@@ -1,5 +1,5 @@
 G_AddGametype({
-    name = "Pizza Time Deluxe",
+    name = "Pizza Time Spice Runners",
     identifier = "PTSPICER",
     typeoflevel = TOL_RACE,
     rules = GTR_FRIENDLY|GTR_SPAWNENEMIES|GTR_TIMELIMIT,

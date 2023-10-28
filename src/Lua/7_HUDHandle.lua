@@ -305,7 +305,7 @@ local rank_hud = function(v,player)
 		end
 	end
 end
-
+/*
 local event_hud = function(v,player)
 	if gametype ~= GT_PTSPICER then return end
 	if not PTSR.currentEvent then return end
@@ -325,6 +325,7 @@ local event_hud = function(v,player)
 		v.drawString(160, 120, "have fun being small", 0, "center")
 	end
 end
+*/
 
 local faceswap_hud = function(v,player)
 	if gametype ~= GT_PTSPICER then return end
@@ -334,10 +335,10 @@ local faceswap_hud = function(v,player)
 	end
 end
 
-customhud.SetupItem("ptje_bar", hudmodname, bar_hud, "game", 0)
-customhud.SetupItem("ptje_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
-customhud.SetupItem("ptje_tooltips", hudmodname, tooltips_hud, "game", 0)
-customhud.SetupItem("ptje_lap", hudmodname, lap_hud, "game", 0)
-customhud.SetupItem("ptje_rank", hudmodname, rank_hud, "game", 0)
-customhud.SetupItem("PTSR_event", hudmodname, event_hud, "game", 0)
+customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
+customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
+customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
+customhud.SetupItem("PTSR_lap", hudmodname, lap_hud, "game", 0)
+customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
+--customhud.SetupItem("PTSR_event", hudmodname, event_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)

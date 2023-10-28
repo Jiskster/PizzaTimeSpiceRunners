@@ -93,7 +93,11 @@ PTSR.end_location.z == 0 and
 PTSR.end_location.angle == 0
 ) -- returns true if at the defaults
 
+rawset(_G, "PTSR_MODE_NORMAL", 1)
+rawset(_G, "PTSR_MODE_ELIMINATION", 2)
+rawset(_G, "PTSR_MODE_INFECTION", 3)
 
+PTSR.gamemode = PTSR_MODE_NORMAL
 
 rawset(_G, "PTSR_COUNT", do
 	local playerCount = 0

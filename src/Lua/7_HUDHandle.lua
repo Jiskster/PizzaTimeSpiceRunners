@@ -2,8 +2,8 @@ local hudmodname = "jiskpizzatime"
 
 -- rank to patch
 PTSR.r2p = function(v,rank) 
-	if v.cachePatch("PTSRRANK_"..rank:upper()) then
-		return v.cachePatch("PTSRRANK_"..rank:upper())
+	if v.cachePatch("PTSR_RANK_"..rank:upper()) then
+		return v.cachePatch("PTSR_RANK_"..rank:upper())
 	end
 end
 

@@ -142,9 +142,11 @@ end
 local itspizzatime_hud = function(v,player)
 	if gametype ~= GT_PTSPICER then return end
 	if PTSR.pizzatime and PTSR.pizzatime_tics then
+		/*
 		if PTSR.pizzatime_tics < 85
 			v.draw(0, 0, v.cachePatch("PIZZAPAL"), V_50TRANS|V_SNAPTOTOP|V_SNAPTOLEFT|V_PERPLAYER)
 		end
+		*/
 	end
 	if PTSR.pizzatime and PTSR.pizzatime_tics and PTSR.pizzatime_tics < 10*TICRATE then
 		local patch = v.cachePatch("ITSPIZZATIME1")

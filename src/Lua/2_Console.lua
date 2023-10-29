@@ -38,6 +38,26 @@ COM_AddCommand("PTSR_pizzatimenow", function(player)
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 
+COM_AddCommand("PTSR_setgamemode", function(player, arg)
+	if gametype ~= GT_PTSPICER then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	if tonumber(arg) == nil then
+		CONS_Printf(player, "arg1 must be a number.")
+		return
+	end
+
+	if not arg then
+		CONS_Printf(player, "PTSR_setgamemode <gamemode_num>")
+		return
+	end
+
+	PTSR.gamemode = PTSR.gamemode_list[tonumber(arg)] and tonumber(arg) or 1
+	print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
+end,1)
+
 // ADDED FOR TESTING PURPOSES
 
 CV_PTSR.x_positioning = CV_RegisterVar({
@@ -208,7 +228,6 @@ CV_PTSR.pizzamask = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
-
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",
@@ -261,6 +280,13 @@ CV_PTSR.oldmusic = CV_RegisterVar({
 			CONS_Printf(consoleplayer, "Lap 4 will now play Pasta La Vista by Oofator.")
 		end
 	end
+})
+
+CV_PTSR.allowgamemodes = CV_RegisterVar({
+	name = "PTSR_allowgamemodes",
+	defaultvalue = "on",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
 })
 
 rawset(_G, "CV_PTJE", CV_PTSR)

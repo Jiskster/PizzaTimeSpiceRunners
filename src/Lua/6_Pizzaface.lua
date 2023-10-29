@@ -135,6 +135,20 @@ addHook("PlayerThink", function(player)
 		if player.pizzachargecooldown then
 			player.pizzachargecooldown = $ - 1
 		end
+
+		if PTSR.gamemode == 4 and not player.stuntime then
+			local pmo = player.mo
+			local findrange = 625*FRACUNIT
+			local zrange = 512*FU
+			searchBlockmap("objects", function(refmobj, foundmobj)
+				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
+				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
+					P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,1*FRACUNIT,true)
+				end
+			end,pmo,
+			pmo.x-findrange,pmo.x+findrange,
+			pmo.y-findrange,pmo.y+findrange)
+		end
 		--print(player.pizzacharge)
 		/*
 		if not p.mo.colorized or p.mo.color != SKINCOLOR_ORANGE
@@ -183,7 +197,20 @@ addHook("MobjCollide", function(mo1, mo2)
 	if mo1.player.pizzaface then return end -- lets not tag our buddies!!
 	if not L_ZCollide(mo1,mo2) then return end
 	
-	P_KillMobj(mo1,mo2)
+	--refactor later
+	if PTSR.gamemode == 1 or PTSR.gamemode == 4 then
+		P_KillMobj(mo1,mo2)
+	elseif PTSR.gamemode == 2 then
+		P_DamageMobj(mo1, mo2)
+		P_Thrust(mo1, mo2.angle, 80*FRACUNIT)
+		P_SetObjectMomZ(mo1, 50*FRACUNIT)
+	elseif PTSR.gamemode == 3 then
+		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!.\n"
+		end
+		mo1.player.pizzaface = true
+	end
 end, MT_PLAYER)
 
 

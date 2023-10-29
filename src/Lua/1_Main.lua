@@ -61,6 +61,8 @@ addHook("NetVars", function(net)
 		"hudstuff",
 		
 		"maxrankpoints",
+
+		"gamemode",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -93,11 +95,14 @@ PTSR.end_location.z == 0 and
 PTSR.end_location.angle == 0
 ) -- returns true if at the defaults
 
-rawset(_G, "PTSR_MODE_NORMAL", 1)
-rawset(_G, "PTSR_MODE_ELIMINATION", 2)
-rawset(_G, "PTSR_MODE_INFECTION", 3)
+PTSR.gamemode_list = {
+	"Elimination Mode",
+	"Bull Mode",
+	"Infection Mode",
+	"Blackhole Mode",
+}
 
-PTSR.gamemode = PTSR_MODE_NORMAL
+PTSR.gamemode = 1
 
 rawset(_G, "PTSR_COUNT", do
 	local playerCount = 0
@@ -265,6 +270,13 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.pizzatime = true
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
+
+
+		if CV_PTSR.allowgamemodes.value then
+			PTSR.gamemode = P_RandomRange(1,#PTSR.gamemode_list) -- gamemode rng
+		else
+			PTSR.gamemode = 1
+		end
 
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)

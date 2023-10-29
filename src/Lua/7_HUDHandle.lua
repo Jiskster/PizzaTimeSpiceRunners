@@ -1,4 +1,4 @@
-local hudmodname = "jiskpizzatime"
+local hudmodname = "spicerunners"
 
 -- rank to patch
 PTSR.r2p = function(v,rank) 
@@ -335,6 +335,16 @@ local faceswap_hud = function(v,player)
 	end
 end
 
+local gamemode_hud = function(v,player)
+	local currentGamemode = PTSR.gamemode_list[PTSR.gamemode]
+	
+	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.pizzatime then return end
+	
+
+	v.drawString(320, 0, "\x8A"..currentGamemode, V_SNAPTORIGHT|V_50TRANS|V_ADD, "thin-right")
+end
+
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
 customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
@@ -342,3 +352,7 @@ customhud.SetupItem("PTSR_lap", hudmodname, lap_hud, "game", 0)
 customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 --customhud.SetupItem("PTSR_event", hudmodname, event_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
+customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
+
+
+--PTSR.gamemode[#PTSR.gamemode_list]

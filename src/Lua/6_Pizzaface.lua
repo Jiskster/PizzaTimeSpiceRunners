@@ -140,7 +140,8 @@ addHook("PlayerThink", function(player)
 			local zrange = 512*FU
 			searchBlockmap("objects", function(refmobj, foundmobj)
 				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
-				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
+				and foundmobj.valid and P_CheckSight(pmo, foundmobj)
+				and not foundmobj.flags & MF_SCENERY then
 					P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,1*FRACUNIT,true)
 				end
 			end,pmo,

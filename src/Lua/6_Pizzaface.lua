@@ -19,9 +19,7 @@ addHook("PlayerThink", function(player)
 		player.pizzacharge = $ or 0
 		player.pizzachargecooldown = $ or 0
 		
-		
-		P_SetScale(player.realmo, 2*FU)
-		
+		player.realmo.scale = 2*FU
 		player.spectator = false -- dont give up! dont spectate as pizzaface! (theres another check when spawning so idk 
 		
 		if player.stuntime then -- player freeze decrement (mainly for pizza faces)
@@ -69,7 +67,7 @@ addHook("PlayerThink", function(player)
 		if (not player.pizzamask or not player.pizzamask.valid) and CV_PTSR.pizzamask.value then
 			player.pizzamask = P_SpawnMobj(player.realmo.x,player.realmo.y,player.realmo.z,MT_PIZZAMASK)
 			player.pizzamask.targetplayer = player --dream reference
-			player.pizzamask.scale = pfmaskData[1].scale
+			--player.pizzamask.scale = pfmaskData[1].scale
 		end
 		
 		if player.pizzamask then

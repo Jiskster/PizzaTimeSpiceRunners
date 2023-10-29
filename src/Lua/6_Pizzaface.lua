@@ -209,7 +209,7 @@ addHook("MobjCollide", function(mo1, mo2)
 	elseif PTSR.gamemode == 3 then
 		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
 		if DiscordBot then
-			DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!\n"
+			DiscordBot.Data.msgsrb2 = $ .. "[" .. #mo1.player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!\n"
 		end
 		mo1.player.pizzaface = true
 	end

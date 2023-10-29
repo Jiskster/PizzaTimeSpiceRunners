@@ -1,6 +1,9 @@
+
+/*
 addHook('NetVars', function(net)
 	animationtable = net($)
 end)
+*/
 
 addHook('ThinkFrame', function()
 	// Animation Thinker

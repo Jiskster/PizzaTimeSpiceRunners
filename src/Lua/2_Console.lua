@@ -1,6 +1,6 @@
 rawset(_G, "CV_PTSR", {}) -- for console vars
 
-COM_AddCommand("PTSR_makepizza", function(player, arg)
+COM_AddCommand("ptsr_makepizza", function(player, arg)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
@@ -30,7 +30,7 @@ COM_AddCommand("PTSR_makepizza", function(player, arg)
 end,1)
 
 
-COM_AddCommand("PTSR_pizzatimenow", function(player)
+COM_AddCommand("ptsr_pizzatimenow", function(player)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
@@ -38,7 +38,7 @@ COM_AddCommand("PTSR_pizzatimenow", function(player)
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 
-COM_AddCommand("PTSR_setgamemode", function(player, arg)
+COM_AddCommand("ptsr_setgamemode", function(player, arg)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return

@@ -278,6 +278,12 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			PTSR.gamemode = 1
 		end
 
+		print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
+
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. ":pizza: **" .. PTSR.gamemode_list[PTSR.gamemode] .. "** is the new gamemode!\n"
+		end
+
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		thesign.angle = PTSR.spawn_location.angle

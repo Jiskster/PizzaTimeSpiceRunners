@@ -24,9 +24,11 @@ addHook("PlayerThink", function(player)
 		
 		if player.stuntime then -- player freeze decrement (mainly for pizza faces)
 			player.stuntime = $ - 1
+			-- # No Momentum # -- 
 			player.mo.momx = 0
 			player.mo.momy = 0
 			player.mo.momz = 0
+			-- # No Momentum # --
 			--player.pflags = $|PF_FULLSTASIS
 			if not player.stuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
 				if CV_PTSR.pizzalaugh.value and not player.pizzachargecooldown

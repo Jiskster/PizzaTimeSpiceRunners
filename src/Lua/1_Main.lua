@@ -253,8 +253,6 @@ end
 
 PTSR.StartNewLap = function(mobj)
 	local player = mobj.player
-	
-	if PTSR.laps
 
 	if not player.pizzaface then
 		PTSR.LapTP(player, true)

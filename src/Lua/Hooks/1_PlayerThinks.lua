@@ -27,7 +27,7 @@ addHook("PlayerSpawn", function(player)
 end)
 
 addHook("PlayerThink", function(player)
-	if player.deadtimer > 5*TICRATE and PTSR.pizzatime then
+	if player.deadtimer > 5*TICRATE and PTSR.pizzatime and not player.spectator then
 		player.playerstate = PST_REBORN
 	end
 

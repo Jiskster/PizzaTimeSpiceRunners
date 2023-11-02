@@ -129,26 +129,26 @@ addHook("PlayerThink", function(player)
 	-- idk what pec is supposed to mean but i guess it means a fraction of the maxrank points
 	local pec = (PTSR.maxrankpoints)/6
 	
-	--player.ptje_rank = "P"
+	--player.ptsr_rank = "P"
 	-- boy what the hellllll o ma god way ayyaay
 	if player.score < pec then
 		-- this is real p rank
 		-- cry like a wittle babyy!
-		player.ptje_rank = "D"
+		player.ptsr_rank = "D"
 	elseif player.score <= pec*2
-		player.ptje_rank = "C"
+		player.ptsr_rank = "C"
 		
 	elseif player.score <= pec*3
-		player.ptje_rank = "B"
+		player.ptsr_rank = "B"
 	elseif player.score <= pec*5
-		player.ptje_rank = "A"
+		player.ptsr_rank = "A"
 	elseif player.score <= pec*6
-		player.ptje_rank = "S"
+		player.ptsr_rank = "S"
 	else
 		if player.timeshit then
-			player.ptje_rank = "S"
+			player.ptsr_rank = "S"
 		else
-			player.ptje_rank = "P"
+			player.ptsr_rank = "P"
 		end
 	end
 	

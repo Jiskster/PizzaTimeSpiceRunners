@@ -189,76 +189,41 @@ local tooltips_hud = function(v,player)
 		
 
 		if timeafteranimation then
-			if timeafteranimation < 10 then
-				if (playerCount == 1) then
-					v.drawString(165, 157, practicemodetext, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-				end
-				
-				if player.pizzaface then
-					if player.pizzachargecooldown then
-						v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					elseif player.pizzacharge then
-						local percentage = FixedMul(FixedDiv(1*FRACUNIT, 35*FRACUNIT),35*FRACUNIT)>>FRACBITS
-						
-						v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					else
-						v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					end
-				end
+			local addtransflag = (timeafteranimation < 10) and (10-timeafteranimation)<<V_ALPHASHIFT or 0 
 
-				-- Early returns start here --
-				if player.pizzaface and CV_PTSR.lappingtype.value == 2 then return end
-
-				if CV_PTSR.lappingtype.value == 2 then
-					v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					return
-				end
-				if CV_PTSR.dynamiclaps.value then
-					v.drawString(165, 165, dynamiclapstext , V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					return
-				end
-				
-				if CV_PTSR.maxlaps.value then
-					v.drawString(165, 165, lapsandmaxlapstext, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					return
+			if (playerCount == 1) then
+				v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
+			end
+			if player.pizzaface then
+				if player.pizzachargecooldown then
+					v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
+				elseif player.pizzacharge then
+					local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)>>FRACBITS
+					
+					v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
 				else
-					v.drawString(165, 165, lapstext, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
-					return
+					v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
 				end
+			end
+			-- Early returns start here --
+			if player.pizzaface and CV_PTSR.lappingtype.value == 2 then return end
+
+			if CV_PTSR.lappingtype.value == 2 then
+				v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
+				return
+			end
+			
+			if CV_PTSR.dynamiclaps.value then
+				v.drawString(165, 165, dynamiclapstext, V_SNAPTOBOTTOM|addtransflag, "thin-center")
+				return
+			end
+			
+			if CV_PTSR.maxlaps.value then
+				v.drawString(165, 165, lapsandmaxlapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
+				return
 			else
-				if (playerCount == 1) then
-					v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM, "thin-center")
-				end
-				if player.pizzaface then
-					if player.pizzachargecooldown then
-						v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
-					elseif player.pizzacharge then
-						local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)>>FRACBITS
-						
-						v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM, "thin-center")
-					else
-						v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM, "thin-center")
-					end
-				end
-				-- Early returns start here --
-				if player.pizzaface and CV_PTSR.lappingtype.value == 2 then return end
-				if CV_PTSR.lappingtype.value == 2 then
-					v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM, "thin-center")
-					return
-				end
-				
-				if CV_PTSR.dynamiclaps.value then
-					v.drawString(165, 165, dynamiclapstext, V_SNAPTOBOTTOM, "thin-center")
-					return
-				end
-				
-				if CV_PTSR.maxlaps.value then
-					v.drawString(165, 165, lapsandmaxlapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-center")
-					return
-				else
-					v.drawString(165, 165, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-center")
-					return
-				end
+				v.drawString(165, 165, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
+				return
 			end
 		end
 	end
@@ -301,9 +266,9 @@ end
 local rank_hud = function(v,player)
 	if gametype ~= GT_PTSPICER then return end
 	if player.pizzaface then return end
-	if player.ptje_rank then
-		v.drawScaled(15*FRACUNIT,55*FRACUNIT,FRACUNIT/3, PTSR.r2p(v,player.ptje_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
-		if player.timeshit then
+	if player.ptsr_rank then
+		v.drawScaled(15*FRACUNIT,55*FRACUNIT,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
+		if player.timeshit then -- no p rank for you noob
 			v.drawScaled(15*FRACUNIT,55*FRACUNIT,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
 		end
 	end

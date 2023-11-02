@@ -26,8 +26,8 @@ local function registerIt(successValue)
 					rank = pfmaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza:"
 				elseif player.spectator or player.playerstate == PST_DEAD
 					rank = ':dead:'
-				elseif player.ptje_rank
-					rank = ':'..player.ptje_rank:lower()..'rank:'
+				elseif player.ptsr_rank
+					rank = ':'..player.ptsr_rank:lower()..'rank:'
 				end
 				if player.mo and (player.pflags & PF_FINISHED) then pffinished = ":completed:" end
 				if IsPlayerAdmin(player) then admin = ":remote_admin:" end
@@ -36,7 +36,7 @@ local function registerIt(successValue)
 				if string.len(seconds) == 1 then seconds = "0"..tostring(seconds) end
 				local pptime = G_TicsToMinutes(player.playtime, true)..":"..seconds
 				local line = statms..iconskin..rank..admin.."["..#player.."] `"..pname.."`: Score - "..player.score
-				if not player.pizzaface and player.ptje_rank and player.lapsdid then
+				if not player.pizzaface and player.ptsr_rank and player.lapsdid then
 					line = $ .. "; Laps - "..player.lapsdid.." / "..CV_PTSR.maxlaps_perplayer.value
 				end
 				playerstats = $ + line.."\n"

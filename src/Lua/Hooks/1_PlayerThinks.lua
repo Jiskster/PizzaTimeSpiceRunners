@@ -7,13 +7,29 @@ addHook("PlayerSpawn", function(player)
 			return
 		end
 		if PTSR.pizzatime and leveltime then
-			player.spectator = true
+			if PTSR.gamemode == 3 then
+				if not player.pizzaface then
+					chatprint("\x83*"..player.name.."\x82 has been infected.")
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:pizza: **" .. player.name .. "** has been infected!\n"
+					end
+					player.pizzaface = true
+				end
+			else
+				player.spectator = true
+			end
 		end
 	end
 end)
 
 addHook("PlayerSpawn", function(player)
 	player["PT@hudstuff"] = PTSR.hudstuff
+end)
+
+addHook("PlayerThink", function(player)
+	if player.deadtimer > 5*TICRATE and PTSR.pizzatime then
+		player.playerstate = PST_REBORN
+	end
 end)
 
 addHook("PlayerThink", function(player)

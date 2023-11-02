@@ -204,12 +204,8 @@ addHook("MobjCollide", function(mo1, mo2)
 	if not L_ZCollide(mo1,mo2) then return end
 	
 	--refactor later
-	if PTSR.gamemode == 1 or PTSR.gamemode == 4 then
+	if PTSR.gamemode == 1 or PTSR.gamemode == 4 or PTSR.gamemode == 2 then
 		P_KillMobj(mo1,mo2)
-	elseif PTSR.gamemode == 2 then
-		P_DamageMobj(mo1, mo2)
-		P_Thrust(mo1, mo2.angle, 80*FRACUNIT)
-		P_SetObjectMomZ(mo1, 50*FRACUNIT)
 	elseif PTSR.gamemode == 3 then
 		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
 		if DiscordBot then

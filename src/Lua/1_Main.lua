@@ -1,3 +1,17 @@
+rawset(_G, "PTSR_shallowcopy", function(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end)
+
 G_AddGametype({
     name = "Pizza Time Spice Runners",
     identifier = "PTSPICER",
@@ -87,7 +101,7 @@ local function ResetPlayerVars(player)
 	player.spectator = false
 	player.lapsdid = 0
 	player.laptime = 0
-	player["PT@hudstuff"] = PTSR.hudstuff
+	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 
 PTSR.spawn_location_atdefault = (

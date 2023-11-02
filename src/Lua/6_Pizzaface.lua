@@ -138,13 +138,16 @@ addHook("PlayerThink", function(player)
 
 		if PTSR.gamemode == 4 and not player.stuntime then
 			local pmo = player.mo
-			local findrange = 1000*FRACUNIT
-			local zrange = 700*FU
-			local strength = (FRACUNIT + FRACUNIT/4)
+			local findrange = 2500*FRACUNIT
+			local zrange = 400*FU
 			searchBlockmap("objects", function(refmobj, foundmobj)
+				local strength = 2*FRACUNIT
 				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
-					if not (foundmobj.flags & MF_SCENERY) then
+					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
+						if P_IsObjectOnGround(foundmobj) then
+							strength = $ * 3
+						end
 						P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,strength,true)
 					end
 				end

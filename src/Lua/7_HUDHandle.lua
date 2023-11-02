@@ -193,6 +193,7 @@ local tooltips_hud = function(v,player)
 				if (playerCount == 1) then
 					v.drawString(165, 157, practicemodetext, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
 				end
+				
 				if player.pizzaface then
 					if player.pizzachargecooldown then
 						v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
@@ -204,8 +205,10 @@ local tooltips_hud = function(v,player)
 						v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
 					end
 				end
+
 				-- Early returns start here --
 				if player.pizzaface and CV_PTSR.lappingtype.value == 2 then return end
+
 				if CV_PTSR.lappingtype.value == 2 then
 					v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT, "thin-center")
 					return

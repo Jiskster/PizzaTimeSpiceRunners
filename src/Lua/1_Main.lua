@@ -254,6 +254,8 @@ end
 PTSR.StartNewLap = function(mobj)
 	local player = mobj.player
 	
+	if PTSR.laps
+
 	if not player.pizzaface then
 		PTSR.LapTP(player, true)
 		//player.lapsdid = $+1
@@ -265,10 +267,13 @@ PTSR.StartNewLap = function(mobj)
 		
 		
 		player.lapsdid = $ + 1
+		PTSR.laps = $ + 1
+		/*
 		if player.lapsdid > PTSR.laps
 			PTSR.laps = player.lapsdid
 		end
-
+		*/
+		
 		
 		-- Elfilin support
 		

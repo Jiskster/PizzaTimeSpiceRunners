@@ -30,6 +30,10 @@ addHook("PlayerThink", function(player)
 	if player.deadtimer > 5*TICRATE and PTSR.pizzatime then
 		player.playerstate = PST_REBORN
 	end
+
+	if PTSR.gamemode == 2 and not player.pizzaface then
+		player.powers[pw_sneakers] = 1
+	end
 end)
 
 addHook("PlayerThink", function(player)

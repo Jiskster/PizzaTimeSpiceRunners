@@ -47,7 +47,7 @@ local function drawBarFill(v, x, y, scale, progress)
 		drawwidth, patch.height*FU)
 end
 
-local bar_hud = function(v,player)
+local bar_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if PTSR.pizzatime then
 		local expectedtime = TICRATE*3
@@ -122,12 +122,12 @@ local bar_hud = function(v,player)
 					--drawSuperText(v, 160, 183+120-PTHUD.PizzaTimeTimerY,str,{font = 'PTFNT', flags = V_SNAPTOBOTTOM, align = 'center'})
 					if timeafteranimation < 10 then
 						--v.drawString(165, y + 5, timestring, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT , "center")
-						customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT), "center", FRACUNIT/2)
+						customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 					else
 						if PTSR.timeleft then
-							customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2)
+							customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 						else
-							customhud.CustomFontString(v, x, y, "TIME OVER!", "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2)
+							customhud.CustomFontString(v, x, y, "TIME OVER!", "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 						end
 					end
 				end
@@ -139,7 +139,7 @@ local bar_hud = function(v,player)
 	end
 end
 
-local itspizzatime_hud = function(v,player)
+local itspizzatime_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if PTSR.pizzatime and PTSR.pizzatime_tics then
 		/*
@@ -167,7 +167,7 @@ local itspizzatime_hud = function(v,player)
 	end
 end
 
-local tooltips_hud = function(v,player)
+local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
@@ -229,7 +229,7 @@ local tooltips_hud = function(v,player)
 	end
 end
 
-local lap_hud = function(v,player)
+local lap_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if not player.laptime then return end
 	if player.pizzaface then return end
@@ -263,7 +263,7 @@ local lap_hud = function(v,player)
 	end
 end
 
-local rank_hud = function(v,player)
+local rank_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if player.pizzaface then return end
 	if player.ptsr_rank then
@@ -295,7 +295,7 @@ local event_hud = function(v,player)
 end
 */
 
-local faceswap_hud = function(v,player)
+local faceswap_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if not (player.pizzaface and leveltime) then return end
 	if player.stuntime and PTSR.pizzatime_tics < TICRATE*CV_PTSR.pizzatimestun.value+20 then
@@ -303,7 +303,7 @@ local faceswap_hud = function(v,player)
 	end
 end
 
-local gamemode_hud = function(v,player)
+local gamemode_hud = function(v, player)
 	local currentGamemode = PTSR.gamemode_list[PTSR.gamemode]
 	
 	if gametype ~= GT_PTSPICER then return end
@@ -313,6 +313,26 @@ local gamemode_hud = function(v,player)
 	v.drawString(320, 0, "\x8A"..currentGamemode, V_SNAPTORIGHT|V_SNAPTOTOP|V_50TRANS|V_ADD, "thin-right")
 end
 
+local scoreboard_hud = function(v, player)
+	if gametype ~= GT_PTSPICER then return end
+	local zinger_text = "LEADERBOARD"
+	local zinger_x = 160*FRACUNIT
+	local zinger_y = 10*FRACUNIT
+	local player_list = {}
+	for _player in players.iterate do
+		table.insert(player_list, _player)
+	end
+	for i=1,#player_list do
+		local _player = player_list[i]
+		local _skinname = skins[_player.realmo.skin].name
+		local _colormap = v.getColormap(_skinname, _player.mo.color)
+		local _skinpatch = v.getSprite2Patch(_player.realmo.skin, SPR2_XTRA)
+		v.drawScaled(10*FRACUNIT, 15*FRACUNIT + (i*16*FRACUNIT), FRACUNIT/2,
+		_skinpatch, V_SNAPTOLEFT|V_SNAPTOTOP, _colormap)		
+	end 
+
+	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/3, SKINCOLOR_BLUE)
+end
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
 customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
@@ -321,6 +341,7 @@ customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 --customhud.SetupItem("PTSR_event", hudmodname, event_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
+customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 
 
 --PTSR.gamemode[#PTSR.gamemode_list]

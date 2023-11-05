@@ -315,23 +315,66 @@ end
 
 local scoreboard_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
+
 	local zinger_text = "LEADERBOARD"
 	local zinger_x = 160*FRACUNIT
 	local zinger_y = 10*FRACUNIT
+
 	local player_list = {}
 	for _player in players.iterate do
-		table.insert(player_list, _player)
+		if not _player.spectator and not _player.pizzaface then
+			table.insert(player_list, _player)
+		end
 	end
+
+	table.sort(player_list, function(a,b) return a.score > b.score end)
+
 	for i=1,#player_list do
+		if i > 20 then continue end
+		
 		local _player = player_list[i]
 		local _skinname = skins[_player.realmo.skin].name
-		local _colormap = v.getColormap(_skinname, _player.mo.color)
+		local _colormap = v.getColormap(_skinname, _player.skincolor)
 		local _skinpatch = v.getSprite2Patch(_player.realmo.skin, SPR2_XTRA)
-		v.drawScaled(10*FRACUNIT, 15*FRACUNIT + (i*16*FRACUNIT), FRACUNIT/2,
-		_skinpatch, V_SNAPTOLEFT|V_SNAPTOTOP, _colormap)		
+		local commonflags = (V_SNAPTOLEFT|V_SNAPTOTOP)
+		local playernameflags = (_player == consoleplayer) and V_YELLOWMAP or V_GRAYMAP
+
+		local _xcoord = 22*FRACUNIT
+		local _ycoord = 15*FRACUNIT + (i*16*FRACUNIT)
+
+		if i > 10 then
+			_xcoord = $ + 160*FRACUNIT
+			_ycoord = $ - (10*16*FRACUNIT)
+			commonflags = $ & ~V_SNAPTOLEFT
+			commonflags = $ | V_SNAPTORIGHT
+		end
+		-- [Player Icon] --
+		v.drawScaled(_xcoord, _ycoord, FRACUNIT/2,
+		_skinpatch, (commonflags), _colormap)
+
+		-- [Player Rank] --
+		v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
+		PTSR.r2p(v,_player.ptsr_rank), commonflags)
+
+		if _player.timeshit then -- no p rank for you noob, but on score hud
+			v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
+			PTSR.r2p(v, "BROKEN"), commonflags|V_20TRANS)
+		end
+
+		-- [ Bar Things] --
+		v.drawFill(0, 25, 640, 1, V_SNAPTOTOP+V_SNAPTOLEFT) -- bar 
+		v.drawFill(160, 25, 1, 640, V_SNAPTOTOP)
+
+		-- [Player Name] --
+		v.drawString( _xcoord + 16*FRACUNIT, _ycoord,  _player.name, (commonflags|playernameflags), "thin-fixed")
+		
+		-- [Player Score] --
+		v.drawString(_xcoord + 16*FRACUNIT, _ycoord + 8*FRACUNIT, tostring(_player.score), (commonflags), "thin-fixed")
+
+		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	end 
 
-	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/3, SKINCOLOR_BLUE)
+	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/4, SKINCOLOR_BLUE)
 end
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)

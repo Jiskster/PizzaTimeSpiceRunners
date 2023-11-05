@@ -135,26 +135,6 @@ addHook("PlayerThink", function(player)
 		if player.pizzachargecooldown then
 			player.pizzachargecooldown = $ - 1
 		end
-
-		if PTSR.gamemode == 4 and not player.stuntime then
-			local pmo = player.mo
-			local findrange = 2500*FRACUNIT
-			local zrange = 400*FU
-			searchBlockmap("objects", function(refmobj, foundmobj)
-				local strength = 2*FRACUNIT
-				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
-				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
-					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
-						if P_IsObjectOnGround(foundmobj) then
-							strength = $ * 3
-						end
-						P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,strength,true)
-					end
-				end
-			end,pmo,
-			pmo.x-findrange,pmo.x+findrange,
-			pmo.y-findrange,pmo.y+findrange)
-		end
 		--print(player.pizzacharge)
 		/*
 		if not p.mo.colorized or p.mo.color != SKINCOLOR_ORANGE

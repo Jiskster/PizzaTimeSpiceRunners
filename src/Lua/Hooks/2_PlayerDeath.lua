@@ -11,7 +11,7 @@ addHook("MobjDeath", function(mobj)
 	if PTSR.pizzatime then
 		if not player.pizzaface then
 			if CV_PTSR.showdeaths.value and not PTSR.timeover then
-				if PTSR.gamemode == 1 or PTSR.gamemode == 2 or PTSR.gamemode == 4 then
+				if PTSR.gamemode == 1 or PTSR.gamemode == 2 then
 					chatprint("\x82*"..player.name.."\x82 has died.")
 					if DiscordBot then
 						DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:skull: **" .. player.name .. "** died.\n"

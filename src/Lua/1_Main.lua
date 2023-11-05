@@ -122,7 +122,6 @@ PTSR.gamemode_list = {
 	"Elimination Mode",
 	"Fast Mode",
 	"Infection Mode",
-	"Blackhole Mode",
 }
 
 PTSR.gamemode = 1

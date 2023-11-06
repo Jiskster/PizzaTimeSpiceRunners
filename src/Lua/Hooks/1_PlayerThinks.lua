@@ -7,7 +7,7 @@ addHook("PlayerSpawn", function(player)
 			return
 		end
 		if PTSR.pizzatime and leveltime then
-			if PTSR.gamemode == 3 then
+			if PTSR.gamemode == 2 then
 				if not player.pizzaface then
 					chatprint("\x83*"..player.name.."\x82 has been infected.")
 					if DiscordBot then
@@ -31,7 +31,7 @@ addHook("PlayerThink", function(player)
 		player.playerstate = PST_REBORN
 	end
 
-	if PTSR.gamemode == 2 and not player.pizzaface then
+	if PTSR.pizzatime and PTSR.timeover then
 		player.powers[pw_sneakers] = 1
 	end
 end)
@@ -75,15 +75,11 @@ addHook("ThinkFrame", do
 			PTSR.timeleft = $ - 1
 			if not PTSR.timeleft then
 				PTSR.timeover = true
-				for player in players.iterate() do
-					if player.mo and player.mo.valid and not player.pizzaface and not player.exiting then
-						P_KillMobj(player.mo)
-					end
-				end
-				local timeover_text = "\x8F*Time over!"
+				local timeover_text = "\x8F*Overtime!"
 				chatprint(timeover_text)
+				
 				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Time over!\n"
+					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
 				end
 			end
 		end

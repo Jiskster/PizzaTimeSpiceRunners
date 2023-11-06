@@ -120,8 +120,13 @@ addHook("PlayerThink", function(player)
 				local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
 				if peppinos ~= {} then
 					player.pizzacharge = 0
-					player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value*TICRATE
-					player.stuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+					if not PTSR.timeover then
+						player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value*TICRATE
+						player.stuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+					else
+						player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value*TICRATE)/3
+						player.stuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
+					end
 				
 					P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
 					S_StartSound(player.mo, pfmaskData[player.PTSR_pizzastyle].sound)
@@ -184,9 +189,9 @@ addHook("MobjCollide", function(mo1, mo2)
 	if not L_ZCollide(mo1,mo2) then return end
 	
 	--refactor later
-	if PTSR.gamemode == 1 or PTSR.gamemode == 4 or PTSR.gamemode == 2 then
+	if PTSR.gamemode == 1 then
 		P_KillMobj(mo1,mo2)
-	elseif PTSR.gamemode == 3 then
+	elseif PTSR.gamemode == 2 then
 		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
 		if DiscordBot then
 			DiscordBot.Data.msgsrb2 = $ .. "[" .. #mo1.player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!\n"

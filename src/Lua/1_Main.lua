@@ -120,7 +120,6 @@ PTSR.end_location.angle == 0
 
 PTSR.gamemode_list = {
 	"Elimination Mode",
-	"Fast Mode",
 	"Infection Mode",
 }
 

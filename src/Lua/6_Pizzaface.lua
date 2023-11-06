@@ -150,7 +150,8 @@ addHook("PlayerThink", function(player)
 				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
-						if foundmobj.player and foundmobj.player.valid and foundmobj.player.pizzaface then
+						if foundmobj.player and foundmobj.player.valid and
+						not foundmobj.player.spectator and foundmobj.player.pizzaface then
 							return
 						end
 						if P_IsObjectOnGround(foundmobj) then

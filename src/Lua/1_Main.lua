@@ -276,7 +276,10 @@ PTSR.StartNewLap = function(mobj)
 		if player.elfilin and player.mo.elfilin_portal then
 			player.mo.elfilin_portal.fuse = 1
 		end
-		S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+
+		if not PTSR.timeover then
+			S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+		end
 	else -- FAKE LAP -- 
 		mobj.player.stuntime = TICRATE*CV_PTSR.fakelapstun.value
 		P_SetOrigin(mobj, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
@@ -387,8 +390,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			john.momy = -sin(john.angle)*8
 			john.momz = P_MobjFlip(john)*8*FU
 		end
-
-		S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+		
+		if not PTSR.timeover then
+			S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+		end
 	end
 end
 

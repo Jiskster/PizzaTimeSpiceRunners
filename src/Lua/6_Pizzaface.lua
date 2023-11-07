@@ -164,13 +164,6 @@ addHook("PlayerThink", function(player)
 			pmo.x-findrange,pmo.x+findrange,
 			pmo.y-findrange,pmo.y+findrange)
 		end
-		--print(player.pizzacharge)
-		/*
-		if not p.mo.colorized or p.mo.color != SKINCOLOR_ORANGE
-			p.mo.color = SKINCOLOR_ORANGE
-			p.mo.colorized = true		
-		end
-		*/
 	end
 end)
 

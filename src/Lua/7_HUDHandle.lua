@@ -274,27 +274,6 @@ local rank_hud = function(v, player)
 		end
 	end
 end
-/*
-local event_hud = function(v,player)
-	if gametype ~= GT_PTSPICER then return end
-	if not PTSR.currentEvent then return end
-	local event = PTSR.currentEvent
-	if leveltime > TICRATE*5 then return end
-	if event.name == "mirrorPrelude" then
-		v.drawNameTag(160,  80, "MAGIC MIRROR NEXT ROUND", V_CENTERNAMETAG, SKINCOLOR_ICY, SKINCOLOR_AQUA)
-		v.drawString(160, 120, "everyone will be forced to use", 0, "center")
-		v.drawString(160, 130, "the skin of the highest scoring player", 0, "center")
-	end
-	if event.name == "super" then
-		v.drawNameTag(160,  80, "EVERYONE SUPER", V_CENTERNAMETAG, SKINCOLOR_GOLD, SKINCOLOR_RUST)
-		v.drawString(160, 120, "go nuts", 0, "center")
-	end
-	if event.name == "mini" then
-		v.drawNameTag(160,  80, "MINI MUSHROOM", V_CENTERNAMETAG, SKINCOLOR_BLUE, SKINCOLOR_WHITE)
-		v.drawString(160, 120, "have fun being small", 0, "center")
-	end
-end
-*/
 
 local faceswap_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end

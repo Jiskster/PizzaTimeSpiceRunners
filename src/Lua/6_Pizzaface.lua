@@ -1,3 +1,42 @@
+function PTSR:PizzaCanTag(peppino, pizza)
+	if not self.pizzatime then return false end
+	
+	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
+	
+	if not (pizza.player and pizza.valid and pizza.player.valid) 
+	or (pizza.player and not pizza.player.pizzaface) then return false end -- only continue if "pizza" is pizzaface
+	
+	if pizza.player.stuntime then return false end
+	
+	if peppino.player.exiting then return false end
+	
+	if peppino.player.powers[pw_invulnerability] then return false end
+	
+	if peppino.player.powers[pw_flashing] then return false end
+	
+	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
+	
+	if not L_ZCollide(peppino,pizza) then return false end
+	
+	return true
+end
+
+ -- taken from the original since barely anything needs to be changed
+addHook("MobjCollide", function(peppino, pizza)	
+	if not PTSR:PizzaCanTag(peppino, pizza) then return end
+	--refactor later
+	if PTSR.gamemode == 1 then
+		P_KillMobj(peppino,pizza)
+	elseif PTSR.gamemode == 2 then
+		chatprint("\x83*"..peppino.player.name.."\x82 has been infected.")
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. "[" .. #peppino.player .. "]:pizza: **" .. peppino.player.name .. "** has been infected!\n"
+		end
+		peppino.player.pizzaface = true
+	end
+end, MT_PLAYER)
+
+
 addHook("PlayerCmd", function (player, cmd)
 	if player.pizzaface and player.stuntime then
 		cmd.buttons = 0
@@ -5,7 +44,6 @@ addHook("PlayerCmd", function (player, cmd)
 		-- dont do sidemove cuz face swapping
 	end
 end)
-
 
 --Pizza Face Thinker
 addHook("PlayerThink", function(player)
@@ -193,28 +231,5 @@ addHook("ShouldDamage", function(target, inflictor)
 		return false
 	end
 end)
- -- taken from the original since barely anything needs to be changed
-addHook("MobjCollide", function(mo1, mo2)
-	if not PTSR.pizzatime then return end
-	if not (mo1.player and mo1.valid and mo1.player.valid) then return end
-	if not (mo2.player and mo2.valid and mo2.player.valid) or (mo2.player and not mo2.player.pizzaface) then return end -- only continue if mo2 is pizzaface
-	if mo2.player.stuntime then return end
-	if mo1.player.exiting then return end
-	if mo1.player.powers[pw_invulnerability] then return end
-	if mo1.player.powers[pw_flashing] then return end
-	if mo1.player.pizzaface then return end -- lets not tag our buddies!!
-	if not L_ZCollide(mo1,mo2) then return end
-	
-	--refactor later
-	if PTSR.gamemode == 1 then
-		P_KillMobj(mo1,mo2)
-	elseif PTSR.gamemode == 2 then
-		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
-		if DiscordBot then
-			DiscordBot.Data.msgsrb2 = $ .. "[" .. #mo1.player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!\n"
-		end
-		mo1.player.pizzaface = true
-	end
-end, MT_PLAYER)
 
 

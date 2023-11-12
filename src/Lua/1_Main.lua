@@ -299,13 +299,15 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
 
-		if CV_PTSR.allowgamemodes.value then
+		if CV_PTSR.allowgamemodes.value and not CV_PTSR.aimode.value then
 			PTSR.gamemode = P_RandomRange(1,#PTSR.gamemode_list) -- gamemode rng
 		else
 			PTSR.gamemode = 1
 		end
 
-		print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
+		if not CV_PTSR.aimode.value then
+			print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
+		end
 
 		if DiscordBot then
 			DiscordBot.Data.msgsrb2 = $ .. ":pizza: **" .. PTSR.gamemode_list[PTSR.gamemode] .. "** is the new gamemode!\n"
@@ -314,8 +316,12 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
-		local newpizaface = P_SpawnMobj(0,0,0, MT_PIZZA_ENEMY)
-		P_SetOrigin(newpizaface, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
+		if CV_PTSR.aimode.value then
+			local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+								PTSR.end_location.y*FRACUNIT,
+								PTSR.end_location.z*FRACUNIT, 
+								MT_PIZZA_ENEMY)
+		end
 		
 		thesign.angle = PTSR.spawn_location.angle
 		
@@ -327,46 +333,48 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.laps = 1
 		
 		--hit the player that touched the location with these variables
-		local _, playerCount = PTSR_COUNT()
-		if playerCount > 1 then
-			if CV_PTSR.pizzachoosetype.value == 1 then
-				mobj.player.pizzaface = true
-				mobj.player.stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
-				chatprint("\x85*"..mobj.player.name.." has become a pizza!") 
-				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. "- [" .. #mobj.player .. "] **" .. mobj.player.name .. "**\n"
-				end
-			else
-				local active_playernums = {}
-				local playerschoosing = CV_PTSR.pizzacount.value
-				
-				if playerCount < playerschoosing then
-					playerschoosing = 1
-				end
-				if playerschoosing then
-					-- store every playernum
-					for player in players.iterate() do
-						if CV_PTSR.pizzachoosetype.value == 3 and player == mobj.player then
-							continue
-						end
-						if player.quittime then
-							player.spectator = true
-							continue
-						end
-						table.insert(active_playernums, #player)
-						
+		if not CV_PTSR.aimode.value then
+			local _, playerCount = PTSR_COUNT()
+			if playerCount > 1 then
+				if CV_PTSR.pizzachoosetype.value == 1 then
+					mobj.player.pizzaface = true
+					mobj.player.stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
+					chatprint("\x85*"..mobj.player.name.." has become a pizza!") 
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. "- [" .. #mobj.player .. "] **" .. mobj.player.name .. "**\n"
 					end
-					-- loop for every pizza needed
-					for i=1,playerschoosing do
-						local chosen_playernum = P_RandomRange(1,#active_playernums) -- random entry in table
-						local chosen_player = active_playernums[chosen_playernum] -- get the chosen value in table
-						players[chosen_player].pizzaface = true
-						players[chosen_player].stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
-						chatprint("\x85*"..players[chosen_player].name.." has become a pizza!") 
-						if DiscordBot then
-							DiscordBot.Data.msgsrb2 = $ .. "- [" .. chosen_player .. "] **" .. players[chosen_player].name .. "**\n"
+				else
+					local active_playernums = {}
+					local playerschoosing = CV_PTSR.pizzacount.value
+					
+					if playerCount < playerschoosing then
+						playerschoosing = 1
+					end
+					if playerschoosing then
+						-- store every playernum
+						for player in players.iterate() do
+							if CV_PTSR.pizzachoosetype.value == 3 and player == mobj.player then
+								continue
+							end
+							if player.quittime then
+								player.spectator = true
+								continue
+							end
+							table.insert(active_playernums, #player)
+							
 						end
-						table.remove(active_playernums, chosen_playernum) -- so we dont repeat the pizza given
+						-- loop for every pizza needed
+						for i=1,playerschoosing do
+							local chosen_playernum = P_RandomRange(1,#active_playernums) -- random entry in table
+							local chosen_player = active_playernums[chosen_playernum] -- get the chosen value in table
+							players[chosen_player].pizzaface = true
+							players[chosen_player].stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
+							chatprint("\x85*"..players[chosen_player].name.." has become a pizza!") 
+							if DiscordBot then
+								DiscordBot.Data.msgsrb2 = $ .. "- [" .. chosen_player .. "] **" .. players[chosen_player].name .. "**\n"
+							end
+							table.remove(active_playernums, chosen_playernum) -- so we dont repeat the pizza given
+						end
 					end
 				end
 			end

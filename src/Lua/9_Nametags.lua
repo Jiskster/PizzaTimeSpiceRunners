@@ -85,8 +85,17 @@ hud.add( function(v, player, camera)
 		if not tmo or not tmo.valid then continue end
 		
 		if tmo.player and player == tmo.player then continue end
-
-		if (tmo.type ~= MT_PIZZA_ENEMY) then continue end
+		
+		if tmo.player and tmo.player.valid then
+			if not tmo.player.pizzaface then
+				continue
+			end
+		end
+		
+		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER) then
+			continue
+		end
+			
 		--if not tmo.player and not mobjinfo[tmo.type].npc_name then continue end
 
 		--how far away is the other mobj?
@@ -142,10 +151,7 @@ hud.add( function(v, player, camera)
 		local vpos = hudheight>>1 + FixedMul(hud_distance, tan(vangle) * realheight/height)
 
 		hpos = $ - 25*FU
-		local name = "NPC"
-		if tmo.player then
-			name = tmo.player.name
-		end
+		local name = "PIZZAFACE"
 		
 		local textcolor = SKINCOLOR_GREEN
 		local namecolor = SKINCOLOR_ORANGE

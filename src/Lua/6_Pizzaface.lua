@@ -37,7 +37,7 @@ function PTSR:PizzaCanTag(peppino, pizza)
 
 	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
 
-	if pizza.player and pizza.player.valid then 
+	if pizza.player and pizza.player.valid and pizza.player.pizzaface then 
 		if pizza.player.stuntime then return false end
 		if not L_ZCollide(peppino,pizza) then return false end
 		return true
@@ -53,6 +53,8 @@ addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
 	-- special: pizzaface
 	if not (toucher and toucher.valid) then return true end 
+	if special.pfstuntime then return true end
+
 	local player = toucher.player
 	if player and player.valid then
 		if not PTSR:PizzaCanTag(toucher, special) then return true end
@@ -80,7 +82,19 @@ end)
 
 addHook("MobjThinker", function(mobj)
 	if not PTSR.pizzatime then return end
-	
+	if mobj.pfstuntime then 
+		mobj.pfstuntime = $ - 1
+		if not mobj.pfstuntime then -- If we just got to 0
+			if not PTSR.showtime // hiiii adding onto this for showtime
+				PTSR.showtime = true
+				local anim = animationtable["pizzaface"]
+				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+				S_StartSound(nil, sfx_pizzah)
+			end
+		end
+		return 
+	end
+
 	local nearest_player 
 	
 	for player in players.iterate do
@@ -104,21 +118,24 @@ addHook("MobjThinker", function(mobj)
 				nearest_player.mo.x,
 				nearest_player.mo.y,
 				nearest_player.mo.z,
-				10*FRACUNIT,
+				8*FRACUNIT,
 				true)
 				
 		L_SpeedCap(mobj, 35*FRACUNIT)
 	else
-		L_SpeedCap(mobj, 0*FRACUNIT)
+		L_SpeedCap(mobj, 0)
 	end
 end, MT_PIZZA_ENEMY)
 
 addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
 	mobj.spriteyscale = $ / 2
+
+	mobj.pfstuntime = CV_PTSR.aistuntime.value
 end, MT_PIZZA_ENEMY)
 
 --Pizza Face Thinker
+
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
 	player.stuntime = $ or 0 
@@ -139,6 +156,7 @@ addHook("PlayerThink", function(player)
 			player.mo.momx = 0
 			player.mo.momy = 0
 			player.mo.momz = 0
+			L_SpeedCap(player.mo, 0)
 			-- # No Momentum # --
 			--player.pflags = $|PF_FULLSTASIS
 			if not player.stuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
@@ -190,8 +208,7 @@ addHook("PlayerThink", function(player)
 			player.mo.colorized = true
 		end
 		
-		
-		
+	
 		if not (leveltime % 3) and player.pizzamask and player.pizzamask.valid and player.speed > FRACUNIT then
 			if (player ~= displayplayer) or (camera.chase and player == displayplayer) then
 				local colors = pfmaskData[player.PTSR_pizzastyle].trails
@@ -209,6 +226,7 @@ addHook("PlayerThink", function(player)
 			end
 			player.redgreen = not player.redgreen
 		end
+
 		if player.exiting or PTSR.quitting then
 			player.pizzacharge = 0
 		end

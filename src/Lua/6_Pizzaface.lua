@@ -1,30 +1,18 @@
-function PTSR:PizzaCanTag(peppino, pizza)
-	if not self.pizzatime then return false end
-	
-	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
-	
-	if not (pizza.player and pizza.valid and pizza.player.valid) 
-	or (pizza.player and not pizza.player.pizzaface) then return false end -- only continue if "pizza" is pizzaface
-	
-	if pizza.player.stuntime then return false end
-	
-	if peppino.player.exiting then return false end
-	
-	if peppino.player.powers[pw_invulnerability] then return false end
-	
-	if peppino.player.powers[pw_flashing] then return false end
-	
-	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
-	
-	if not L_ZCollide(peppino,pizza) then return false end
-	
-	return true
-end
+freeslot("MT_PIZZA_ENEMY") -- For AI
 
- -- taken from the original since barely anything needs to be changed
-addHook("MobjCollide", function(peppino, pizza)	
-	if not PTSR:PizzaCanTag(peppino, pizza) then return end
-	--refactor later
+-- For AI
+mobjinfo[MT_PIZZA_ENEMY] = {
+	doomednum = -1,
+	spawnstate = S_PIZZAFACE,
+	spawnhealth = 1000,
+	deathstate = S_NULL,
+	radius = 32*FU,
+	height = 96*FU,
+	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL
+}
+
+
+function PTSR:PizzaCollision(peppino, pizza)
 	if PTSR.gamemode == 1 then
 		P_KillMobj(peppino,pizza)
 	elseif PTSR.gamemode == 2 then
@@ -34,6 +22,51 @@ addHook("MobjCollide", function(peppino, pizza)
 		end
 		peppino.player.pizzaface = true
 	end
+end
+
+function PTSR:PizzaCanTag(peppino, pizza)
+	if not self.pizzatime then return false end
+
+	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
+
+	if peppino.player.exiting then return false end
+
+	if peppino.player.powers[pw_invulnerability] then return false end
+
+	if peppino.player.powers[pw_flashing] then return false end
+
+	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
+
+	if pizza.player and pizza.player.valid then 
+		if pizza.player.stuntime then return false end
+		if not L_ZCollide(peppino,pizza) then return false end
+		return true
+	elseif pizza.type == MT_PIZZA_ENEMY then
+		return true
+	end
+
+	return false
+end
+
+-- Player Touches AI
+addHook("TouchSpecial", function(special, toucher)
+	-- toucher: player
+	-- special: pizzaface
+	if not (toucher and toucher.valid) then return true end 
+	local player = toucher.player
+	if player and player.valid then
+		if not PTSR:PizzaCanTag(toucher, special) then return true end
+		
+		PTSR:PizzaCollision(toucher, special)
+	end
+	return true
+end, MT_PIZZA_ENEMY)
+
+-- Player touches human pizzaface
+addHook("MobjCollide", function(peppino, pizza)	
+	if not PTSR:PizzaCanTag(peppino, pizza) then return end
+
+	PTSR:PizzaCollision(peppino, pizza)
 end, MT_PLAYER)
 
 
@@ -44,6 +77,22 @@ addHook("PlayerCmd", function (player, cmd)
 		-- dont do sidemove cuz face swapping
 	end
 end)
+
+addHook("MobjThinker", function(mobj)
+	if not PTSR.pizzatime then return end
+	
+	local host = players[0]
+	
+	if host and host.valid and host.mo and host.mo.valid then
+		P_FlyTo(mobj,host.mo.x,host.mo.y,host.mo.z,5*FRACUNIT,true)
+		L_SpeedCap(mobj, 40*FRACUNIT)
+	end
+end, MT_PIZZA_ENEMY)
+
+addHook("MobjSpawn", function(mobj)
+	mobj.spritexscale = $ / 2
+	mobj.spriteyscale = $ / 2
+end, MT_PIZZA_ENEMY)
 
 --Pizza Face Thinker
 addHook("PlayerThink", function(player)

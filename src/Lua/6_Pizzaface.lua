@@ -114,14 +114,23 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	if nearest_player and nearest_player.valid and nearest_player.mo and nearest_player.mo.valid and nearest_player.mo.health then
+		local speed = 8*FRACUNIT
+		local speedcap = 35*FRACUNIT
+
+		if PTSR.timeover then
+			speed = $ * 2
+			speedcap = $ * 2
+		end
+
+
 		P_FlyTo(mobj,
 				nearest_player.mo.x,
 				nearest_player.mo.y,
 				nearest_player.mo.z,
-				8*FRACUNIT,
+				speed,
 				true)
 				
-		L_SpeedCap(mobj, 35*FRACUNIT)
+		L_SpeedCap(mobj, speedcap)
 	else
 		L_SpeedCap(mobj, 0)
 	end
@@ -195,7 +204,7 @@ addHook("PlayerThink", function(player)
 		
 		
 
-		if (not player.pizzamask or not player.pizzamask.valid) and CV_PTSR.pizzamask.value then
+		if (not player.pizzamask or not player.pizzamask.valid) then
 			player.pizzamask = P_SpawnMobj(player.realmo.x,player.realmo.y,player.realmo.z,MT_PIZZAMASK)
 			player.pizzamask.targetplayer = player --dream reference
 			player.pizzamask.scale = pfmaskData[1].scale

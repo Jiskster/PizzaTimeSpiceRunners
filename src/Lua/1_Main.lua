@@ -214,7 +214,7 @@ PTSR.ReturnPizzaTimeMusic = function()
 	songdata["Gluten Getaway"] = 'GLUWAY'
 	songdata["Pasta La Vista"] = 'PASTVI'
 
-	if PTSR.pizzatime then
+	if PTSR.pizzatime and consoleplayer and consoleplayer.valid then
 		if consoleplayer.lapsdid == 2 then
 			song = "The Death That I Deservioli"
 		elseif consoleplayer.lapsdid == 3 then
@@ -232,7 +232,7 @@ PTSR.ReturnPizzaTimeMusic = function()
 
 	// modding check here
 
-	return songdata[song]
+	return songdata[song] or 'PIZTIM'
 end
 
 -- doesnt actually trigger or increment lap, just tps you

@@ -294,10 +294,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		if DiscordBot then
 			DiscordBot.Data.msgsrb2 = $ .. ":pizza: Pizza Time has started! Pizzas:\n"
 		end
+		
 		PTSR.pizzatime = true
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
-
 
 		if CV_PTSR.allowgamemodes.value then
 			PTSR.gamemode = P_RandomRange(1,#PTSR.gamemode_list) -- gamemode rng
@@ -313,6 +313,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
+		
+		local newpizaface = P_SpawnMobj(0,0,0, MT_PIZZA_ENEMY)
+		P_SetOrigin(newpizaface, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
+		
 		thesign.angle = PTSR.spawn_location.angle
 		
 		if thesign.subsector then

@@ -81,11 +81,33 @@ end)
 addHook("MobjThinker", function(mobj)
 	if not PTSR.pizzatime then return end
 	
-	local host = players[0]
+	local nearest_player 
 	
-	if host and host.valid and host.mo and host.mo.valid then
-		P_FlyTo(mobj,host.mo.x,host.mo.y,host.mo.z,5*FRACUNIT,true)
-		L_SpeedCap(mobj, 40*FRACUNIT)
+	for player in players.iterate do
+		if player.mo and player.mo.valid and not player.spectator and not player.pizzaface then
+			if not nearest_player then
+				nearest_player = player
+			else
+				if player == nearest_player then continue end 
+				
+				local dist_nptopizza = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
+				local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
+				if dist_newplayertopizza < dist_nptopizza then
+					nearest_player = player
+				end
+			end
+		end
+	end
+	
+	if nearest_player and nearest_player.valid and nearest_player.mo and nearest_player.mo.valid and nearest_player.mo.health then
+		P_FlyTo(mobj,
+				nearest_player.mo.x,
+				nearest_player.mo.y,
+				nearest_player.mo.z,
+				10*FRACUNIT,
+				true)
+				
+		L_SpeedCap(mobj, 35*FRACUNIT)
 	end
 end, MT_PIZZA_ENEMY)
 

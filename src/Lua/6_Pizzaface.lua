@@ -108,6 +108,8 @@ addHook("MobjThinker", function(mobj)
 				true)
 				
 		L_SpeedCap(mobj, 35*FRACUNIT)
+	else
+		L_SpeedCap(mobj, 0*FRACUNIT)
 	end
 end, MT_PIZZA_ENEMY)
 

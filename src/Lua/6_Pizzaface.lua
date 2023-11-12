@@ -1,3 +1,77 @@
+freeslot("MT_PIZZA_ENEMY") -- For AI
+
+-- For AI
+mobjinfo[MT_PIZZA_ENEMY] = {
+	doomednum = -1,
+	spawnstate = S_PIZZAFACE,
+	spawnhealth = 1000,
+	deathstate = S_NULL,
+	radius = 32*FU,
+	height = 96*FU,
+	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL
+}
+
+
+function PTSR:PizzaCollision(peppino, pizza)
+	if PTSR.gamemode == 1 then
+		P_KillMobj(peppino,pizza)
+	elseif PTSR.gamemode == 2 then
+		chatprint("\x83*"..peppino.player.name.."\x82 has been infected.")
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. "[" .. #peppino.player .. "]:pizza: **" .. peppino.player.name .. "** has been infected!\n"
+		end
+		peppino.player.pizzaface = true
+	end
+end
+
+function PTSR:PizzaCanTag(peppino, pizza)
+	if not self.pizzatime then return false end
+
+	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
+
+	if peppino.player.exiting then return false end
+
+	if peppino.player.powers[pw_invulnerability] then return false end
+
+	if peppino.player.powers[pw_flashing] then return false end
+
+	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
+
+	if pizza.player and pizza.player.valid and pizza.player.pizzaface then 
+		if pizza.player.stuntime then return false end
+		if not L_ZCollide(peppino,pizza) then return false end
+		return true
+	elseif pizza.type == MT_PIZZA_ENEMY then
+		return true
+	end
+
+	return false
+end
+
+-- Player Touches AI
+addHook("TouchSpecial", function(special, toucher)
+	-- toucher: player
+	-- special: pizzaface
+	if not (toucher and toucher.valid) then return true end 
+	if special.pfstuntime then return true end
+
+	local player = toucher.player
+	if player and player.valid then
+		if not PTSR:PizzaCanTag(toucher, special) then return true end
+		
+		PTSR:PizzaCollision(toucher, special)
+	end
+	return true
+end, MT_PIZZA_ENEMY)
+
+-- Player touches human pizzaface
+addHook("MobjCollide", function(peppino, pizza)	
+	if not PTSR:PizzaCanTag(peppino, pizza) then return end
+
+	PTSR:PizzaCollision(peppino, pizza)
+end, MT_PLAYER)
+
+
 addHook("PlayerCmd", function (player, cmd)
 	if player.pizzaface and player.stuntime then
 		cmd.buttons = 0
@@ -6,8 +80,62 @@ addHook("PlayerCmd", function (player, cmd)
 	end
 end)
 
+addHook("MobjThinker", function(mobj)
+	if not PTSR.pizzatime then return end
+	if mobj.pfstuntime then 
+		mobj.pfstuntime = $ - 1
+		if not mobj.pfstuntime then -- If we just got to 0
+			if not PTSR.showtime // hiiii adding onto this for showtime
+				PTSR.showtime = true
+				local anim = animationtable["pizzaface"]
+				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+				S_StartSound(nil, sfx_pizzah)
+			end
+		end
+		return 
+	end
+
+	local nearest_player 
+	
+	for player in players.iterate do
+		if player.mo and player.mo.valid and not player.spectator and not player.pizzaface then
+			if not nearest_player then
+				nearest_player = player
+			else
+				if player == nearest_player then continue end 
+				
+				local dist_nptopizza = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
+				local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
+				if dist_newplayertopizza < dist_nptopizza then
+					nearest_player = player
+				end
+			end
+		end
+	end
+	
+	if nearest_player and nearest_player.valid and nearest_player.mo and nearest_player.mo.valid and nearest_player.mo.health then
+		P_FlyTo(mobj,
+				nearest_player.mo.x,
+				nearest_player.mo.y,
+				nearest_player.mo.z,
+				8*FRACUNIT,
+				true)
+				
+		L_SpeedCap(mobj, 35*FRACUNIT)
+	else
+		L_SpeedCap(mobj, 0)
+	end
+end, MT_PIZZA_ENEMY)
+
+addHook("MobjSpawn", function(mobj)
+	mobj.spritexscale = $ / 2
+	mobj.spriteyscale = $ / 2
+
+	mobj.pfstuntime = CV_PTSR.aistuntime.value
+end, MT_PIZZA_ENEMY)
 
 --Pizza Face Thinker
+
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
 	player.stuntime = $ or 0 
@@ -28,6 +156,7 @@ addHook("PlayerThink", function(player)
 			player.mo.momx = 0
 			player.mo.momy = 0
 			player.mo.momz = 0
+			L_SpeedCap(player.mo, 0)
 			-- # No Momentum # --
 			--player.pflags = $|PF_FULLSTASIS
 			if not player.stuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
@@ -79,8 +208,7 @@ addHook("PlayerThink", function(player)
 			player.mo.colorized = true
 		end
 		
-		
-		
+	
 		if not (leveltime % 3) and player.pizzamask and player.pizzamask.valid and player.speed > FRACUNIT then
 			if (player ~= displayplayer) or (camera.chase and player == displayplayer) then
 				local colors = pfmaskData[player.PTSR_pizzastyle].trails
@@ -98,6 +226,7 @@ addHook("PlayerThink", function(player)
 			end
 			player.redgreen = not player.redgreen
 		end
+
 		if player.exiting or PTSR.quitting then
 			player.pizzacharge = 0
 		end
@@ -164,13 +293,6 @@ addHook("PlayerThink", function(player)
 			pmo.x-findrange,pmo.x+findrange,
 			pmo.y-findrange,pmo.y+findrange)
 		end
-		--print(player.pizzacharge)
-		/*
-		if not p.mo.colorized or p.mo.color != SKINCOLOR_ORANGE
-			p.mo.color = SKINCOLOR_ORANGE
-			p.mo.colorized = true		
-		end
-		*/
 	end
 end)
 
@@ -200,28 +322,5 @@ addHook("ShouldDamage", function(target, inflictor)
 		return false
 	end
 end)
- -- taken from the original since barely anything needs to be changed
-addHook("MobjCollide", function(mo1, mo2)
-	if not PTSR.pizzatime then return end
-	if not (mo1.player and mo1.valid and mo1.player.valid) then return end
-	if not (mo2.player and mo2.valid and mo2.player.valid) or (mo2.player and not mo2.player.pizzaface) then return end -- only continue if mo2 is pizzaface
-	if mo2.player.stuntime then return end
-	if mo1.player.exiting then return end
-	if mo1.player.powers[pw_invulnerability] then return end
-	if mo1.player.powers[pw_flashing] then return end
-	if mo1.player.pizzaface then return end -- lets not tag our buddies!!
-	if not L_ZCollide(mo1,mo2) then return end
-	
-	--refactor later
-	if PTSR.gamemode == 1 then
-		P_KillMobj(mo1,mo2)
-	elseif PTSR.gamemode == 2 then
-		chatprint("\x83*"..mo1.player.name.."\x82 has been infected.")
-		if DiscordBot then
-			DiscordBot.Data.msgsrb2 = $ .. "[" .. #mo1.player .. "]:pizza: **" .. mo1.player.name .. "** has been infected!\n"
-		end
-		mo1.player.pizzaface = true
-	end
-end, MT_PLAYER)
 
 

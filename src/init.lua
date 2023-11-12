@@ -33,8 +33,6 @@ states[S_PILLARJOHN_PAIN] = {
     nextstate = S_PILLARJOHN_PAIN
 }
 
-
-
 rawset(_G, "FUNC_PTSR", {}) -- functions
 
 freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "SPR_PZAT", "SPR_CONB")
@@ -124,3 +122,4 @@ dofile "6_Pizzaface.lua"
 dofile "7_HUDHandle.lua"
 --dofile "8_RandomEvents.lua"
 dofile "8_CustomDiscordLeaderboard.lua"
+dofile "9_Nametags.lua"

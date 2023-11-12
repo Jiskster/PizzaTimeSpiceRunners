@@ -177,14 +177,14 @@ rawset(_G, "G_TicsToMTIME", function(tics, hascents)
 	end
 end)
 
-rawset(_G, "P_FlyTo", function(mo, fx, fy, fz, sped, addques) --A very useful command honestly.
+--this is really simple, no other way to make this
+rawset(_G, "P_FlyTo", function(mo, fx, fy, fz, sped, addques)
     if mo.valid
         local flyto = P_AproxDistance(P_AproxDistance(fx - mo.x, fy - mo.y), fz - mo.z)
         if flyto < 1
             flyto = 1
         end
-        --local anglesucc = R_PointToAngle2(mo.x, mo.y, fx, fy)
-        
+		
         if addques
             mo.momx = $ + FixedMul(FixedDiv(fx - mo.x, flyto), sped)
             mo.momy = $ + FixedMul(FixedDiv(fy - mo.y, flyto), sped)
@@ -195,4 +195,24 @@ rawset(_G, "P_FlyTo", function(mo, fx, fy, fz, sped, addques) --A very useful co
             mo.momz = FixedMul(FixedDiv(fz - mo.z, flyto), sped)
         end    
     end    
+end)
+
+rawset(_G, "L_DoBrakes", function(mo,factor)
+	mo.momx = FixedMul($,factor)
+	mo.momy = FixedMul($,factor)
+	mo.momz = FixedMul($,factor)
+end)
+
+rawset(_G, "L_SpeedCap", function(mo,limit,factor)
+	local spd_xy = R_PointToDist2(0,0,mo.momx,mo.momy)
+	local spd, ang =
+		R_PointToDist2(0,0,spd_xy,mo.momz),
+		R_PointToAngle2(0,0,mo.momx,mo.momy)
+	if spd > limit
+		if factor == nil
+			factor = FixedDiv(limit,spd)
+		end
+		L_DoBrakes(mo,factor)
+		return factor
+	end
 end)

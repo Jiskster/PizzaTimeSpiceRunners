@@ -221,11 +221,18 @@ CV_PTSR.screams = CV_RegisterVar({
 })
 
 
-CV_PTSR.pizzamask = CV_RegisterVar({
-	name = "PTSR_pizzamask",
+CV_PTSR.aimode = CV_RegisterVar({
+	name = "PTSR_aimode",
 	defaultvalue = "on",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 
+})
+
+CV_PTSR.aistuntime = CV_RegisterVar({
+	name = "PTSR_aistuntime",
+	defaultvalue = "350",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
 CV_PTSR.pizzastyle = CV_RegisterVar({

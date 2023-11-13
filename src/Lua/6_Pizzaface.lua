@@ -100,7 +100,7 @@ addHook("MobjThinker", function(mobj)
 	local nearest_player 
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.mo.heath and not player.exiting 
+		if player.mo and player.mo.valid and player.mo.health and not player.exiting 
 		and not player.spectator and not player.quittime and not player.pizzaface then
 			if not nearest_player then
 				nearest_player = player

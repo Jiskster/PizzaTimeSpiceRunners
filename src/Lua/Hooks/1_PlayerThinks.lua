@@ -75,12 +75,17 @@ addHook("ThinkFrame", do
 			PTSR.timeleft = $ - 1
 			if not PTSR.timeleft then
 				PTSR.timeover = true
-				local timeover_text = "\x8F*Overtime!"
+				local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
 				chatprint(timeover_text)
 				
 				if DiscordBot then
 					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
 				end
+
+				local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+				PTSR.end_location.y*FRACUNIT,
+				PTSR.end_location.z*FRACUNIT, 
+				MT_PIZZA_ENEMY)
 			end
 		end
 	end 

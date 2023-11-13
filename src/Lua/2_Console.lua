@@ -235,6 +235,20 @@ CV_PTSR.aistuntime = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
+CV_PTSR.aispeed = CV_RegisterVar({
+	name = "PTSR_aispeed",
+	defaultvalue = "8",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
+})
+
+CV_PTSR.aispeedcap = CV_RegisterVar({
+	name = "PTSR_aispeedcap",
+	defaultvalue = "30",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
+})
+
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",

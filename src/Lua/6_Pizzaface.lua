@@ -119,8 +119,8 @@ addHook("MobjThinker", function(mobj)
 	if nearest_player and nearest_player.valid and nearest_player.mo 
 	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.exiting
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
-		local speed = 6*FRACUNIT
-		local speedcap = 35*FRACUNIT
+		local speed = CV_PTSR.aispeed.value
+		local speedcap = CV_PTSR.aispeedcap.value
 
 		if PTSR.timeover then
 			speed = $ * 2

@@ -88,7 +88,9 @@ addHook("MobjThinker", function(mobj)
 			if not PTSR.showtime // hiiii adding onto this for showtime
 				PTSR.showtime = true
 				local anim = animationtable["pizzaface"]
-				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+				if anim then
+					anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+				end
 				S_StartSound(nil, sfx_pizzah)
 			end
 		end
@@ -98,7 +100,8 @@ addHook("MobjThinker", function(mobj)
 	local nearest_player 
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and not player.spectator and not player.pizzaface then
+		if player.mo and player.mo.valid and player.mo.heath and not player.exiting 
+		and not player.spectator and not player.quittime and not player.pizzaface then
 			if not nearest_player then
 				nearest_player = player
 			else
@@ -113,8 +116,10 @@ addHook("MobjThinker", function(mobj)
 		end
 	end
 	
-	if nearest_player and nearest_player.valid and nearest_player.mo and nearest_player.mo.valid and nearest_player.mo.health then
-		local speed = 8*FRACUNIT
+	if nearest_player and nearest_player.valid and nearest_player.mo 
+	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.exiting
+	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
+		local speed = 6*FRACUNIT
 		local speedcap = 35*FRACUNIT
 
 		if PTSR.timeover then
@@ -176,7 +181,9 @@ addHook("PlayerThink", function(player)
 				if not PTSR.showtime // hiiii adding onto this for showtime
 					PTSR.showtime = true
 					local anim = animationtable['pizzaface']
-					anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+					if anim then
+						anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+					end
 				end
 			elseif PTSR.pizzatime_tics < TICRATE*CV_PTSR.pizzatimestun.value+20 then
 				player.mo.momz = P_MobjFlip(player.mo)*-FU

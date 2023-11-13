@@ -178,8 +178,8 @@ hud.add( function(v, player, camera)
 		local trans = min(9, (((distedit * 10) >> 16) / distlimit)) * V_10TRANS
 		
 		if name then
-			local crm = consoleplayer.realmo
-			local pizza_dist = R_PointToDist2(crm.x,crm.y,tmo.x,tmo.y)/FU
+			local dsm = displayplayer.realmo
+			local pizza_dist = R_PointToDist2(dsm.x,dsm.y,tmo.x,tmo.y)/FU
 			customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, FRACUNIT/4, namecolor)
 			customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), pizza_dist.."m", "PTFNT", trans, namefont, FRACUNIT/4, SKINCOLOR_WHITE)
 		end

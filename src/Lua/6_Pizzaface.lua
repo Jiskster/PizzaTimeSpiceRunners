@@ -6,8 +6,8 @@ mobjinfo[MT_PIZZA_ENEMY] = {
 	spawnstate = S_PIZZAFACE,
 	spawnhealth = 1000,
 	deathstate = S_NULL,
-	radius = 32*FU,
-	height = 96*FU,
+	radius = 20*FU,
+	height = 64*FU,
 	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL
 }
 
@@ -48,6 +48,53 @@ function PTSR:PizzaCanTag(peppino, pizza)
 	return false
 end
 
+-- Randomly TPS to a peppino, check for stuntime manually
+function PTSR:RNGPizzaTP(pizza, uselaugh)
+	local peppinos = {} -- temp list of chosen players, or "peppinos" in this case.
+
+	for peppino in players.iterate() do
+		if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and 
+		not peppino.spectator and not peppino.exiting and (peppino.playerstate == PST_LIVE)
+		and not peppino.quittime then 
+			table.insert(peppinos, #peppino)
+		end
+	end
+	
+	local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
+	local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
+	
+	if peppinos ~= {} then
+		if pizza.player then -- If Real Player
+			local player = pizza.player 
+			
+			player.pizzacharge = 0
+			if not PTSR.timeover then
+				player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value*TICRATE
+				player.stuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+			else
+				player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value*TICRATE)/3
+				player.stuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
+			end
+		
+			P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
+			if uselaugh == true then
+				S_StartSound(player.mo, pfmaskData[player.PTSR_pizzastyle].sound)
+			end
+		else -- If AI Pizza Face
+			if not PTSR.timeover then
+				pizza.pfstuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+			else
+				pizza.pfstuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
+			end
+		
+			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
+			if uselaugh == true then
+				S_StartSound(pizza, sfx_pizzah)
+			end
+		end
+	end
+end
+
 -- Player Touches AI
 addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
@@ -80,12 +127,14 @@ addHook("PlayerCmd", function (player, cmd)
 	end
 end)
 
+-- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
 	local nearest_player
 	
 	if not PTSR.pizzatime then return end
 	if mobj.pfstuntime then 
 		mobj.pfstuntime = $ - 1
+		L_SpeedCap(mobj, 0) -- Freeze! You peasant food!
 		if not mobj.pfstuntime then -- If we just got to 0
 			if not PTSR.showtime // hiiii adding onto this for showtime
 				PTSR.showtime = true
@@ -127,13 +176,10 @@ addHook("MobjThinker", function(mobj)
 			speed = $ * 2
 			speedcap = $ * 2
 		end
-		if dist > 5000*FRACUNIT then
-			--PTSR:RNGPizzaTP(mobj)
-		elseif dist < 110*FRACUNIT and abs(nearest_player.mo.z - mobj.z) < 400*FRACUNIT then
-			speed = FixedDiv($, 3*FRACUNIT)
-			if nearest_player.speed < 15*FRACUNIT then
-				speed = FixedDiv($, 6*FRACUNIT)
-				speedcap = $ - 10*FRACUNIT
+		
+		if dist > CV_PTSR.aileash.value then
+			if not mobj.pfstuntime then
+				PTSR:RNGPizzaTP(mobj, true)
 			end
 		end
 		
@@ -260,32 +306,7 @@ addHook("PlayerThink", function(player)
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
 			else
-				local peppinos = {} -- temp list of chosen players, or "peppinos" in this case.
-
-				-- we will have "peppino" as the alias because conflicts
-				for peppino in players.iterate() do
-					if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and 
-					not peppino.spectator and not peppino.exiting and (peppino.playerstate == PST_LIVE)
-					and not peppino.quittime then 
-						table.insert(peppinos, #peppino)
-					end
-				end
-				local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
-				local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
-				if peppinos ~= {} then
-					player.pizzacharge = 0
-					if not PTSR.timeover then
-						player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value*TICRATE
-						player.stuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
-					else
-						player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value*TICRATE)/3
-						player.stuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
-					end
-				
-					P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
-					S_StartSound(player.mo, pfmaskData[player.PTSR_pizzastyle].sound)
-				end
-
+				PTSR:RNGPizzaTP(player, true) -- Tp to random active player
 			end
 		elseif player.pizzacharge > 0 then
 			player.pizzacharge = $ - 1

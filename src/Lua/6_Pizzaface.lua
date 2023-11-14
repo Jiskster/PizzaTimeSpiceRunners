@@ -81,6 +81,8 @@ addHook("PlayerCmd", function (player, cmd)
 end)
 
 addHook("MobjThinker", function(mobj)
+	local nearest_player
+	
 	if not PTSR.pizzatime then return end
 	if mobj.pfstuntime then 
 		mobj.pfstuntime = $ - 1
@@ -96,8 +98,6 @@ addHook("MobjThinker", function(mobj)
 		end
 		return 
 	end
-
-	local nearest_player 
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid and player.mo.health and not player.exiting 
@@ -121,19 +121,28 @@ addHook("MobjThinker", function(mobj)
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
 		local speedcap = CV_PTSR.aispeedcap.value
-
+		local dist = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
+		
 		if PTSR.timeover then
 			speed = $ * 2
 			speedcap = $ * 2
 		end
-
-
-		P_FlyTo(mobj,
-				nearest_player.mo.x,
-				nearest_player.mo.y,
-				nearest_player.mo.z,
-				speed,
-				true)
+		if dist > 5000*FRACUNIT then
+			--PTSR:RNGPizzaTP(mobj)
+		elseif dist < 110*FRACUNIT and abs(nearest_player.mo.z - mobj.z) < 400*FRACUNIT then
+			speed = FixedDiv($, 3*FRACUNIT)
+			if nearest_player.speed < 15*FRACUNIT then
+				speed = FixedDiv($, 6*FRACUNIT)
+				speedcap = $ - 10*FRACUNIT
+			end
+		end
+		
+		-- t in tx means "player that we're TARGETING"
+		local tx = nearest_player.mo.x
+		local ty = nearest_player.mo.y
+		local tz = nearest_player.mo.z
+		
+		P_FlyTo(mobj, tx, ty, tz, speed, true)
 				
 		L_SpeedCap(mobj, speedcap)
 	else

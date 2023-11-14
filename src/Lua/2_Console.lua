@@ -181,16 +181,16 @@ CV_PTSR.pizzacount = CV_RegisterVar({
 
 CV_PTSR.pizzatpcooldown = CV_RegisterVar({
 	name = "PTSR_pizzatpcooldown",
-	defaultvalue = "5",
+	defaultvalue = "175", -- 5 Seconds
 	flags = CV_NETVAR,
-	PossibleValue = CV_Unsigned, 
+	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
 CV_PTSR.pizzatpstuntime = CV_RegisterVar({
 	name = "PTSR_pizzatpstuntime",
-	defaultvalue = "2",
+	defaultvalue = "70",
 	flags = CV_NETVAR,
-	PossibleValue = CV_Unsigned, 
+	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
 CV_PTSR.nomusic = CV_RegisterVar({
@@ -235,6 +235,13 @@ CV_PTSR.aistuntime = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
+CV_PTSR.aitpstuntime = CV_RegisterVar({
+	name = "PTSR_aitpstuntime",
+	defaultvalue = "50",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 525}, 
+})
+
 CV_PTSR.aispeed = CV_RegisterVar({
 	name = "PTSR_aispeed",
 	defaultvalue = "6",
@@ -244,14 +251,14 @@ CV_PTSR.aispeed = CV_RegisterVar({
 
 CV_PTSR.aispeedcap = CV_RegisterVar({
 	name = "PTSR_aispeedcap",
-	defaultvalue = "25",
+	defaultvalue = "27",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
 })
 
 CV_PTSR.aileash = CV_RegisterVar({
 	name = "PTSR_aileash",
-	defaultvalue = "4000",
+	defaultvalue = "5200",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })

@@ -69,11 +69,11 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			
 			player.pizzacharge = 0
 			if not PTSR.timeover then
-				player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value*TICRATE
-				player.stuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+				player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value
+				player.stuntime = CV_PTSR.pizzatpstuntime.value
 			else
-				player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value*TICRATE)/3
-				player.stuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
+				player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value)/3
+				player.stuntime = (CV_PTSR.pizzatpstuntime.value)/3
 			end
 		
 			P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
@@ -82,9 +82,9 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			end
 		else -- If AI Pizza Face
 			if not PTSR.timeover then
-				pizza.pfstuntime = CV_PTSR.pizzatpstuntime.value*TICRATE
+				pizza.pfstuntime = CV_PTSR.aitpstuntime.value
 			else
-				pizza.pfstuntime = (CV_PTSR.pizzatpstuntime.value*TICRATE)/3
+				pizza.pfstuntime = (CV_PTSR.aitpstuntime.value)/3
 			end
 		
 			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)

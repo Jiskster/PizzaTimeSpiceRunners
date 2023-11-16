@@ -92,7 +92,7 @@ hud.add( function(v, player, camera)
 			end
 		end
 		
-		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER) then
+		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER or tmo.type == MT_PT_DEATHRING) then
 			continue
 		end
 			
@@ -151,10 +151,20 @@ hud.add( function(v, player, camera)
 		local vpos = hudheight>>1 + FixedMul(hud_distance, tan(vangle) * realheight/height)
 
 		hpos = $ - 25*FU
-		local name = "PIZZAFACE"
-		
+		local name = "NPC"
 		local textcolor = SKINCOLOR_GREEN
 		local namecolor = SKINCOLOR_ORANGE
+		local text_size = FRACUNIT/4
+		
+		if tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER then
+			name = "PIZZAFACE"
+		elseif tmo.type == MT_PT_DEATHRING then
+			name = "DEATH RING"
+			local text_size = FRACUNIT/32
+			namecolor = SKINCOLOR_GREEN
+		end
+		
+
 
 		local namefont = "fixed-center"
 		local ringfont = "fixed-center"
@@ -179,9 +189,12 @@ hud.add( function(v, player, camera)
 		
 		if name then
 			local dsm = displayplayer.realmo
-			local pizza_dist = R_PointToDist2(dsm.x,dsm.y,tmo.x,tmo.y)/FU
-			customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, FRACUNIT/4, namecolor)
-			customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), pizza_dist.."m", "PTFNT", trans, namefont, FRACUNIT/4, SKINCOLOR_WHITE)
+			local obj_dist = R_PointToDist2(dsm.x,dsm.y,tmo.x,tmo.y)/FU
+			if tmo.type == MT_PT_DEATHRING and tmo.rings_kept then
+				name = $ + "["..tostring(tmo.rings_kept).."x]"
+			end
+			customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, text_size, namecolor)
+			customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
 		end
 		--v.drawString(hpos, vpos, name, nameflags|trans|V_ALLOWLOWERCASE, namefont)
 		--v.drawString(hpos, vpos+(lineheight*FRACUNIT), health, rflags|trans|V_ALLOWLOWERCASE, ringfont)

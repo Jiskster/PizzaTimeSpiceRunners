@@ -47,9 +47,14 @@ addHook("MobjLineCollide", function(mobj, line)
 			end
 
 			if player.lapsdid ~= nil then
-				P_AddPlayerScore(player, (player.lapsdid*777) + (player.rings*13) ) -- Bonus!
+				local lapbonus = (player.lapsdid*777)
+				local ringbonus = (player.rings*13) 
+				
+				P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
+				CONS_Printf(player, "** Lap "..player.lapsdid.." bonuses **")
+				CONS_Printf(player, "* "..lapbonus.." point lap bonus!")
+				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
 			end
-			
 		end
 	end
 end, MT_PLAYER)

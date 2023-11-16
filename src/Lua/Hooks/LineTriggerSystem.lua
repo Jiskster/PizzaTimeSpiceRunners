@@ -38,6 +38,7 @@ addHook("MobjLineCollide", function(mobj, line)
 			end
 			
 			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
+			
 			P_DoPlayerExit(player)
 			
 			chatprint(lapstring, true)
@@ -46,7 +47,7 @@ addHook("MobjLineCollide", function(mobj, line)
 			end
 
 			if player.lapsdid ~= nil then
-				P_AddPlayerScore(player, player.lapsdid*2500)
+				P_AddPlayerScore(player, (player.lapsdid*777) + (player.rings*13) ) -- Bonus!
 			end
 			
 		end

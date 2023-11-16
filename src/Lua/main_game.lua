@@ -198,9 +198,10 @@ local function InitMap2()
 		-- INCREMENT OVER --
 		ResetPlayerVars(player)	
 	end
+	
 	PTSR.dynamic_maxlaps = playercount*2
 	
-	PTSR.maxrankpoints = PTSR.GetRingCount()*1500
+	PTSR.maxrankpoints = PTSR.GetRingCount()*150
 end
 
 PTSR.ReturnPizzaTimeMusic = function()
@@ -254,7 +255,6 @@ PTSR.StartNewLap = function(mobj)
 
 	if not player.pizzaface then
 		PTSR.LapTP(player, true)
-		//player.lapsdid = $+1
 
 		S_StartSound(nil, sfx_lap2, player)
 		
@@ -264,12 +264,14 @@ PTSR.StartNewLap = function(mobj)
 		
 		player.lapsdid = $ + 1
 		PTSR.laps = $ + 1
-		/*
+		
+		
+		
+		/* Unused code idk what tf this is for
 		if player.lapsdid > PTSR.laps
 			PTSR.laps = player.lapsdid
 		end
 		*/
-		
 		
 		-- Elfilin support
 		

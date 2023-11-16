@@ -99,27 +99,26 @@ rawset(_G, "pfmaskData", {
 	}
 })
 
-dofile "HUD Animation/0_Init.lua"
-dofile "HUD Animation/1_UpdatePerFrame.lua"
+dofile "HUD Animation/Init.lua"
+dofile "HUD Animation/UpdatePerFrame.lua"
 
-dofile "0_customhudlib.lua"
+dofile "customhudlib.lua"
 
 customhud.SetupFont("PTFNT", -1, 4)
 
-dofile "1_Main.lua"
+dofile "main_game.lua"
 
-dofile "2_Console.lua"
+dofile "consolethings.lua"
 
-dofile "Hooks/1_PlayerThinks.lua"
-dofile "Hooks/2_PlayerDeath.lua"
-dofile "Hooks/3_PlayerTweaks.lua"
-dofile "Hooks/4_LineTriggerSystem.lua"
+dofile "Hooks/PlayerThinks.lua"
+dofile "Hooks/PlayerDeath.lua"
+dofile "Hooks/PlayerTweaks.lua"
+dofile "Hooks/LineTriggerSystem.lua"
 
-dofile "3_Libs.lua"
-dofile "4_ExitHandle.lua"
-dofile "5_MusicHandle.lua"
-dofile "6_Pizzaface.lua"
-dofile "7_HUDHandle.lua"
---dofile "8_RandomEvents.lua"
-dofile "8_CustomDiscordLeaderboard.lua"
-dofile "9_Nametags.lua"
+dofile "libs.lua"
+dofile "exit_handle.lua"
+dofile "music_handle.lua"
+dofile "pizzaface.lua"
+dofile "main_hud.lua"
+dofile "discord_botleaderboard.lua"
+dofile "name_tags.lua"

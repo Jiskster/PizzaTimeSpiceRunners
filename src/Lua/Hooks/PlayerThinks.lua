@@ -156,14 +156,14 @@ addHook("PlayerThink", function(player)
 		-- this is real p rank
 		-- cry like a wittle babyy!
 		player.ptsr_rank = "D"
-	elseif player.score <= pec*2
+	elseif player.score <= pec*2 then
 		player.ptsr_rank = "C"
 		
-	elseif player.score <= pec*3
+	elseif player.score <= pec*3 then
 		player.ptsr_rank = "B"
-	elseif player.score <= pec*5
+	elseif player.score <= pec*10 then
 		player.ptsr_rank = "A"
-	elseif player.score <= pec*6
+	elseif player.score <= pec*15 then
 		player.ptsr_rank = "S"
 	else
 		if player.timeshit then

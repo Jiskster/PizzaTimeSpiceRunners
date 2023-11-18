@@ -313,7 +313,7 @@ addHook("PlayerThink", function(player)
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
 			else
-				PTSR:RNGPizzaTP(player, true) -- Tp to random active player
+				PTSR:RNGPizzaTP(player.mo, true) -- Tp to random active player
 			end
 		elseif player.pizzacharge > 0 then
 			player.pizzacharge = $ - 1

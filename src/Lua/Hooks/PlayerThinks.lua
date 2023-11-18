@@ -212,7 +212,7 @@ addHook("PlayerThink", function(player)
 				
 				player.pre_parry = true
 				if player.pre_parry_counter then
-					if player.pre_parry_counter > maxpptime - 5 then
+					if player.pre_parry_counter > maxpptime - 4 then
 						player.pre_parry_counter = 0
 						S_StartSound(player.mo, sfx_pzprry)
 						L_SpeedCap(player.mo, 15*FRACUNIT)
@@ -225,15 +225,15 @@ addHook("PlayerThink", function(player)
 						parry.fuse = 5
 
 						local range = 1200*FRACUNIT -- higher blockmap range so it doesnt look choppy
-						local real_range = 200*FRACUNIT
+						local real_range = 400*FRACUNIT
 						searchBlockmap("objects", function(refmobj, foundmobj)
 							if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
-							and abs(foundmobj.z-pmo.z) < 120*FRACUNIT then
+							and abs(foundmobj.z-pmo.z) < 200*FRACUNIT then
 								if foundmobj.type == MT_PIZZA_ENEMY then
 									local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
-									print("parried")
+
 									foundmobj.pfstunmomentum = true
-									foundmobj.pfstuntime = 3*TICRATE
+									foundmobj.pfstuntime = 2*TICRATE
 									P_SetObjectMomZ(foundmobj, 10*FRACUNIT)
 									P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, 20*FRACUNIT)
 								else

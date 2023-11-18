@@ -6,8 +6,8 @@ mobjinfo[MT_PIZZA_ENEMY] = {
 	spawnstate = S_PIZZAFACE,
 	spawnhealth = 1000,
 	deathstate = S_NULL,
-	radius = 20*FU,
-	height = 64*FU,
+	radius = 18*FU,
+	height = 48*FU,
 	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL
 }
 
@@ -135,7 +135,10 @@ addHook("MobjThinker", function(mobj)
 	if not PTSR.pizzatime then return end
 	if mobj.pfstuntime then 
 		mobj.pfstuntime = $ - 1
-		L_SpeedCap(mobj, 0) -- Freeze! You peasant food!
+		if not mobj.pfstunmomentum then
+			L_SpeedCap(mobj, 0) -- Freeze! You peasant food!
+		end
+		
 		if not mobj.pfstuntime then -- If we just got to 0
 			if not PTSR.showtime // hiiii adding onto this for showtime
 				PTSR.showtime = true

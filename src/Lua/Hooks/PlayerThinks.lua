@@ -196,9 +196,12 @@ end)
 -- Parry
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
+	if (player.playerstate == PST_DEAD) or (player.exiting) then return end 
+	
 	local cmd = player.cmd
 	local pmo = player.mo
 	local maxpptime = 40 -- haha pp
+	
 	if not player.ptsr_parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.pre_parry then
@@ -209,14 +212,13 @@ addHook("PlayerThink", function(player)
 				}
 				local parried
 				
-				
 				player.pre_parry = true
 				if player.pre_parry_counter then
-					if player.pre_parry_counter > maxpptime - 4 then
+					if player.pre_parry_counter > maxpptime - CV_PTSR.parrytimeframe.value then
 						player.pre_parry_counter = 0
 						S_StartSound(player.mo, sfx_pzprry)
 						L_SpeedCap(player.mo, 15*FRACUNIT)
-						player.ptsr_parry_cooldown = TICRATE*3
+						player.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
 						
 						// TODO: Remake this parry animation
 						local parry = P_SpawnMobj(player.mo.x, player.mo.y, player.mo.z, MT_PT_PARRY)
@@ -233,11 +235,9 @@ addHook("PlayerThink", function(player)
 									local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
 									foundmobj.pfstunmomentum = true
-									foundmobj.pfstuntime = 2*TICRATE
-									P_SetObjectMomZ(foundmobj, 10*FRACUNIT)
-									P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, 20*FRACUNIT)
-								else
-									return false
+									foundmobj.pfstuntime = CV_PTSR.parrystuntime.value
+									P_SetObjectMomZ(foundmobj, CV_PTSR.parryknockback_z.value)
+									P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, CV_PTSR.parryknockback_xy.value)
 								end
 							end
 						end, 
@@ -265,10 +265,16 @@ addHook("PlayerThink", function(player)
 	
 	if player.ptsr_parry_cooldown then
 		player.ptsr_parry_cooldown = $ - 1
+		if not player.ptsr_parry_cooldown then
+			S_StartSound(player.mo, sfx_ngskid)
+			local tryparry = P_SpawnGhostMobj(player.mo)
+			tryparry.color = SKINCOLOR_GOLDENROD
+			tryparry.fuse = 5
+			P_SetScale(tryparry, (3*FRACUNIT)/2)
+		end
 	end
 	
 	if player.pre_parry_counter then
 		player.pre_parry_counter = $ - 1
 	end
-	
 end)

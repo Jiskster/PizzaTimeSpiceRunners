@@ -319,12 +319,22 @@ local scoreboard_hud = function(v, player)
 		local commonflags = (V_SNAPTOLEFT|V_SNAPTOTOP)
 		local playernameflags = (_player == consoleplayer) and V_YELLOWMAP or V_GRAYMAP
 
+		local playerpingcolor
+		
+		if _player.ping < 105 then
+			playerpingcolor = V_GREENMAP
+		elseif _player.ping < 200 then
+			playerpingcolor = V_YELLOWMAP
+		elseif _player.ping < INT32_MAX then
+			playerpingcolor = V_REDMAP
+		end
+		
 		local _xcoord = 22*FRACUNIT
-		local _ycoord = 15*FRACUNIT + (i*16*FRACUNIT)
+		local _ycoord = 15*FRACUNIT + (i*20*FRACUNIT)
 
 		if i > 10 then
 			_xcoord = $ + 160*FRACUNIT
-			_ycoord = $ - (10*16*FRACUNIT)
+			_ycoord = $ - (10*20*FRACUNIT)
 			commonflags = $ & ~V_SNAPTOLEFT
 			commonflags = $ | V_SNAPTORIGHT
 		end
@@ -340,10 +350,12 @@ local scoreboard_hud = function(v, player)
 			v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
 			PTSR.r2p(v, "BROKEN"), commonflags|V_20TRANS)
 		end
-
+		local scorewidth = v.stringWidth(tostring(_player.score), (commonflags|playernameflags))
+		local scoreandpingwidth = v.stringWidth(tostring(_player.score)..tostring(_player.ping), (commonflags))
+		
 		-- [ Bar Things] --
 		v.drawFill(0, 25, 640, 1, V_SNAPTOTOP+V_SNAPTOLEFT) -- bar 
-		v.drawFill(160, 25, 1, 640, V_SNAPTOTOP)
+		--v.drawFill(160, 25, 1, 640, V_SNAPTOTOP)
 
 		-- [Player Name] --
 		v.drawString( _xcoord + 16*FRACUNIT, _ycoord,  _player.name, (commonflags|playernameflags), "thin-fixed")
@@ -351,6 +363,8 @@ local scoreboard_hud = function(v, player)
 		-- [Player Score] --
 		v.drawString(_xcoord + 16*FRACUNIT, _ycoord + 8*FRACUNIT, tostring(_player.score), (commonflags), "thin-fixed")
 
+		v.drawString( _xcoord +8*FRACUNIT+(scorewidth*FU), _ycoord+8*FRACUNIT,  _player.ping.."ms", (commonflags|playerpingcolor), "thin-fixed")
+		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.lapsdid, (commonflags), "thin-fixed")
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	end 
 

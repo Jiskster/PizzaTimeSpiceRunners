@@ -281,6 +281,40 @@ CV_PTSR.aileash = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
+CV_PTSR.parrytimeframe = CV_RegisterVar({
+	name = "PTSR_parrytimeframe",
+	defaultvalue = "5",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 40}, 
+})
+
+CV_PTSR.parrycooldown = CV_RegisterVar({
+	name = "PTSR_parrycooldown",
+	defaultvalue = "70",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 525}, 
+})
+CV_PTSR.parrystuntime = CV_RegisterVar({
+	name = "PTSR_parrystuntime",
+	defaultvalue = "45",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 525}, 
+})
+
+CV_PTSR.parryknockback_xy = CV_RegisterVar({
+	name = "PTSR_parryknockback_xy",
+	defaultvalue = "25",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
+})
+
+CV_PTSR.parryknockback_z = CV_RegisterVar({
+	name = "PTSR_parryknockback_z",
+	defaultvalue = "15",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
+})
+
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",

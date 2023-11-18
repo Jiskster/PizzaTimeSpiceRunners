@@ -1,4 +1,4 @@
-freeslot("sfx_pizzah", "sfx_coneba", "sfx_pepdie", "sfx_lap2")
+freeslot("sfx_pizzah", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry")
 
 sfxinfo[sfx_pizzah].caption = "Pizzaface laughs"
 sfxinfo[sfx_coneba].caption = "Coneball laughs"

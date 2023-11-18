@@ -1,3 +1,21 @@
+mobjinfo[MT_PT_PARRY] = {
+	doomednum = -1,
+	spawnstate = S_PT_PARRY,
+	spawnhealth = 1000,
+	deathstate = S_NULL,
+	radius = 32*FU,
+	height = 48*FU,
+	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT
+}
+
+states[S_PT_PARRY] = {
+    sprite = SPR_PRRY,
+    frame = FF_TRANS50|A,
+    tics = -1,
+    nextstate = S_PT_PARRY
+}
+
+
 -- simple midgame joining blocker & more
 addHook("PlayerSpawn", function(player)
 	player.lapsdid = $ or 0
@@ -118,7 +136,7 @@ addHook("PlayerThink", function(player)
 		end
 		--endsupport
 		local range = 250*FRACUNIT -- higher blockmap range so it doesnt look choppy
-		local real_range = 75*FRACUNIT
+		local real_range = 110*FRACUNIT
 		searchBlockmap("objects", function(refmobj, foundmobj)
 			if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 			and L_ZCollide(foundmobj,pmo) then
@@ -171,6 +189,86 @@ addHook("PlayerThink", function(player)
 		else
 			player.ptsr_rank = "P"
 		end
+	end
+	
+end)
+
+-- Parry
+addHook("PlayerThink", function(player)
+	if not (player and player.mo and player.mo.valid) then return end
+	local cmd = player.cmd
+	local pmo = player.mo
+	local maxpptime = 40 -- haha pp
+	if not player.ptsr_parry_cooldown then
+		if cmd.buttons & BT_ATTACK then
+			if not player.pre_parry then
+				local preparrysfx = {
+					sfx_prepr1,
+					sfx_prepr2,
+					sfx_prepr3
+				}
+				local parried
+				
+				
+				player.pre_parry = true
+				if player.pre_parry_counter then
+					if player.pre_parry_counter > maxpptime - 5 then
+						player.pre_parry_counter = 0
+						S_StartSound(player.mo, sfx_pzprry)
+						L_SpeedCap(player.mo, 15*FRACUNIT)
+						player.ptsr_parry_cooldown = TICRATE*3
+						
+						// TODO: Remake this parry animation
+						local parry = P_SpawnMobj(player.mo.x, player.mo.y, player.mo.z, MT_PT_PARRY)
+						P_SpawnGhostMobj(parry)
+						P_SetScale(parry, 3*FRACUNIT)
+						parry.fuse = 5
+
+						local range = 1200*FRACUNIT -- higher blockmap range so it doesnt look choppy
+						local real_range = 200*FRACUNIT
+						searchBlockmap("objects", function(refmobj, foundmobj)
+							if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
+							and abs(foundmobj.z-pmo.z) < 120*FRACUNIT then
+								if foundmobj.type == MT_PIZZA_ENEMY then
+									local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
+									print("parried")
+									foundmobj.pfstunmomentum = true
+									foundmobj.pfstuntime = 3*TICRATE
+									P_SetObjectMomZ(foundmobj, 10*FRACUNIT)
+									P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, 20*FRACUNIT)
+								else
+									return false
+								end
+							end
+						end, 
+						player.mo,
+						player.mo.x-range, player.mo.x+range,
+						player.mo.y-range, player.mo.y+range)	
+						
+						parried = true
+					end
+				end
+				
+				if not parried then
+					player.pre_parry_counter = maxpptime
+					S_StartSound(player.mo, preparrysfx[P_RandomRange(1,3)])
+					local tryparry = P_SpawnGhostMobj(player.mo)
+					tryparry.color = SKINCOLOR_WHITE
+					tryparry.fuse = 2
+					P_SetScale(tryparry, (3*FRACUNIT)/2)
+				end
+			end
+		else
+			player.pre_parry = false
+		end
+	end
+	
+	if player.ptsr_parry_cooldown then
+		player.ptsr_parry_cooldown = $ - 1
+	end
+	
+	if player.pre_parry_counter then
+		player.pre_parry_counter = $ - 1
 	end
 	
 end)

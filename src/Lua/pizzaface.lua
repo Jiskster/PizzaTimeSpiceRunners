@@ -88,6 +88,7 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			end
 		
 			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
+			
 			if uselaugh == true then
 				S_StartSound(pizza, sfx_pizzah)
 			end
@@ -144,6 +145,7 @@ addHook("MobjThinker", function(mobj)
 				end
 				S_StartSound(nil, sfx_pizzah)
 			end
+			mobj.pfstunmomentum = false
 		end
 		return 
 	end
@@ -192,7 +194,9 @@ addHook("MobjThinker", function(mobj)
 				
 		L_SpeedCap(mobj, speedcap)
 	else
-		L_SpeedCap(mobj, 0)
+		if not mobj.pfstunmomentum then
+			L_SpeedCap(mobj, 0)
+		end
 	end
 end, MT_PIZZA_ENEMY)
 

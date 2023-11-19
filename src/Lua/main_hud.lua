@@ -371,7 +371,7 @@ local scoreboard_hud = function(v, player)
 	
 		-- [Finish Flag] --
 		if (_player.exiting)
-			v.drawScaled(_xcoord+(6*FU),_ycoord+11*FRACUNIT,FU/2,
+			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
 				v.getSpritePatch(SPR_FNSF,A,0),
 				(commonflags)|V_FLIP
 			)		

@@ -58,18 +58,21 @@ COM_AddCommand("ptsr_setgamemode", function(player, arg)
 	print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
 end,1)
 
-COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer)
+COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
-
-	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
-					PTSR.end_location.y*FRACUNIT,
-					PTSR.end_location.z*FRACUNIT, 
-					MT_PIZZA_ENEMY)
-					
-	if randomplayer then
+	
+	local newpizaface = PTSR:SpawnPFAI()
+	
+	if pftype ~= nil and pftype == "summa" then
+		newpizaface.laughsound = sfx_smdah
+		newpizaface.state = S_SUMMADAT_PF
+		print(69)
+	end
+	
+	if (randomplayer and not randomplayer == "false") then
 		PTSR:RNGPizzaTP(newpizaface, true)
 	end
 	

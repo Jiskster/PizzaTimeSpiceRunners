@@ -265,12 +265,17 @@ local lap_hud = function(v, player)
 end
 
 local rank_hud = function(v, player)
+	local rankpos = {
+		x = 100*FRACUNIT,
+		y = 15*FRACUNIT
+	}
 	if gametype ~= GT_PTSPICER then return end
+	
 	if player.pizzaface then return end
 	if player.ptsr_rank then
-		v.drawScaled(15*FRACUNIT,55*FRACUNIT,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
 		if player.timeshit then -- no p rank for you noob
-			v.drawScaled(15*FRACUNIT,55*FRACUNIT,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
+			v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
 		end
 	end
 end
@@ -382,6 +387,12 @@ local scoreboard_hud = function(v, player)
 
 	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/4, SKINCOLOR_BLUE)
 end
+
+local score_hud = function(v, player)
+	v.drawScaled(24*FU, 15*FU, FU/3, v.cachePatch("_SCOREOFPIZZA"), (V_SNAPTOLEFT|V_SNAPTOTOP))
+	customhud.CustomFontString(v, 58*FU, 11*FU, tostring(player.score), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
+end
+
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
 customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
@@ -391,6 +402,8 @@ customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
+customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
+customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)
 
 
 --PTSR.gamemode[#PTSR.gamemode_list]

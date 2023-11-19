@@ -90,12 +90,28 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
 			
 			if uselaugh == true then
-				S_StartSound(pizza, sfx_pizzah)
+				local laughsound = pizza.laughsound or sfx_pizzah
+				S_StartSound(pizza, laughsound)
 			end
 		end
 	end
 end
 
+-- spawns at the uhh normal spot where it spawns
+function PTSR:SpawnPFAI(_laughsound, _pfstate)
+	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+					PTSR.end_location.y*FRACUNIT,
+					PTSR.end_location.z*FRACUNIT, 
+					MT_PIZZA_ENEMY)
+	
+	newpizaface.laughsound = _laughsound
+	
+	if _pfstate then
+		newpizaface.pfstate = _pfstate
+	end
+	
+	return newpizaface
+end
 -- Player Touches AI
 addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
@@ -131,6 +147,7 @@ end)
 -- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
 	local nearest_player
+	local laughsound = mobj.laughsound or sfx_pizzah
 	
 	if not PTSR.pizzatime then return end
 	if mobj.pfstuntime then 
@@ -146,7 +163,8 @@ addHook("MobjThinker", function(mobj)
 				if anim then
 					anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
 				end
-				S_StartSound(nil, sfx_pizzah)
+				
+				S_StartSound(nil, laughsound)
 			end
 			mobj.pfstunmomentum = false
 		end

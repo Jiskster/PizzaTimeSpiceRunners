@@ -39,7 +39,7 @@ states[S_PILLARJOHN_PAIN] = {
 
 rawset(_G, "FUNC_PTSR", {}) -- functions
 
-freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "SPR_PZAT", "SPR_CONB")
+freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah")
 
 mobjinfo[MT_PIZZAMASK] = {
 	doomednum = -1,
@@ -76,6 +76,13 @@ states[S_PF_EGGMAN] = {
     nextstate = S_PF_EGGMAN
 }
 
+states[S_SUMMADAT_PF] = {
+    sprite = SPR_SMAD,
+    frame = FF_FULLBRIGHT|A,
+    tics = -1,
+    nextstate = S_SUMMADAT_PF
+}
+
 rawset(_G, "pfmaskData", {
 	{
 		name = "Pizzaface",
@@ -110,7 +117,7 @@ dofile "HUD Animation/UpdatePerFrame.lua"
 dofile "customhudlib.lua"
 
 customhud.SetupFont("PTFNT", -1, 4)
-customhud.SetupFont("SCRPT", -1, 4)
+customhud.SetupFont("SCRPT", -2, 4)
 
 dofile "main_game.lua"
 

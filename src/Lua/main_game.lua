@@ -319,10 +319,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
 		if CV_PTSR.aimode.value then
-			local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
-								PTSR.end_location.y*FRACUNIT,
-								PTSR.end_location.z*FRACUNIT, 
-								MT_PIZZA_ENEMY)
+			PTSR:SpawnPFAI()
 		end
 		
 		thesign.angle = PTSR.spawn_location.angle

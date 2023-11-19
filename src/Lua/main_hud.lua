@@ -274,9 +274,11 @@ local rank_hud = function(v, player)
 	if player.pizzaface then return end
 	if player.ptsr_rank then
 		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
+		/*
 		if player.timeshit then -- no p rank for you noob
 			v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
 		end
+		*/
 	end
 end
 
@@ -354,10 +356,13 @@ local scoreboard_hud = function(v, player)
 		v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
 		PTSR.r2p(v,_player.ptsr_rank), commonflags)
 
+		/*
 		if _player.timeshit then -- no p rank for you noob, but on score hud
 			v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
 			PTSR.r2p(v, "BROKEN"), commonflags|V_20TRANS)
 		end
+		*/
+		
 		local scorewidth = v.stringWidth(tostring(_player.score), (commonflags|playernameflags))
 		local scoreandpingwidth = v.stringWidth(tostring(_player.score)..tostring(_player.ping), (commonflags))
 		

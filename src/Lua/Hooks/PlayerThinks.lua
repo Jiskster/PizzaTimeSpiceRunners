@@ -177,18 +177,22 @@ addHook("PlayerThink", function(player)
 	elseif player.score <= pec*2 then
 		player.ptsr_rank = "C"
 		
-	elseif player.score <= pec*3 then
+	elseif player.score <= pec*4 then
 		player.ptsr_rank = "B"
-	elseif player.score <= pec*10 then
+	elseif player.score <= pec*8 then
 		player.ptsr_rank = "A"
-	elseif player.score <= pec*15 then
+	elseif player.score <= pec*13 then
 		player.ptsr_rank = "S"
 	else
+		/*
 		if player.timeshit then
 			player.ptsr_rank = "S"
 		else
 			player.ptsr_rank = "P"
 		end
+		*/
+		
+		player.ptsr_rank = "P"
 	end
 	
 end)

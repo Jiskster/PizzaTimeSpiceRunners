@@ -319,7 +319,7 @@ local scoreboard_hud = function(v, player)
 		local commonflags = (V_SNAPTOLEFT|V_SNAPTOTOP)
 		local playernameflags = (_player == consoleplayer) and V_YELLOWMAP or V_GRAYMAP
 		playernameflags = $|V_ALLOWLOWERCASE
-		local aliveflag = (_player.playerstate ~= PST_LIVE) and V_50TRANS or 0
+		local aliveflag = (_player.playerstate ~= PST_LIVE or _player.quittime > 0) and V_50TRANS or 0
 		
 		local playerpingcolor
 		

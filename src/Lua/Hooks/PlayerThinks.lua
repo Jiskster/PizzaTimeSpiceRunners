@@ -204,25 +204,25 @@ addHook("PlayerThink", function(player)
 	
 	local cmd = player.cmd
 	local pmo = player.mo
-	local maxpptime = 40 -- haha pp
+	local maxpptime = CV_PTSR.parrytimeframe.value -- haha pp
 	
-	if not player.ptsr_parry_cooldown then
+	if not player.mo.ptsr_parry_cooldown and not player.mo.parryseek then
 		if cmd.buttons & BT_ATTACK then
-			if not player.pre_parry then
+			if not player.mo.pre_parry then -- pre parry start
 				local preparrysfx = {
 					sfx_prepr1,
 					sfx_prepr2,
 					sfx_prepr3
 				}
-				local parried
 				
-				player.pre_parry = true
-				if player.pre_parry_counter then
-					if player.pre_parry_counter > maxpptime - CV_PTSR.parrytimeframe.value then
-						player.pre_parry_counter = 0
+				/*
+				player.mo.pre_parry = true
+				if player.mo.pre_parry_counter then
+					if player.mo.pre_parry_counter > maxpptime - CV_PTSR.parrytimeframe.value then
+						player.mo.pre_parry_counter = 0
 						S_StartSound(player.mo, sfx_pzprry)
 						L_SpeedCap(player.mo, 15*FRACUNIT)
-						player.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
+						player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
 						
 						// TODO: Remake this parry animation
 						local parry = P_SpawnMobj(player.mo.x, player.mo.y, player.mo.z, MT_PT_PARRY)
@@ -236,12 +236,7 @@ addHook("PlayerThink", function(player)
 							if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 							and abs(foundmobj.z-pmo.z) < 200*FRACUNIT then
 								if foundmobj.type == MT_PIZZA_ENEMY then
-									local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
-									foundmobj.pfstunmomentum = true
-									foundmobj.pfstuntime = CV_PTSR.parrystuntime.value
-									P_SetObjectMomZ(foundmobj, CV_PTSR.parryknockback_z.value)
-									P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, CV_PTSR.parryknockback_xy.value)
 								end
 							end
 						end, 
@@ -249,27 +244,26 @@ addHook("PlayerThink", function(player)
 						player.mo.x-range, player.mo.x+range,
 						player.mo.y-range, player.mo.y+range)	
 						
-						parried = true
+
 					end
 				end
+				*/
 				
-				if not parried then
-					player.pre_parry_counter = maxpptime
-					S_StartSound(player.mo, preparrysfx[P_RandomRange(1,3)])
-					local tryparry = P_SpawnGhostMobj(player.mo)
-					tryparry.color = SKINCOLOR_WHITE
-					tryparry.fuse = 2
-					P_SetScale(tryparry, (3*FRACUNIT)/2)
-				end
+				player.mo.parryseek = maxpptime
+				S_StartSound(player.mo, preparrysfx[P_RandomRange(1,3)])
+				local tryparry = P_SpawnGhostMobj(player.mo)
+				tryparry.color = SKINCOLOR_WHITE
+				tryparry.fuse = 2
+				P_SetScale(tryparry, (3*FRACUNIT)/2)
 			end
 		else
-			player.pre_parry = false
+			player.mo.pre_parry = false
 		end
 	end
 	
-	if player.ptsr_parry_cooldown then
-		player.ptsr_parry_cooldown = $ - 1
-		if not player.ptsr_parry_cooldown then
+	if player.mo.ptsr_parry_cooldown then
+		player.mo.ptsr_parry_cooldown = $ - 1
+		if not player.mo.ptsr_parry_cooldown then
 			S_StartSound(player.mo, sfx_ngskid)
 			local tryparry = P_SpawnGhostMobj(player.mo)
 			tryparry.color = SKINCOLOR_GOLDENROD
@@ -278,7 +272,19 @@ addHook("PlayerThink", function(player)
 		end
 	end
 	
-	if player.pre_parry_counter then
-		player.pre_parry_counter = $ - 1
+	if player.mo.parryseek then
+		player.mo.parryseek = $ - 1
+		L_SpeedCap(player.mo, 3*FRACUNIT)
+		if not player.mo.parryseek then
+			if not player.mo.ptsr_parry_cooldown then
+				player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
+			else
+				S_StartSound(player.mo, sfx_ngskid)
+				local tryparry = P_SpawnGhostMobj(player.mo)
+				tryparry.color = SKINCOLOR_GOLDENROD
+				tryparry.fuse = 5
+				P_SetScale(tryparry, (3*FRACUNIT)/2)
+			end
+		end
 	end
 end)

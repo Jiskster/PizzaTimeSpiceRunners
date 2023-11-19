@@ -318,7 +318,9 @@ local scoreboard_hud = function(v, player)
 		local _skinpatch = v.getSprite2Patch(_player.realmo.skin, SPR2_XTRA)
 		local commonflags = (V_SNAPTOLEFT|V_SNAPTOTOP)
 		local playernameflags = (_player == consoleplayer) and V_YELLOWMAP or V_GRAYMAP
-
+		playernameflags = $|V_ALLOWLOWERCASE
+		local aliveflag = (_player.playerstate ~= PST_LIVE or _player.quittime > 0) and V_50TRANS or 0
+		
 		local playerpingcolor
 		
 		if _player.ping < 105 then
@@ -340,7 +342,7 @@ local scoreboard_hud = function(v, player)
 		end
 		-- [Player Icon] --
 		v.drawScaled(_xcoord, _ycoord, FRACUNIT/2,
-		_skinpatch, (commonflags), _colormap)
+		_skinpatch, (commonflags)|aliveflag, _colormap)
 
 		-- [Player Rank] --
 		v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
@@ -358,7 +360,7 @@ local scoreboard_hud = function(v, player)
 		--v.drawFill(160, 25, 1, 640, V_SNAPTOTOP)
 
 		-- [Player Name] --
-		v.drawString( _xcoord + 16*FRACUNIT, _ycoord,  _player.name, (commonflags|playernameflags), "thin-fixed")
+		v.drawString( _xcoord + 16*FRACUNIT, _ycoord,  _player.name, (commonflags|playernameflags|aliveflag), "thin-fixed")
 		
 		-- [Player Score] --
 		v.drawString(_xcoord + 16*FRACUNIT, _ycoord + 8*FRACUNIT, tostring(_player.score), (commonflags), "thin-fixed")
@@ -366,6 +368,15 @@ local scoreboard_hud = function(v, player)
 		v.drawString( _xcoord +8*FRACUNIT+(scorewidth*FU), _ycoord+8*FRACUNIT,  _player.ping.."ms", (commonflags|playerpingcolor), "thin-fixed")
 		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.lapsdid, (commonflags), "thin-fixed")
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
+	
+		-- [Finish Flag] --
+		if (_player.exiting)
+			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
+				v.getSpritePatch(SPR_FNSF,A,0),
+				(commonflags)|V_FLIP
+			)		
+		end
+		
 	end 
 
 	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/4, SKINCOLOR_BLUE)

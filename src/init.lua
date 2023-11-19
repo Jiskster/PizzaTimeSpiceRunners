@@ -1,5 +1,8 @@
 freeslot("sfx_pizzah", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry",
 		 "sfx_prepr1", "sfx_prepr2", "sfx_prepr3", "MT_PT_PARRY", "S_PT_PARRY", "SPR_PRRY")
+for i = 0, 2
+	sfxinfo[sfx_prepr1 + i].caption = "Boink"
+end
 
 sfxinfo[sfx_pizzah].caption = "Pizzaface laughs"
 sfxinfo[sfx_coneba].caption = "Coneball laughs"
@@ -100,6 +103,7 @@ rawset(_G, "pfmaskData", {
 	}
 })
 
+--this is UGLY.
 dofile "HUD Animation/Init.lua"
 dofile "HUD Animation/UpdatePerFrame.lua"
 

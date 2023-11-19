@@ -299,6 +299,7 @@ local scoreboard_hud = function(v, player)
 	local zinger_text = "LEADERBOARD"
 	local zinger_x = 160*FRACUNIT
 	local zinger_y = 10*FRACUNIT
+	local player_sep = 17*FRACUNIT -- separation of player infos 
 
 	local player_list = {}
 	for _player in players.iterate do
@@ -332,11 +333,11 @@ local scoreboard_hud = function(v, player)
 		end
 		
 		local _xcoord = 22*FRACUNIT
-		local _ycoord = 15*FRACUNIT + (i*20*FRACUNIT)
+		local _ycoord = 15*FRACUNIT + (i*player_sep)
 
 		if i > 10 then
 			_xcoord = $ + 160*FRACUNIT
-			_ycoord = $ - (10*20*FRACUNIT)
+			_ycoord = $ - (10*player_sep)
 			commonflags = $ & ~V_SNAPTOLEFT
 			commonflags = $ | V_SNAPTORIGHT
 		end

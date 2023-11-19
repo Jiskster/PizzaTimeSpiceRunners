@@ -110,6 +110,7 @@ dofile "HUD Animation/UpdatePerFrame.lua"
 dofile "customhudlib.lua"
 
 customhud.SetupFont("PTFNT", -1, 4)
+customhud.SetupFont("SCRPT", -1, 4)
 
 dofile "main_game.lua"
 

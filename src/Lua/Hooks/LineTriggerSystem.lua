@@ -31,7 +31,7 @@ addHook("MobjLineCollide", function(mobj, line)
 		-- Sign at start check.
 		if ((line.backsector and line.backsector == PTSR.endsector)
 		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.exiting and not player.spectator
-		and player.mo and player.mo.valid then 
+		and player.mo and player.mo.valid and player.lapsdid ~= nil then 
 		
 			if player.pizzaface then
 				PTSR.StartNewLap(mobj)

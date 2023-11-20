@@ -189,7 +189,15 @@ hud.add( function(v, player, camera)
 		
 		if name then
 			local dsm = displayplayer.realmo
-			local obj_dist = R_PointToDist2(dsm.x,dsm.y,tmo.x,tmo.y)/FU
+
+			-- the z axis exists too yknow
+			local dx = tmo.x-dsm.x
+			local dy = tmo.y-dsm.y
+			local dz = tmo.z-dsm.z
+			local obj_dist = (FixedHypot(FixedHypot(dx,dy),dz))/FU
+			--luigi budd: regular FU values are too big to easily discern distance
+			--from the face, so divide by 10 to help with uh..... telling the distance
+			obj_dist = $/10
 			if tmo.type == MT_PT_DEATHRING and tmo.rings_kept then
 				name = $ + "["..tostring(tmo.rings_kept).."x]"
 			end

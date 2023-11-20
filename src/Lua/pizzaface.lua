@@ -121,7 +121,7 @@ addHook("TouchSpecial", function(special, toucher)
 	
 	local player = toucher.player
 	if player and player.valid then
-		if toucher.parryseek then
+		if toucher.parryseek or player.powers[pw_invulnerability] then
 			local anglefromplayer = R_PointToAngle2(special.x, special.y, toucher.x, toucher.y)
 
 			special.pfstunmomentum = true
@@ -131,7 +131,7 @@ addHook("TouchSpecial", function(special, toucher)
 			
 			toucher.pre_parry_counter = 0
 			S_StartSound(toucher, sfx_pzprry)
-			L_SpeedCap(player.mo, 10*FRACUNIT)
+			L_SpeedCap(player.mo, 25*FRACUNIT)
 			toucher.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
 			
 			// TODO: Remake this parry animation
@@ -139,7 +139,6 @@ addHook("TouchSpecial", function(special, toucher)
 			P_SpawnGhostMobj(parry)
 			P_SetScale(parry, 3*FRACUNIT)
 			parry.fuse = 5
-
 
 			toucher.parryseek = 0
 			return true

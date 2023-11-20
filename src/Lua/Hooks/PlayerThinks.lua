@@ -274,7 +274,7 @@ addHook("PlayerThink", function(player)
 	
 	if player.mo.parryseek then
 		player.mo.parryseek = $ - 1
-		L_SpeedCap(player.mo, 3*FRACUNIT)
+		L_SpeedCap(player.mo, 40*FRACUNIT)
 		if not player.mo.parryseek then
 			if not player.mo.ptsr_parry_cooldown then
 				player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value

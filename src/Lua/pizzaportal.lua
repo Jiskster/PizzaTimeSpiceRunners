@@ -5,6 +5,9 @@ local maxspritescale = FRACUNIT
 freeslot("MT_PIZZAPORTAL", "S_PIZZAPORTAL", "SPR_P3PT", "sfx_lapin", "sfx_lapout", "sfx_yuck34")
 
 mobjinfo[MT_PIZZAPORTAL] = {
+	--$Name "Pizza Portal"
+    --$Sprite SPR_P3PT
+    --$Category "Spice Runners"
 	doomednum = 1417,
 	spawnstate = S_PIZZAPORTAL,
 	spawnhealth = 1000,
@@ -20,6 +23,32 @@ states[S_PIZZAPORTAL] = {
     tics = -1,
     nextstate = S_PIZZAPORTAL
 }
+
+-- yay, placing portals without zone builder!
+addHook("MapLoad", function(map)
+	if mapheaderinfo[map].ptsr_maxportals and tonumber(mapheaderinfo[map].ptsr_maxportals) then
+		local maxportals = tonumber(mapheaderinfo[map]["ptsr_maxportals"])
+		for i=1, maxportals do
+			local portal_x = mapheaderinfo[map]["ptsr_portal("..i..")_x"]
+			local portal_y = mapheaderinfo[map]["ptsr_portal("..i..")_y"]
+			local portal_z = mapheaderinfo[map]["ptsr_portal("..i..")_z"]
+
+			local portal_angle = mapheaderinfo[map]["ptsr_portal("..i..")_angle"]
+
+			if portal_x and portal_y and portal_z 
+			and tonumber(portal_x) and tonumber(portal_y) and tonumber(portal_z) then
+				local portal = P_SpawnMobj(portal_x*FU, portal_y*FU, portal_z*FU, MT_PIZZAPORTAL)
+
+				-- give angle
+				if portal_angle and tonumber(portal_angle) then
+					portal.angle = FixedAngle(portal_angle*FRACUNIT) + ANGLE_90
+				end
+			else
+				print("\x85\PTSR: Invalid Portal Parameters, ID: ["..i.."]")
+			end
+		end
+	end
+end)
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player

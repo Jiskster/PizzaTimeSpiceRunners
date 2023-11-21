@@ -88,7 +88,15 @@ COM_AddCommand("ptsr_printcoords", function(player)
 	CONS_Printf(player, "X: "..player.mo.x/FU.."\n"
 				.."Y: "..player.mo.y/FU.."\n"
 				.."Z: "..player.mo.z/FU)
+end)
+
+COM_AddCommand("ptsr_printangle", function(player)
+	if gametype ~= GT_PTSPICER then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
 	
+	CONS_Printf(player, "Angle: "..AngleFixed(player.mo.angle)/FU)
 end)
 // ADDED FOR TESTING PURPOSES
 

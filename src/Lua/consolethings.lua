@@ -69,7 +69,6 @@ COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 	if pftype ~= nil and pftype == "summa" then
 		newpizaface.laughsound = sfx_smdah
 		newpizaface.state = S_SUMMADAT_PF
-		print(69)
 	end
 	
 	if (randomplayer and not randomplayer == "false") then
@@ -79,6 +78,18 @@ COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 	CONS_Printf(player, "Spawned an AI Pizzaface")
 end,1)
 
+
+COM_AddCommand("ptsr_printcoords", function(player)
+	if gametype ~= GT_PTSPICER then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	CONS_Printf(player, "X: "..player.mo.x/FU.."\n"
+				.."Y: "..player.mo.y/FU.."\n"
+				.."Z: "..player.mo.z/FU)
+	
+end)
 // ADDED FOR TESTING PURPOSES
 
 CV_PTSR.x_positioning = CV_RegisterVar({

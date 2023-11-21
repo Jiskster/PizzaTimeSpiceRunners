@@ -102,18 +102,11 @@ CV_PTSR.forcelap = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
-CV_PTSR.maxlaps = CV_RegisterVar({
-	name = "PTSR_maxlaps",
+CV_PTSR.default_maxlaps = CV_RegisterVar({
+	name = "PTSR_default_maxlaps",
 	defaultvalue = "5",
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
-})
-
-CV_PTSR.lappingtype = CV_RegisterVar({
-	name = "PTSR_lappingtype",
-	defaultvalue = "2",
-	flags = CV_NETVAR,
-	PossibleValue = {shared = 1, perplayer = 2}, 
 })
 
 CV_PTSR.pizzatimestun = CV_RegisterVar({

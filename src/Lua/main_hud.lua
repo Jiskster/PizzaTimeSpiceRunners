@@ -173,7 +173,7 @@ local tooltips_hud = function(v, player)
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local lapstext = "\x82\* LAPS: "..PTSR.laps.." *"
-	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..CV_PTSR.maxlaps.value.." *"
+	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..CV_PTSR.maxlaps.." *"
 
 
 	if (not player.pizzaface) and (player.exiting) and (not PTSR.quitting) and (player.playerstate ~= PST_DEAD) and (exitingCount ~= playerCount) then
@@ -205,12 +205,8 @@ local tooltips_hud = function(v, player)
 				end
 			end
 			-- Early returns start here --
-			if player.pizzaface and CV_PTSR.lappingtype.value == 2 then return end
+			if player.pizzaface then return end
 
-			if CV_PTSR.lappingtype.value == 2 then
-				v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				return
-			end
 
 			v.drawString(165, 165, lapsperplayertext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
 		end

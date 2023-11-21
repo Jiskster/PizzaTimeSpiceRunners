@@ -330,17 +330,19 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		
 		PTSR.timeleft = CV_PTSR.timelimit.value*TICRATE*60
 		PTSR.maxtime = CV_PTSR.timelimit.value*TICRATE*60
+		PTSR.maxlaps = CV_PTSR.default_maxlaps.value
+		
 		-- Custom Level Header 
 		if mapheaderinfo[gamemap].ptsr_timelimit then -- in minutes
 			PTSR.timeleft = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
 			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
-		elseif  mapheaderinfo[gamemap].ptsr_timelimit_secs then -- in seconds
+		elseif mapheaderinfo[gamemap].ptsr_timelimit_secs then -- in seconds
 			PTSR.timeleft = tonumber(mapheaderinfo[gamemap].ptsr_timelimit_secs)*TICRATE
 			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit_secs)*TICRATE
 		end
 		
 		
-		PTSR.laps = 1
+		PTSR.laps = 1 -- new day new me
 		
 		--hit the player that touched the location with these variables
 		if not CV_PTSR.aimode.value then

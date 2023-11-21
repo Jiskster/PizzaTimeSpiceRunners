@@ -176,9 +176,15 @@ local tooltips_hud = function(v, player)
 	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
 
-	if (not player.pizzaface) and (player.exiting) and (not PTSR.quitting) and (player.playerstate ~= PST_DEAD) and (exitingCount ~= playerCount) then
-		v.drawString(160, 120, "\x85\* Press FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
+	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) and not (player.lapsdid >= PTSR.maxlaps) then
+		if not player.hold_newlap then
+			v.drawString(160, 120, "\x85\* Hold FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
+		else
+			local percentage = (FixedDiv(player.hold_newlap*FRACUNIT, PTSR.laphold*FRACUNIT)*100)/FRACUNIT
+			v.drawString(160, 120, "\x85\* CHARGING \$percentage\% *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
+		end
 	end
+
 	if PTSR.pizzatime then
 
 		
@@ -197,7 +203,7 @@ local tooltips_hud = function(v, player)
 				if player.pizzachargecooldown then
 					v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
 				elseif player.pizzacharge then
-					local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)>>FRACBITS
+					local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)/FRACUNIT
 					
 					v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
 				else

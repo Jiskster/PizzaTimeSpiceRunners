@@ -137,5 +137,5 @@ dofile "discord_botleaderboard.lua"
 dofile "name_tags.lua"
 dofile "pizzaportal.lua"
 
-dofile "exitsign_init.lua"
-dofile "exitsign_thinkers.lua"
+dofile "Exit Signs/exitsign_init.lua"
+dofile "Exit Signs/exitsign_thinkers.lua"

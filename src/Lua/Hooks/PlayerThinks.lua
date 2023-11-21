@@ -112,14 +112,30 @@ end)
 addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	local hudst = player["PT@hudstuff"]
+	local maxholdtime = PTSR.laphold -- HOLDFORLAP
+
 	if player.mo and player.mo.valid then
-		if player.exiting and (player.cmd.buttons & BT_ATTACK) and not PTSR.quitting 
-		and not (player.lapsdid >= PTSR.maxlaps) then 
-			PTSR.StartNewLap(player.mo)
-			--PTSR.LapTP(player, true)
-			hudst.anim_active = true
-			hudst.anim = 1
+		if player.hold_newlap == nil then
+			player.hold_newlap = 0
 		end
+
+		if player.exiting and not (player.lapsdid >= PTSR.maxlaps) then 
+			if (player.cmd.buttons & BT_ATTACK) then
+				player.hold_newlap = $ + 1
+			else
+				player.hold_newlap = 0
+			end
+		end
+
+		if player.hold_newlap then
+		 	if player.hold_newlap >= PTSR.laphold then
+				PTSR.StartNewLap(player.mo)
+				hudst.anim_active = true
+				hudst.anim = 1
+
+				player.hold_newlap = 0
+			end
+		end 
 		
 		-- increment laptime
 		if player.laptime ~= nil and PTSR.pizzatime and not player.exiting 

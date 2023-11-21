@@ -173,7 +173,7 @@ local tooltips_hud = function(v, player)
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local lapstext = "\x82\* LAPS: "..PTSR.laps.." *"
-	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..CV_PTSR.maxlaps.." *"
+	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
 
 	if (not player.pizzaface) and (player.exiting) and (not PTSR.quitting) and (player.playerstate ~= PST_DEAD) and (exitingCount ~= playerCount) then

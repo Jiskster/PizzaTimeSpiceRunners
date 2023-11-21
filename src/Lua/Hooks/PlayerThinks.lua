@@ -114,7 +114,7 @@ addHook("PlayerThink", function(player)
 	local hudst = player["PT@hudstuff"]
 	if player.mo and player.mo.valid then
 		if player.exiting and (player.cmd.buttons & BT_ATTACK) and not PTSR.quitting 
-		and not (player.lapsdid >= CV_PTSR.maxlaps.value) then 
+		and not (player.lapsdid >= PTSR.maxlaps) then 
 			PTSR.StartNewLap(player.mo)
 			--PTSR.LapTP(player, true)
 			hudst.anim_active = true

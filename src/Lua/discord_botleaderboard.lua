@@ -37,7 +37,7 @@ local function registerIt(successValue)
 				local pptime = G_TicsToMinutes(player.playtime, true)..":"..seconds
 				local line = statms..iconskin..rank..admin.."["..#player.."] `"..pname.."`: Score - "..player.score
 				if not player.pizzaface and player.ptsr_rank and player.lapsdid then
-					line = $ .. "; Laps - "..player.lapsdid.." / "..CV_PTSR.maxlaps
+					line = $ .. "; Laps - "..player.lapsdid.." / "..PTSR.maxlaps
 				end
 				playerstats = $ + line.."\n"
 			end

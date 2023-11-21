@@ -45,6 +45,8 @@ rawset(_G, "PTSR", { -- variables
 	quitting = false,
 	pizzatime_tics = 0,
 	
+	maxlaps = 5,
+
 	timeleft = 0,
 	
 	timeover = false,
@@ -71,7 +73,7 @@ addHook("NetVars", function(net)
 		"spawn_location",
 		"end_location",
 		"pizzatime",
-		"laps",
+		"maxlaps",
 		"quitting",
 		"pizzatime_tics",
 		"timeleft",
@@ -331,8 +333,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.timeleft = CV_PTSR.timelimit.value*TICRATE*60
 		PTSR.maxtime = CV_PTSR.timelimit.value*TICRATE*60
 		PTSR.maxlaps = CV_PTSR.default_maxlaps.value
-		
-		-- Custom Level Header 
+
+		-- Custom timelimit Header 
 		if mapheaderinfo[gamemap].ptsr_timelimit then -- in minutes
 			PTSR.timeleft = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
 			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
@@ -341,6 +343,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit_secs)*TICRATE
 		end
 		
+		-- Custon maxlaps header
+		if mapheaderinfo[gamemap].ptsr_maxlaps then 
+			PTSR.maxlaps = tonumber(mapheaderinfo[gamemap].ptsr_maxlaps)
+		end
 		
 		PTSR.laps = 1 -- new day new me
 		

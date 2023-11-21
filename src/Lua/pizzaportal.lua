@@ -24,7 +24,7 @@ states[S_PIZZAPORTAL] = {
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player
 	if toucher and toucher.valid and tplayer and tplayer.valid then
-		local lastlap_perplayer = (tplayer.lapsdid >= CV_PTSR.maxlaps)
+		local lastlap_perplayer = (tplayer.lapsdid >= PTSR.maxlaps)
 		if not toucher.pizza_in and not toucher.pizza_out and PTSR.pizzatime and not lastlap_perplayer then -- start lap portal in sequence
 			toucher.pizza_in = portal_time
 			S_StartSound(toucher, sfx_lapin)
@@ -44,7 +44,7 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	if displayplayer and displayplayer.valid then
-		if (displayplayer.lapsdid >= CV_PTSR.maxlaps) or not PTSR.pizzatime then
+		if (displayplayer.lapsdid >= PTSR.maxlaps) or not PTSR.pizzatime then
 			mobj.frame = $|FF_TRANS50
 		else
 			mobj.frame = $ & ~FF_TRANS50

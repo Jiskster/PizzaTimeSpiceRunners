@@ -13,7 +13,7 @@ rawset(_G, "PTSR_shallowcopy", function(orig)
 end)
 
 G_AddGametype({
-    name = "Pizza Time Spice Runners",
+    name = "Spice Runners",
     identifier = "PTSPICER",
     typeoflevel = TOL_RACE,
     rules = GTR_FRIENDLY|GTR_SPAWNENEMIES|GTR_TIMELIMIT,

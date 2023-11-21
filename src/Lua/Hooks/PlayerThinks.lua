@@ -121,7 +121,9 @@ addHook("PlayerThink", function(player)
 			hudst.anim = 1
 		end
 		
-		if player.laptime ~= nil and PTSR.pizzatime and not player.exiting then
+		-- increment laptime
+		if player.laptime ~= nil and PTSR.pizzatime and not player.exiting 
+		and not player.mo.pizza_in and not player.mo.pizza_out then
 			player.laptime = $ + 1
 		end
 		

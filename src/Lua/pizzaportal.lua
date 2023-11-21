@@ -73,13 +73,13 @@ addHook("MobjThinker", function(mobj)
 		if not mobj.pizza_in then -- start lap portal out sequence
 			mobj.pizza_out = portal_time
 			
-			PTSR.StartNewLap(mobj)
-			hudst.anim_active = true
-			hudst.anim = 1
-			
 			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
 			chatprint(lapstring, true)
 			
+			PTSR.StartNewLap(mobj)
+			hudst.anim_active = true
+			hudst.anim = 1
+
 			if player.lapsdid ~= nil then
 				local lapbonus = (player.lapsdid*777)
 				local ringbonus = (player.rings*13) 

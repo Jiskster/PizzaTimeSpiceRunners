@@ -236,7 +236,7 @@ addHook("MobjThinker", function(mobj)
 		local ty = nearest_player.mo.y
 		local tz = nearest_player.mo.z
 		
-		P_FlyTo(mobj, tx, ty, tz, speed, true)
+		P_FlyTo(mobj, tx, ty, tz, speed, false)
 				
 		L_SpeedCap(mobj, speedcap)
 	else

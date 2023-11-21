@@ -104,13 +104,6 @@ CV_PTSR.forcelap = CV_RegisterVar({
 
 CV_PTSR.maxlaps = CV_RegisterVar({
 	name = "PTSR_maxlaps",
-	defaultvalue = "16",
-	flags = CV_NETVAR,
-	PossibleValue = CV_Unsigned, 
-})
-
-CV_PTSR.maxlaps_perplayer = CV_RegisterVar({
-	name = "PTSR_maxlaps_perplayer",
 	defaultvalue = "5",
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
@@ -142,13 +135,6 @@ CV_PTSR.tpinv = CV_RegisterVar({
 	defaultvalue = "3", -- IN SECONDS
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
-})
-
-CV_PTSR.dynamiclaps = CV_RegisterVar({
-	name = "PTSR_dynamiclaps",
-	defaultvalue = "Off",
-	flags = CV_NETVAR,
-	PossibleValue = CV_OnOff, 
 })
 
 CV_PTSR.showdeaths = CV_RegisterVar({

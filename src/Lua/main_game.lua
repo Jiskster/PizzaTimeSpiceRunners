@@ -41,7 +41,6 @@ rawset(_G, "PTSR", { -- variables
 	{x = 0, y = 0, z = 0, angle = 0}, -- where the sign originally was in the map placement
 	
 	pizzatime = false,
-	dynamic_maxlaps = 0,
 	laps = 0,
 	quitting = false,
 	pizzatime_tics = 0,
@@ -72,7 +71,6 @@ addHook("NetVars", function(net)
 		"spawn_location",
 		"end_location",
 		"pizzatime",
-		"dynamic_maxlaps",
 		"laps",
 		"quitting",
 		"pizzatime_tics",
@@ -155,7 +153,6 @@ local function InitMap()
     PTSR.endsector = nil
 	PTSR.laps = 0
 	PTSR.quitting = false
-	PTSR.dynamic_maxlaps = 0
 	PTSR.pizzatime_tics = 0 
 	PTSR.timeleft = 0
 	PTSR.timeover = false
@@ -201,7 +198,6 @@ local function InitMap2()
 		ResetPlayerVars(player)	
 	end
 	
-	PTSR.dynamic_maxlaps = playercount*2
 	
 	PTSR.maxrankpoints = PTSR.GetRingCount()*150
 end

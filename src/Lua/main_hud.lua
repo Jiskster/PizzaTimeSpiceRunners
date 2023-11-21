@@ -172,10 +172,8 @@ local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
-	local dynamiclapstext = "\x82\* DYNAMIC LAPS: "..PTSR.laps.." / "..PTSR.dynamic_maxlaps.." *"
-	local lapsandmaxlapstext = "\x82\* LAPS: "..PTSR.laps.." / "..CV_PTSR.maxlaps.value.." *"
 	local lapstext = "\x82\* LAPS: "..PTSR.laps.." *"
-	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..CV_PTSR.maxlaps_perplayer.value.." *"
+	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..CV_PTSR.maxlaps.value.." *"
 
 
 	if (not player.pizzaface) and (player.exiting) and (not PTSR.quitting) and (player.playerstate ~= PST_DEAD) and (exitingCount ~= playerCount) then
@@ -213,19 +211,8 @@ local tooltips_hud = function(v, player)
 				v.drawString(165, 165, lapsperplayertext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
 				return
 			end
-			
-			if CV_PTSR.dynamiclaps.value then
-				v.drawString(165, 165, dynamiclapstext, V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				return
-			end
-			
-			if CV_PTSR.maxlaps.value then
-				v.drawString(165, 165, lapsandmaxlapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				return
-			else
-				v.drawString(165, 165, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				return
-			end
+
+			v.drawString(165, 165, lapsperplayertext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
 		end
 	end
 end

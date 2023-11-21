@@ -123,26 +123,7 @@ addHook("TouchSpecial", function(special, toucher)
 	
 	local player = toucher.player
 	if player and player.valid then
-		if toucher.parryseek or player.powers[pw_invulnerability] then
-			local anglefromplayer = R_PointToAngle2(special.x, special.y, toucher.x, toucher.y)
-
-			special.pfstunmomentum = true
-			special.pfstuntime = CV_PTSR.parrystuntime.value
-			P_SetObjectMomZ(special, CV_PTSR.parryknockback_z.value)
-			P_InstaThrust(special, anglefromplayer - ANGLE_180, CV_PTSR.parryknockback_xy.value)
-			
-			toucher.pre_parry_counter = 0
-			S_StartSound(toucher, sfx_pzprry)
-			L_SpeedCap(player.mo, 25*FRACUNIT)
-			toucher.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
-			
-			// TODO: Remake this parry animation
-			local parry = P_SpawnMobj(toucher.x, toucher.y, toucher.z, MT_PT_PARRY)
-			P_SpawnGhostMobj(parry)
-			P_SetScale(parry, 3*FRACUNIT)
-			parry.fuse = 5
-
-			toucher.parryseek = 0
+		if player.powers[pw_invulnerability] then
 			return true
 		end
 		if not PTSR:PizzaCanTag(toucher, special) then return true end

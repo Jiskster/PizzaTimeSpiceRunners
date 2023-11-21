@@ -274,16 +274,9 @@ CV_PTSR.aileash = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
-CV_PTSR.parrytimeframe = CV_RegisterVar({
-	name = "PTSR_parrytimeframe",
-	defaultvalue = "10",
-	flags = CV_NETVAR,
-	PossibleValue = {MIN = 0, MAX = 70}, 
-})
-
 CV_PTSR.parrycooldown = CV_RegisterVar({
 	name = "PTSR_parrycooldown",
-	defaultvalue = "70",
+	defaultvalue = "90",
 	flags = CV_NETVAR,
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })

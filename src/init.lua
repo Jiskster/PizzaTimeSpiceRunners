@@ -136,3 +136,6 @@ dofile "main_hud.lua"
 dofile "discord_botleaderboard.lua"
 dofile "name_tags.lua"
 dofile "pizzaportal.lua"
+
+dofile "exitsign_init.lua"
+dofile "exitsign_thinkers.lua"

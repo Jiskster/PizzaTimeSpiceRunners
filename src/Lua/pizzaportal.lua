@@ -55,18 +55,41 @@ end, MT_PIZZAPORTAL)
 -- pizza portal enter animations
 -- the easings are the opposites because the counter is going down, ex: out being in and in being out
 addHook("MobjThinker", function(mobj)
+	local player = mobj.player
+	if player.spectator or player.pizzaface then return end
+	
 	if mobj.pizza_in then
+		local hudst = player["PT@hudstuff"]
 		local div = FixedDiv(mobj.pizza_in*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.outquint(div, minspritescale, maxspritescale)
 		mobj.pizza_in = $ - 1
 
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese
+		player.powers[pw_nocontrol] = 1
 		
 		L_SpeedCap(mobj, 0)
+		
 		if not mobj.pizza_in then -- start lap portal out sequence
 			mobj.pizza_out = portal_time
+			
 			PTSR.StartNewLap(mobj)
+			hudst.anim_active = true
+			hudst.anim = 1
+			
+			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
+			chatprint(lapstring, true)
+			
+			if player.lapsdid ~= nil then
+				local lapbonus = (player.lapsdid*777)
+				local ringbonus = (player.rings*13) 
+				
+				P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
+				CONS_Printf(player, "** Lap "..player.lapsdid.." bonuses **")
+				CONS_Printf(player, "* "..lapbonus.." point lap bonus!")
+				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
+			end
+			
 			S_StartSound(mobj, sfx_lapout)
 		end
 	end
@@ -75,6 +98,7 @@ addHook("MobjThinker", function(mobj)
 		local div = FixedDiv(mobj.pizza_out*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.inquint(div, maxspritescale, minspritescale)
 		mobj.pizza_out = $ - 1
+		mobj.player.powers[pw_nocontrol] = 1
 		
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese

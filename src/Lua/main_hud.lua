@@ -54,7 +54,7 @@ local bar_hud = function(v, player)
 		local start = 300*FRACUNIT -- animation position start
 		local finish = 175*FRACUNIT -- animation position end
 		local bar_finish = 1475*FRACUNIT/10
-		local TLIM = CV_PTSR.timelimit.value*TICRATE*60 
+		local TLIM = PTSR.maxtime or 0 
 		-- "TLIM" is time limit number converted to seconds to minutes
 		--example, if CV_PTSR.timelimit.value is 4, it goes to 4*35 to 4*35*60 making it 4 minutes
 		
@@ -81,7 +81,7 @@ local bar_hud = function(v, player)
 		end
 
 		--ease.linear(fixed_t t, [[fixed_t start], fixed_t end])
-		if CV_PTSR.timelimit.value then
+		if PTSR.maxtime then
 
 			
 			--for the bar length calculations

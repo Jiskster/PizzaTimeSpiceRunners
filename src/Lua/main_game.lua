@@ -86,6 +86,8 @@ addHook("NetVars", function(net)
 		"maxrankpoints",
 
 		"gamemode",
+		
+		"maxtime",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -328,7 +330,20 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			PTSR.endsector = thesign.subsector.sector
 		end
 		
+		
+		
 		PTSR.timeleft = CV_PTSR.timelimit.value*TICRATE*60
+		PTSR.maxtime = CV_PTSR.timelimit.value*TICRATE*60
+		-- Custom Level Header 
+		if mapheaderinfo[gamemap].ptsr_timelimit then -- in minutes
+			PTSR.timeleft = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
+			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit)*TICRATE*60
+		elseif  mapheaderinfo[gamemap].ptsr_timelimit_secs then -- in seconds
+			PTSR.timeleft = tonumber(mapheaderinfo[gamemap].ptsr_timelimit_secs)*TICRATE
+			PTSR.maxtime = tonumber(mapheaderinfo[gamemap].ptsr_timelimit_secs)*TICRATE
+		end
+		
+		
 		PTSR.laps = 1
 		
 		--hit the player that touched the location with these variables

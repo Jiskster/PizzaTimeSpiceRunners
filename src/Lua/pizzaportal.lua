@@ -24,7 +24,8 @@ states[S_PIZZAPORTAL] = {
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player
 	if toucher and toucher.valid and tplayer and tplayer.valid then
-		if not toucher.pizza_in and not toucher.pizza_out then -- start lap portal in sequence
+		local lastlap_perplayer = ((CV_PTSR.lappingtype.value == 2) and (tplayer.lapsdid >= CV_PTSR.maxlaps_perplayer.value))
+		if not toucher.pizza_in and not toucher.pizza_out and PTSR.pizzatime and not lastlap_perplayer then -- start lap portal in sequence
 			toucher.pizza_in = portal_time
 			S_StartSound(toucher, sfx_lapin)
 			S_StartSound(special, sfx_yuck34)
@@ -37,6 +38,18 @@ end, MT_PIZZAPORTAL)
 addHook("MobjThinker", function(mobj)
 	local float_offset = sin(leveltime*FRACUNIT*500)*10
 	mobj.spriteyoffset = float_offset
+	
+	if mobj.spawnpoint then
+		mobj.angle = FixedAngle(mobj.spawnpoint.angle*FRACUNIT) + ANGLE_90 -- give me the right angle dumbass papersprite
+	end
+	
+	if displayplayer and displayplayer.valid then
+		if ((CV_PTSR.lappingtype.value == 2) and (displayplayer.lapsdid >= CV_PTSR.maxlaps_perplayer.value)) or not PTSR.pizzatime then
+			mobj.frame = $|FF_TRANS50
+		else
+			mobj.frame = $ & ~FF_TRANS50
+		end
+	end
 end, MT_PIZZAPORTAL)
 
 -- pizza portal enter animations
@@ -46,8 +59,7 @@ addHook("MobjThinker", function(mobj)
 		local div = FixedDiv(mobj.pizza_in*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.outquint(div, minspritescale, maxspritescale)
 		mobj.pizza_in = $ - 1
-		print(mobj.pizza_in)
-		
+
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese
 		
@@ -63,10 +75,10 @@ addHook("MobjThinker", function(mobj)
 		local div = FixedDiv(mobj.pizza_out*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.inquint(div, maxspritescale, minspritescale)
 		mobj.pizza_out = $ - 1
-		print(mobj.pizza_out)
 		
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese
 		L_SpeedCap(mobj, 0)
 	end	
 end, MT_PLAYER)
+

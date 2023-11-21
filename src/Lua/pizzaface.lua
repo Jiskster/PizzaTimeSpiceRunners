@@ -36,6 +36,8 @@ function PTSR:PizzaCanTag(peppino, pizza)
 	if peppino.player.powers[pw_flashing] then return false end
 
 	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
+	
+	if peppino.pizza_out or peppino.pizza_in then return false end -- in pizza portal? then dont kill
 
 	if pizza.player and pizza.player.valid and pizza.player.pizzaface then 
 		if pizza.player.stuntime then return false end
@@ -195,7 +197,8 @@ addHook("MobjThinker", function(mobj)
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid and player.mo.health and not player.exiting 
-		and not player.spectator and not player.quittime and not player.pizzaface then
+		and not player.spectator and not player.quittime and not player.pizzaface 
+		and not player.mo.pizza_out and not player.mo.pizza_in then
 			if not nearest_player then
 				nearest_player = player
 			else

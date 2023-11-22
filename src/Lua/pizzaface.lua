@@ -206,6 +206,10 @@ addHook("MobjThinker", function(mobj)
 			speedcap = $ * 2
 		end
 		
+		if mobj.eflags & MFE_UNDERWATER then
+			speed = $ / 2
+		end
+		
 		if dist > CV_PTSR.aileash.value then
 			if not mobj.pfstuntime then
 				PTSR:RNGPizzaTP(mobj, true)

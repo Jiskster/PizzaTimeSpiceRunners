@@ -172,9 +172,8 @@ local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
-	local lapstext = "\x82\* LAPS: "..PTSR.laps.." *"
-	local lapsperplayertext = "\x82\* YOUR LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
-
+	local infinitelapstext = "\x82\* LAPS: "..PTSR.laps.." *"
+	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
 	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) and not (player.lapsdid >= PTSR.maxlaps) then
 		if not player.hold_newlap then
@@ -186,13 +185,10 @@ local tooltips_hud = function(v, player)
 	end
 
 	if PTSR.pizzatime then
-
-		
 		if player.stuntime then
 			v.drawString(160, 100, "You will be unfrozen in: "..player.stuntime/TICRATE.. " seconds.", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
 		end
 		
-
 		if timeafteranimation then
 			local addtransflag = (timeafteranimation < 10) and (10-timeafteranimation)<<V_ALPHASHIFT or 0 
 
@@ -212,9 +208,12 @@ local tooltips_hud = function(v, player)
 			end
 			-- Early returns start here --
 			if player.pizzaface then return end
-
-
-			v.drawString(165, 165, lapsperplayertext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
+			
+			if CV_PTSR.default_maxlaps.value then
+				v.drawString(165, 165, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
+			else -- infinite laps
+				v.drawString(165, 165, infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
+			end
 		end
 	end
 end

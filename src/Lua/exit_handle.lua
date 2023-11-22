@@ -10,7 +10,7 @@ addHook("ThinkFrame", function()
 	
 	for player in players.iterate() do
 		if leveltime then -- just a safety check
-			if (player.lapsdid > PTSR.maxlaps) then
+			if (player.lapsdid > PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
 				P_DoPlayerExit(player)
 			elseif ((playerCount > 1) and (not pizzaCount and not CV_PTSR.aimode.value) and PTSR.pizzatime) or (exitingCount == playerCount) then
 				if player.valid and not (player.exiting)

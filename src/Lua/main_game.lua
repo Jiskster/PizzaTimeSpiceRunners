@@ -350,7 +350,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		end
 		
 		-- Custon maxlaps header
-		if mapheaderinfo[gamemap].ptsr_maxlaps then 
+		if mapheaderinfo[gamemap].ptsr_maxlaps and CV_PTSR.default_maxlaps.value then -- if header and not 0
 			PTSR.maxlaps = tonumber(mapheaderinfo[gamemap].ptsr_maxlaps)
 		end
 		

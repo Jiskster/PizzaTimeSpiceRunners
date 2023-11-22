@@ -323,6 +323,13 @@ CV_PTSR.parry_height = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
+CV_PTSR.parry_friendlyfire = CV_RegisterVar({
+	name = "PTSR_parry_friendlyfire",
+	defaultvalue = "on",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff,
+})
+
 
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",

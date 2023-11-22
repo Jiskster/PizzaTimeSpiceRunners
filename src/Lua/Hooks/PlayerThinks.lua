@@ -245,7 +245,14 @@ addHook("PlayerThink", function(player)
 				searchBlockmap("objects", function(refmobj, foundmobj)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
-						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY then
+						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
+						or (foundmobj.type == MT_PLAYER and CV_PTSR.parry_friendlyfire.value and PTSR.pizzatime) then
+							if foundmobj.type == MT_PLAYER then
+								if foundmobj.player and foundmobj.player.valid 
+								and foundmobj.player.powers[pw_invulnerability] then
+									return
+								end
+							end
 							local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
 							foundmobj.pfstunmomentum = true

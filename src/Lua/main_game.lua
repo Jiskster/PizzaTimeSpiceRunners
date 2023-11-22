@@ -65,6 +65,8 @@ rawset(_G, "PTSR", { -- variables
 		stop = false,
 	},
 	
+	deathrings = {},
+	
 	maxrankpoints = 0,
 })
 
@@ -90,6 +92,8 @@ addHook("NetVars", function(net)
 		"gamemode",
 		
 		"maxtime",
+		
+		"deathrings",
 	}
 	
 	for i,v in ipairs(sync_list) do

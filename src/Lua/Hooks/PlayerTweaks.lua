@@ -15,7 +15,18 @@ addHook("MobjSpawn", function(mobj)
 	mobj.scale = $*2
 	mobj.colorized = true
 	mobj.color = SKINCOLOR_GREEN
+	table.insert(PTSR.deathrings, mobj)
 end, MT_PT_DEATHRING)
+
+addHook("ThinkFrame", function()
+	if #PTSR.deathrings > 0 then
+		for i,deathring in ipairs(PTSR.deathrings) do
+			if not deathring or not deathring.valid then
+				table.remove(PTSR.deathrings, i)
+			end
+		end
+	end
+end)	
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player

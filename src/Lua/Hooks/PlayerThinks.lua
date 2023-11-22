@@ -96,6 +96,12 @@ addHook("ThinkFrame", do
 				local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
 				chatprint(timeover_text)
 				
+				for i,deathring in ipairs(PTSR.deathrings) do
+					if deathring and deathring.valid and deathring.rings_kept then
+						deathring.rings_kept = $ * 3
+					end
+				end
+				
 				if DiscordBot then
 					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
 				end

@@ -70,7 +70,7 @@ rawset(_G, "PTSR", { -- variables
 	maxrankpoints = 0,
 })
 
-PTSR.laphold = 60 -- hold fire to lap
+PTSR.laphold = 10*TICRATE -- hold fire to lap
 
 addHook("NetVars", function(net)
 	local sync_list = {

@@ -67,6 +67,8 @@ rawset(_G, "PTSR", { -- variables
 	
 	deathrings = {},
 	
+	timeover_tics = 0,
+	
 	maxrankpoints = 0,
 })
 
@@ -92,6 +94,8 @@ addHook("NetVars", function(net)
 		"gamemode",
 		
 		"maxtime",
+		
+		"timeover_tics",
 		
 		"deathrings",
 	}
@@ -165,6 +169,8 @@ local function InitMap()
 	PTSR.timeleft = 0
 	PTSR.timeover = false
 	PTSR.showtime = false
+	PTSR.deathrings = {}
+	PTSR.timeover_tics = 0
 end
 
 local function InitMap2()

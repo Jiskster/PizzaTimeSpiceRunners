@@ -268,13 +268,6 @@ CV_PTSR.aispeed = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
 })
 
-CV_PTSR.aispeedcap = CV_RegisterVar({
-	name = "PTSR_aispeedcap",
-	defaultvalue = "35",
-	flags = CV_NETVAR|CV_FLOAT,
-	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
-})
-
 CV_PTSR.aileash = CV_RegisterVar({
 	name = "PTSR_aileash",
 	defaultvalue = "5200",

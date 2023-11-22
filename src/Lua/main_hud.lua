@@ -386,6 +386,17 @@ local score_hud = function(v, player)
 	customhud.CustomFontString(v, 58*FU, 11*FU, tostring(player.score), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 end
 
+local overtimemulti_hud = function(v, player)
+	if not PTSR.timeover then return end
+	
+	local yum = L_FixedDecimal(FRACUNIT + (PTSR.timeover_tics*25))
+	
+	v.drawString(10, 135, "\x85\PF Speed: "..yum.."x", V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
+end
+
+
+--local yum = FRACUNIT + (PTSR.timeover_tics*48)
+
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
 customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
@@ -394,6 +405,7 @@ customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 --customhud.SetupItem("PTSR_event", hudmodname, event_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
+customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)

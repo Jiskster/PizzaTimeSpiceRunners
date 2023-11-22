@@ -112,6 +112,10 @@ addHook("ThinkFrame", do
 				MT_PIZZA_ENEMY)
 			end
 		end
+		
+		if PTSR.timeover then
+			PTSR.timeover_tics = $ + 1
+		end
 	end 
 end)
 
@@ -265,6 +269,7 @@ addHook("PlayerThink", function(player)
 							P_SpawnGhostMobj(parry)
 							P_SetScale(parry, 3*FRACUNIT)
 							parry.fuse = 5
+							
 							local parry2 = P_SpawnMobj(foundmobj.x, foundmobj.y, foundmobj.z, MT_PT_PARRY)
 							P_SpawnGhostMobj(parry)
 							P_SetScale(parry2, 3*FRACUNIT)

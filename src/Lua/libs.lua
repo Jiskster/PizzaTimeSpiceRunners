@@ -216,3 +216,24 @@ rawset(_G, "L_SpeedCap", function(mo,limit,factor)
 		return factor
 	end
 end)
+
+rawset(_G, "L_FixedDecimal", function(str,maxdecimal)
+	if str == nil or tostring(str) == nil
+		return "<invalid FixedDecimal>"
+	end
+	local number = tonumber(str)
+	maxdecimal = ($ != nil) and $ or 3
+	if tonumber(str) == 0 return '0' end
+	local polarity = abs(number)/number
+	local str_polarity = (polarity < 0) and '-' or ''
+	local str_whole = tostring(abs(number/FRACUNIT))
+	if maxdecimal == 0
+		return str_polarity..str_whole
+	end
+	local decimal = number%FRACUNIT
+	decimal = FRACUNIT + $
+	decimal = FixedMul($,FRACUNIT*10^maxdecimal)
+	decimal = $>>FRACBITS
+	local str_decimal = string.sub(decimal,2)
+	return str_polarity..str_whole..'.'..str_decimal
+end)

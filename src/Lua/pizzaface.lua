@@ -198,16 +198,16 @@ addHook("MobjThinker", function(mobj)
 	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.exiting
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
-		local speedcap = CV_PTSR.aispeedcap.value
 		local dist = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
-		
-		if PTSR.timeover then
-			speed = $ * 2
-			speedcap = $ * 2
-		end
 		
 		if mobj.eflags & MFE_UNDERWATER then
 			speed = $ / 2
+		end
+		
+		if PTSR.timeover then
+			local yum = FRACUNIT + (PTSR.timeover_tics*25)
+			
+			speed = FixedMul($, yum)
 		end
 		
 		if dist > CV_PTSR.aileash.value then
@@ -223,7 +223,6 @@ addHook("MobjThinker", function(mobj)
 		
 		P_FlyTo(mobj, tx, ty, tz, speed, false)
 				
-		L_SpeedCap(mobj, speedcap)
 	else
 		if not mobj.pfstunmomentum then
 			L_SpeedCap(mobj, 0)

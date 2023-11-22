@@ -127,11 +127,9 @@ addHook("MobjThinker", function(mobj)
 		local div = FixedDiv(mobj.pizza_out*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.inquint(div, maxspritescale, minspritescale)
 		mobj.pizza_out = $ - 1
-		mobj.player.powers[pw_nocontrol] = 1
 		
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese
-		L_SpeedCap(mobj, 0)
 	end	
 end, MT_PLAYER)
 

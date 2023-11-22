@@ -231,6 +231,11 @@ addHook("MobjThinker", function(mobj)
 	end
 end, MT_PIZZA_ENEMY)
 
+addHook("MobjDeath", function(mobj)
+	PTSR:RNGPizzaTP(mobj, true)
+	return true
+end, MT_PIZZA_ENEMY)
+
 addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
 	mobj.spriteyscale = $ / 2

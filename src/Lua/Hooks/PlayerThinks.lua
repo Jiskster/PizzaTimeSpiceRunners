@@ -129,7 +129,7 @@ addHook("PlayerThink", function(player)
 			player.hold_newlap = 0
 		end
 
-		if player.exiting and not (player.lapsdid >= PTSR.maxlaps) then 
+		if player.exiting and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
 			if (player.cmd.buttons & BT_ATTACK) then
 				player.hold_newlap = $ + 1
 			else

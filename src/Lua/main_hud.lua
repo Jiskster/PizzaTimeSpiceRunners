@@ -172,10 +172,11 @@ local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	local exitingCount, playerCount = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
-	local infinitelapstext = "\x82\* LAPS: "..PTSR.laps.." *"
+	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
-	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) and not (player.lapsdid >= PTSR.maxlaps) then
+	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) 
+	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
 		if not player.hold_newlap then
 			v.drawString(160, 120, "\x85\* Hold FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
 		else
@@ -195,6 +196,7 @@ local tooltips_hud = function(v, player)
 			if (playerCount == 1) then
 				v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
 			end
+			
 			if player.pizzaface then
 				if player.pizzachargecooldown then
 					v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|addtransflag, "thin-center")

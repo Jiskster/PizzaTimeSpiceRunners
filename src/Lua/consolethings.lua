@@ -309,6 +309,21 @@ CV_PTSR.parryknockback_z = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
+CV_PTSR.parry_radius = CV_RegisterVar({
+	name = "PTSR_parry_radius",
+	defaultvalue = "175",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
+})
+
+CV_PTSR.parry_height = CV_RegisterVar({
+	name = "PTSR_parry_height",
+	defaultvalue = "185",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
+})
+
+
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",

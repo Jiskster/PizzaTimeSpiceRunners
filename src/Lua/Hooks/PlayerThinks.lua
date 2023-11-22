@@ -238,18 +238,14 @@ addHook("PlayerThink", function(player)
 					sfx_prepr3
 				}
 				
-			
-				
-				
-				
 				local gotapf = false
 
-				local range = 1200*FRACUNIT -- higher blockmap range so it doesnt look choppy
-				local real_range = 160*FRACUNIT
+				local range = 10000*FRACUNIT -- higher blockmap range so it doesnt look choppy
+				local real_range = CV_PTSR.parry_radius.value
 				searchBlockmap("objects", function(refmobj, foundmobj)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
-					and abs(foundmobj.z-pmo.z) < 170*FRACUNIT then
-						if foundmobj.type == MT_PIZZA_ENEMY then
+					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
+						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY then
 							local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
 							foundmobj.pfstunmomentum = true
@@ -262,6 +258,10 @@ addHook("PlayerThink", function(player)
 							P_SpawnGhostMobj(parry)
 							P_SetScale(parry, 3*FRACUNIT)
 							parry.fuse = 5
+							local parry2 = P_SpawnMobj(foundmobj.x, foundmobj.y, foundmobj.z, MT_PT_PARRY)
+							P_SpawnGhostMobj(parry)
+							P_SetScale(parry2, 3*FRACUNIT)
+							parry2.fuse = 5
 
 							S_StartSound(player.mo, sfx_pzprry)
 							L_SpeedCap(player.mo, 30*FRACUNIT)

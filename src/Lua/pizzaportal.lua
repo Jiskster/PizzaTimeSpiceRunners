@@ -24,6 +24,16 @@ states[S_PIZZAPORTAL] = {
     nextstate = S_PIZZAPORTAL
 }
 
+local function cancelEspioTeleport(mobj)
+	if chaotix then
+		if mobj.espio_teleport then
+			mobj.espio_teleport = false
+			mobj.espio_teleport_state = nil
+			mobj.state = S_PLAY_FALL
+		end
+	end
+end
+
 -- yay, placing portals without zone builder!
 addHook("MapLoad", function(map)
 	if mapheaderinfo[map].ptsr_maxportals and tonumber(mapheaderinfo[map].ptsr_maxportals) then
@@ -99,6 +109,8 @@ addHook("MobjThinker", function(mobj)
 		
 		L_SpeedCap(mobj, 0)
 		
+		cancelEspioTeleport(mobj)
+
 		if not mobj.pizza_in then -- start lap portal out sequence
 			mobj.pizza_out = portal_time
 			

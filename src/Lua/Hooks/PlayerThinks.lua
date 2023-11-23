@@ -88,6 +88,7 @@ end)
 addHook("ThinkFrame", do
 	local exitingCount, playerCount = PTSR_COUNT()
 	if PTSR.pizzatime then
+		P_StartQuake(FRACUNIT*4, 1)
 		PTSR.pizzatime_tics = $ + 1
 		if PTSR.timeleft and (exitingCount ~= playerCount) and CV_PTSR.timelimit.value then
 			PTSR.timeleft = $ - 1

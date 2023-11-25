@@ -103,6 +103,8 @@ addHook("NetVars", function(net)
 		
 		"deathrings",
 
+		"untilend",
+
 		"intermission_tics",
 
 		"gameover",
@@ -121,6 +123,7 @@ local function ResetPlayerVars(player)
 	player.spectator = false
 	player.lapsdid = 0
 	player.laptime = 0
+	player.ptsr_outofgame = 0
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 
@@ -155,7 +158,7 @@ rawset(_G, "PTSR_COUNT", do
 			if player.pizzaface then
 				pizzaCount = $+1
 			end
-			if player.exiting or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
+			if player.ptsr_outofgame or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
 				inactiveCount = $+1
 			end
 		end
@@ -268,7 +271,7 @@ end
 -- doesnt actually trigger or increment lap, just tps you
 PTSR.LapTP = function(player, invincibility)
 	if not player and not player.mo and not player.mo.valid then return end -- safety
-	player.exiting = 0
+	player.ptsr_outofgame = 0
 	P_SetOrigin(player.mo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 	player.mo.angle = PTSR.end_location.angle - ANGLE_90
 	

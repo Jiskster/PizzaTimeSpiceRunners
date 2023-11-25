@@ -95,7 +95,7 @@ addHook("PlayerThink", function(player)
 			player.hold_newlap = 0
 		end
 
-		if player.exiting and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
+		if player.ptsr_outofgame and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
 			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
 				player.hold_newlap = $ + 1
 			else
@@ -114,7 +114,7 @@ addHook("PlayerThink", function(player)
 		end 
 		
 		-- increment laptime
-		if player.laptime ~= nil and PTSR.pizzatime and not player.exiting 
+		if player.laptime ~= nil and PTSR.pizzatime and not player.ptsr_outofgame 
 		and not player.mo.pizza_in and not player.mo.pizza_out then
 			player.laptime = $ + 1
 		end
@@ -185,7 +185,7 @@ end)
 -- Parry
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
-	if (player.playerstate == PST_DEAD) or (player.exiting) then return end 
+	if (player.playerstate == PST_DEAD) or (player.ptsr_outofgame) then return end 
 	if PTSR.gameover then return end
 
 	local cmd = player.cmd
@@ -273,5 +273,11 @@ addHook("PlayerThink", function(player)
 			tryparry.fuse = 5
 			P_SetScale(tryparry, (3*FRACUNIT)/2)
 		end
+	end
+end)
+
+addHook("PlayerThink", function(player)
+	if player.ptsr_outofgame then
+		player.powers[pw_nocontrol] = 1
 	end
 end)

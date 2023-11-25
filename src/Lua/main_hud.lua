@@ -175,7 +175,7 @@ local tooltips_hud = function(v, player)
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
-	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) 
+	if (not player.pizzaface) and (player.ptsr_outofgame) and (player.playerstate ~= PST_DEAD) 
 	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) and not PTSR.gameover then
 		if not player.hold_newlap then
 			v.drawString(160, 120, "\x85\* Hold FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
@@ -371,7 +371,7 @@ local scoreboard_hud = function(v, player)
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	
 		-- [Finish Flag] --
-		if (_player.exiting)
+		if (_player.ptsr_outofgame)
 			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
 				v.getSpritePatch(SPR_FNSF,A,0),
 				(commonflags)|V_FLIP

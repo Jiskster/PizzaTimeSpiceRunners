@@ -176,7 +176,7 @@ local tooltips_hud = function(v, player)
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
 	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) 
-	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
+	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) and not PTSR.gameover then
 		if not player.hold_newlap then
 			v.drawString(160, 120, "\x85\* Hold FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
 		else
@@ -396,7 +396,12 @@ local overtimemulti_hud = function(v, player)
 	v.drawString(10, 135, "\x85\PF Speed: "..yum.."x", V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
 end
 
-
+local untilend_hud = function(v, player)
+	if not PTSR.untilend and not PTSR.gameover then return end
+	local real_timeuntilend = 100 - PTSR.untilend
+	local text_timeundilend = "\x88".."Ending in.. "..G_TicsToSeconds(real_timeuntilend).."."..G_TicsToCentiseconds(real_timeuntilend).."s"
+	v.drawString(160, 60, text_timeundilend, V_SNAPTOTOP|V_30TRANS|V_ADD, "thin-center")
+end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
@@ -408,6 +413,7 @@ customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
 customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
+customhud.SetupItem("PTSR_untilend", hudmodname, untilend_hud, "game", 0)
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)

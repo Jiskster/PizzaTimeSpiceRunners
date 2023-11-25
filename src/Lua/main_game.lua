@@ -184,7 +184,7 @@ local function InitMap()
 	PTSR.timeover = false
 	PTSR.showtime = false
 	PTSR.deathrings = {}
-	PTSR.timeover_tics = 0
+	PTSR.timeover_tics = 0 -- overtime
 	PTSR.intermission_tics = 0
 	PTSR.gameover = false
 	PTSR.untilend = 0
@@ -493,18 +493,19 @@ addHook("ThinkFrame", do
 
 		-- This is explicitly for turning off an inactive game (everyones dead!!!).
 		if not PTSR.gameover then
-			if (count.inactive == count.active) and PTSR.untilend < 75 then
+			if (count.inactive == count.active) and PTSR.untilend < 100 then
 				PTSR.untilend = $ + 1
-				print(PTSR.untilend)
-				if PTSR.untilend >= 75 then
+				if PTSR.untilend >= 100 then
 					PTSR.gameover = true
 					print("GAME OVER!")
 				end
 			else
 				PTSR.untilend = 0
 			end
+		else -- intermission thinker
+			PTSR.intermission_tics = $ + 1
 		end
-		
+
 		if PTSR.timeover then
 			PTSR.timeover_tics = $ + 1
 		end

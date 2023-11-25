@@ -96,14 +96,14 @@ addHook("PlayerThink", function(player)
 		end
 
 		if player.exiting and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
-			if (player.cmd.buttons & BT_ATTACK) then
+			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
 				player.hold_newlap = $ + 1
 			else
 				player.hold_newlap = 0
 			end
 		end
 
-		if player.hold_newlap then
+		if player.hold_newlap and not PTSR.gameover then
 		 	if player.hold_newlap >= PTSR.laphold then
 				PTSR.StartNewLap(player.mo)
 				hudst.anim_active = true
@@ -186,7 +186,8 @@ end)
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
 	if (player.playerstate == PST_DEAD) or (player.exiting) then return end 
-	
+	if PTSR.gameover then return end
+
 	local cmd = player.cmd
 	local pmo = player.mo
 	

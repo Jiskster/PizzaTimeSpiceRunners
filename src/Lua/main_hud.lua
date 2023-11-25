@@ -397,10 +397,18 @@ local overtimemulti_hud = function(v, player)
 end
 
 local untilend_hud = function(v, player)
-	if not PTSR.untilend and not PTSR.gameover then return end
+	if not PTSR.untilend or PTSR.gameover then return end
 	local real_timeuntilend = 100 - PTSR.untilend
 	local text_timeundilend = "\x88".."Ending in.. "..G_TicsToSeconds(real_timeuntilend).."."..G_TicsToCentiseconds(real_timeuntilend).."s"
 	v.drawString(160, 60, text_timeundilend, V_SNAPTOTOP|V_30TRANS|V_ADD, "thin-center")
+end
+
+local fade_hud = function(v, player)
+	if not PTSR.gameover then return end
+
+	local div = min(FixedDiv(PTSR.intermission_tics*FU, 129*FRACUNIT), FRACUNIT)
+	local fadetween = ease.linear(div, 0, 31)
+	v.fadeScreen(0xFF00, min(fadetween, 31))
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 
@@ -414,6 +422,7 @@ customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
 customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
 customhud.SetupItem("PTSR_untilend", hudmodname, untilend_hud, "game", 0)
+customhud.SetupItem("PTSR_fade", hudmodname, fade_hud, "game", 0)
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)

@@ -498,6 +498,8 @@ addHook("ThinkFrame", do
 				if PTSR.untilend >= 100 then
 					PTSR.gameover = true
 					print("GAME OVER!")
+					S_ChangeMusic("RNK_CB", false, player)
+					mapmusname = "RNK_CB"
 				end
 			else
 				PTSR.untilend = 0

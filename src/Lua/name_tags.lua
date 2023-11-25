@@ -64,6 +64,7 @@ hud.add( function(v, player, camera)
 	end
 	
 	if (gametype ~= GT_PTSPICER) then return end
+	if PTSR.gameover then return end
 
 	local width = 320
 	local height = 200

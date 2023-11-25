@@ -85,41 +85,6 @@ addHook("PlayerThink", function(player)
 	end
 end)
 
-addHook("ThinkFrame", do
-	local exitingCount, playerCount = PTSR_COUNT()
-	if PTSR.pizzatime then
-		P_StartQuake(FRACUNIT*4, 1)
-		PTSR.pizzatime_tics = $ + 1
-		if PTSR.timeleft and (exitingCount ~= playerCount) and CV_PTSR.timelimit.value then
-			PTSR.timeleft = $ - 1
-			if not PTSR.timeleft then
-				PTSR.timeover = true
-				local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
-				chatprint(timeover_text)
-				
-				for i,deathring in ipairs(PTSR.deathrings) do
-					if deathring and deathring.valid and deathring.rings_kept then
-						deathring.rings_kept = $ * 3
-					end
-				end
-				
-				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
-				end
-
-				local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
-				PTSR.end_location.y*FRACUNIT,
-				PTSR.end_location.z*FRACUNIT, 
-				MT_PIZZA_ENEMY)
-			end
-		end
-		
-		if PTSR.timeover then
-			PTSR.timeover_tics = $ + 1
-		end
-	end 
-end)
-
 addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	local hudst = player["PT@hudstuff"]
@@ -193,37 +158,28 @@ end)
 
 -- rank thinker
 addHook("PlayerThink", function(player)
-	-- a 6th of the max rank points, multiply later
+	-- a 8th of the max rank points, multiply later
 	-- idk what pec is supposed to mean but i guess it means a fraction of the maxrank points
-	local pec = (PTSR.maxrankpoints)/6
+	local pec = (PTSR.maxrankpoints)/8
 	
 	--player.ptsr_rank = "P"
 	-- boy what the hellllll o ma god way ayyaay
+	
 	if player.score < pec then
 		-- this is real p rank
 		-- cry like a wittle babyy!
 		player.ptsr_rank = "D"
 	elseif player.score <= pec*2 then
-		player.ptsr_rank = "C"
-		
+		player.ptsr_rank = "C"	
 	elseif player.score <= pec*4 then
 		player.ptsr_rank = "B"
-	elseif player.score <= pec*8 then
+	elseif player.score <= PTSR.maxrankpoints then
 		player.ptsr_rank = "A"
-	elseif player.score <= pec*13 then
+	elseif player.score <= pec*16 then
 		player.ptsr_rank = "S"
-	else
-		/*
-		if player.timeshit then
-			player.ptsr_rank = "S"
-		else
-			player.ptsr_rank = "P"
-		end
-		*/
-		
+	else		
 		player.ptsr_rank = "P"
 	end
-	
 end)
 
 -- Parry

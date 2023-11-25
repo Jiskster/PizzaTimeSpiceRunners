@@ -64,6 +64,10 @@ rawset(_G, "PTSR", { -- variables
 		
 		stop = false,
 	},
+
+	intermission_tics = 0,
+
+	gameover = false,
 	
 	deathrings = {},
 	
@@ -98,6 +102,10 @@ addHook("NetVars", function(net)
 		"timeover_tics",
 		
 		"deathrings",
+
+		"intermission_tics",
+
+		"gameover",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -171,6 +179,8 @@ local function InitMap()
 	PTSR.showtime = false
 	PTSR.deathrings = {}
 	PTSR.timeover_tics = 0
+	PTSR.intermission_tics = 0
+	PTSR.gameover = false
 end
 
 local function InitMap2()
@@ -439,6 +449,41 @@ PTSR.PizzaTimeTrigger = function(mobj)
 	end
 end
 
+addHook("ThinkFrame", do
+	local exitingCount, playerCount = PTSR_COUNT()
+	if PTSR.pizzatime then
+		P_StartQuake(FRACUNIT*4, 1)
+		PTSR.pizzatime_tics = $ + 1
+		if PTSR.timeleft and (exitingCount ~= playerCount) and CV_PTSR.timelimit.value then
+			PTSR.timeleft = $ - 1
+			if not PTSR.timeleft then
+				PTSR.timeover = true
+				local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
+				chatprint(timeover_text)
+				
+				for i,deathring in ipairs(PTSR.deathrings) do
+					if deathring and deathring.valid and deathring.rings_kept then
+						deathring.rings_kept = $ * 3
+					end
+				end
+				
+				if DiscordBot then
+					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+				end
+
+				local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+				PTSR.end_location.y*FRACUNIT,
+				PTSR.end_location.z*FRACUNIT, 
+				MT_PIZZA_ENEMY)
+			end
+		end
+		
+		if PTSR.timeover then
+			PTSR.timeover_tics = $ + 1
+		end
+	end 
+end)
+
 PTSR.GetRingCount = function()
 	local count = 0
 	for mobj in mobjs.iterate() do
@@ -456,14 +501,9 @@ PTSR.GetRingCount = function()
 	return count
 end
 
-
-
 addHook("MapChange", InitMap)
 addHook("MapLoad", InitMap)
 addHook("MapLoad", InitMap2)
-
-
-
 
 rawset(_G, "GT_PIZZATIMEJISK", GT_PTSPICER)
 rawset(_G, "PTJE", PTSR)

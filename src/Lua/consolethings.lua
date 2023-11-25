@@ -239,7 +239,6 @@ CV_PTSR.screams = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
-
 CV_PTSR.aimode = CV_RegisterVar({
 	name = "PTSR_aimode",
 	defaultvalue = "on",
@@ -321,6 +320,13 @@ CV_PTSR.parry_friendlyfire = CV_RegisterVar({
 	defaultvalue = "on",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff,
+})
+
+CV_PTSR.nopizza = CV_RegisterVar({
+	name = "PTSR_nopizza",
+	defaultvalue = "off",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
 })
 
 

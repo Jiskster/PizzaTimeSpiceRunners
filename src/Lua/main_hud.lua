@@ -170,7 +170,7 @@ end
 
 local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
-	local exitingCount, playerCount = PTSR_COUNT()
+	local count = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
@@ -193,7 +193,7 @@ local tooltips_hud = function(v, player)
 		if timeafteranimation then
 			local addtransflag = (timeafteranimation < 10) and (10-timeafteranimation)<<V_ALPHASHIFT or 0 
 
-			if (playerCount == 1) then
+			if (count.active == 1) then -- practice mode
 				v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
 			end
 			

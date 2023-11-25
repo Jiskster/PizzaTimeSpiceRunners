@@ -146,21 +146,27 @@ PTSR.gamemode_list = {
 PTSR.gamemode = 1
 
 rawset(_G, "PTSR_COUNT", do
-	local playerCount = 0
-	local exitingCount = 0
+	local activeCount = 0
+	local inactiveCount = 0
 	local pizzaCount = 0
+
 	for player in players.iterate
 		if player.valid
 			if player.pizzaface then
 				pizzaCount = $+1
 			end
 			if player.exiting or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
-				exitingCount = $+1
+				inactiveCount = $+1
 			end
 		end
-		playerCount = $+1
+		activeCount = $+1
 	end
-	return exitingCount,playerCount, pizzaCount
+
+	return {
+		inactive = inactiveCount, -- includes pizza faces
+		active = activeCount,
+		pizzas = pizzacount
+	}
 end)
 
 
@@ -181,6 +187,7 @@ local function InitMap()
 	PTSR.timeover_tics = 0
 	PTSR.intermission_tics = 0
 	PTSR.gameover = false
+	PTSR.untilend = 0
 end
 
 local function InitMap2()
@@ -340,7 +347,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
-		if CV_PTSR.aimode.value then
+		if CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
 			PTSR:SpawnPFAI()
 		end
 		
@@ -373,9 +380,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.laps = 1 -- new day new me
 		
 		--hit the player that touched the location with these variables
-		if not CV_PTSR.aimode.value then
-			local _, playerCount = PTSR_COUNT()
-			if playerCount > 1 then
+		if not CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
+			local count = PTSR_COUNT()
+
+			if count.active > 1 then
 				if CV_PTSR.pizzachoosetype.value == 1 then
 					mobj.player.pizzaface = true
 					mobj.player.stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
@@ -387,7 +395,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 					local active_playernums = {}
 					local playerschoosing = CV_PTSR.pizzacount.value
 					
-					if playerCount < playerschoosing then
+					if count.active < playerschoosing then
 						playerschoosing = 1
 					end
 					if playerschoosing then
@@ -419,6 +427,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 				end
 			end
 		end
+
 		for player in players.iterate() do
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
@@ -450,31 +459,49 @@ PTSR.PizzaTimeTrigger = function(mobj)
 end
 
 addHook("ThinkFrame", do
-	local exitingCount, playerCount = PTSR_COUNT()
+	local count = PTSR_COUNT()
+
 	if PTSR.pizzatime then
 		P_StartQuake(FRACUNIT*4, 1)
 		PTSR.pizzatime_tics = $ + 1
-		if PTSR.timeleft and (exitingCount ~= playerCount) and CV_PTSR.timelimit.value then
-			PTSR.timeleft = $ - 1
-			if not PTSR.timeleft then
-				PTSR.timeover = true
-				local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
-				chatprint(timeover_text)
-				
-				for i,deathring in ipairs(PTSR.deathrings) do
-					if deathring and deathring.valid and deathring.rings_kept then
-						deathring.rings_kept = $ * 3
-					end
-				end
-				
-				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
-				end
 
-				local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
-				PTSR.end_location.y*FRACUNIT,
-				PTSR.end_location.z*FRACUNIT, 
-				MT_PIZZA_ENEMY)
+		if CV_PTSR.timelimit.value then
+			if PTSR.timeleft and (count.inactive ~= count.active) then
+				PTSR.timeleft = $ - 1
+				if not PTSR.timeleft then
+					PTSR.timeover = true
+					local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
+					chatprint(timeover_text)
+					
+					for i,deathring in ipairs(PTSR.deathrings) do
+						if deathring and deathring.valid and deathring.rings_kept then
+							deathring.rings_kept = $ * 3
+						end
+					end
+					
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+					end
+
+					local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+					PTSR.end_location.y*FRACUNIT,
+					PTSR.end_location.z*FRACUNIT, 
+					MT_PIZZA_ENEMY)
+				end
+			end
+		end
+
+		-- This is explicitly for turning off an inactive game (everyones dead!!!).
+		if not PTSR.gameover then
+			if (count.inactive == count.active) and PTSR.untilend < 75 then
+				PTSR.untilend = $ + 1
+				print(PTSR.untilend)
+				if PTSR.untilend >= 75 then
+					PTSR.gameover = true
+					print("GAME OVER!")
+				end
+			else
+				PTSR.untilend = 0
 			end
 		end
 		

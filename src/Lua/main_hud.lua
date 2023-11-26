@@ -256,19 +256,14 @@ end
 
 local rank_hud = function(v, player)
 	local rankpos = {
-		x = 100*FRACUNIT,
-		y = 15*FRACUNIT
+		x = 110*FRACUNIT,
+		y = 20*FRACUNIT
 	}
 	if gametype ~= GT_PTSPICER then return end
 	
 	if player.pizzaface then return end
 	if player.ptsr_rank then
 		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
-		/*
-		if player.timeshit then -- no p rank for you noob
-			v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
-		end
-		*/
 	end
 end
 
@@ -407,8 +402,22 @@ local fade_hud = function(v, player)
 	if not PTSR.gameover then return end
 
 	local div = min(FixedDiv(PTSR.intermission_tics*FU, 129*FRACUNIT), FRACUNIT)
+	local div2 = min(FixedDiv(PTSR.intermission_tics*FU, 324*FRACUNIT),FRACUNIT)
 	local fadetween = ease.linear(div, 0, 31)
-	v.fadeScreen(0xFF00, min(fadetween, 31))
+	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
+	v.fadeScreen(0xFB00, min(fadetween, 31))
+	local rock = 324-PTSR.intermission_tics
+	if rock < 0 then
+		rock = 0
+	end
+	local turnx = sin(PTSR.intermission_tics*FRACUNIT*1800)*rock/2
+	local turny = cos(PTSR.intermission_tics*FRACUNIT*1800)*rock/2
+	local q_rank = v.cachePatch("PTSR_RANK_UNK")
+	if PTSR.intermission_tics > 324 then
+		q_rank = PTSR.r2p(v,player.ptsr_rank)
+	end
+
+	v.drawScaled(160*FRACUNIT - turnx, 60*FRACUNIT - turny, sizetween, q_rank)
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 

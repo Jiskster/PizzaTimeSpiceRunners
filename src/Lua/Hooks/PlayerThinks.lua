@@ -197,6 +197,27 @@ addHook("PlayerThink", function(player)
 	-- idk what pec is supposed to mean but i guess it means a fraction of the maxrank points
 	local pec = (PTSR.maxrankpoints)/6
 	
+	/*
+	print("rank debug")
+	local previ = 0
+	for i = 1,13
+		if dont[i] == true then continue end
+		
+		local num = max(pec*i-player.score,0)
+		
+		local cc = ''
+		if num == 0 then cc = "\x83" end
+		local pad = ' '
+		if i == 13 then pad = '' end
+		
+		print(i..pad..": "..rank[i]..": "
+			..cc..num..
+			" (+"..(pec*previ).." from last rank)"
+		)
+		previ = i
+	end
+	*/
+
 	--player.ptsr_rank = "P"
 	-- boy what the hellllll o ma god way ayyaay
 	if player.score < pec then

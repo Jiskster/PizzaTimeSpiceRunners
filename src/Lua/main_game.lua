@@ -461,6 +461,15 @@ PTSR.PizzaTimeTrigger = function(mobj)
 	end
 end
 
+local RANKMUS = {
+	P = "RNK_P",
+	S = "RNK_S",
+	A = "RNK_A",
+	B = "RNK_CB",
+	C = "RNK_CB",
+	D = "RNK_D"
+}
+
 addHook("ThinkFrame", do
 	local count = PTSR_COUNT()
 
@@ -501,8 +510,10 @@ addHook("ThinkFrame", do
 				if PTSR.untilend >= 100 then
 					PTSR.gameover = true
 					print("GAME OVER!")
-					S_ChangeMusic("RNK_CB", false, player)
-					mapmusname = "RNK_CB"
+					if consoleplayer and consoleplayer.valid then
+						S_ChangeMusic(RANKMUS[consoleplayer.ptsr_rank], false, player)
+						mapmusname = RANKMUS[consoleplayer.ptsr_rank]
+					end
 				end
 			else
 				PTSR.untilend = 0

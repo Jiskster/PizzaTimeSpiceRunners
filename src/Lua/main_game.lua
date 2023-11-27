@@ -98,6 +98,8 @@ addHook("NetVars", function(net)
 		"timeover_tics",
 		
 		"deathrings",
+		
+		"john",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -424,13 +426,14 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			end
 		end   
 		
-		if PTSR.john then
+		if PTSR.john and PTSR.john.valid then
 			local john = PTSR.john
 			john.state = S_PILLARJOHN_PAIN
 			john.flags = $ | MF_NOCLIP | MF_NOCLIPHEIGHT
 			john.momx = -cos(john.angle)*8
 			john.momy = -sin(john.angle)*8
 			john.momz = P_MobjFlip(john)*8*FU
+			S_StartSound(nil, sfx_jpilr)
 		end
 		
 		if not PTSR.timeover then

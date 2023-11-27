@@ -9,7 +9,7 @@ sfxinfo[sfx_coneba].caption = "Coneball laughs"
 sfxinfo[sfx_pepdie].caption = "Death"
 sfxinfo[sfx_lap2].caption = "New lap!"
 
-freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ")
+freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ", "sfx_jpilr")
 
 mobjinfo[MT_PILLARJOHN] = {
 	doomednum = -1,

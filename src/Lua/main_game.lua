@@ -434,6 +434,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			john.momy = -sin(john.angle)*8
 			john.momz = P_MobjFlip(john)*8*FU
 			S_StartSound(nil, sfx_jpilr)
+			P_FlashPal(consoleplayer, 1, 2)
 		end
 		
 		if not PTSR.timeover then

@@ -104,7 +104,6 @@ addHook("NetVars", function(net)
 		"deathrings",
 
 		"untilend",
-
 		"john",
 
 		"intermission_tics",

@@ -105,6 +105,8 @@ addHook("NetVars", function(net)
 
 		"untilend",
 
+		"john",
+
 		"intermission_tics",
 
 		"gameover",

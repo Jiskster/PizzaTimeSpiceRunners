@@ -384,7 +384,7 @@ local score_hud = function(v, player)
 end
 
 local overtimemulti_hud = function(v, player)
-	if not PTSR.timeover then return end
+	if not PTSR.timeover or PTSR.gameover then return end
 	
 	local yum = L_FixedDecimal(FRACUNIT + (PTSR.timeover_tics*25))
 	
@@ -436,6 +436,40 @@ local fade_hud = function(v, player)
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 
+local overtime_hud = function(v, player)
+	if not PTSR.timeover then return end
+	local left_tween 
+	local right_tween 
+	
+	local anim_len = 2*TICRATE
+	local anim_delay = 2*TICRATE
+	local anim_lastframe = (anim_len*2)+(anim_delay)
+	local left_end = 60 -- end pos of left
+	local right_end = 120 -- end pos of right
+	
+	local shake_dist = 2
+	local shakex_1 = v.RandomRange(-shake_dist, shake_dist)
+	local shakey_1 = v.RandomRange(-shake_dist, shake_dist)
+	local shakex_2 = v.RandomRange(-shake_dist, shake_dist)
+	local shakey_2 = v.RandomRange(-shake_dist, shake_dist)
+	
+	local div = min(FixedDiv(PTSR.timeover_tics*FU, anim_len*FU), FU)
+	local div_end = min(FixedDiv((PTSR.timeover_tics - anim_delay - anim_len)*FU, (anim_len)*FU), FU)
+
+	if PTSR.timeover_tics <= anim_len + anim_delay then -- come in
+		left_tween = ease.outquint(div, left_end-400, left_end)
+		right_tween = ease.outquint(div, right_end+400, right_end)
+	else -- come out
+		left_tween = ease.inquint(div_end, left_end, left_end-400)
+		right_tween = ease.inquint(div_end, right_end, right_end+400)
+	end
+	
+	if PTSR.timeover_tics <= anim_lastframe then -- draw
+		v.drawLevelTitle(left_tween+shakex_1, 100+shakey_1, "It's ", V_REDMAP)
+		v.drawLevelTitle(right_tween+shakex_2, 100+shakey_2, "Overtime!", V_REDMAP)
+	end
+end
+
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
 customhud.SetupItem("PTSR_tooltips", hudmodname, tooltips_hud, "game", 0)
@@ -447,6 +481,7 @@ customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- sho
 customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
 customhud.SetupItem("PTSR_untilend", hudmodname, untilend_hud, "game", 0)
 customhud.SetupItem("PTSR_fade", hudmodname, fade_hud, "game", 0)
+customhud.SetupItem("PTSR_overtime", hudmodname, overtime_hud, "game", 0)
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)

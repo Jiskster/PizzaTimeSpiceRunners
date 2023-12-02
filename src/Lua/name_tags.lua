@@ -161,7 +161,7 @@ hud.add( function(v, player, camera)
 			name = "PIZZAFACE"
 		elseif tmo.type == MT_PT_DEATHRING then
 			name = "DEATH RING"
-			local text_size = FRACUNIT/32
+			text_size = FRACUNIT/6
 			namecolor = SKINCOLOR_GREEN
 		end
 		

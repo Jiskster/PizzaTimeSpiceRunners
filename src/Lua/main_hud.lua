@@ -399,25 +399,40 @@ local untilend_hud = function(v, player)
 end
 
 local fade_hud = function(v, player)
+	local t_part1 = 324 -- the end tic of the first scene of the music
+	local t_part2 = 385
+	local i_tic = PTSR.intermission_tics
 	if not PTSR.gameover then return end
-
-	local div = min(FixedDiv(PTSR.intermission_tics*FU, 129*FRACUNIT), FRACUNIT)
-	local div2 = min(FixedDiv(PTSR.intermission_tics*FU, 324*FRACUNIT),FRACUNIT)
+	
+	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
+	local div2 = min(FixedDiv(i_tic*FU, t_part1*FRACUNIT),FRACUNIT)
 	local fadetween = ease.linear(div, 0, 31)
 	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
+	local turntween = ease.inexpo(div2, 0, t_part1*FU)
 	v.fadeScreen(0xFB00, min(fadetween, 31))
-	local rock = 324-PTSR.intermission_tics
+	local rock = t_part1-(turntween/FU)
 	if rock < 0 then
 		rock = 0
 	end
-	local turnx = sin(PTSR.intermission_tics*FRACUNIT*1800)*rock/2
-	local turny = cos(PTSR.intermission_tics*FRACUNIT*1800)*rock/2
+	local turnx = sin(turntween*1800)*rock/2
+	local turny = cos(turntween*1800)*rock/2
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
-	if PTSR.intermission_tics > 324 then
+	if i_tic > t_part1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
+	
+	local c = 0 -- tic offset after part1
+	if i_tic >= t_part1 and i_tic <= (t_part1 + 10) then
+		c = (t_part1 + 10) - i_tic
+		if c < 0 then
+			c = 0
+		end
+	end
+	
+	local shakex = v.RandomRange(-c/2,c/2)
+	local shakey = v.RandomRange(-c/2,c/2)
 
-	v.drawScaled(160*FRACUNIT - turnx, 60*FRACUNIT - turny, sizetween, q_rank)
+	v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 

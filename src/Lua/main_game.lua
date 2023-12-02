@@ -485,6 +485,9 @@ addHook("ThinkFrame", do
 					local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
 					chatprint(timeover_text)
 					
+					S_StartSound(nil, P_RandomRange(41,43)) -- lightning
+					--S_StartSound(nil, sfx_pizzao)
+					
 					for i,deathring in ipairs(PTSR.deathrings) do
 						if deathring and deathring.valid and deathring.rings_kept then
 							deathring.rings_kept = $ * 3

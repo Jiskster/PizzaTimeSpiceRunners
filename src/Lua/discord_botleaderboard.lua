@@ -14,22 +14,22 @@ local function registerIt(successValue)
 				local pname = string.gsub(player.name, "`", "")
 				local ping = player.ping
 				local statms = ''
-				local iconskin = ":"..skins[player.skin].name..":"
-				local admin = ':black_small_square:'
-				if (ping < 32) then statms = ':ping_blue:'
-				elseif (ping < 95) then statms = ':ping_green:'
-				elseif (ping < 195) then statms = ':ping_yellow:'
-				elseif (ping < 256) then statms = ':ping_red:' end
-				local rank = ':unknown:'
+				local iconskin = "{"..skins[player.skin].name.."} "
+				local admin = ':black_small_square: '
+				if (ping < 32) then statms = ':ping_blue: '
+				elseif (ping < 95) then statms = ':ping_green: '
+				elseif (ping < 195) then statms = ':ping_yellow: '
+				elseif (ping < 256) then statms = ':ping_red: ' end
+				local rank = ':unknown: '
 				if player.pizzaface and leveltime then
-					rank = pfmaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza:"
+					rank = pfmaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza: "
 				elseif player.spectator or player.playerstate == PST_DEAD
-					rank = ':dead:'
+					rank = ':dead: '
 				elseif player.ptsr_rank
-					rank = ':'..player.ptsr_rank:lower()..'rank:'
+					rank = '['..player.ptsr_rank:upper()..']'
 				end
-				if player.mo and (player.pflags & PF_FINISHED) then pffinished = ":completed:" end
-				if IsPlayerAdmin(player) then admin = ":remote_admin:" end
+				if player.mo and ((player.pflags & PF_FINISHED) or player.ptsr_outofgame) then pffinished = ":completed: " end
+				if IsPlayerAdmin(player) then admin = ":remote_admin: " end
 				if player.playtime == nil then player.playtime = 0 end
 				local seconds = G_TicsToSeconds(player.playtime)
 				if string.len(seconds) == 1 then seconds = "0"..tostring(seconds) end

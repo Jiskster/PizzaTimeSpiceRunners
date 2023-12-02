@@ -528,6 +528,10 @@ addHook("ThinkFrame", do
 		if PTSR.timeover then
 			PTSR.timeover_tics = $ + 1
 		end
+		
+		if PTSR.intermission_tics >= 20*TICRATE then
+			COM_BufInsertText(server, "exitlevel")
+		end
 	end 
 end)
 

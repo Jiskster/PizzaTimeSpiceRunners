@@ -400,15 +400,43 @@ end
 
 local fade_hud = function(v, player)
 	local t_part1 = 324 -- the end tic of the first scene of the music
-	local t_part2 = 385
+	local t_part2 = 388
+	
+
+	
 	local i_tic = PTSR.intermission_tics
 	if not PTSR.gameover then return end
 	
 	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
 	local div2 = min(FixedDiv(i_tic*FU, t_part1*FRACUNIT),FRACUNIT)
+	local div3 
+		
+	local c1 = 0 -- tic offset after part1
+	local c2 = 0 -- tic offset after part2
+	
+	if i_tic >= t_part1 and i_tic <= (t_part1 + 10) then
+		c1 = (t_part1 + 10) - i_tic
+		if c1 < 0 then
+			c1 = 0
+		end
+	end
+	
+	if i_tic >= t_part2 and i_tic <= (t_part2 + 15) then
+		c2 = (t_part2 + 10) - i_tic
+		if c2 < 0 then
+			c2 = 0
+		end
+	end
+	
+	div3 = min(FixedDiv(c2*FU, 10*FRACUNIT),FRACUNIT)
+	
 	local fadetween = ease.linear(div, 0, 31)
 	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
 	local turntween = ease.inexpo(div2, 0, t_part1*FU)
+	local zonenametween = ease.inquint(div3, 10*FU, -100*FU)
+	local scoretween = ease.inquint(div3, 100*FU, 500*FU)
+	
+	
 	v.fadeScreen(0xFB00, min(fadetween, 31))
 	local rock = t_part1-(turntween/FU)
 	if rock < 0 then
@@ -421,16 +449,20 @@ local fade_hud = function(v, player)
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
 	
-	local c = 0 -- tic offset after part1
-	if i_tic >= t_part1 and i_tic <= (t_part1 + 10) then
-		c = (t_part1 + 10) - i_tic
-		if c < 0 then
-			c = 0
-		end
-	end
+
 	
-	local shakex = v.RandomRange(-c/2,c/2)
-	local shakey = v.RandomRange(-c/2,c/2)
+	local shakex = v.RandomRange(-c1/2,c1/2)
+	local shakey = v.RandomRange(-c1/2,c1/2)
+	
+	if i_tic >= t_part2 then
+		local x1,y1 = 160*FU,zonenametween
+		local x2,y2 = 160*FU,scoretween
+		local x3,y3 = 160*FU,180*FU
+		customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
+		customhud.CustomFontString(v, x2, y2, "SCORE: "..player.score, "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
+		
+		customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
+	end
 
 	v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
 end

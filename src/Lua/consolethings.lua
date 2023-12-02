@@ -98,6 +98,15 @@ COM_AddCommand("ptsr_printangle", function(player)
 	
 	CONS_Printf(player, "Angle: "..AngleFixed(player.mo.angle)/FU)
 end)
+
+COM_AddCommand("ptsr_timeto1", function(player)
+	if gametype ~= GT_PTSPICER then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	PTSR.timeleft = 1
+end, 1)
 // ADDED FOR TESTING PURPOSES
 
 CV_PTSR.x_positioning = CV_RegisterVar({
@@ -239,7 +248,6 @@ CV_PTSR.screams = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
-
 CV_PTSR.aimode = CV_RegisterVar({
 	name = "PTSR_aimode",
 	defaultvalue = "on",
@@ -321,6 +329,13 @@ CV_PTSR.parry_friendlyfire = CV_RegisterVar({
 	defaultvalue = "on",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff,
+})
+
+CV_PTSR.nopizza = CV_RegisterVar({
+	name = "PTSR_nopizza",
+	defaultvalue = "off",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
 })
 
 

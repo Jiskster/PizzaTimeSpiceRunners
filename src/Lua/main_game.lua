@@ -64,6 +64,10 @@ rawset(_G, "PTSR", { -- variables
 		
 		stop = false,
 	},
+
+	intermission_tics = 0,
+
+	gameover = false,
 	
 	deathrings = {},
 	
@@ -100,6 +104,12 @@ addHook("NetVars", function(net)
 		"deathrings",
 		
 		"john",
+
+		"untilend",
+
+		"intermission_tics",
+
+		"gameover",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -115,6 +125,7 @@ local function ResetPlayerVars(player)
 	player.spectator = false
 	player.lapsdid = 0
 	player.laptime = 0
+	player.ptsr_outofgame = 0
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 
@@ -140,21 +151,27 @@ PTSR.gamemode_list = {
 PTSR.gamemode = 1
 
 rawset(_G, "PTSR_COUNT", do
-	local playerCount = 0
-	local exitingCount = 0
+	local activeCount = 0
+	local inactiveCount = 0
 	local pizzaCount = 0
+
 	for player in players.iterate
 		if player.valid
 			if player.pizzaface then
 				pizzaCount = $+1
 			end
-			if player.exiting or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
-				exitingCount = $+1
+			if player.ptsr_outofgame or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
+				inactiveCount = $+1
 			end
 		end
-		playerCount = $+1
+		activeCount = $+1
 	end
-	return exitingCount,playerCount, pizzaCount
+
+	return {
+		inactive = inactiveCount, -- includes pizza faces
+		active = activeCount,
+		pizzas = pizzacount
+	}
 end)
 
 
@@ -172,7 +189,10 @@ local function InitMap()
 	PTSR.timeover = false
 	PTSR.showtime = false
 	PTSR.deathrings = {}
-	PTSR.timeover_tics = 0
+	PTSR.timeover_tics = 0 -- overtime
+	PTSR.intermission_tics = 0
+	PTSR.gameover = false
+	PTSR.untilend = 0
 end
 
 local function InitMap2()
@@ -253,7 +273,7 @@ end
 -- doesnt actually trigger or increment lap, just tps you
 PTSR.LapTP = function(player, invincibility)
 	if not player and not player.mo and not player.mo.valid then return end -- safety
-	player.exiting = 0
+	player.ptsr_outofgame = 0
 	P_SetOrigin(player.mo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 	player.mo.angle = PTSR.end_location.angle - ANGLE_90
 	
@@ -332,7 +352,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
-		if CV_PTSR.aimode.value then
+		if CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
 			PTSR:SpawnPFAI()
 		end
 		
@@ -365,9 +385,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.laps = 1 -- new day new me
 		
 		--hit the player that touched the location with these variables
-		if not CV_PTSR.aimode.value then
-			local _, playerCount = PTSR_COUNT()
-			if playerCount > 1 then
+		if not CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
+			local count = PTSR_COUNT()
+
+			if count.active > 1 then
 				if CV_PTSR.pizzachoosetype.value == 1 then
 					mobj.player.pizzaface = true
 					mobj.player.stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
@@ -379,7 +400,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 					local active_playernums = {}
 					local playerschoosing = CV_PTSR.pizzacount.value
 					
-					if playerCount < playerschoosing then
+					if count.active < playerschoosing then
 						playerschoosing = 1
 					end
 					if playerschoosing then
@@ -411,6 +432,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 				end
 			end
 		end
+
 		for player in players.iterate() do
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
@@ -443,6 +465,80 @@ PTSR.PizzaTimeTrigger = function(mobj)
 	end
 end
 
+local RANKMUS = {
+	P = "RNK_P",
+	S = "RNK_S",
+	A = "RNK_A",
+	B = "RNK_CB",
+	C = "RNK_CB",
+	D = "RNK_D"
+}
+
+addHook("ThinkFrame", do
+	local count = PTSR_COUNT()
+
+	if PTSR.pizzatime then
+		P_StartQuake(FRACUNIT*4, 1)
+		PTSR.pizzatime_tics = $ + 1
+
+		if CV_PTSR.timelimit.value then
+			if PTSR.timeleft and (count.inactive ~= count.active) then
+				PTSR.timeleft = $ - 1
+				if not PTSR.timeleft then
+					PTSR.timeover = true
+					local timeover_text = "\x8F*Overtime! Spawned another pizza face!"
+					chatprint(timeover_text)
+					
+					S_StartSound(nil, P_RandomRange(41,43)) -- lightning
+					--S_StartSound(nil, sfx_pizzao)
+					
+					for i,deathring in ipairs(PTSR.deathrings) do
+						if deathring and deathring.valid and deathring.rings_kept then
+							deathring.rings_kept = $ * 3
+						end
+					end
+					
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+					end
+
+					local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
+					PTSR.end_location.y*FRACUNIT,
+					PTSR.end_location.z*FRACUNIT, 
+					MT_PIZZA_ENEMY)
+				end
+			end
+		end
+
+		-- This is explicitly for turning off an inactive game (everyones dead!!!).
+		if not PTSR.gameover then
+			if (count.inactive == count.active) and PTSR.untilend < 100 then
+				PTSR.untilend = $ + 1
+				if PTSR.untilend >= 100 then
+					PTSR.gameover = true
+					print("GAME OVER!")
+					if consoleplayer and consoleplayer.valid then
+						S_ChangeMusic(RANKMUS[consoleplayer.ptsr_rank], false, player)
+						mapmusname = RANKMUS[consoleplayer.ptsr_rank]
+					end
+				end
+			else
+				PTSR.untilend = 0
+			end
+		else -- intermission thinker
+			PTSR.intermission_tics = $ + 1
+		end
+
+		if PTSR.timeover then
+			PTSR.timeover_tics = $ + 1
+		end
+		
+		if PTSR.intermission_tics >= 20*TICRATE then
+			COM_BufInsertText(server, "exitlevel")
+		end
+	end 
+end)
+
 PTSR.GetRingCount = function()
 	local count = 0
 	for mobj in mobjs.iterate() do
@@ -460,14 +556,9 @@ PTSR.GetRingCount = function()
 	return count
 end
 
-
-
 addHook("MapChange", InitMap)
 addHook("MapLoad", InitMap)
 addHook("MapLoad", InitMap2)
-
-
-
 
 rawset(_G, "GT_PIZZATIMEJISK", GT_PTSPICER)
 rawset(_G, "PTJE", PTSR)

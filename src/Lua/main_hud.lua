@@ -170,13 +170,13 @@ end
 
 local tooltips_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
-	local exitingCount, playerCount = PTSR_COUNT()
+	local count = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
 
-	if (not player.pizzaface) and (player.exiting) and (player.playerstate ~= PST_DEAD) 
-	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
+	if (not player.pizzaface) and (player.ptsr_outofgame) and (player.playerstate ~= PST_DEAD) 
+	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) and not PTSR.gameover then
 		if not player.hold_newlap then
 			v.drawString(160, 120, "\x85\* Hold FIRE to try a new lap! *", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
 		else
@@ -193,7 +193,7 @@ local tooltips_hud = function(v, player)
 		if timeafteranimation then
 			local addtransflag = (timeafteranimation < 10) and (10-timeafteranimation)<<V_ALPHASHIFT or 0 
 
-			if (playerCount == 1) then
+			if (count.active == 1) then -- practice mode
 				v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
 			end
 			
@@ -256,19 +256,14 @@ end
 
 local rank_hud = function(v, player)
 	local rankpos = {
-		x = 100*FRACUNIT,
-		y = 15*FRACUNIT
+		x = 110*FRACUNIT,
+		y = 20*FRACUNIT
 	}
 	if gametype ~= GT_PTSPICER then return end
 	
 	if player.pizzaface then return end
 	if player.ptsr_rank then
 		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)
-		/*
-		if player.timeshit then -- no p rank for you noob
-			v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v, "BROKEN"), V_SNAPTOLEFT|V_SNAPTOTOP|V_20TRANS)
-		end
-		*/
 	end
 end
 
@@ -343,7 +338,7 @@ local scoreboard_hud = function(v, player)
 		_skinpatch, (commonflags)|aliveflag, _colormap)
 
 		-- [Player Rank] --
-		v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
+		v.drawScaled(_xcoord - 16*FRACUNIT + 8*FRACUNIT, _ycoord + 8*FRACUNIT, FRACUNIT/4, 
 		PTSR.r2p(v,_player.ptsr_rank), commonflags)
 
 		/*
@@ -371,7 +366,7 @@ local scoreboard_hud = function(v, player)
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	
 		-- [Finish Flag] --
-		if (_player.exiting)
+		if (_player.ptsr_outofgame)
 			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
 				v.getSpritePatch(SPR_FNSF,A,0),
 				(commonflags)|V_FLIP
@@ -389,15 +384,123 @@ local score_hud = function(v, player)
 end
 
 local overtimemulti_hud = function(v, player)
-	if not PTSR.timeover then return end
+	if not PTSR.timeover or PTSR.gameover then return end
 	
 	local yum = L_FixedDecimal(FRACUNIT + (PTSR.timeover_tics*25))
 	
 	v.drawString(10, 135, "\x85\PF Speed: "..yum.."x", V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
 end
 
+local untilend_hud = function(v, player)
+	if not PTSR.untilend or PTSR.gameover then return end
+	local real_timeuntilend = 100 - PTSR.untilend
+	local text_timeundilend = "\x88".."Ending in.. "..G_TicsToSeconds(real_timeuntilend).."."..G_TicsToCentiseconds(real_timeuntilend).."s"
+	v.drawString(160, 60, text_timeundilend, V_SNAPTOTOP|V_30TRANS|V_ADD, "thin-center")
+end
 
+local fade_hud = function(v, player)
+	local t_part1 = 324 -- the end tic of the first scene of the music
+	local t_part2 = 388
+	
+
+	
+	local i_tic = PTSR.intermission_tics
+	if not PTSR.gameover then return end
+	
+	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
+	local div2 = min(FixedDiv(i_tic*FU, t_part1*FRACUNIT),FRACUNIT)
+	local div3 
+		
+	local c1 = 0 -- tic offset after part1
+	local c2 = 0 -- tic offset after part2
+	
+	if i_tic >= t_part1 and i_tic <= (t_part1 + 10) then
+		c1 = (t_part1 + 10) - i_tic
+		if c1 < 0 then
+			c1 = 0
+		end
+	end
+	
+	if i_tic >= t_part2 and i_tic <= (t_part2 + 15) then
+		c2 = (t_part2 + 10) - i_tic
+		if c2 < 0 then
+			c2 = 0
+		end
+	end
+	
+	div3 = min(FixedDiv(c2*FU, 10*FRACUNIT),FRACUNIT)
+	
+	local fadetween = ease.linear(div, 0, 31)
+	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
+	local turntween = ease.inexpo(div2, 0, t_part1*FU)
+	local zonenametween = ease.inquint(div3, 10*FU, -100*FU)
+	local scoretween = ease.inquint(div3, 100*FU, 500*FU)
+	
+	
+	v.fadeScreen(0xFB00, min(fadetween, 31))
+	local rock = t_part1-(turntween/FU)
+	if rock < 0 then
+		rock = 0
+	end
+	local turnx = sin(turntween*1800)*rock/2
+	local turny = cos(turntween*1800)*rock/2
+	local q_rank = v.cachePatch("PTSR_RANK_UNK")
+	if i_tic > t_part1 then
+		q_rank = PTSR.r2p(v,player.ptsr_rank)
+	end
+	
+
+	
+	local shakex = v.RandomRange(-c1/2,c1/2)
+	local shakey = v.RandomRange(-c1/2,c1/2)
+	
+	if i_tic >= t_part2 then
+		local x1,y1 = 160*FU,zonenametween
+		local x2,y2 = 160*FU,scoretween
+		local x3,y3 = 160*FU,180*FU
+		customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
+		customhud.CustomFontString(v, x2, y2, "SCORE: "..player.score, "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
+		
+		customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
+	end
+
+	v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
+end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
+
+local overtime_hud = function(v, player)
+	if not PTSR.timeover then return end
+	local left_tween 
+	local right_tween 
+	
+	local anim_len = 2*TICRATE
+	local anim_delay = 2*TICRATE
+	local anim_lastframe = (anim_len*2)+(anim_delay)
+	local left_end = 60 -- end pos of left
+	local right_end = 120 -- end pos of right
+	
+	local shake_dist = 2
+	local shakex_1 = v.RandomRange(-shake_dist, shake_dist)
+	local shakey_1 = v.RandomRange(-shake_dist, shake_dist)
+	local shakex_2 = v.RandomRange(-shake_dist, shake_dist)
+	local shakey_2 = v.RandomRange(-shake_dist, shake_dist)
+	
+	local div = min(FixedDiv(PTSR.timeover_tics*FU, anim_len*FU), FU)
+	local div_end = min(FixedDiv((PTSR.timeover_tics - anim_delay - anim_len)*FU, (anim_len)*FU), FU)
+
+	if PTSR.timeover_tics <= anim_len + anim_delay then -- come in
+		left_tween = ease.outquint(div, left_end-400, left_end)
+		right_tween = ease.outquint(div, right_end+400, right_end)
+	else -- come out
+		left_tween = ease.inquint(div_end, left_end, left_end-400)
+		right_tween = ease.inquint(div_end, right_end, right_end+400)
+	end
+	
+	if PTSR.timeover_tics <= anim_lastframe then -- draw
+		v.drawLevelTitle(left_tween+shakex_1, 100+shakey_1, "It's ", V_REDMAP)
+		v.drawLevelTitle(right_tween+shakex_2, 100+shakey_2, "Overtime!", V_REDMAP)
+	end
+end
 
 customhud.SetupItem("PTSR_bar", hudmodname, bar_hud, "game", 0)
 customhud.SetupItem("PTSR_itspizzatime", hudmodname, itspizzatime_hud, "game", 0)
@@ -408,6 +511,9 @@ customhud.SetupItem("PTSR_rank", hudmodname, rank_hud, "game", 0)
 customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
 customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
+customhud.SetupItem("PTSR_untilend", hudmodname, untilend_hud, "game", 0)
+customhud.SetupItem("PTSR_fade", hudmodname, fade_hud, "game", 0)
+customhud.SetupItem("PTSR_overtime", hudmodname, overtime_hud, "game", 0)
 customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)

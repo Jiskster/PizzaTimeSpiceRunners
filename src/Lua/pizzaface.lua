@@ -29,7 +29,7 @@ function PTSR:PizzaCanTag(peppino, pizza)
 
 	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
 
-	if peppino.player.exiting then return false end
+	if peppino.player.ptsr_outofgame then return false end
 
 	if peppino.player.powers[pw_invulnerability] then return false end
 
@@ -56,7 +56,7 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 
 	for peppino in players.iterate() do
 		if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and 
-		not peppino.spectator and not peppino.exiting and (peppino.playerstate == PST_LIVE)
+		not peppino.spectator and not peppino.ptsr_outofgame and (peppino.playerstate == PST_LIVE)
 		and not peppino.quittime then 
 			table.insert(peppinos, #peppino)
 		end
@@ -177,7 +177,7 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.mo.health and not player.exiting 
+		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame 
 		and not player.spectator and not player.quittime and not player.pizzaface 
 		and not player.mo.pizza_out and not player.mo.pizza_in then
 			if not nearest_player then
@@ -195,7 +195,7 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	if nearest_player and nearest_player.valid and nearest_player.mo 
-	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.exiting
+	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.ptsr_outofgame
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
@@ -337,10 +337,10 @@ addHook("PlayerThink", function(player)
 			player.redgreen = not player.redgreen
 		end
 
-		if player.exiting or PTSR.quitting then
+		if player.ptsr_outofgame or PTSR.quitting then
 			player.pizzacharge = 0
 		end
-		if not player.exiting and (player.cmd.buttons & BT_ATTACK) 
+		if not player.ptsr_outofgame and (player.cmd.buttons & BT_ATTACK) 
 		and not PTSR.quitting and not player.stuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1

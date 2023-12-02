@@ -30,7 +30,7 @@ addHook("MobjLineCollide", function(mobj, line)
 
 		-- Sign at start check.
 		if ((line.backsector and line.backsector == PTSR.endsector)
-		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.exiting and not player.spectator
+		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.ptsr_outofgame and not player.spectator
 		and player.mo and player.mo.valid and player.lapsdid ~= nil then 
 		
 			if player.pizzaface then
@@ -40,7 +40,7 @@ addHook("MobjLineCollide", function(mobj, line)
 			
 			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
 			
-			P_DoPlayerExit(player)
+			player.ptsr_outofgame = 1
 			
 			chatprint(lapstring, true)
 			if CV_PTSR.forcelap.value then 

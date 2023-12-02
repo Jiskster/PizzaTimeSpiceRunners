@@ -12,14 +12,13 @@ local function registerIt(successValue)
 		for player in players.iterate do
 			if player
 				local pname = string.gsub(player.name, "`", "")
-				local ping = 0
+				local ping = player.ping
 				local statms = ''
 				local iconskin = ":"..skins[player.skin].name..":"
 				local admin = ':black_small_square:'
-				if player.cmd.latency then ping = player.cmd.latency * 13 end
 				if (ping < 32) then statms = ':ping_blue:'
-				elseif (ping < 64) then statms = ':ping_green:'
-				elseif (ping < 128) then statms = ':ping_yellow:'
+				elseif (ping < 95) then statms = ':ping_green:'
+				elseif (ping < 195) then statms = ':ping_yellow:'
 				elseif (ping < 256) then statms = ':ping_red:' end
 				local rank = ':unknown:'
 				if player.pizzaface and leveltime then

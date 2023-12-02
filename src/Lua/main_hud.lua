@@ -338,7 +338,7 @@ local scoreboard_hud = function(v, player)
 		_skinpatch, (commonflags)|aliveflag, _colormap)
 
 		-- [Player Rank] --
-		v.drawScaled(_xcoord - 16*FRACUNIT, _ycoord, FRACUNIT/4, 
+		v.drawScaled(_xcoord - 16*FRACUNIT + 8*FRACUNIT, _ycoord + 8*FRACUNIT, FRACUNIT/4, 
 		PTSR.r2p(v,_player.ptsr_rank), commonflags)
 
 		/*

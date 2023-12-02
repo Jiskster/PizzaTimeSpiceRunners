@@ -328,7 +328,15 @@ end
 PTSR.PizzaTimeTrigger = function(mobj)
 	if not (PTSR.pizzatime and PTSR.spawn_location_atdefault) then
 		if DiscordBot then
-			DiscordBot.Data.msgsrb2 = $ .. ":pizza: Pizza Time has started! Pizzas:\n"
+			local discord_pizzatime_text = "This text isn't supposed to show. Uh oh!"
+			
+			if not CV_PTSR.aimode.value then
+				discord_pizzatime_text = ":pizza: Pizza Time has started!\n"
+			else
+				discord_pizzatime_text = ":pizza: Pizza Time has started! Pizzas:\n"
+			end
+			
+			DiscordBot.Data.msgsrb2 = $ .. discord_pizzatime_text
 		end
 		
 		PTSR.pizzatime = true
@@ -345,7 +353,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
 		end
 
-		if DiscordBot then
+		if DiscordBot and not CV_PTSR.aimode.value then
 			DiscordBot.Data.msgsrb2 = $ .. ":pizza: **" .. PTSR.gamemode_list[PTSR.gamemode] .. "** is the new gamemode!\n"
 		end
 

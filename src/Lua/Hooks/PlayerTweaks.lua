@@ -36,6 +36,7 @@ addHook("TouchSpecial", function(special, toucher)
 		if special.rings_kept then
 			P_GivePlayerRings(tplayer, special.rings_kept)
 			print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
+			DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
 		end
 	end
 end, MT_PT_DEATHRING)

@@ -37,6 +37,7 @@ local function registerIt(successValue)
 				local line = statms..iconskin..rank..admin.."["..#player.."] `"..pname.."`: Score - "..player.score
 				if not player.pizzaface and player.ptsr_rank and player.lapsdid then
 					line = $ .. "; Laps - "..player.lapsdid -- .." / "..PTSR.maxlaps
+					line = $ .. "; Rings -"..player.rings
 				end
 				playerstats = $ + line.."\n"
 			end

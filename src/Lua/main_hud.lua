@@ -271,7 +271,7 @@ local rank_hud = function(v, player)
 	if player.pizzaface then return end
 
 	--get the percent to next rank
-	local per = (PTSR.maxrankpoints)/6
+	local per = (PTSR.maxrankpoints)/8
 	local percent = per
 	local score = 0
 	local rank = player.ptsr_rank
@@ -284,11 +284,11 @@ local rank_hud = function(v, player)
 		score = player.score-(per*2)
 		percent = $*2
 	elseif (rank == "A")
-		score = player.score-(per*3)
-		percent = $*5
+		score = player.score-(per*4)
+		percent = $*4
 	elseif (rank == "S")
-		score = player.score-(per*8)
-		percent = $*5
+		score = player.score-(PTSR.maxrankpoints)
+		percent = $*8
 	end
 	--
 

@@ -55,6 +55,7 @@ end)
 -- Keep most rings if more than 125 rings. Else do "normal" ring drop
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
+	local istakis = player.takistable and player.takistable.isTakis
 	if target and target.valid and player and player.valid then
 		if not (damagetype & DMG_DEATHMASK) then
 			if player.rings < 125 then
@@ -70,8 +71,10 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 			end
 			
 			player.score = ($*3)/4 -- 3/4 remaining
-			P_DoPlayerPain(player, source, inflictor)
-			return true
+			if not (istakis)
+				P_DoPlayerPain(player, source, inflictor)
+				return true
+			end
 		end
 	end
 end, MT_PLAYER)

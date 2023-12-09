@@ -15,7 +15,7 @@ end)
 G_AddGametype({
     name = "Spice Runners",
     identifier = "PTSPICER",
-    typeoflevel = TOL_RACE,
+    typeoflevel = TOL_PTSR,
     rules = GTR_FRIENDLY|GTR_SPAWNENEMIES|GTR_TIMELIMIT,
     intermissiontype = int_match,
     headercolor = 67,

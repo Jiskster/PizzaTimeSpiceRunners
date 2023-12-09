@@ -30,20 +30,3 @@ addHook("ThinkFrame", function()
 		end
 	end
 end)
-
-
-addHook("MobjDamage", function(mobj)
-	if mobj and mobj.valid and mobj.player and mobj.player.valid then
-		if mobj.player.ptsr_outofgame then
-			return true
-		end
-	end
-end, MT_PLAYER)
-
-addHook("MobjDeath", function(mobj)
-	if mobj and mobj.valid and mobj.player and mobj.player.valid then
-		if mobj.player.ptsr_outofgame then
-			return true
-		end
-	end
-end, MT_PLAYER)

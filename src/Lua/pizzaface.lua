@@ -33,7 +33,7 @@ function PTSR:PizzaCanTag(peppino, pizza)
 
 	if peppino.player.powers[pw_invulnerability] then return false end
 
-	if peppino.player.powers[pw_flashing] then return false end
+	if peppino.player.powers[pw_flashing] and not CV_PTSR.flashframedeath.value then return false end
 
 	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
 	

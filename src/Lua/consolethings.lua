@@ -338,6 +338,12 @@ CV_PTSR.nopizza = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
+CV_PTSR.flashframedeath = CV_RegisterVar({
+	name = "PTSR_flashframedeath",
+	defaultvalue = "On",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
+})
 
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",

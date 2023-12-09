@@ -132,7 +132,7 @@ CV_PTSR.forcelap = CV_RegisterVar({
 
 CV_PTSR.default_maxlaps = CV_RegisterVar({
 	name = "PTSR_default_maxlaps",
-	defaultvalue = "5",
+	defaultvalue = "0",
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
 })

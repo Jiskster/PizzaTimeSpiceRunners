@@ -16,7 +16,7 @@ end
 
 PTSR.intermission_act1 = 324 -- last drum beat of the music
 PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
-
+PTSR.intermission_act_end = PTSR.intermission_act2 + 5*TICRATE
 
 /*
 local hud_debug = CV_RegisterVar({
@@ -457,63 +457,51 @@ local fade_hud = function(v, player)
 	--local t_part1 = 324 -- the end tic of the first scene of the music
 	--local t_part2 = 388
 	
-	
 	local i_tic = PTSR.intermission_tics
 	if not PTSR.gameover then return end
 	
 	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
 	local div2 = min(FixedDiv(i_tic*FU, PTSR.intermission_act1*FRACUNIT),FRACUNIT)
-	local div3 
+	local div3 -- go down for div3
 		
-	local c1 = 0 -- tic offset after part1
-	local c2 = 0 -- tic offset after part2
+	local c1 = clamp(0, (PTSR.intermission_act1 + 10) - i_tic, 10); 
+	local c2 = clamp(0, (PTSR.intermission_act2 + 20) - i_tic, 20); 
+	local c3 = clamp(0, (PTSR.intermission_act_end + 20) - i_tic, 20); 
 	
-	if i_tic >= PTSR.intermission_act1 and i_tic <= (PTSR.intermission_act1 + 10) then
-		c1 = (PTSR.intermission_act1 + 10) - i_tic
-		if c1 < 0 then
-			c1 = 0
-		end
-	end
+	div3 = min(FixedDiv(c2*FU, 20*FRACUNIT),FRACUNIT)
 	
-	if i_tic >= PTSR.intermission_act2 and i_tic <= (PTSR.intermission_act2 + 15) then
-		c2 = (PTSR.intermission_act2 + 10) - i_tic
-		if c2 < 0 then
-			c2 = 0
-		end
-	end
-	
-	div3 = min(FixedDiv(c2*FU, 10*FRACUNIT),FRACUNIT)
-	
-	local fadetween = ease.linear(div, 0, 31)
+	local fadetween = ease.linear(div, 0, 31); fadetween = $ < 0 and 0 or $
 	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
 	local turntween = ease.inexpo(div2, 0, PTSR.intermission_act1*FU)
 	local zonenametween = ease.inquint(div3, 10*FU, -100*FU)
 	local scoretween = ease.inquint(div3, 100*FU, 500*FU)
-	
-	
-	v.fadeScreen(0xFB00, min(fadetween, 31))
 	local rock = PTSR.intermission_act1-(turntween/FU)
-	if rock < 0 then
-		rock = 0
-	end
+	rock = max(0, $)
+	
 	local turnx = sin(turntween*1800)*rock/2
 	local turny = cos(turntween*1800)*rock/2
+	
+	v.fadeScreen(0xFB00, min(fadetween, 31))
+
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
 	if i_tic > PTSR.intermission_act1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
 	
-
+	local shakex = i_tic > PTSR.intermission_act1 and v.RandomRange(-c1/2,c1/2) or 0 
+	local shakey = i_tic > PTSR.intermission_act1 and v.RandomRange(-c1/2,c1/2) or 0
 	
-	local shakex = v.RandomRange(-c1/2,c1/2)
-	local shakey = v.RandomRange(-c1/2,c1/2)
+	if i_tic >= PTSR.intermission_act_end then
+		zonenametween = ease.inquint(div3, 10*FU, -100*FU)
+		scoretween = ease.inquint(div3, 100*FU, 500*FU)
+	end
 	
 	if i_tic >= PTSR.intermission_act2 then
 		local x1,y1 = 160*FU,zonenametween
 		local x2,y2 = 160*FU,scoretween
 		local x3,y3 = 160*FU,180*FU
 		customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
-		customhud.CustomFontString(v, x2, y2, "SCORE: "..player.score, "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
+		customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.pt_endscore or "Invalid Score"), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
 		
 		customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
 	end

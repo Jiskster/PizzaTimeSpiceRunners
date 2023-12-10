@@ -1,12 +1,13 @@
 addHook("ThinkFrame", do
 	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
-	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act2 + 5*TICRATE then
+	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
 		PTSR.vote_maplist = {
 		{0,1},
 		{0,1},
 		{0,1}
 		} -- votes, mapnumber
+		
 		local temp_maplist = {}
 		local temp_selected_maplist = {}
 		
@@ -27,7 +28,7 @@ addHook("ThinkFrame", do
 		
 		for i=1,#temp_selected_maplist do
 			PTSR.vote_maplist[i][2] = temp_selected_maplist[i]
-			print(mapheaderinfo[temp_selected_maplist[i]].lvlttl)
+			print(G_BuildMapTitle(temp_selected_maplist[i]))
 		end
 		
 		S_StartSound(nil,sfx_s3kb3)

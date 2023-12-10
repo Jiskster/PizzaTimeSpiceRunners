@@ -14,6 +14,9 @@ PTSR.r2f = function(v,rank)
 	end
 end
 
+PTSR.intermission_act1 = 324 -- last drum beat of the music
+PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
+
 
 /*
 local hud_debug = CV_RegisterVar({
@@ -451,30 +454,29 @@ local untilend_hud = function(v, player)
 end
 
 local fade_hud = function(v, player)
-	local t_part1 = 324 -- the end tic of the first scene of the music
-	local t_part2 = 388
+	--local t_part1 = 324 -- the end tic of the first scene of the music
+	--local t_part2 = 388
 	
-
 	
 	local i_tic = PTSR.intermission_tics
 	if not PTSR.gameover then return end
 	
 	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
-	local div2 = min(FixedDiv(i_tic*FU, t_part1*FRACUNIT),FRACUNIT)
+	local div2 = min(FixedDiv(i_tic*FU, PTSR.intermission_act1*FRACUNIT),FRACUNIT)
 	local div3 
 		
 	local c1 = 0 -- tic offset after part1
 	local c2 = 0 -- tic offset after part2
 	
-	if i_tic >= t_part1 and i_tic <= (t_part1 + 10) then
-		c1 = (t_part1 + 10) - i_tic
+	if i_tic >= PTSR.intermission_act1 and i_tic <= (PTSR.intermission_act1 + 10) then
+		c1 = (PTSR.intermission_act1 + 10) - i_tic
 		if c1 < 0 then
 			c1 = 0
 		end
 	end
 	
-	if i_tic >= t_part2 and i_tic <= (t_part2 + 15) then
-		c2 = (t_part2 + 10) - i_tic
+	if i_tic >= PTSR.intermission_act2 and i_tic <= (PTSR.intermission_act2 + 15) then
+		c2 = (PTSR.intermission_act2 + 10) - i_tic
 		if c2 < 0 then
 			c2 = 0
 		end
@@ -484,20 +486,20 @@ local fade_hud = function(v, player)
 	
 	local fadetween = ease.linear(div, 0, 31)
 	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
-	local turntween = ease.inexpo(div2, 0, t_part1*FU)
+	local turntween = ease.inexpo(div2, 0, PTSR.intermission_act1*FU)
 	local zonenametween = ease.inquint(div3, 10*FU, -100*FU)
 	local scoretween = ease.inquint(div3, 100*FU, 500*FU)
 	
 	
 	v.fadeScreen(0xFB00, min(fadetween, 31))
-	local rock = t_part1-(turntween/FU)
+	local rock = PTSR.intermission_act1-(turntween/FU)
 	if rock < 0 then
 		rock = 0
 	end
 	local turnx = sin(turntween*1800)*rock/2
 	local turny = cos(turntween*1800)*rock/2
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
-	if i_tic > t_part1 then
+	if i_tic > PTSR.intermission_act1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
 	
@@ -506,7 +508,7 @@ local fade_hud = function(v, player)
 	local shakex = v.RandomRange(-c1/2,c1/2)
 	local shakey = v.RandomRange(-c1/2,c1/2)
 	
-	if i_tic >= t_part2 then
+	if i_tic >= PTSR.intermission_act2 then
 		local x1,y1 = 160*FU,zonenametween
 		local x2,y2 = 160*FU,scoretween
 		local x3,y3 = 160*FU,180*FU

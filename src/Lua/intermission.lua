@@ -61,37 +61,39 @@ addHook("PreThinkFrame", function()
 		if PTSR:inVoteScreen() then
 		
 			-- Selection Increment
-			if cmd.forwardmove < -40 or cmd.sidemove > 40 then
-				if not player.ptvote_down then
-					S_StartSound(nil, sfx_s3kb7)
+			if not player.ptvote_voted then
+				if cmd.forwardmove < -40 or cmd.sidemove > 40 then
+					if not player.ptvote_down then
+						S_StartSound(nil, sfx_s3kb7)
+					
+						if player.ptvote_selection + 1 > 3 then
+							player.ptvote_selection = 1
+						else
+							player.ptvote_selection = $ + 1 
+						end
+						
+						player.ptvote_down = true
+					end
+				else
+					player.ptvote_down = false
+				end
 				
-					if player.ptvote_selection + 1 > 3 then
-						player.ptvote_selection = 1
-					else
-						player.ptvote_selection = $ + 1 
+				-- Selection Decrement
+				if cmd.forwardmove > 40 or cmd.sidemove < -40 then
+					if not player.ptvote_up then
+						S_StartSound(nil, sfx_s3kb7)
+						
+						if player.ptvote_selection - 1 < 1 then
+							player.ptvote_selection = 3
+						else
+							player.ptvote_selection = $ - 1 
+						end
+						
+						player.ptvote_up = true
 					end
-					
-					player.ptvote_down = true
+				else
+					player.ptvote_up = false
 				end
-			else
-				player.ptvote_down = false
-			end
-			
-			-- Selection Decrement
-			if cmd.forwardmove > 40 or cmd.sidemove < -40 then
-				if not player.ptvote_up then
-					S_StartSound(nil, sfx_s3kb7)
-					
-					if player.ptvote_selection - 1 < 1 then
-						player.ptvote_selection = 3
-					else
-						player.ptvote_selection = $ - 1 
-					end
-					
-					player.ptvote_up = true
-				end
-			else
-				player.ptvote_up = false
 			end
 			
 			if cmd.buttons & BT_JUMP and not player.ptvote_voted then

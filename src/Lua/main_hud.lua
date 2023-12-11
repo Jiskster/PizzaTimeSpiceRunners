@@ -466,7 +466,8 @@ local fade_hud = function(v, player)
 		
 	local c1 = clamp(0, (PTSR.intermission_act1 + 10) - i_tic, 10); 
 	local c2 = clamp(0, (PTSR.intermission_act2 + 20) - i_tic, 20); 
-	local c3 = clamp(0, (PTSR.intermission_act_end + 20) - i_tic, 20); 
+	local c3 = clamp(0, (PTSR.intermission_act_end + 20) - i_tic, 20);
+	local c4 = clamp(0, (PTSR.intermission_act2 + 31) - i_tic, 31); -- 2nd fade
 	
 	div3 = min(FixedDiv(c2*FU, 20*FRACUNIT),FRACUNIT)
 	
@@ -481,8 +482,46 @@ local fade_hud = function(v, player)
 	local turnx = sin(turntween*1800)*rock/2
 	local turny = cos(turntween*1800)*rock/2
 	
-	v.fadeScreen(0xFB00, min(fadetween, 31))
-
+	v.fadeScreen(0xFF00, min(fadetween, 31))
+	
+	if i_tic < PTSR.intermission_act2 then
+		v.fadeScreen(0xFF00, min(fadetween, 31))
+	else
+		v.drawFill(0,0,v.width(),v.height(),
+			c4|V_SNAPTOLEFT|V_SNAPTOTOP
+		)
+	end
+	
+	if PTSR:inVoteScreen() then
+		--thank you luigi for this code :iwantsummadat:
+		--drawfill my favorite :kindlygimmesummadat:
+		v.drawFill(0,0,v.width(),v.height(),
+			--even if there is tearing, you wont see the black void
+			skincolors[SKINCOLOR_PURPLE].ramp[15]|V_SNAPTOLEFT|V_SNAPTOTOP
+		)
+		
+		
+		--need the scale before the loops
+		local s = FU
+		local bgp = v.cachePatch("PTSR_SECRET_BG")
+		--this will overflow in 15 minutes + some change
+		local timer = FixedDiv(leveltime*FU,2*FU) or 1
+		local bgoffx = FixedDiv(timer,2*FU)%(bgp.width*s)
+		local bgoffy = FixedDiv(timer,2*FU)%(bgp.height*s)
+		for i = 0,(v.width()/bgp.width)+1
+			for j = 0,(v.height()/bgp.height)+1
+				--Complicated
+				local x = 300
+				local y = bgp.height*(j-1)
+				local f = V_SNAPTORIGHT|V_SNAPTOTOP
+				local c = v.getColormap(nil,pagecolor)
+				
+				v.drawScaled(((x-bgp.width*(i-1)))*s-bgoffx,(y)*s+bgoffy,s,bgp,f,c)
+				v.drawScaled(((x-bgp.width*i))*s-bgoffx,(y)*s+bgoffy,s,bgp,f,c)
+			end
+		end
+	end
+	
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
 	if i_tic > PTSR.intermission_act1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
@@ -533,6 +572,9 @@ local fade_hud = function(v, player)
 				end
 			end
 		end
+		
+		
+
 	end
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)

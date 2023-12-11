@@ -74,6 +74,14 @@ rawset(_G, "PTSR", { -- variables
 	timeover_tics = 0,
 	
 	maxrankpoints = 0,
+	
+	vote_maplist = {
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1}
+	},
+	
+	nextmapvoted = 0,
 })
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
@@ -110,6 +118,10 @@ addHook("NetVars", function(net)
 		"intermission_tics",
 
 		"gameover",
+		
+		"vote_maplist",
+		
+		"nextmapvoted",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -126,6 +138,8 @@ local function ResetPlayerVars(player)
 	player.lapsdid = 0
 	player.laptime = 0
 	player.ptsr_outofgame = 0
+	player.ptvote_selection = 0
+	player.ptvote_voted = false
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 
@@ -193,6 +207,12 @@ local function InitMap()
 	PTSR.intermission_tics = 0
 	PTSR.gameover = false
 	PTSR.untilend = 0
+	
+	PTSR.vote_maplist = {
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1}
+	} 
 end
 
 local function InitMap2()
@@ -539,10 +559,6 @@ addHook("ThinkFrame", do
 
 		if PTSR.timeover then
 			PTSR.timeover_tics = $ + 1
-		end
-		
-		if PTSR.intermission_tics >= 20*TICRATE then
-			COM_BufInsertText(server, "exitlevel")
 		end
 	end 
 end)

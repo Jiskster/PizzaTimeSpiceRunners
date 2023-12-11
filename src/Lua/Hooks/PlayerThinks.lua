@@ -95,14 +95,6 @@ addHook("PlayerThink", function(player)
 			player.hold_newlap = 0
 		end
 
-		if player.ptsr_outofgame and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
-			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
-				player.hold_newlap = $ + 1
-			else
-				player.hold_newlap = 0
-			end
-		end
-
 		if player.hold_newlap and not PTSR.gameover then
 		 	if player.hold_newlap >= PTSR.laphold then
 				PTSR.StartNewLap(player.mo)

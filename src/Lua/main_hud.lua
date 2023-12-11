@@ -483,6 +483,8 @@ local fade_hud = function(v, player)
 	local turnx = sin(turntween*1800)*rock/2
 	local turny = cos(turntween*1800)*rock/2
 	
+	v.fadeScreen(0xFF00, min(fadetween, 31))
+	
 	if i_tic < PTSR.intermission_act2 then
 		v.fadeScreen(0xFF00, min(fadetween, 31))
 	else
@@ -553,12 +555,15 @@ local fade_hud = function(v, player)
 			local map_y = 15*FU+((i-1)*60*FU)	
 			local current_map = PTSR.vote_maplist[i]
 			local current_map_icon = v.cachePatch(G_BuildMapName(current_map.mapnum).."P")
+			local current_map_name = mapheaderinfo[current_map.mapnum].lvlttl
+			local current_map_act = mapheaderinfo[current_map.mapnum].actnum
 			local cursor_patch = v.cachePatch("SLCT1LVL")
 			local cursor_patch2 = v.cachePatch("SLCT2LVL")
 			
 			v.drawScaled(act_vote_tween, map_y, FU/2, current_map_icon, V_SNAPTORIGHT)
 			
-						-- Selection Flicker Code
+			
+			-- Selection Flicker Code
 			if player.ptvote_selection == i then
 				if (player.ptvote_voted)
 					v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch, V_SNAPTORIGHT)
@@ -570,6 +575,12 @@ local fade_hud = function(v, player)
 					end
 				end
 			end
+			
+			v.drawString(act_vote_tween+FU, map_y+FU, current_map_name, V_SNAPTORIGHT, "thin-fixed")
+			if current_map_act then
+				v.drawString(act_vote_tween+FU, map_y+(FU*9), "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
+			end
+			
 		end
 		
 		

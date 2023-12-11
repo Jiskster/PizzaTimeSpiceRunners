@@ -94,6 +94,16 @@ addHook("PreThinkFrame", function()
 				player.ptvote_up = false
 			end
 			
+			if cmd.buttons & BT_JUMP then
+				if not player.ptvote_votepressed then
+					S_StartSound(nil, sfx_s1a1)
+
+					player.ptvote_votepressed = true
+				end
+			else
+				player.ptvote_votepressed = false
+			end
+			
 			player.ptvote_selection = clamp(1,$,3)
 		end
 		

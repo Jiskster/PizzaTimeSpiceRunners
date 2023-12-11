@@ -468,6 +468,7 @@ local fade_hud = function(v, player)
 	local c2 = clamp(0, (PTSR.intermission_act2 + 20) - i_tic, 20); 
 	local c3 = clamp(0, (PTSR.intermission_act_end + 20) - i_tic, 20);
 	local c4 = clamp(0, (PTSR.intermission_act2 + 31) - i_tic, 31); -- 2nd fade
+	local c5 = clamp(0, (PTSR.intermission_act_end + 10) - i_tic, 9); -- 3rd fade
 	
 	div3 = min(FixedDiv(c2*FU, 20*FRACUNIT),FRACUNIT)
 	
@@ -482,8 +483,6 @@ local fade_hud = function(v, player)
 	local turnx = sin(turntween*1800)*rock/2
 	local turny = cos(turntween*1800)*rock/2
 	
-	v.fadeScreen(0xFF00, min(fadetween, 31))
-	
 	if i_tic < PTSR.intermission_act2 then
 		v.fadeScreen(0xFF00, min(fadetween, 31))
 	else
@@ -495,11 +494,11 @@ local fade_hud = function(v, player)
 	if PTSR:inVoteScreen() then
 		--thank you luigi for this code :iwantsummadat:
 		--drawfill my favorite :kindlygimmesummadat:
+		
 		v.drawFill(0,0,v.width(),v.height(),
 			--even if there is tearing, you wont see the black void
-			skincolors[SKINCOLOR_PURPLE].ramp[15]|V_SNAPTOLEFT|V_SNAPTOTOP
+			skincolors[SKINCOLOR_PURPLE].ramp[15]|V_SNAPTOLEFT|V_SNAPTOTOP|c5<<V_ALPHASHIFT
 		)
-		
 		
 		--need the scale before the loops
 		local s = FU
@@ -513,7 +512,7 @@ local fade_hud = function(v, player)
 				--Complicated
 				local x = 300
 				local y = bgp.height*(j-1)
-				local f = V_SNAPTORIGHT|V_SNAPTOTOP
+				local f = V_SNAPTORIGHT|V_SNAPTOTOP|c5<<V_ALPHASHIFT
 				local c = v.getColormap(nil,pagecolor)
 				
 				v.drawScaled(((x-bgp.width*(i-1)))*s-bgoffx,(y)*s+bgoffy,s,bgp,f,c)

@@ -17,6 +17,7 @@ end
 PTSR.intermission_act1 = 324 -- last drum beat of the music
 PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
 PTSR.intermission_act_end = PTSR.intermission_act2 + 5*TICRATE
+PTSR.intermission_vote_end = PTSR.intermission_act_end + 12*TICRATE
 
 /*
 local hud_debug = CV_RegisterVar({
@@ -547,7 +548,9 @@ local fade_hud = function(v, player)
 		end
 	
 		v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
-	else
+	elseif not PTSR:isVoteOver() then
+		local vote_timeleft = (PTSR.intermission_vote_end - i_tic)/TICRATE
+	
 		for i=1,3 do
 			local act_vote = clamp(0, i_tic - PTSR.intermission_act_end - (i*4), 35)
 			local act_vote_div = clamp(0, FixedDiv(act_vote*FU, 35*FU), 35*FU)
@@ -559,6 +562,7 @@ local fade_hud = function(v, player)
 			local current_map_act = mapheaderinfo[current_map.mapnum].actnum
 			local cursor_patch = v.cachePatch("SLCT1LVL")
 			local cursor_patch2 = v.cachePatch("SLCT2LVL")
+			
 			
 			v.drawScaled(act_vote_tween, map_y, FU/2, current_map_icon, V_SNAPTORIGHT)
 			
@@ -580,9 +584,17 @@ local fade_hud = function(v, player)
 				v.drawString(act_vote_tween+FU, map_y+(FU*9), "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
 			end
 			
-			customhud.CustomFontString(v, act_vote_tween-(FU*10), map_y+(FU*16), tostring(PTSR.vote_maplist[i].votes), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_WHITE)
+			customhud.CustomFontString(v, act_vote_tween-(FU*16), map_y+(FU*16), tostring(PTSR.vote_maplist[i].votes), "PTFNT", V_SNAPTORIGHT, "center", FRACUNIT/2, SKINCOLOR_WHITE)
 		end
+		customhud.CustomFontString(v, 160*FU, 10*FU, tostring(vote_timeleft), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_PINK)
+			
+	else
+		local chosen_map_icon = v.cachePatch(G_BuildMapName(PTSR.nextmapvoted).."P")
+		customhud.CustomFontString(v, 160*FU, 10*FU, G_BuildMapTitle(PTSR.nextmapvoted).." WINS!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_YELLOW)
+		v.drawScaled(120*FU, 75*FU, FU/2, chosen_map_icon)
 	end
+	
+	
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 

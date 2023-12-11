@@ -79,7 +79,9 @@ rawset(_G, "PTSR", { -- variables
 		{votes = 0, mapnum = 1},
 		{votes = 0, mapnum = 1},
 		{votes = 0, mapnum = 1}
-	} 
+	},
+	
+	nextmapvoted = 0,
 })
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
@@ -118,6 +120,8 @@ addHook("NetVars", function(net)
 		"gameover",
 		
 		"vote_maplist",
+		
+		"nextmapvoted",
 	}
 	
 	for i,v in ipairs(sync_list) do

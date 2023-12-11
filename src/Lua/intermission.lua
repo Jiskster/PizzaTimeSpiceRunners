@@ -2,6 +2,27 @@ function PTSR:inVoteScreen()
 	return PTSR.intermission_tics > PTSR.intermission_act_end
 end
 
+function PTSR:isVoteOver()
+	return PTSR.intermission_tics > PTSR.intermission_vote_end
+end
+
+local function allequals(...)
+	local args = {...}
+	local success = true
+	
+	for i,v in ipairs(args)
+		
+		for ii,vv in ipairs(args)
+			if v ~= vv then
+				success = false
+				break 2
+			end
+		end
+	end
+	
+	return success
+end
+
 addHook("ThinkFrame", do
 	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
@@ -44,6 +65,37 @@ addHook("ThinkFrame", do
 		S_ChangeMusic("P_INT", true)
 		mapmusname = "P_INT"
 	end
+	
+	if PTSR.intermission_tics == PTSR.intermission_vote_end then
+		local sorted_votes = PTSR_shallowcopy(PTSR.vote_maplist)
+
+		table.sort(sorted_votes,function(a,b) return a.votes > b.votes end)
+		
+		if allequals(sorted_votes[1].votes,sorted_votes[2].votes,sorted_votes[3].votes)
+			local chosenmap = P_RandomRange(1,3)
+			
+			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a three way tie!")
+			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum
+		elseif sorted_votes[1].votes == sorted_votes[2].votes then
+			local chosenmap = P_RandomRange(1,2)
+			
+			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a two way tie!")
+			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum
+		else
+			print("\x82"..G_BuildMapTitle(sorted_votes[1].mapnum).. " was picked as the next map!")
+			PTSR.nextmapvoted = sorted_votes[1].mapnum
+		end
+		
+		for i,v in ipairs(sorted_votes) do
+			print(i..": "..G_BuildMapTitle(v.mapnum).. "["..v.votes.."]")
+		end
+		
+		S_StartSound(nil, sfx_s3kb3)
+	end
+	
+	if PTSR.intermission_tics == PTSR.intermission_vote_end + 5*TICRATE then
+		COM_BufInsertText(server, "map "..PTSR.nextmapvoted)
+	end
 end)
 
 addHook("PreThinkFrame", function()
@@ -58,7 +110,7 @@ addHook("PreThinkFrame", function()
 			end
 		end
 		
-		if PTSR:inVoteScreen() then
+		if PTSR:inVoteScreen() and not PTSR:isVoteOver() then
 		
 			-- Selection Increment
 			if not player.ptvote_voted then

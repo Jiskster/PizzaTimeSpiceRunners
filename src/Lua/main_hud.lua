@@ -470,7 +470,7 @@ local fade_hud = function(v, player)
 	
 	div3 = min(FixedDiv(c2*FU, 20*FRACUNIT),FRACUNIT)
 	
-	local fadetween = ease.linear(div, 0, 31); fadetween = $ < 0 and 0 or $
+	local fadetween = clamp(0, ease.linear(div, 0, 31), 31)
 	local sizetween = ease.linear(div2, FRACUNIT/64, FRACUNIT/2)
 	local turntween = ease.inexpo(div2, 0, PTSR.intermission_act1*FU)
 	local zonenametween = ease.inquint(div3, 10*FU, -100*FU)
@@ -495,18 +495,45 @@ local fade_hud = function(v, player)
 		zonenametween = ease.inquint(div3, 10*FU, -100*FU)
 		scoretween = ease.inquint(div3, 100*FU, 500*FU)
 	end
+	if i_tic < PTSR.intermission_act_end then
+		if i_tic >= PTSR.intermission_act2  then
+			local x1,y1 = 160*FU,zonenametween
+			local x2,y2 = 160*FU,scoretween
+			local x3,y3 = 160*FU,180*FU
+			customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
+			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.pt_endscore or "Invalid Score"), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
+			
+			customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
+		end
 	
-	if i_tic >= PTSR.intermission_act2 then
-		local x1,y1 = 160*FU,zonenametween
-		local x2,y2 = 160*FU,scoretween
-		local x3,y3 = 160*FU,180*FU
-		customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
-		customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.pt_endscore or "Invalid Score"), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
-		
-		customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
+		v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
+	else
+		for i=1,3 do
+			local act_vote = clamp(0, i_tic - PTSR.intermission_act_end - (i*4), 35)
+			local act_vote_div = clamp(0, FixedDiv(act_vote*FU, 35*FU), 35*FU)
+			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 225*FU)
+			local map_y = 15*FU+((i-1)*60*FU)	
+			local current_map = PTSR.vote_maplist[i]
+			local current_map_icon = v.cachePatch(G_BuildMapName(current_map.mapnum).."P")
+			local cursor_patch = v.cachePatch("SLCT1LVL")
+			local cursor_patch2 = v.cachePatch("SLCT2LVL")
+			
+			v.drawScaled(act_vote_tween, map_y, FU/2, current_map_icon, V_SNAPTORIGHT)
+			
+						-- Selection Flicker Code
+			if player.ptvote_selection == i then
+				if (player.ptvote_voted)
+					v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch, V_SNAPTORIGHT)
+				else
+					if ((leveltime/4)%2 == 0) then 
+						v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch, V_SNAPTORIGHT) 
+					else
+						v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch2, V_SNAPTORIGHT) 
+					end
+				end
+			end
+		end
 	end
-
-	v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)
 

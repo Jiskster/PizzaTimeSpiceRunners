@@ -76,9 +76,9 @@ rawset(_G, "PTSR", { -- variables
 	maxrankpoints = 0,
 	
 	vote_maplist = {
-		{0,1},
-		{0,1},
-		{0,1}
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1}
 	} 
 })
 
@@ -134,6 +134,7 @@ local function ResetPlayerVars(player)
 	player.lapsdid = 0
 	player.laptime = 0
 	player.ptsr_outofgame = 0
+	player.ptvote_selection = 0
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 
@@ -203,9 +204,9 @@ local function InitMap()
 	PTSR.untilend = 0
 	
 	PTSR.vote_maplist = {
-		{0,1},
-		{0,1},
-		{0,1}
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1},
+		{votes = 0, mapnum = 1}
 	} 
 end
 

@@ -238,6 +238,7 @@ rawset(_G, "L_FixedDecimal", function(str,maxdecimal)
 	return str_polarity..str_whole..'.'..str_decimal
 end)
 
+-- clamp
 rawset(_G, "clamp", function(low, value, high)
 	if value < low then
 		value = low
@@ -246,4 +247,15 @@ rawset(_G, "clamp", function(low, value, high)
 	end
 	
 	return value
+end)
+
+-- inverse clamp
+rawset(_G, "iclamp", function(low, value, high)
+	if value < low then
+		value = low
+	elseif value > high then
+		value = high
+	end
+	
+	return high-value
 end)

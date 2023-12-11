@@ -94,14 +94,28 @@ addHook("PreThinkFrame", function()
 				player.ptvote_up = false
 			end
 			
-			if cmd.buttons & BT_JUMP then
+			if cmd.buttons & BT_JUMP and not player.ptvote_voted then
 				if not player.ptvote_votepressed then
-					S_StartSound(nil, sfx_s1a1)
+					S_StartSound(nil, sfx_s1a1)  
 
+					PTSR.vote_maplist[player.ptvote_selection].votes = $ + 1
+					player.ptvote_voted = true
 					player.ptvote_votepressed = true
 				end
 			else
 				player.ptvote_votepressed = false
+			end
+			
+			if cmd.buttons & BT_SPIN and player.ptvote_voted then
+				if not player.ptvote_unvotepressed then
+					S_StartSound(nil, sfx_s3k72) 
+
+					PTSR.vote_maplist[player.ptvote_selection].votes = $ - 1
+					player.ptvote_voted = false
+					player.ptvote_unvotepressed = true
+				end
+			else
+				player.ptvote_unvotepressed = false
 			end
 			
 			player.ptvote_selection = clamp(1,$,3)

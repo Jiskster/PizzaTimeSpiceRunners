@@ -562,7 +562,6 @@ local fade_hud = function(v, player)
 			
 			v.drawScaled(act_vote_tween, map_y, FU/2, current_map_icon, V_SNAPTORIGHT)
 			
-			
 			-- Selection Flicker Code
 			if player.ptvote_selection == i then
 				if (player.ptvote_voted)
@@ -581,10 +580,8 @@ local fade_hud = function(v, player)
 				v.drawString(act_vote_tween+FU, map_y+(FU*9), "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
 			end
 			
+			customhud.CustomFontString(v, act_vote_tween-(FU*10), map_y+(FU*16), tostring(PTSR.vote_maplist[i].votes), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_WHITE)
 		end
-		
-		
-
 	end
 end
 --local yum = FRACUNIT + (PTSR.timeover_tics*48)

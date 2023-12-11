@@ -135,6 +135,7 @@ local function ResetPlayerVars(player)
 	player.laptime = 0
 	player.ptsr_outofgame = 0
 	player.ptvote_selection = 0
+	player.ptvote_voted = false
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end
 

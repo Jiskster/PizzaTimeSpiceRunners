@@ -25,6 +25,23 @@ end
 
 addHook("ThinkFrame", do
 	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
+	if PTSR.gameover then
+		P_SwitchWeather(0)
+		for sector in sectors.iterate do
+			S_StopSound(sector)
+		end
+	end
+end)
+
+addHook("MobjThinker", function(mobj)
+	if PTSR.gameover and leveltime then
+		mobj.flags = $ | MF_NOTHINK
+		return true
+	end
+end)
+
+addHook("ThinkFrame", do
+	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
 	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
 		PTSR.vote_maplist = {
@@ -65,7 +82,7 @@ addHook("ThinkFrame", do
 		S_ChangeMusic("P_INT", true)
 		mapmusname = "P_INT"
 		
-		P_SwitchWeather(0)
+		
 	end
 	
 	if PTSR.intermission_tics == PTSR.intermission_vote_end then

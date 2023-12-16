@@ -172,7 +172,11 @@ addHook("PreThinkFrame", function()
 				player.ptvote_unvotepressed = false
 			end
 			
-			player.ptvote_selection = clamp(1,$,3)
+			if player.ptvote_selection then
+				player.ptvote_selection = clamp(1,$,3)
+			else
+				player.ptvote_selection = 1
+			end
 		end
 		
 		if PTSR:inVoteScreen() or player.ptsr_outofgame then

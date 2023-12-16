@@ -64,6 +64,8 @@ addHook("ThinkFrame", do
 		
 		S_ChangeMusic("P_INT", true)
 		mapmusname = "P_INT"
+		
+		P_SwitchWeather(0)
 	end
 	
 	if PTSR.intermission_tics == PTSR.intermission_vote_end then

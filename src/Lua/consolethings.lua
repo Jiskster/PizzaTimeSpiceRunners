@@ -20,7 +20,7 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 			targetplayer.pizzaface = true
 			chatprint("\x85*"..targetplayer.name.." has become a pizza!")
 			if DiscordBot then
-				DiscordBot.Data.msgsrb2 = $ .. "[" .. chosen_player .. "] **" .. players[chosen_player].name .. "** has magically become a pizza!\n"
+				DiscordBot.Data.msgsrb2 = $ .. "[" .. targetplayer.. "] **" .. targetplayer.name .. "** has magically become a pizza!\n"
 			end
 			PTSR_add_announcement(5*TICRATE,"\x85*"..targetplayer.name.." has become a pizza!")
 		end

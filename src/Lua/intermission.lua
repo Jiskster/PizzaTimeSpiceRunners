@@ -135,7 +135,7 @@ addHook("PreThinkFrame", function()
 			if not player.ptvote_voted then
 				if cmd.forwardmove < -40 or cmd.sidemove > 40 then
 					if not player.ptvote_down then
-						S_StartSound(nil, sfx_s3kb7)
+						S_StartSound(nil, sfx_s3kb7, player)
 					
 						if player.ptvote_selection + 1 > 3 then
 							player.ptvote_selection = 1
@@ -152,7 +152,7 @@ addHook("PreThinkFrame", function()
 				-- Selection Decrement
 				if cmd.forwardmove > 40 or cmd.sidemove < -40 then
 					if not player.ptvote_up then
-						S_StartSound(nil, sfx_s3kb7)
+						S_StartSound(nil, sfx_s3kb7, player)
 						
 						if player.ptvote_selection - 1 < 1 then
 							player.ptvote_selection = 3
@@ -169,7 +169,7 @@ addHook("PreThinkFrame", function()
 			
 			if cmd.buttons & BT_JUMP and not player.ptvote_voted then
 				if not player.ptvote_votepressed then
-					S_StartSound(nil, sfx_s1a1)  
+					S_StartSound(nil, sfx_s1a1, player)  
 
 					PTSR.vote_maplist[player.ptvote_selection].votes = $ + 1
 					player.ptvote_voted = true
@@ -181,7 +181,7 @@ addHook("PreThinkFrame", function()
 			
 			if cmd.buttons & BT_SPIN and player.ptvote_voted then
 				if not player.ptvote_unvotepressed then
-					S_StartSound(nil, sfx_s3k72) 
+					S_StartSound(nil, sfx_s3k72, player) 
 
 					PTSR.vote_maplist[player.ptvote_selection].votes = $ - 1
 					player.ptvote_voted = false

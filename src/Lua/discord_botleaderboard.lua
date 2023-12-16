@@ -28,7 +28,7 @@ local function registerIt(successValue)
 				elseif player.ptsr_rank
 					rank = '['..player.ptsr_rank:upper()..']'
 				end
-				if player.mo and ((player.pflags & PF_FINISHED) or player.ptsr_outofgame) then pffinished = ":completed: " end
+				--if player.mo and ((player.pflags & PF_FINISHED) or player.ptsr_outofgame) then pffinished = ":completed: " end
 				if IsPlayerAdmin(player) then admin = ":remote_admin: " end
 				if player.playtime == nil then player.playtime = 0 end
 				local seconds = G_TicsToSeconds(player.playtime)

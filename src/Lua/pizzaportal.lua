@@ -45,7 +45,7 @@ addHook("MapLoad", function(map)
 
 			local portal_angle = mapheaderinfo[map]["ptsr_portal("..i..")_angle"]
 
-			if portal_x and portal_y and portal_z 
+			if portal_x ~= nil and portal_y ~= nil and portal_z ~= nil
 			and tonumber(portal_x) and tonumber(portal_y) and tonumber(portal_z) then
 				local portal = P_SpawnMobj(portal_x*FU, portal_y*FU, portal_z*FU, MT_PIZZAPORTAL)
 

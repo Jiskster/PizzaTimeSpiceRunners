@@ -219,7 +219,7 @@ Level 41
 Levelname = Aerial Garden
 Keywords = AGZ
 Music = AGZ
-TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+TypeOfLevel = Singleplayer,Co-op,Competition,Race
 NextLevel = 42
 SkyNum = 40
 RecordAttack = true

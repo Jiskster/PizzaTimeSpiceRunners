@@ -412,7 +412,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		
 		PTSR.laps = 1 -- new day new me
 		
-		--hit the player that touched the location with these variables
+		-- player pf only stuff
 		if not CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
 			local count = PTSR_COUNT()
 
@@ -467,6 +467,12 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			player.lapsdid = 1
 			P_SetOrigin(pmo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
+			
+			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
+			if angle_frompotal and tonumber(angle_frompotal) then
+				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
+			end
+			
 			if not player.pizzaface then
 				player.powers[pw_invulnerability] = CV_PTSR.tpinv.value*TICRATE+20
 				player.powers[pw_nocontrol] = 20

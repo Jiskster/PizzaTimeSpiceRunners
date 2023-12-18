@@ -26,6 +26,7 @@ Lua.ptsr_maxportals = 1
 Lua.ptsr_portal(1)_x = 2079
 Lua.ptsr_portal(1)_y = 99
 Lua.ptsr_portal(1)_z = -32
+Lua.ptsr_lapangle = 90
 
 #Flicky selection is final.
 
@@ -55,6 +56,7 @@ Lua.ptsr_portal(2)_x = -1178
 Lua.ptsr_portal(2)_y = 560
 Lua.ptsr_portal(2)_z = 1568
 Lua.ptsr_portal(2)_angle = 12 
+Lua.ptsr_lapangle = 0
 #see act 1
 
 Level 4
@@ -78,6 +80,7 @@ Lua.ptsr_portal(1)_x = -2097
 Lua.ptsr_portal(1)_y = -705
 Lua.ptsr_portal(1)_z = 704
 Lua.ptsr_portal(1)_angle = 356 
+Lua.ptsr_lapangle = 180
 #Flicky selection is final.
 
 Level 5
@@ -96,6 +99,7 @@ FlickyList = Rabbit,Chicken
 Lua.ptsr_timelimit_secs = 250
 Lua.Takis_UsesHeartCards = true
 Lua.Takis_MaxHeartCards = 3
+Lua.ptsr_lapangle = 103
 #see act 1
 
 Level 25
@@ -121,6 +125,7 @@ Lua.ptsr_portal(1)_x = -68
 Lua.ptsr_portal(1)_y = -3287
 Lua.ptsr_portal(1)_z = 256
 Lua.ptsr_portal(1)_angle = 358
+Lua.ptsr_lapangle = 270
 
 #Bonus Levels
 
@@ -149,6 +154,7 @@ Lua.ptsr_portal(2)_x = 8187
 Lua.ptsr_portal(2)_y = -3578
 Lua.ptsr_portal(2)_z = -72
 Lua.ptsr_portal(2)_angle = 51
+Lua.ptsr_lapangle = 270
 
 Level 31
 LevelName = Pipe Towers
@@ -168,6 +174,7 @@ Lua.ptsr_portal(1)_x = 4470
 Lua.ptsr_portal(1)_y = -115
 Lua.ptsr_portal(1)_z = 1088
 Lua.ptsr_portal(1)_angle = 122
+Lua.ptsr_lapangle = 0
 
 Level 32
 Levelname = Forest Fortress
@@ -190,6 +197,7 @@ Lua.ptsr_portal(1)_x = -3190
 Lua.ptsr_portal(1)_y = -14550
 Lua.ptsr_portal(1)_z = -96
 Lua.ptsr_portal(1)_angle = 357
+Lua.ptsr_lapangle = 270
 
 Level 33
 levelname = Techno Legacy
@@ -212,6 +220,7 @@ Lua.ptsr_portal(1)_x = -6947
 Lua.ptsr_portal(1)_y = 5358
 Lua.ptsr_portal(1)_z = 1280
 Lua.ptsr_portal(1)_angle = 182
+Lua.ptsr_lapangle = 90
 
 #Challenge Stages
 

@@ -120,7 +120,12 @@ addHook("MobjThinker", function(mobj)
 			PTSR.StartNewLap(mobj)
 			hudst.anim_active = true
 			hudst.anim = 1
-
+			
+			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
+			if angle_frompotal and tonumber(angle_frompotal) then
+				mobj.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
+			end
+			
 			if player.lapsdid ~= nil then
 				local lapbonus = (player.lapsdid*777)
 				local ringbonus = (player.rings*13) 

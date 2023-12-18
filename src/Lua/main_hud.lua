@@ -336,8 +336,8 @@ local gamemode_hud = function(v, player)
 	
 	if gametype ~= GT_PTSPICER then return end
 	if not PTSR.pizzatime then return end
+	if CV_PTSR.aimode.value or CV_PTSR.nopizza.value then return end
 	
-
 	v.drawString(320, 0, "\x8A"..currentGamemode, V_SNAPTORIGHT|V_SNAPTOTOP|V_50TRANS|V_ADD, "thin-right")
 end
 

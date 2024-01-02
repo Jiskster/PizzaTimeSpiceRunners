@@ -41,6 +41,7 @@ states[S_PILLARJOHN_PAIN] = {
 rawset(_G, "FUNC_PTSR", {}) -- functions
 
 freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah")
+freeslot("sfx_nrmlfc","S_NORMALFACE_PF","SPR_NMFC")
 
 mobjinfo[MT_PIZZAMASK] = {
 	doomednum = -1,
@@ -82,6 +83,13 @@ states[S_SUMMADAT_PF] = {
     frame = FF_FULLBRIGHT|A,
     tics = -1,
     nextstate = S_SUMMADAT_PF
+}
+
+states[S_NORMALFACE_PF] = {
+    sprite = SPR_NMFC,
+    frame = FF_FULLBRIGHT|A,
+    tics = -1,
+    nextstate = S_NORMALFACE_PF
 }
 
 rawset(_G, "pfmaskData", {

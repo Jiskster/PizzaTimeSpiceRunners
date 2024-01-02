@@ -155,6 +155,7 @@ addHook("MobjThinker", function(mobj)
 	local laughsound = mobj.laughsound or sfx_pizzah
 	
 	if not PTSR.pizzatime then return end
+	
 	if mobj.pfstuntime then 
 		mobj.pfstuntime = $ - 1
 		if not mobj.pfstunmomentum then

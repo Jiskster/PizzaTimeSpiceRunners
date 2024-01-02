@@ -69,6 +69,9 @@ COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 	if pftype ~= nil and pftype == "summa" then
 		newpizaface.laughsound = sfx_smdah
 		newpizaface.state = S_SUMMADAT_PF
+	elseif pftype == "normal" then
+		newpizaface.laughsound = sfx_nrmlfc
+		newpizaface.state = S_NORMALFACE_PF
 	end
 	
 	if (randomplayer and not randomplayer == "false") then

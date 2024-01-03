@@ -8,10 +8,15 @@ addHook("ThinkFrame", function()
 	local laps = consoleplayer.lapsdid
 	if PTSR.pizzatime then
 		if PTSR.timeover and leveltime then
-			if mapmusname ~= "OVRTME" then
-				S_ChangeMusic("OVRTME", true, player)
-				mapmusname = "OVRTME"
+			local mus = CV_PTSR.overtime_music.value
+			local mus_table = {[1] = "OVRTME", [2] = "OVRTM2"}
+			local mus_str = mus_table[mus]
+			
+			if mapmusname ~= mus_str then
+				S_ChangeMusic(mus_str, true, player)
+				mapmusname = mus_str
 			end
+			
 			P_SetupLevelSky(34)
 			P_SetSkyboxMobj(nil)
 			return

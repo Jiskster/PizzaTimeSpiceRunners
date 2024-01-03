@@ -367,6 +367,13 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 	end 
 })
 
+CV_PTSR.overtime_music = CV_RegisterVar({
+	name = "PTSR_overtime_music",
+	defaultvalue = "1",
+	flags = CV_NETVAR,
+	PossibleValue = {old = 1, new = 2}, 
+})
+
 local luaOnly = "iamlua" .. P_RandomFixed()
 
 COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)

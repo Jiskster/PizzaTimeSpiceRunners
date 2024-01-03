@@ -603,8 +603,8 @@ local overtime_hud = function(v, player)
 	local left_tween 
 	local right_tween 
 	
-	local anim_len = 2*TICRATE
-	local anim_delay = 2*TICRATE
+	local anim_len = 5*TICRATE/3 -- 1.6__ secs
+	local anim_delay = 1*TICRATE
 	local anim_lastframe = (anim_len*2)+(anim_delay)
 	local left_end = 60 -- end pos of left
 	local right_end = 120 -- end pos of right

@@ -520,6 +520,9 @@ addHook("ThinkFrame", do
 		if CV_PTSR.timelimit.value then
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = $ - 1
+				if PTSR.timeleft == 3*TICRATE then
+					S_FadeMusic(0, 3000)
+				end
 				if not PTSR.timeleft then
 					PTSR.timeover = true
 					local timeover_text = "\x8F*Overtime!"

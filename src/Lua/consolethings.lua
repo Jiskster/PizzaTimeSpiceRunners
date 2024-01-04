@@ -20,7 +20,7 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 			targetplayer.pizzaface = true
 			chatprint("\x85*"..targetplayer.name.." has become a pizza!")
 			if DiscordBot then
-				DiscordBot.Data.msgsrb2 = $ .. "[" .. chosen_player .. "] **" .. players[chosen_player].name .. "** has magically become a pizza!\n"
+				DiscordBot.Data.msgsrb2 = $ .. "[" .. targetplayer.. "] **" .. targetplayer.name .. "** has magically become a pizza!\n"
 			end
 			PTSR_add_announcement(5*TICRATE,"\x85*"..targetplayer.name.." has become a pizza!")
 		end
@@ -69,6 +69,9 @@ COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 	if pftype ~= nil and pftype == "summa" then
 		newpizaface.laughsound = sfx_smdah
 		newpizaface.state = S_SUMMADAT_PF
+	elseif pftype == "normal" then
+		newpizaface.laughsound = sfx_nrmlfc
+		newpizaface.state = S_NORMALFACE_PF
 	end
 	
 	if (randomplayer and not randomplayer == "false") then
@@ -98,6 +101,15 @@ COM_AddCommand("ptsr_printangle", function(player)
 	
 	CONS_Printf(player, "Angle: "..AngleFixed(player.mo.angle)/FU)
 end)
+
+COM_AddCommand("ptsr_timeto1", function(player)
+	if gametype ~= GT_PTSPICER then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	PTSR.timeleft = 1
+end, 1)
 // ADDED FOR TESTING PURPOSES
 
 CV_PTSR.x_positioning = CV_RegisterVar({
@@ -123,7 +135,7 @@ CV_PTSR.forcelap = CV_RegisterVar({
 
 CV_PTSR.default_maxlaps = CV_RegisterVar({
 	name = "PTSR_default_maxlaps",
-	defaultvalue = "5",
+	defaultvalue = "0",
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
 })
@@ -239,7 +251,6 @@ CV_PTSR.screams = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
-
 CV_PTSR.aimode = CV_RegisterVar({
 	name = "PTSR_aimode",
 	defaultvalue = "on",
@@ -323,6 +334,19 @@ CV_PTSR.parry_friendlyfire = CV_RegisterVar({
 	PossibleValue = CV_OnOff,
 })
 
+CV_PTSR.nopizza = CV_RegisterVar({
+	name = "PTSR_nopizza",
+	defaultvalue = "off",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
+})
+
+CV_PTSR.flashframedeath = CV_RegisterVar({
+	name = "PTSR_flashframedeath",
+	defaultvalue = "On",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
+})
 
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
@@ -341,6 +365,13 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 			print("You will now appear as " .. name .. " when you're the villian of Pizza Time.")
 		end
 	end 
+})
+
+CV_PTSR.overtime_music = CV_RegisterVar({
+	name = "PTSR_overtime_music",
+	defaultvalue = "1",
+	flags = CV_NETVAR,
+	PossibleValue = {old = 1, new = 2}, 
 })
 
 local luaOnly = "iamlua" .. P_RandomFixed()

@@ -45,7 +45,7 @@ addHook("MapLoad", function(map)
 
 			local portal_angle = mapheaderinfo[map]["ptsr_portal("..i..")_angle"]
 
-			if portal_x and portal_y and portal_z 
+			if portal_x ~= nil and portal_y ~= nil and portal_z ~= nil
 			and tonumber(portal_x) and tonumber(portal_y) and tonumber(portal_z) then
 				local portal = P_SpawnMobj(portal_x*FU, portal_y*FU, portal_z*FU, MT_PIZZAPORTAL)
 
@@ -120,7 +120,12 @@ addHook("MobjThinker", function(mobj)
 			PTSR.StartNewLap(mobj)
 			hudst.anim_active = true
 			hudst.anim = 1
-
+			
+			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
+			if angle_frompotal and tonumber(angle_frompotal) then
+				mobj.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
+			end
+			
 			if player.lapsdid ~= nil then
 				local lapbonus = (player.lapsdid*777)
 				local ringbonus = (player.rings*13) 

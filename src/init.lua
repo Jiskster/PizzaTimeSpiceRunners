@@ -1,4 +1,5 @@
-freeslot("sfx_pizzah", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry",
+freeslot("TOL_PTSR")
+freeslot("sfx_pizzah", "sfx_pizzao", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry",
 		 "sfx_prepr1", "sfx_prepr2", "sfx_prepr3", "MT_PT_PARRY", "S_PT_PARRY", "SPR_PRRY")
 for i = 0, 2
 	sfxinfo[sfx_prepr1 + i].caption = "Boink"
@@ -9,7 +10,7 @@ sfxinfo[sfx_coneba].caption = "Coneball laughs"
 sfxinfo[sfx_pepdie].caption = "Death"
 sfxinfo[sfx_lap2].caption = "New lap!"
 
-freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ")
+freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ", "sfx_jpilr")
 
 mobjinfo[MT_PILLARJOHN] = {
 	doomednum = -1,
@@ -40,6 +41,7 @@ states[S_PILLARJOHN_PAIN] = {
 rawset(_G, "FUNC_PTSR", {}) -- functions
 
 freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah")
+freeslot("sfx_nrmlfc","S_NORMALFACE_PF","SPR_NMFC")
 
 mobjinfo[MT_PIZZAMASK] = {
 	doomednum = -1,
@@ -81,6 +83,13 @@ states[S_SUMMADAT_PF] = {
     frame = FF_FULLBRIGHT|A,
     tics = -1,
     nextstate = S_SUMMADAT_PF
+}
+
+states[S_NORMALFACE_PF] = {
+    sprite = SPR_NMFC,
+    frame = FF_FULLBRIGHT|A,
+    tics = -1,
+    nextstate = S_NORMALFACE_PF
 }
 
 rawset(_G, "pfmaskData", {
@@ -136,6 +145,8 @@ dofile "main_hud.lua"
 dofile "discord_botleaderboard.lua"
 dofile "name_tags.lua"
 dofile "pizzaportal.lua"
+
+dofile "intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"
 dofile "Exit Signs/exitsign_thinkers.lua"

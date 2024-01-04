@@ -36,6 +36,7 @@ addHook("TouchSpecial", function(special, toucher)
 		if special.rings_kept then
 			P_GivePlayerRings(tplayer, special.rings_kept)
 			print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
+			DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
 		end
 	end
 end, MT_PT_DEATHRING)
@@ -55,9 +56,8 @@ end)
 -- Keep most rings if more than 125 rings. Else do "normal" ring drop
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
-	local istakis = player.takistable and player.takistable.isTakis
 	if target and target.valid and player and player.valid then
-		if not (damagetype & DMG_DEATHMASK) then
+		if not (damagetype & DMG_DEATHMASK) and not player.ptsr_outofgame then
 			if player.rings < 125 then
 				S_StartSound(target, sfx_s3kb9) -- ring loss sound
 				P_PlayerRingBurst(player, 5)
@@ -71,10 +71,8 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 			end
 			
 			player.score = ($*3)/4 -- 3/4 remaining
-			if not (istakis)
-				P_DoPlayerPain(player, source, inflictor)
-				return true
-			end
+			P_DoPlayerPain(player, source, inflictor)
+			return true
 		end
 	end
 end, MT_PLAYER)
@@ -97,3 +95,14 @@ addHook("PlayerCanDamage", function(player, mobj)
 		return true
 	end
 end)
+
+-- dont damage (or maybe die) when you're out of the game
+local function isPlayerOutOfGame(mobj)
+	local player = mobj.player
+	
+	return player.ptsr_outofgame or false
+end
+
+addHook("MobjDamage", isPlayerOutOfGame, MT_PLAYER)
+
+addHook("MobjDeath", isPlayerOutOfGame, MT_PLAYER)

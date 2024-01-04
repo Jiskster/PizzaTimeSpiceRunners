@@ -64,6 +64,7 @@ hud.add( function(v, player, camera)
 	end
 	
 	if (gametype ~= GT_PTSPICER) then return end
+	if PTSR.gameover then return end
 
 	local width = 320
 	local height = 200
@@ -160,7 +161,7 @@ hud.add( function(v, player, camera)
 			name = "PIZZAFACE"
 		elseif tmo.type == MT_PT_DEATHRING then
 			name = "DEATH RING"
-			local text_size = FRACUNIT/32
+			text_size = FRACUNIT/6
 			namecolor = SKINCOLOR_GREEN
 		end
 		

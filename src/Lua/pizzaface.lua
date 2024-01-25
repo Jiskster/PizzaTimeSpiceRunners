@@ -8,7 +8,52 @@ mobjinfo[MT_PIZZA_ENEMY] = {
 	deathstate = S_NULL,
 	radius = 18*FU,
 	height = 48*FU,
-	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL
+	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL|MF_BOSS
+}
+
+PTSR.PFMaskData = {
+	{
+		name = "Pizzaface",
+		state = S_PIZZAFACE,
+		scale = FU/2,
+		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
+		sound = sfx_pizzah,
+		emoji = ":pizza:",
+		aiselectable = true
+	},
+	{
+		name = "Coneball",
+	    state = S_CONEBALL,
+		scale = 3*FU/4,
+		trails = {SKINCOLOR_SKY, SKINCOLOR_NEON},
+		sound = sfx_coneba,
+		emoji = ":candy:",
+		aiselectable = true
+	},
+	{
+		name = "Eggman",
+	    state = S_PF_EGGMAN,
+		scale = FU,
+		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
+		sound = sfx_bewar3,
+		emoji = ":egg:"
+	},
+	{
+		name = "Summa",
+	    state = S_SUMMADAT_PF,
+		scale = FU,
+		trails = {SKINCOLOR_PEACHY, SKINCOLOR_RED},
+		sound = sfx_smdah,
+		emoji = ":stuck_out_tongue:"
+	},
+	{
+		name = "Normal",
+	    state = S_NORMALFACE_PF,
+		scale = FU,
+		trails = {SKINCOLOR_GREEN, SKINCOLOR_WHITE},
+		sound = sfx_nrmlfc,
+		emoji = ":green_circle:"
+	}
 }
 
 
@@ -36,10 +81,10 @@ function PTSR:PizzaCanTag(peppino, pizza)
 	if peppino.player.powers[pw_flashing] and not CV_PTSR.flashframedeath.value then return false end
 
 	if peppino.player.pizzaface then return false end -- lets not tag our buddies!!
-	
+
 	if peppino.pizza_out or peppino.pizza_in then return false end -- in pizza portal? then dont kill
 
-	if pizza.player and pizza.player.valid and pizza.player.pizzaface then 
+	if pizza.player and pizza.player.valid and pizza.player.pizzaface then
 		if pizza.player.stuntime then return false end
 		if not L_ZCollide(peppino,pizza) then return false end
 		return true
@@ -55,20 +100,20 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 	local peppinos = {} -- temp list of chosen players, or "peppinos" in this case.
 
 	for peppino in players.iterate() do
-		if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and 
+		if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and
 		not peppino.spectator and not peppino.ptsr_outofgame and (peppino.playerstate == PST_LIVE)
-		and not peppino.quittime then 
+		and not peppino.quittime then
 			table.insert(peppinos, #peppino)
 		end
 	end
-	
+
 	local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
 	local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
-	
+
 	if peppinos ~= {} then
 		if pizza.player then -- If Real Player
-			local player = pizza.player 
-			
+			local player = pizza.player
+
 			player.pizzacharge = 0
 			if not PTSR.timeover then
 				player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value
@@ -77,10 +122,10 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 				player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value)/3
 				player.stuntime = (CV_PTSR.pizzatpstuntime.value)/3
 			end
-		
+
 			P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
 			if uselaugh == true then
-				S_StartSound(player.mo, pfmaskData[player.PTSR_pizzastyle].sound)
+				S_StartSound(player.mo, PTSR.PFMaskData[player.PTSR_pizzastyle].sound)
 			end
 		else -- If AI Pizza Face
 			if not PTSR.timeover then
@@ -88,9 +133,9 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			else
 				pizza.pfstuntime = (CV_PTSR.aitpstuntime.value)/3
 			end
-		
+
 			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
-			
+
 			if uselaugh == true then
 				local laughsound = pizza.laughsound or sfx_pizzah
 				S_StartSound(pizza, laughsound)
@@ -100,41 +145,63 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 end
 
 -- spawns at the uhh normal spot where it spawns
-function PTSR:SpawnPFAI(_laughsound, _pfstate)
+function PTSR:SpawnPFAI(forcestyle)
 	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
 					PTSR.end_location.y*FRACUNIT,
-					PTSR.end_location.z*FRACUNIT, 
+					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
-	
-	newpizaface.laughsound = _laughsound
-	
-	if _pfstate then
-		newpizaface.pfstate = _pfstate
+	newpizaface.health = 0 -- SRB2 wont try to kill something dead
+
+	-- choose a random PF style if nothing was provided
+	local style = forcestyle
+	if forcestyle == nil then
+		local good = {}
+		for index, value in ipairs(PTSR.PFMaskData) do
+			if value.aiselectable then
+				table.insert(good, index)
+			end
+		end
+		style = good[P_RandomRange(1, #good)]
+	elseif type(forcestyle) == "string" then
+		for index, value in ipairs(PTSR.PFMaskData) do
+			if value.name:lower() == forcestyle:lower() then
+				style = index
+				break
+			end
+		end
 	end
-	
+	if not PTSR.PFMaskData[style] then
+		style = 1
+	end
+	newpizaface.laughsound = PTSR.PFMaskData[style].sound
+	newpizaface.state = PTSR.PFMaskData[style].state
+	newpizaface.spritexscale = PTSR.PFMaskData[style].scale
+	newpizaface.spriteyscale = PTSR.PFMaskData[style].scale
+	newpizaface.pizzastyle = style
+
 	return newpizaface
 end
 -- Player Touches AI
 addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
 	-- special: pizzaface
-	if not (toucher and toucher.valid) then return true end 
+	if not (toucher and toucher.valid) then return true end
 	if special.pfstuntime then return true end
-	
+
 	local player = toucher.player
 	if player and player.valid then
 		if player.powers[pw_invulnerability] then
 			return true
 		end
 		if not PTSR:PizzaCanTag(toucher, special) then return true end
-		
+
 		PTSR:PizzaCollision(toucher, special)
 	end
 	return true
 end, MT_PIZZA_ENEMY)
 
 -- Player touches human pizzaface
-addHook("MobjCollide", function(peppino, pizza)	
+addHook("MobjCollide", function(peppino, pizza)
 	if not PTSR:PizzaCanTag(peppino, pizza) then return end
 
 	PTSR:PizzaCollision(peppino, pizza)
@@ -153,15 +220,15 @@ end)
 addHook("MobjThinker", function(mobj)
 	local nearest_player
 	local laughsound = mobj.laughsound or sfx_pizzah
-	
+
 	if not PTSR.pizzatime then return end
-	
-	if mobj.pfstuntime then 
+
+	if mobj.pfstuntime then
 		mobj.pfstuntime = $ - 1
 		if not mobj.pfstunmomentum then
 			L_SpeedCap(mobj, 0) -- Freeze! You peasant food!
 		end
-		
+
 		if not mobj.pfstuntime then -- If we just got to 0
 			if not PTSR.showtime // hiiii adding onto this for showtime
 				PTSR.showtime = true
@@ -169,23 +236,23 @@ addHook("MobjThinker", function(mobj)
 				if anim then
 					anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
 				end
-				
+
 				S_StartSound(nil, laughsound)
 			end
 			mobj.pfstunmomentum = false
 		end
-		return 
+		return
 	end
-	
+
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame 
-		and not player.spectator and not player.quittime and not player.pizzaface 
+		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
+		and not player.spectator and not player.quittime and not player.pizzaface
 		and not player.mo.pizza_out and not player.mo.pizza_in then
 			if not nearest_player then
 				nearest_player = player
 			else
-				if player == nearest_player then continue end 
-				
+				if player == nearest_player then continue end
+
 				local dist_nptopizza = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
 				local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
 				if dist_newplayertopizza < dist_nptopizza then
@@ -194,47 +261,67 @@ addHook("MobjThinker", function(mobj)
 			end
 		end
 	end
-	
-	if nearest_player and nearest_player.valid and nearest_player.mo 
+
+	if nearest_player and nearest_player.valid and nearest_player.mo
 	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.ptsr_outofgame
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
-		
+
 		if mobj.eflags & MFE_UNDERWATER then
 			speed = $ / 2
 		end
-		
+
 		if PTSR.timeover then
 			local yum = FRACUNIT + (PTSR.timeover_tics*25)
-			
+
 			speed = FixedMul($, yum)
 		end
-		
+
 		if dist > CV_PTSR.aileash.value then
 			if not mobj.pfstuntime then
 				PTSR:RNGPizzaTP(mobj, true)
 			end
 		end
-		
+
 		-- t in tx means "player that we're TARGETING"
 		local tx = nearest_player.mo.x
 		local ty = nearest_player.mo.y
 		local tz = nearest_player.mo.z
-		
+
 		P_FlyTo(mobj, tx, ty, tz, speed, false)
-				
+		mobj.angle = R_PointToAngle2(mobj.x, mobj.y, tx, ty)
+
+		if not (leveltime % 6) then
+			local colors = PTSR.PFMaskData[mobj.pizzastyle or 1].trails
+			local ghost = P_SpawnGhostMobj(mobj)
+			P_SetOrigin(ghost, mobj.x, mobj.y, mobj.z)
+			ghost.fuse = 22
+			ghost.colorized = true
+
+			if mobj.redgreen then
+				ghost.color = colors[1]
+			else
+				ghost.color = colors[2]
+			end
+			mobj.redgreen = not mobj.redgreen
+			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
+		end
+
 	else
 		if not mobj.pfstunmomentum then
 			L_SpeedCap(mobj, 0)
 		end
 	end
+
+
 end, MT_PIZZA_ENEMY)
 
-addHook("MobjDeath", function(mobj)
-	PTSR:RNGPizzaTP(mobj, true)
-	return true
-end, MT_PIZZA_ENEMY)
+-- addHook("MobjDeath", function(mobj)
+-- 	-- SRB2 does some stuff before we can stop it so
+-- 	mobj.flags = $ | MF_SPECIAL
+-- 	return true
+-- end, MT_PIZZA_ENEMY)
 
 addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
@@ -247,7 +334,7 @@ end, MT_PIZZA_ENEMY)
 
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
-	player.stuntime = $ or 0 
+	player.stuntime = $ or 0
 	if gametype ~= GT_PTSPICER then return end
 	if player.realmo and player.realmo.valid and player.pizzaface and leveltime then
 		if player.redgreen == nil then
@@ -255,13 +342,13 @@ addHook("PlayerThink", function(player)
 		end
 		player.pizzacharge = $ or 0
 		player.pizzachargecooldown = $ or 0
-		
+
 		player.realmo.scale = 2*FU
-		player.spectator = false -- dont give up! dont spectate as pizzaface! (theres another check when spawning so idk 
-		
+		player.spectator = false -- dont give up! dont spectate as pizzaface! (theres another check when spawning so idk
+
 		if player.stuntime then -- player freeze decrement (mainly for pizza faces)
 			player.stuntime = $ - 1
-			-- # No Momentum # -- 
+			-- # No Momentum # --
 			player.mo.momx = 0
 			player.mo.momy = 0
 			player.mo.momz = 0
@@ -270,7 +357,7 @@ addHook("PlayerThink", function(player)
 			--player.pflags = $|PF_FULLSTASIS
 			if not player.stuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
 				if CV_PTSR.pizzalaugh.value and not player.pizzachargecooldown
-					S_StartSound(player.mo, pfmaskData[player.PTSR_pizzastyle].sound)
+					S_StartSound(player.mo, PTSR.PFMaskData[player.PTSR_pizzastyle].sound)
 				end
 
 				if not PTSR.showtime // hiiii adding onto this for showtime
@@ -294,7 +381,7 @@ addHook("PlayerThink", function(player)
 					if change ~= 0 then
 						S_StartSound(nil, sfx_menu1, player)
 						player.facechangecooldown = TICRATE/3
-						local changeTo = (player.PTSR_pizzastyle + change + #pfmaskData - 1) % #pfmaskData + 1
+						local changeTo = (player.PTSR_pizzastyle + change + #PTSR.PFMaskData - 1) % #PTSR.PFMaskData + 1
 						player.PTSR_pizzastyle = changeTo
 						if consoleplayer == player then
 							CV_StealthSet(CV_PTSR.pizzastyle, changeTo)
@@ -303,31 +390,31 @@ addHook("PlayerThink", function(player)
 				end
 			end
 		end
-		
-		
+
+
 
 		if (not player.pizzamask or not player.pizzamask.valid) then
 			player.pizzamask = P_SpawnMobj(player.realmo.x,player.realmo.y,player.realmo.z,MT_PIZZAMASK)
 			player.pizzamask.targetplayer = player --dream reference
-			player.pizzamask.scale = pfmaskData[1].scale
+			player.pizzamask.scale = PTSR.PFMaskData[1].scale
 		end
-		
+
 		if player.pizzamask then
 			player.realmo.flags2 = $|MF2_DONTDRAW -- invisible so that the pizza mask can draw over.
 		else
 			player.mo.color = SKINCOLOR_ORANGE
 			player.mo.colorized = true
 		end
-		
-	
+
+
 		if not (leveltime % 3) and player.pizzamask and player.pizzamask.valid and player.speed > FRACUNIT then
 			if (player ~= displayplayer) or (camera.chase and player == displayplayer) then
-				local colors = pfmaskData[player.PTSR_pizzastyle].trails
+				local colors = PTSR.PFMaskData[player.PTSR_pizzastyle].trails
 				local ghost = P_SpawnGhostMobj(player.pizzamask)
 				P_SetOrigin(ghost, player.pizzamask.x, player.pizzamask.y, player.pizzamask.z)
 				ghost.fuse = 11
 				ghost.colorized = true
-				
+
 				if player.redgreen then
 					ghost.color = colors[1]
 				else
@@ -341,7 +428,7 @@ addHook("PlayerThink", function(player)
 		if player.ptsr_outofgame or PTSR.quitting then
 			player.pizzacharge = 0
 		end
-		if not player.ptsr_outofgame and (player.cmd.buttons & BT_ATTACK) 
+		if not player.ptsr_outofgame and (player.cmd.buttons & BT_ATTACK)
 		and not PTSR.quitting and not player.stuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
@@ -351,7 +438,7 @@ addHook("PlayerThink", function(player)
 		elseif player.pizzacharge > 0 then
 			player.pizzacharge = $ - 1
 		end
-		
+
 		if player.pizzachargecooldown then
 			player.pizzachargecooldown = $ - 1
 		end
@@ -361,8 +448,8 @@ addHook("PlayerThink", function(player)
 			local findrange = 2500*FRACUNIT
 			local zrange = 400*FU
 			searchBlockmap("objects", function(refmobj, foundmobj)
-				local strength = 3*FRACUNIT 
-				if foundmobj and abs(pmo.z-foundmobj.z) < zrange 
+				local strength = 3*FRACUNIT
+				if foundmobj and abs(pmo.z-foundmobj.z) < zrange
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
 						if foundmobj.player and foundmobj.player.valid and
@@ -389,7 +476,7 @@ addHook("MobjThinker", function(mobj)
 		local targetplayer = mobj.targetplayer
 		P_MoveOrigin(mobj, targetplayer.mo.x, targetplayer.mo.y, targetplayer.mo.z)
 		mobj.angle = targetplayer.drawangle
-		local thisMask = pfmaskData[targetplayer.PTSR_pizzastyle]
+		local thisMask = PTSR.PFMaskData[targetplayer.PTSR_pizzastyle]
 		if mobj.state ~= thisMask.state then
 			mobj.state = thisMask.state
 			mobj.scale = thisMask.scale
@@ -402,8 +489,8 @@ end, MT_PIZZAMASK)
 
 --THE BADNIKS ARENT PIZZAHEAD'S ENEMY
 addHook("ShouldDamage", function(target, inflictor)
-	if target.valid and target.player and target.player.pizzaface then 
-	--and inflictor and inflictor.valid and (inflictor.flags & MF_ENEMY)  
+	if target.valid and target.player and target.player.pizzaface then
+	--and inflictor and inflictor.valid and (inflictor.flags & MF_ENEMY)
 	--this code is gone because we want pizzaface to not die
 		return false
 	end

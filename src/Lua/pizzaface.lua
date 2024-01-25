@@ -150,7 +150,6 @@ function PTSR:SpawnPFAI(forcestyle)
 					PTSR.end_location.y*FRACUNIT,
 					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
-	newpizaface.health = 0 -- SRB2 wont try to kill something dead
 
 	-- choose a random PF style if nothing was provided
 	local style = forcestyle
@@ -321,6 +320,7 @@ end, MT_PIZZA_ENEMY)
 addHook("MobjDeath", function(mobj)
 	-- SRB2 does some stuff before we can stop it so
 	mobj.flags = $ | MF_SPECIAL
+	mobj.health = 1000
 	return true
 end, MT_PIZZA_ENEMY)
 

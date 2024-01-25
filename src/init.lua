@@ -92,33 +92,6 @@ states[S_NORMALFACE_PF] = {
     nextstate = S_NORMALFACE_PF
 }
 
-rawset(_G, "pfmaskData", {
-	{
-		name = "Pizzaface",
-		state = S_PIZZAFACE,
-		scale = FU/2,
-		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
-		sound = sfx_pizzah,
-		emoji = ":pizza:"
-	},
-	{
-		name = "Coneball",
-	    state = S_CONEBALL,
-		scale = 3*FU/4,
-		trails = {SKINCOLOR_SKY, SKINCOLOR_NEON},
-		sound = sfx_coneba,
-		emoji = ":candy:"
-	},
-	{
-		name = "Eggman",
-	    state = S_PF_EGGMAN,
-		scale = FU,
-		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
-		sound = sfx_bewar3,
-		emoji = ":egg:"
-	}
-})
-
 --this is UGLY.
 dofile "HUD Animation/Init.lua"
 dofile "HUD Animation/UpdatePerFrame.lua"

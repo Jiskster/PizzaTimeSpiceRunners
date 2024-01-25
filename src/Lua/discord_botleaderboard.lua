@@ -22,7 +22,7 @@ local function registerIt(successValue)
 				elseif (ping < 256) then statms = ':ping_red: ' end
 				local rank = ':unknown: '
 				if player.pizzaface and leveltime then
-					rank = pfmaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza: "
+					rank = PTSR.PFMaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza: "
 				elseif player.spectator or player.playerstate == PST_DEAD
 					rank = ':dead: '
 				elseif player.ptsr_rank

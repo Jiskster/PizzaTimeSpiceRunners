@@ -38,6 +38,21 @@ COM_AddCommand("ptsr_pizzatimenow", function(player)
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 
+local forcePT = false
+
+COM_AddCommand("ptsr_debug_forcept", function(player)
+	if gametype ~= GT_PTSPICER then
+		forcePT = true
+	end
+end,1)
+
+addHook("PostThinkFrame", function ()
+	if forcePT then
+		COM_BufInsertText(server, "map " + G_BuildMapName(gamemap) + " -gametype 8 -f")
+		forcePT = false
+	end
+end)
+
 COM_AddCommand("ptsr_setgamemode", function(player, arg)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
@@ -64,15 +79,7 @@ COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
 		return
 	end
 	
-	local newpizaface = PTSR:SpawnPFAI()
-	
-	if pftype ~= nil and pftype == "summa" then
-		newpizaface.laughsound = sfx_smdah
-		newpizaface.state = S_SUMMADAT_PF
-	elseif pftype == "normal" then
-		newpizaface.laughsound = sfx_nrmlfc
-		newpizaface.state = S_NORMALFACE_PF
-	end
+	local newpizaface = PTSR:SpawnPFAI(pftype)
 	
 	if (randomplayer and not randomplayer == "false") then
 		PTSR:RNGPizzaTP(newpizaface, true)
@@ -357,7 +364,8 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 		local name = ({
 			[1] = "Pizzaface",
 			[2] = "Coneball",
-			[3] = "Eggman"
+			[3] = "Eggman",
+			[4] = "Summa"
 		})[cv.value]
 		if consoleplayer then
 			CONS_Printf(consoleplayer, "You will now appear as " .. name .. " when you're the villian of Pizza Time.")

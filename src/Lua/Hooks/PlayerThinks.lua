@@ -294,3 +294,50 @@ addHook("PlayerThink", function(player)
 		player.powers[pw_nocontrol] = 1
 	end
 end)
+
+--leaderboard stuff -luigi budd
+local ranktonum = {
+	["P"] = 6,
+	["S"] = 5,
+	["A"] = 4,
+	["B"] = 3,
+	["C"] = 2,
+	["D"] = 1,
+}
+
+addHook('ThinkFrame', function()
+	if gamestate ~= GS_LEVEL
+		return
+	end
+	
+	if gametype ~= GT_PTSPICER then return end
+	
+	if PTSR.pizzatime
+		PTSR.leaderboard = {}
+		
+		for p in players.iterate
+			
+			if (PTSR.pizzatime)
+				local outofgame = p.spectator or p.pizzaface or (p.playerstate == PST_DEAD and PTSR.pizzatime)
+				if not outofgame
+					table.insert(PTSR.leaderboard,p)
+				end
+			end
+			
+		end
+		table.sort(PTSR.leaderboard, function(a,b)
+			local p1 = a
+			local p2 = b
+			if ranktonum[a.ptsr_rank] ~= ranktonum[b.ptsr_rank]
+				if ranktonum[a.ptsr_rank] > ranktonum[b.ptsr_rank]
+					return true
+				end
+			else
+				if p1.score > p2.score then
+					return true
+				end
+			end
+		end)
+		
+	end
+end)

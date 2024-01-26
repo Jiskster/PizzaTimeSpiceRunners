@@ -158,7 +158,17 @@ hud.add( function(v, player, camera)
 		local text_size = FRACUNIT/4
 		
 		if tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER then
-			name = "PIZZAFACE"
+			local maskdata = nil
+			if tmo.type == MT_PLAYER then
+				maskdata = PTSR.PFMaskData[tmo.player.PTSR_pizzastyle or 1]
+			else
+				maskdata = PTSR.PFMaskData[tmo.pizzastyle or 1]
+			end
+			if not maskdata then
+				maskdata = PTSR.PFMaskData[1]
+			end
+			name = (maskdata.name or "PIZZAFACE"):upper()
+			namecolor = (maskdata.tagcolor or SKINCOLOR_ORANGE)
 		elseif tmo.type == MT_PT_DEATHRING then
 			name = "DEATH RING"
 			text_size = FRACUNIT/6

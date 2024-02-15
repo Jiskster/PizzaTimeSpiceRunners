@@ -39,6 +39,7 @@ PTSR.PFMaskData = {
 		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
 		sound = sfx_bewar3,
 		emoji = ":egg:",
+		aiselectable = true,
 		tagcolor = SKINCOLOR_RED
 	},
 	{

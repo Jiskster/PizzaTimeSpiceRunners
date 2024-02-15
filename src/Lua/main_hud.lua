@@ -542,7 +542,7 @@ local fade_hud = function(v, player)
 			local x2,y2 = 160*FU,scoretween
 			local x3,y3 = 160*FU,180*FU
 			customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
-			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.pt_endscore or "Invalid Score"), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
+			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.pt_endscore or player.score), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_BLUE)
 			
 			customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
 		end
@@ -712,10 +712,10 @@ customhud.SetupItem("PTSR_faceswap", hudmodname, faceswap_hud, "game", 0)
 customhud.SetupItem("PTSR_gamemode", hudmodname, gamemode_hud, "game", 0) -- show gamemode type
 customhud.SetupItem("PTSR_overtimemulti", hudmodname, overtimemulti_hud, "game", 0)
 customhud.SetupItem("PTSR_untilend", hudmodname, untilend_hud, "game", 0)
-customhud.SetupItem("PTSR_fade", hudmodname, fade_hud, "game", 0)
+customhud.SetupItem("PTSR_fade", hudmodname, fade_hud, "game", 1)
 customhud.SetupItem("PTSR_overtime", hudmodname, overtime_hud, "game", 0)
-customhud.SetupItem("PTSR_leaderboard", hudmodname, leaderboard_hud, "game", 0)
-customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 0) -- override vanilla rankings hud
+customhud.SetupItem("PTSR_leaderboard", hudmodname, leaderboard_hud, "game", 2)
+customhud.SetupItem("rankings", hudmodname, scoreboard_hud, "scores", 1) -- override vanilla rankings hud
 customhud.SetupItem("score", hudmodname, score_hud, "game", 0) -- override score hud
 customhud.SetupItem("time", hudmodname, nil, "game", 0) -- override time hud (NOTHING)
 

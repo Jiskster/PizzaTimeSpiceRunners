@@ -19,7 +19,8 @@ PTSR.PFMaskData = {
 		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
 		sound = sfx_pizzah,
 		emoji = ":pizza:",
-		aiselectable = true
+		aiselectable = true,
+		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
 		name = "Coneball",
@@ -28,7 +29,8 @@ PTSR.PFMaskData = {
 		trails = {SKINCOLOR_SKY, SKINCOLOR_NEON},
 		sound = sfx_coneba,
 		emoji = ":candy:",
-		aiselectable = true
+		aiselectable = true,
+		tagcolor = SKINCOLOR_MAGENTA
 	},
 	{
 		name = "Eggman",
@@ -36,23 +38,27 @@ PTSR.PFMaskData = {
 		scale = FU,
 		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
 		sound = sfx_bewar3,
-		emoji = ":egg:"
+		emoji = ":egg:",
+		aiselectable = true,
+		tagcolor = SKINCOLOR_RED
 	},
 	{
 		name = "Summa",
 	    state = S_SUMMADAT_PF,
-		scale = FU,
+		scale = FU/2,
 		trails = {SKINCOLOR_PEACHY, SKINCOLOR_RED},
 		sound = sfx_smdah,
-		emoji = ":stuck_out_tongue:"
+		emoji = ":stuck_out_tongue:",
+		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
 		name = "Normal",
 	    state = S_NORMALFACE_PF,
-		scale = FU,
+		scale = FU/2,
 		trails = {SKINCOLOR_GREEN, SKINCOLOR_WHITE},
 		sound = sfx_nrmlfc,
-		emoji = ":green_circle:"
+		emoji = ":green_circle:",
+		tagcolor = SKINCOLOR_GREEN
 	}
 }
 
@@ -71,6 +77,7 @@ end
 
 function PTSR:PizzaCanTag(peppino, pizza)
 	if not self.pizzatime then return false end
+	if CV_PTSR.nuhuh.value then return false end
 
 	if not (peppino.player and peppino.valid and peppino.player.valid) then return false end
 

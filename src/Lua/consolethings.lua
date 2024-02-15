@@ -46,6 +46,13 @@ COM_AddCommand("ptsr_debug_forcept", function(player)
 	end
 end,1)
 
+CV_PTSR.nuhuh = CV_RegisterVar({
+	name = "ptsr_debug_nuhuh",
+	defaultvalue = "Off",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
+})
+
 addHook("PostThinkFrame", function ()
 	if forcePT then
 		COM_BufInsertText(server, "map " + G_BuildMapName(gamemap) + " -gametype 8 -f")

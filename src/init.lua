@@ -1,6 +1,8 @@
 freeslot("TOL_PTSR")
 freeslot("sfx_pizzah", "sfx_pizzao", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry",
 		 "sfx_prepr1", "sfx_prepr2", "sfx_prepr3", "MT_PT_PARRY", "S_PT_PARRY", "SPR_PRRY")
+freeslot("sfx_evlagh")
+
 for i = 0, 2
 	sfxinfo[sfx_prepr1 + i].caption = "Boink"
 end
@@ -42,6 +44,7 @@ rawset(_G, "FUNC_PTSR", {}) -- functions
 
 freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah")
 freeslot("sfx_nrmlfc","S_NORMALFACE_PF","SPR_NMFC")
+freeslot("S_KIMIZZA_PF", "SPR_KMZA")
 
 mobjinfo[MT_PIZZAMASK] = {
 	doomednum = -1,
@@ -90,6 +93,15 @@ states[S_NORMALFACE_PF] = {
     frame = FF_FULLBRIGHT|A,
     tics = -1,
     nextstate = S_NORMALFACE_PF
+}
+
+states[S_KIMIZZA_PF] = {
+    sprite = SPR_KMZA,
+    frame = FF_ANIMATE|FF_FULLBRIGHT|A,
+    tics = -1,
+    var1 = 1,
+    var2 = 1,
+    nextstate = S_KIMIZZA_PF
 }
 
 --this is UGLY.

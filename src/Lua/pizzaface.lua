@@ -59,7 +59,17 @@ PTSR.PFMaskData = {
 		sound = sfx_nrmlfc,
 		emoji = ":green_circle:",
 		tagcolor = SKINCOLOR_GREEN
-	}
+	},
+	{
+		name = "Kimizza",
+		state = S_KIMIZZA_PF,
+		scale = FU,
+		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
+		sound = sfx_evlagh,
+		emoji = ":pizza:",
+		aiselectable = true,
+		tagcolor = SKINCOLOR_ORANGE
+	},
 }
 
 

@@ -60,7 +60,7 @@ PTSR.PFMaskData = {
 		emoji = ":green_circle:",
 		tagcolor = SKINCOLOR_GREEN
 	},
-	{
+	{ -- Suggested by Maverick, maverick_2k on discord (841504642306801674)
 		name = "Kimizza",
 		state = S_KIMIZZA_PF,
 		scale = FU,

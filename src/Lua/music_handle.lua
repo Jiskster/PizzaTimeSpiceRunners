@@ -9,7 +9,7 @@ addHook("ThinkFrame", function()
 	if PTSR.pizzatime then
 		if PTSR.timeover and leveltime then
 			local mus = CV_PTSR.overtime_music.value
-			local mus_table = {[1] = "OVRTME", [2] = "OVRTM2"}
+			local mus_table = {[1] = "OVRTME", [2] = "OT_PH"} -- OVRTM2 for unfinished overtime music
 			local mus_str = mus_table[mus]
 			
 			if mapmusname ~= mus_str then

@@ -254,8 +254,12 @@ local function InitMap2()
 		ResetPlayerVars(player)	
 	end
 	
-	
-	PTSR.maxrankpoints = PTSR.GetRingCount()*150
+	if mapheaderinfo[gamemap].ptsr_s_rank_points ~= nil 
+	and tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points) then -- custom maxrankpoints
+		PTSR.maxrankpoints = tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points)
+	else -- default maxrankpoints
+		PTSR.maxrankpoints = PTSR.GetRingCount()*150
+	end
 end
 
 PTSR.ReturnPizzaTimeMusic = function()

@@ -115,6 +115,11 @@ customhud.SetupFont("SCRPT", -2, 4)
 
 dofile "main_game.lua"
 
+dofile "Functions/reset_playervars.lua"
+dofile "Functions/return_ptmusic.lua"
+dofile "Functions/get_ringcount.lua"
+dofile "Init/initmap.lua"
+
 dofile "consolethings.lua"
 
 dofile "Hooks/PlayerThinks.lua"
@@ -122,16 +127,26 @@ dofile "Hooks/PlayerDeath.lua"
 dofile "Hooks/PlayerTweaks.lua"
 dofile "Hooks/LineTriggerSystem.lua"
 
-dofile "libs.lua"
+dofile "PlayerScripts/player_parry.lua"
+dofile "PlayerScripts/player_killwhilerunning.lua"
+dofile "PlayerScripts/player_ringdrophandle.lua"
+dofile "PlayerScripts/player_outofgame.lua"
+
+dofile "PlayerScripts/player_laptp.lua"
+dofile "PlayerScripts/pmo_startnewlap.lua"
+dofile "PlayerScripts/pmo_pizzatimetrigger.lua"
+
+dofile "Libraries/hooksystem.lua"
+dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"
-dofile "music_handle.lua"
+dofile "Hooks/music_handle.lua"
 dofile "pizzaface.lua"
 dofile "main_hud.lua"
 dofile "discord_botleaderboard.lua"
 dofile "name_tags.lua"
-dofile "pizzaportal.lua"
+dofile "Gimmicks/pizzaportal.lua"
 
-dofile "intermission.lua"
+dofile "Hooks/intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"
 dofile "Exit Signs/exitsign_thinkers.lua"

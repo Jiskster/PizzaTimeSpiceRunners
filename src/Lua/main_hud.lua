@@ -700,8 +700,6 @@ local overtime_hud = function(v, player)
 	end
 	
 	if PTSR.timeover_tics <= anim_lastframe then -- draw
-		--v.drawLevelTitle(left_tween+shakex_1, 100+shakey_1, "It's ", V_REDMAP)
-		
 		v.drawScaled(
 			(left_tween+shakex_1)*FU,
 			(80+shakey_1)*FU,
@@ -709,14 +707,17 @@ local overtime_hud = function(v, player)
 			text_its
 		)
 		
-		--v.drawLevelTitle(right_tween+shakex_2, 100+shakey_2, "Overtime!", V_REDMAP)
-		
 		v.drawScaled(
 			(right_tween+shakex_2)*FU,
 			(80+shakey_2)*FU,
 			FU/2,
 			text_overtime
 		)
+		
+		/* Beta Text (Broken positions)
+			v.drawLevelTitle(left_tween+shakex_1, 100+shakey_1, "It's ", V_REDMAP)
+			v.drawLevelTitle(right_tween+shakex_2, 100+shakey_2, "Overtime!", V_REDMAP)
+		*/
 	end
 end
 

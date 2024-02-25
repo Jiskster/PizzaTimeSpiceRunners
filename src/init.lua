@@ -110,6 +110,8 @@ dofile "HUD Animation/UpdatePerFrame.lua"
 
 dofile "customhudlib.lua"
 
+dofile "Libraries/hooksystem.lua"
+
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 
@@ -136,7 +138,6 @@ dofile "PlayerScripts/player_laptp.lua"
 dofile "PlayerScripts/pmo_startnewlap.lua"
 dofile "PlayerScripts/pmo_pizzatimetrigger.lua"
 
-dofile "Libraries/hooksystem.lua"
 dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"

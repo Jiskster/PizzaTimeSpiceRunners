@@ -6,7 +6,7 @@ addHook("PlayerThink", function(player)
 
 	local cmd = player.cmd
 	local pmo = player.mo
-	
+
 	if not player.mo.ptsr_parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
@@ -31,6 +31,7 @@ addHook("PlayerThink", function(player)
 									return
 								end
 							end
+							
 							local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
 							foundmobj.pfstunmomentum = true

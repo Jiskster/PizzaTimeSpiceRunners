@@ -21,8 +21,6 @@ rawset(_G, "PTSR_AddHook", function(hooktype, func)
 end)
 
 rawset(_G, "PTSR_DoHook", function(hooktype, ...)
-    local return_func
-
     for i,v in ipairs(hooks[hooktype]) do
         if v(...) == true then
             override_register = true

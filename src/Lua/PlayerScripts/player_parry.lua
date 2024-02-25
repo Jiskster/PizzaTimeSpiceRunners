@@ -18,7 +18,7 @@ addHook("PlayerThink", function(player)
 				
 				local gotapf = false
 
-				local range = 10000*FRACUNIT -- higher blockmap range so it doesnt look choppy
+				local range = 1000*FRACUNIT -- higher blockmap range so it doesnt look choppy
 				local real_range = CV_PTSR.parry_radius.value
 				searchBlockmap("objects", function(refmobj, foundmobj)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
@@ -32,6 +32,7 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
+
 							local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
 
 							foundmobj.pfstunmomentum = true

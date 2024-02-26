@@ -101,9 +101,8 @@ addHook("PlayerThink", function(player)
 					PTSR.StartNewLap(player.mo)
 					hudst.anim_active = true
 					hudst.anim = 1
-
-					player.hold_newlap = 0
 				end
+				player.hold_newlap = 0
 			end
 		end 
 		

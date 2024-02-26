@@ -97,11 +97,13 @@ addHook("PlayerThink", function(player)
 
 		if player.hold_newlap and not PTSR.gameover then
 		 	if player.hold_newlap >= PTSR.laphold then
-				PTSR.StartNewLap(player.mo)
-				hudst.anim_active = true
-				hudst.anim = 1
+				if not PTSR_DoHook("onlap", toucher) then
+					PTSR.StartNewLap(player.mo)
+					hudst.anim_active = true
+					hudst.anim = 1
 
-				player.hold_newlap = 0
+					player.hold_newlap = 0
+				end
 			end
 		end 
 		

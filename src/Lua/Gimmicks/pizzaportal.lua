@@ -62,6 +62,11 @@ end)
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player
+	
+	if PTSR_DoHook("onlap", toucher) == true then
+		return
+	end
+	
 	if toucher and toucher.valid and tplayer and tplayer.valid then
 		local lastlap_perplayer = (tplayer.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value)
 		if not toucher.pizza_in and not toucher.pizza_out and PTSR.pizzatime and not lastlap_perplayer then -- start lap portal in sequence

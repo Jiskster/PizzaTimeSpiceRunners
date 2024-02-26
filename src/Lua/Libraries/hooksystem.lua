@@ -1,8 +1,11 @@
 local hooks = {}
 hooks.onparry = {}
 hooks.onlap = {}
+hooks.onringbonus = {}
+hooks.onlapbonus = {}
 
-local override_register = false /*
+local override_register = false
+/*
 	It's called override_register because a common use of hooks is to override
 	Ingame actions.
 */

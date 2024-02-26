@@ -39,7 +39,6 @@ addHook("MobjLineCollide", function(mobj, line)
 			
 			player.ptsr_outofgame = 1
 			
-			chatprint(lapstring, true)
 			if CV_PTSR.forcelap.value then 
 				PTSR.StartNewLap(mobj)
 			end

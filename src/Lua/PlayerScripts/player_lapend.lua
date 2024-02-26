@@ -1,3 +1,5 @@
+// TODO: Make DoLapBonus not call ChatLapStatus, and seperately use them when they're needed.
+
 PTSR.ChatLapStatus = function(player)
 	local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
 	chatprint(lapstring, true)

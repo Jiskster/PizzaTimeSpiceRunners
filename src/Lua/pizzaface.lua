@@ -75,7 +75,7 @@ PTSR.PFMaskData = {
 
 function PTSR:PizzaCollision(peppino, pizza)
 	if PTSR.gamemode == 1 then
-		if (leveltime - peppino.player.lastparryframe) <= 5 then
+		if (leveltime - peppino.player.lastparryframe) <= CV_PTSR.parry_safeframes.value then
 			PTSR.DoParry(peppino.player.mo, pizza)
 			PTSR.DoParryAnim(peppino.player.mo, true)
 			PTSR.DoParryAnim(pizza)

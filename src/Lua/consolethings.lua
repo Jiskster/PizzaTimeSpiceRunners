@@ -306,6 +306,7 @@ CV_PTSR.parrycooldown = CV_RegisterVar({
 	flags = CV_NETVAR,
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })
+
 CV_PTSR.parrystuntime = CV_RegisterVar({
 	name = "PTSR_parrystuntime",
 	defaultvalue = "45",
@@ -346,6 +347,13 @@ CV_PTSR.parry_friendlyfire = CV_RegisterVar({
 	defaultvalue = "on",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff,
+})
+
+CV_PTSR.parry_safeframes = CV_RegisterVar({
+	name = "PTSR_parry_safeframes",
+	defaultvalue = "5",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 350}, 
 })
 
 CV_PTSR.nopizza = CV_RegisterVar({

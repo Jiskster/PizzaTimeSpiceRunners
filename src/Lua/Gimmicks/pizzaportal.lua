@@ -119,9 +119,6 @@ addHook("MobjThinker", function(mobj)
 		if not mobj.pizza_in then -- start lap portal out sequence
 			mobj.pizza_out = portal_time
 			
-			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
-			chatprint(lapstring, true)
-			
 			PTSR.StartNewLap(mobj)
 			hudst.anim_active = true
 			hudst.anim = 1
@@ -131,15 +128,7 @@ addHook("MobjThinker", function(mobj)
 				mobj.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
 			
-			if player.lapsdid ~= nil then
-				local lapbonus = (player.lapsdid*777)
-				local ringbonus = (player.rings*13) 
-				
-				P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
-				CONS_Printf(player, "** Lap "..player.lapsdid.." bonuses **")
-				CONS_Printf(player, "* "..lapbonus.." point lap bonus!")
-				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
-			end
+			PTSR.DoLapBonus(player)
 			
 			S_StartSound(mobj, sfx_lapout)
 		end

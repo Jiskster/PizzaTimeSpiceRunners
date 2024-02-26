@@ -133,6 +133,7 @@ dofile "PlayerScripts/player_parry.lua"
 dofile "PlayerScripts/player_killwhilerunning.lua"
 dofile "PlayerScripts/player_ringdrophandle.lua"
 dofile "PlayerScripts/player_outofgame.lua"
+dofile "PlayerScripts/player_lapend.lua"
 
 dofile "PlayerScripts/player_laptp.lua"
 dofile "PlayerScripts/pmo_startnewlap.lua"

@@ -1,6 +1,7 @@
 local hooks = {}
 hooks.onparry = {}
 hooks.onlap = {}
+hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}
 

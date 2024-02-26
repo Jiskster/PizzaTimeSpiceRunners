@@ -32,13 +32,10 @@ addHook("MobjLineCollide", function(mobj, line)
 		if ((line.backsector and line.backsector == PTSR.endsector)
 		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.ptsr_outofgame and not player.spectator
 		and player.mo and player.mo.valid and player.lapsdid ~= nil then 
-		
 			if player.pizzaface then
 				PTSR.StartNewLap(mobj)
 				return
 			end
-			
-			local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
 			
 			player.ptsr_outofgame = 1
 			
@@ -47,15 +44,7 @@ addHook("MobjLineCollide", function(mobj, line)
 				PTSR.StartNewLap(mobj)
 			end
 
-			if player.lapsdid ~= nil then
-				local lapbonus = (player.lapsdid*777)
-				local ringbonus = (player.rings*13) 
-				
-				P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
-				CONS_Printf(player, "** Lap "..player.lapsdid.." bonuses **")
-				CONS_Printf(player, "* "..lapbonus.." point lap bonus!")
-				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
-			end
+			PTSR.DoLapBonus(player)
 		end
 	end
 end, MT_PLAYER)

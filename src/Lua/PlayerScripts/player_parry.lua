@@ -1,4 +1,25 @@
--- Parry
+-- Parry animation function with sound parameter.
+PTSR.DoParryAnim = function(mobj, withsound)
+	local parry = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_PARRY)
+	P_SpawnGhostMobj(parry)
+	P_SetScale(parry, 3*FRACUNIT)
+	parry.fuse = 5
+	
+	if withsound then
+		S_StartSound(mobj, sfx_pzprry)
+	end
+end
+
+PTSR.DoParry = function(parrier, victim)
+	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
+
+	victim.pfstunmomentum = true
+	victim.pfstuntime = CV_PTSR.parrystuntime.value
+	P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value)
+	P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value)
+end
+
+-- Parry Stuff
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
 	if (player.playerstate == PST_DEAD) or (player.ptsr_outofgame) then return end 
@@ -6,7 +27,7 @@ addHook("PlayerThink", function(player)
 
 	local cmd = player.cmd
 	local pmo = player.mo
-
+	
 	if not player.mo.ptsr_parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
@@ -17,8 +38,7 @@ addHook("PlayerThink", function(player)
 				}
 				
 				local gotapf = false
-
-				local range = 1000*FRACUNIT -- higher blockmap range so it doesnt look choppy
+				local range = 1000*FU
 				local real_range = CV_PTSR.parry_radius.value
 				searchBlockmap("objects", function(refmobj, foundmobj)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
@@ -32,26 +52,12 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
-
-							local anglefromplayer = R_PointToAngle2(foundmobj.x, foundmobj.y, pmo.x, pmo.y)
-
-							foundmobj.pfstunmomentum = true
-							foundmobj.pfstuntime = CV_PTSR.parrystuntime.value
-							P_SetObjectMomZ(foundmobj, CV_PTSR.parryknockback_z.value)
-							P_InstaThrust(foundmobj, anglefromplayer - ANGLE_180, CV_PTSR.parryknockback_xy.value)
-
-							// TODO: Remake this parry animation
-							local parry = P_SpawnMobj(player.mo.x, player.mo.y, player.mo.z, MT_PT_PARRY)
-							P_SpawnGhostMobj(parry)
-							P_SetScale(parry, 3*FRACUNIT)
-							parry.fuse = 5
+							PTSR.DoParry(player.mo, foundmobj)
+							player.lastparryframe = leveltime
 							
-							local parry2 = P_SpawnMobj(foundmobj.x, foundmobj.y, foundmobj.z, MT_PT_PARRY)
-							P_SpawnGhostMobj(parry)
-							P_SetScale(parry2, 3*FRACUNIT)
-							parry2.fuse = 5
+							PTSR.DoParryAnim(player.mo, true)
+							PTSR.DoParryAnim(foundmobj)
 
-							S_StartSound(player.mo, sfx_pzprry)
 							L_SpeedCap(player.mo, 30*FRACUNIT)
 
 							player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
@@ -59,7 +65,7 @@ addHook("PlayerThink", function(player)
 							gotapf = true
 						end
 					end
-				end, 
+				end,
 				player.mo,
 				player.mo.x-range, player.mo.x+range,
 				player.mo.y-range, player.mo.y+range)
@@ -71,7 +77,7 @@ addHook("PlayerThink", function(player)
 					tryparry.fuse = 2
 					P_SetScale(tryparry, (3*FRACUNIT)/2)
 					L_SpeedCap(player.mo, 5*FRACUNIT)
-
+					player.lastparryframe = leveltime
 					player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
 				end
 			

@@ -6,7 +6,7 @@ mobjinfo[MT_PIZZA_ENEMY] = {
 	spawnstate = S_PIZZAFACE,
 	spawnhealth = 1000,
 	deathstate = S_NULL,
-	radius = 18*FU,
+	radius = 24*FU,
 	height = 48*FU,
 	flags = MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_SPECIAL|MF_BOSS
 }
@@ -75,7 +75,14 @@ PTSR.PFMaskData = {
 
 function PTSR:PizzaCollision(peppino, pizza)
 	if PTSR.gamemode == 1 then
-		P_KillMobj(peppino,pizza)
+		if (leveltime - peppino.player.lastparryframe) <= 5 then
+			PTSR.DoParry(peppino.player.mo, pizza)
+			PTSR.DoParryAnim(peppino.player.mo, true)
+			PTSR.DoParryAnim(pizza)
+			peppino.player.lastparryframe = leveltime
+		else
+			P_KillMobj(peppino,pizza)
+		end
 	elseif PTSR.gamemode == 2 then
 		chatprint("\x83*"..peppino.player.name.."\x82 has been infected.")
 		if DiscordBot then

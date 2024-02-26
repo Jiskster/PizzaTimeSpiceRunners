@@ -52,7 +52,7 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
-							if PTSR_DoHook("doparry", pmo) == true then
+							if PTSR_DoHook("onparry", pmo) == true then
 								return true
 							end
 							

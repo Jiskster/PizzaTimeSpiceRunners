@@ -21,6 +21,10 @@ rawset(_G, "PTSR_AddHook", function(hooktype, func)
 end)
 
 rawset(_G, "PTSR_DoHook", function(hooktype, ...)
+	if not hooks[hooktype] then
+		error("Invalid HookType")
+	end
+	
     for i,v in ipairs(hooks[hooktype]) do
         if v(...) == true then
             override_register = true

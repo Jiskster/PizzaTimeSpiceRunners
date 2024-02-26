@@ -2,6 +2,10 @@ PTSR.StartNewLap = function(mobj)
 	local player = mobj.player
 
 	if not player.pizzaface and not player.spectator and player.playerstate ~= PST_DEAD then
+		if PTSR_DoHook("dolap", mobj) == true then
+			return
+		end
+		
 		PTSR.LapTP(player, true)
 
 		S_StartSound(nil, sfx_lap2, player)

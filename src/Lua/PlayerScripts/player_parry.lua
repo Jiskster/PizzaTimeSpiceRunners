@@ -52,6 +52,10 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
+							if PTSR_DoHook("doparry", pmo) == true then
+								return true
+							end
+							
 							PTSR.DoParry(player.mo, foundmobj)
 							player.lastparryframe = leveltime
 							

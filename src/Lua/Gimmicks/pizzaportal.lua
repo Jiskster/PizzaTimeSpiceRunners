@@ -119,16 +119,18 @@ addHook("MobjThinker", function(mobj)
 		if not mobj.pizza_in then -- start lap portal out sequence
 			mobj.pizza_out = portal_time
 			
-			PTSR.StartNewLap(mobj)
+			
+			PTSR.DoLapBonus(player)
+			
 			hudst.anim_active = true
 			hudst.anim = 1
+			
+			PTSR.StartNewLap(mobj)
 			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
 			if angle_frompotal and tonumber(angle_frompotal) then
 				mobj.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
-			
-			PTSR.DoLapBonus(player)
 			
 			S_StartSound(mobj, sfx_lapout)
 		end

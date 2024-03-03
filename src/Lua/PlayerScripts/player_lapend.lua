@@ -3,8 +3,6 @@
 PTSR.ChatLapStatus = function(player)
 	local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
 	chatprint(lapstring, true)
-	
-	
 end
 
 PTSR.DoLapBonus = function(player)		

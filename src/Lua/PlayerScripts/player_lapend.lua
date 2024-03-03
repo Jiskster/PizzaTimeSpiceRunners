@@ -14,15 +14,15 @@ PTSR.DoLapBonus = function(player)
 		local lapbonus = (player.lapsdid*777)
 		local ringbonus = (player.rings*13)
 		
-		if PTSR_DoHook("onbonus", toucher) == true then
+		if PTSR_DoHook("onbonus", player) == true then
 			escapebonus = false
 		end
 		
-		if PTSR_DoHook("onlapbonus", toucher) == true then
+		if PTSR_DoHook("onlapbonus", player) == true then
 			lapbonus = 0
 		end
 		
-		if PTSR_DoHook("onringbonus", toucher) == true then
+		if PTSR_DoHook("onringbonus", player) == true then
 			ringbonus = 0
 		end
 		

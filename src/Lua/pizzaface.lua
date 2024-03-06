@@ -215,9 +215,27 @@ addHook("TouchSpecial", function(special, toucher)
 
 	local player = toucher.player
 	if player and player.valid then
+		if player.powers[pw_shield] & SH_FORCE then
+		
+			PTSR.DoParry(toucher, special)
+			
+			PTSR.DoParryAnim(toucher, true)
+			PTSR.DoParryAnim(special)
+			
+			if player.powers[pw_shield] & SH_FORCEHP then
+				player.powers[pw_shield] = SH_FORCE
+			else
+				player.powers[pw_shield] = SH_NONE
+				P_DoPlayerPain(player)
+			end
+			
+			return true
+		end
+	
 		if player.powers[pw_invulnerability] then
 			return true
 		end
+		
 		if not PTSR:PizzaCanTag(toucher, special) then return true end
 
 		PTSR:PizzaCollision(toucher, special)

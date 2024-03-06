@@ -93,7 +93,7 @@ hud.add( function(v, player, camera)
 			end
 		end
 		
-		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER or tmo.type == MT_PT_DEATHRING) then
+		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER or tmo.type == MT_PT_DEATHRING or tmo.type == MT_ALIVEDUSTDEVIL) then
 			continue
 		end
 			
@@ -173,6 +173,10 @@ hud.add( function(v, player, camera)
 			name = "DEATH RING"
 			text_size = FRACUNIT/6
 			namecolor = SKINCOLOR_GREEN
+		elseif tmo.type == MT_ALIVEDUSTDEVIL then
+			name = "TORNADO"
+			text_size = FRACUNIT/4
+			namecolor = SKINCOLOR_GREY
 		end
 		
 

@@ -146,7 +146,9 @@ dofile "pizzaface.lua"
 dofile "main_hud.lua"
 dofile "discord_botleaderboard.lua"
 dofile "name_tags.lua"
+
 dofile "Gimmicks/pizzaportal.lua"
+dofile "Gimmicks/alivedustdevil.lua"
 
 dofile "Hooks/intermission.lua"
 

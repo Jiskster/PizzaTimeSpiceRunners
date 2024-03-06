@@ -1,3 +1,5 @@
+local already_announced_tornado = true
+
 freeslot("MT_PIZZA_ENEMY") -- For AI
 
 -- For AI
@@ -337,6 +339,20 @@ addHook("MobjThinker", function(mobj)
 		end
 	end
 
+	if PTSR.timeover and not PTSR.gameover then
+		PTSR.dustdeviltimer = $ + 1
+		
+		if PTSR.dustdeviltimer >= CV_PTSR.dustdeviltimerend.value then
+			P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_ALIVEDUSTDEVIL)
+			PTSR.dustdeviltimer = 0
+			local tornado_text = "\x86*A tornado spawned!"
+			chatprint(tornado_text)
+			
+			if DiscordBot then
+				DiscordBot.Data.msgsrb2 = $ .. ":cloud_tornado: A tornado spawned!\n"
+			end
+		end
+	end
 
 end, MT_PIZZA_ENEMY)
 

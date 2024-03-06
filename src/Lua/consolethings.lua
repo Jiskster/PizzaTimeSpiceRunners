@@ -369,6 +369,13 @@ CV_PTSR.flashframedeath = CV_RegisterVar({
 	PossibleValue = CV_OnOff, 
 })
 
+CV_PTSR.dustdeviltimerend = CV_RegisterVar({
+	name = "PTSR_dustdeviltimerend",
+	defaultvalue = "3150", -- 1:30 min by default
+	flags = CV_NETVAR,
+	PossibleValue = CV_Unsigned, 
+})
+
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",

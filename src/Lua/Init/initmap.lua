@@ -14,6 +14,7 @@ local function InitMap()
 	PTSR.intermission_tics = 0
 	PTSR.gameover = false
 	PTSR.untilend = 0
+	PTSR.dustdeviltimer = 0
 	
 	PTSR.vote_maplist = {
 		{votes = 0, mapnum = 1},

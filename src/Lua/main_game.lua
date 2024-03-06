@@ -82,6 +82,8 @@ rawset(_G, "PTSR", { -- variables
 	},
 	
 	nextmapvoted = 0,
+	
+	dustdeviltimer = 0, -- when this reaches a certain number, every pizza face spawns an alive dust devil
 })
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
@@ -122,6 +124,8 @@ addHook("NetVars", function(net)
 		"vote_maplist",
 		
 		"nextmapvoted",
+		
+		"dustdeviltimer",
 	}
 	
 	for i,v in ipairs(sync_list) do

@@ -121,6 +121,8 @@ addHook("PreThinkFrame", function()
 	for player in players.iterate do
 		local cmd = player.cmd
 		
+		player.hold_newlap = $ or 0
+		
 		if player.ptsr_outofgame and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
 			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
 				player.hold_newlap = $ + 1

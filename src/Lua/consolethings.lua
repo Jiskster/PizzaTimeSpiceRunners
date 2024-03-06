@@ -22,7 +22,6 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 			if DiscordBot then
 				DiscordBot.Data.msgsrb2 = $ .. "**".. targetplayer.name .. "** has magically become a pizza!\n"
 			end
-			PTSR_add_announcement(5*TICRATE,"\x85*"..targetplayer.name.." has become a pizza!")
 		end
 	else
 		CONS_Printf(player, "Player does not exist")

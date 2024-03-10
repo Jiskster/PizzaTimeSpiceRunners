@@ -80,8 +80,6 @@ addHook("TouchSpecial", function(special, toucher)
 				
 				print("\x83"..tplayer.name.." revived "..special.drop_name)
 				
-				print(rplayer.spectator)
-				
 				if DiscordBot then
 					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
 				end

@@ -525,6 +525,7 @@ local fade_hud = function(v, player)
 	end
 	
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
+	
 	if i_tic > PTSR.intermission_act1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
@@ -536,6 +537,7 @@ local fade_hud = function(v, player)
 		zonenametween = ease.inquint(div3, 10*FU, -100*FU)
 		scoretween = ease.inquint(div3, 100*FU, 500*FU)
 	end
+	
 	if i_tic < PTSR.intermission_act_end then
 		if i_tic >= PTSR.intermission_act2  then
 			local x1,y1 = 160*FU,zonenametween
@@ -551,41 +553,52 @@ local fade_hud = function(v, player)
 	elseif not PTSR:isVoteOver() then
 		local vote_timeleft = (PTSR.intermission_vote_end - i_tic)/TICRATE
 	
-		for i=1,3 do
+		for i=1, CV_PTSR.levelsinvote.value do
 			local act_vote = clamp(0, i_tic - PTSR.intermission_act_end - (i*4), 35)
 			local act_vote_div = clamp(0, FixedDiv(act_vote*FU, 35*FU), 35*FU)
-			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 225*FU)
-			local map_y = 15*FU+((i-1)*60*FU)	
+			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 200*FU)
+			local map_y = 15*FU+((i-1)*30*FU)	
 			local current_map = PTSR.vote_maplist[i]
 			local current_map_icon = v.cachePatch(G_BuildMapName(current_map.mapnum).."P")
 			local current_map_name = mapheaderinfo[current_map.mapnum].lvlttl
 			local current_map_act = mapheaderinfo[current_map.mapnum].actnum
 			local cursor_patch = v.cachePatch("SLCT1LVL")
 			local cursor_patch2 = v.cachePatch("SLCT2LVL")
+			local size = FU/4
+			local mapoffset = FU*8
 			
-			
-			v.drawScaled(act_vote_tween, map_y, FU/2, current_map_icon, V_SNAPTORIGHT)
+			v.drawScaled(act_vote_tween, map_y, size, current_map_icon, V_SNAPTORIGHT)
 			
 			-- Selection Flicker Code
 			if player.ptvote_selection == i then
 				if (player.ptvote_voted)
-					v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch, V_SNAPTORIGHT)
+					v.drawScaled(act_vote_tween, map_y, size,cursor_patch, V_SNAPTORIGHT)
 				else
 					if ((leveltime/4)%2 == 0) then 
-						v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch, V_SNAPTORIGHT) 
+						v.drawScaled(act_vote_tween, map_y, size,cursor_patch, V_SNAPTORIGHT) 
 					else
-						v.drawScaled(act_vote_tween, map_y, FU/2,cursor_patch2, V_SNAPTORIGHT) 
+						v.drawScaled(act_vote_tween, map_y, size,cursor_patch2, V_SNAPTORIGHT) 
 					end
 				end
 			end
 			
-			v.drawString(act_vote_tween+FU, map_y+FU, current_map_name, V_SNAPTORIGHT, "thin-fixed")
+			
+			-- Map Act
 			if current_map_act then
-				v.drawString(act_vote_tween+FU, map_y+(FU*9), "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
+				mapoffset = FU*4
+				v.drawString(act_vote_tween+(FU*40), map_y+(FU*9)+mapoffset, "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
 			end
 			
-			customhud.CustomFontString(v, act_vote_tween-(FU*16), map_y+(FU*16), tostring(PTSR.vote_maplist[i].votes), "PTFNT", V_SNAPTORIGHT, "center", FRACUNIT/2, SKINCOLOR_WHITE)
+			-- Map Name
+			v.drawString(act_vote_tween+(FU*40), map_y+mapoffset, current_map_name, V_SNAPTORIGHT, "thin-fixed")
+			
+
+			
+			-- Map Votes
+			customhud.CustomFontString(v, act_vote_tween-(FU*16), map_y+(FU*4), tostring(PTSR.vote_maplist[i].votes), "PTFNT", V_SNAPTORIGHT, "center", FRACUNIT/2, SKINCOLOR_WHITE)
 		end
+		
+		-- Time Left
 		customhud.CustomFontString(v, 160*FU, 10*FU, tostring(vote_timeleft), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_PINK)
 			
 	else

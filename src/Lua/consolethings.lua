@@ -410,6 +410,13 @@ CV_PTSR.overtime_music = CV_RegisterVar({
 	PossibleValue = {old = 1, new = 2}, 
 })
 
+CV_PTSR.levelsinvote = CV_RegisterVar({
+	name = "PTSR_levelsinvote",
+	defaultvalue = "6",
+	flags = CV_NETVAR,
+	PossibleValue = CV_Unsigned, 
+})
+
 local luaOnly = "iamlua" .. P_RandomFixed()
 
 COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)

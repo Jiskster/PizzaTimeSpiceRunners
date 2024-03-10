@@ -91,11 +91,11 @@ addHook("ThinkFrame", do
 		
 		table.sort(sorted_votes,function(a,b) return a.votes > b.votes end)
 		
-		for i=1,#sortedvotes do
+		for i=1,#sorted_votes do
 			raw_votes[i] = sorted_votes[i].votes
 		end
 		
-		if allequals(table.unpack(raw_votes))
+		if allequals(unpack(raw_votes))
 			local chosenmap = P_RandomRange(1,levelsinvote)
 			
 			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a three way tie!")
@@ -144,7 +144,7 @@ addHook("PreThinkFrame", function()
 					if not player.ptvote_down then
 						S_StartSound(nil, sfx_s3kb7, player)
 					
-						if player.ptvote_selection + 1 > 3 then
+						if player.ptvote_selection + 1 > CV_PTSR.levelsinvote.value then
 							player.ptvote_selection = 1
 						else
 							player.ptvote_selection = $ + 1 
@@ -162,7 +162,7 @@ addHook("PreThinkFrame", function()
 						S_StartSound(nil, sfx_s3kb7, player)
 						
 						if player.ptvote_selection - 1 < 1 then
-							player.ptvote_selection = 3
+							player.ptvote_selection = CV_PTSR.levelsinvote.value
 						else
 							player.ptvote_selection = $ - 1 
 						end
@@ -199,7 +199,7 @@ addHook("PreThinkFrame", function()
 			end
 			
 			if player.ptvote_selection then
-				player.ptvote_selection = clamp(1,$,3)
+				player.ptvote_selection = clamp(1,$,CV_PTSR.levelsinvote.value)
 			else
 				player.ptvote_selection = 1
 			end

@@ -412,7 +412,7 @@ CV_PTSR.overtime_music = CV_RegisterVar({
 
 CV_PTSR.levelsinvote = CV_RegisterVar({
 	name = "PTSR_levelsinvote",
-	defaultvalue = "3",
+	defaultvalue = "6",
 	flags = CV_NETVAR,
 	PossibleValue = CV_Unsigned, 
 })

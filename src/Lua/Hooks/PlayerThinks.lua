@@ -26,34 +26,24 @@ addHook("PlayerSpawn", function(player)
 		end
 		
 		if PTSR.pizzatime and leveltime then
-			if PTSR.gamemode == 2 then
-				if not player.pizzaface then
-					chatprint("\x83*"..player.name.."\x82 has been infected.")
-					if DiscordBot then
-						DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:pizza: **" .. player.name .. "** has been infected!\n"
-					end
-					player.pizzaface = true
-				end
+			if not player.ptsr_justrevived then
+				player.spectator = true -- default behavior
 			else
-				if not player.ptsr_justrevived then
-					player.spectator = true -- default behavior
-				else
-					player.ptsr_justrevived = false
-					
-					if player.ptsr_revivelocation then
-						local revloc = player.ptsr_revivelocation 
-						P_SetOrigin(player.realmo, revloc.x, revloc.y, revloc.z)
-					end
-					
-					if player["ptsr_revive_await_rings"] then
-						player.rings = player["ptsr_revive_await_rings"]
-						player["ptsr_revive_await_rings"] = nil
-					end
-					
-					if player["ptsr_revive_await_score"] then
-						player.score = player["ptsr_revive_await_score"]
-						player["ptsr_revive_await_score"] = nil
-					end
+				player.ptsr_justrevived = false
+				
+				if player.ptsr_revivelocation then
+					local revloc = player.ptsr_revivelocation 
+					P_SetOrigin(player.realmo, revloc.x, revloc.y, revloc.z)
+				end
+				
+				if player["ptsr_revive_await_rings"] then
+					player.rings = player["ptsr_revive_await_rings"]
+					player["ptsr_revive_await_rings"] = nil
+				end
+				
+				if player["ptsr_revive_await_score"] then
+					player.score = player["ptsr_revive_await_score"]
+					player["ptsr_revive_await_score"] = nil
 				end
 			end
 		end

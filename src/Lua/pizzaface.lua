@@ -76,25 +76,14 @@ PTSR.PFMaskData = {
 
 
 function PTSR:PizzaCollision(peppino, pizza)
-	if PTSR.gamemode == 1 then
-		if peppino.player.lastparryframe and (leveltime - peppino.player.lastparryframe) <= CV_PTSR.parry_safeframes.value then
-			PTSR.DoParry(peppino.player.mo, pizza)
-			PTSR.DoParryAnim(peppino.player.mo, true)
-			PTSR.DoParryAnim(pizza)
-			peppino.player.lastparryframe = leveltime
-		else
-			P_KillMobj(peppino,pizza)
-		end
+	if peppino.player.lastparryframe and (leveltime - peppino.player.lastparryframe) <= CV_PTSR.parry_safeframes.value then
+		PTSR.DoParry(peppino.player.mo, pizza)
+		PTSR.DoParryAnim(peppino.player.mo, true)
+		PTSR.DoParryAnim(pizza)
+		peppino.player.lastparryframe = leveltime
+	else
+		P_KillMobj(peppino,pizza)
 	end
-	
-	/*
-		elseif PTSR.gamemode == 2 then
-		chatprint("\x83*"..peppino.player.name.."\x82 has been infected.")
-		if DiscordBot then
-			DiscordBot.Data.msgsrb2 = $ .. "[" .. #peppino.player .. "]:pizza: **" .. peppino.player.name .. "** has been infected!\n"
-		end
-		peppino.player.pizzaface = true
-	*/
 end
 
 function PTSR:PizzaCanTag(peppino, pizza)

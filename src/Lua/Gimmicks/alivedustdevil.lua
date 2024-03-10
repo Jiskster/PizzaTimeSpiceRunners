@@ -11,9 +11,9 @@ mobjinfo[MT_ALIVEDUSTDEVIL] = {
 	doomednum = -1,
 	spawnstate = S_ALIVEDUSTDEVIL_STAND,
 	seestate = S_ALIVEDUSTDEVIL_RUN,
-	spawnhealth = 100,
-	speed = 8,
-	flags = MF_NOCLIP,
+	spawnhealth = 1000,
+	speed = 16,
+	flags = MF_NOCLIP|MF_BOSS|MF_SPECIAL,
 }
 
 states[S_ALIVEDUSTDEVIL_STAND] = {
@@ -34,6 +34,13 @@ states[S_ALIVEDUSTDEVIL_RUN] = {
 
 addHook("MobjSpawn", function(mobj)
 	mobj.scale = $ * 2
+end, MT_ALIVEDUSTDEVIL)
+
+addHook("MobjDeath", function(mobj)
+	-- SRB2 does some stuff before we can stop it so
+	mobj.flags = $ | MF_SPECIAL
+	mobj.health = 1000
+	return true
 end, MT_ALIVEDUSTDEVIL)
 
 addHook("MobjThinker", function(mobj)

@@ -299,6 +299,13 @@ CV_PTSR.aileash = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
+CV_PTSR.airubberband = CV_RegisterVar({
+	name = "PTSR_airubberband",
+	defaultvalue = "off",
+	flags = CV_NETVAR,
+	PossibleValue = CV_OnOff, 
+})
+
 CV_PTSR.parrycooldown = CV_RegisterVar({
 	name = "PTSR_parrycooldown",
 	defaultvalue = "90",

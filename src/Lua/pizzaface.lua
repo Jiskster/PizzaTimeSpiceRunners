@@ -310,7 +310,12 @@ addHook("MobjThinker", function(mobj)
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(nearest_player.mo.x, nearest_player.mo.y, mobj.x, mobj.y)
-
+		local offset_speed = 0
+		
+		if CV_PTSR.airubberband.value then
+			offset_speed = (10*FU)
+		end
+		
 		if mobj.eflags & MFE_UNDERWATER then
 			speed = $ / 2
 		end
@@ -332,7 +337,8 @@ addHook("MobjThinker", function(mobj)
 		local ty = nearest_player.mo.y
 		local tz = nearest_player.mo.z
 
-		P_FlyTo(mobj, tx, ty, tz, speed, false)
+		P_FlyTo(mobj, tx, ty, tz, speed, true)
+		
 		mobj.angle = R_PointToAngle2(mobj.x, mobj.y, tx, ty)
 
 		if not (leveltime % 6) then
@@ -351,6 +357,7 @@ addHook("MobjThinker", function(mobj)
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
 		end
 
+		L_SpeedCap(mobj, speed+(offset_speed))
 	else
 		if not mobj.pfstunmomentum then
 			L_SpeedCap(mobj, 0)

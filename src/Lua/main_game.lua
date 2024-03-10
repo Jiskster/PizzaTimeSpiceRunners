@@ -88,6 +88,44 @@ rawset(_G, "PTSR", { -- variables
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
+PTSR.gamemode = 1
+
+PTSR.gamemode_list = {
+	{
+		name = "Casual",
+		parry_friendlyfire = false,
+		dustdevil = true,
+		dustdeviltimer = 90*TICRATE,
+		allowrevive = true,
+	},
+	{
+		name = "Competitive",
+		parry_friendlyfire = true,
+		dustdevil = true,
+		dustdeviltimer = 30*TICRATE,
+		allowrevive = false,
+	},
+	{
+		name = "What..",
+		parry_friendlyfire = true,
+		dustdevil = true,
+		dustdeviltimer = 20*TICRATE,
+		allowrevive = true,
+		speedcap = 25*FRACUNIT,
+		overtime_music = "OVTWTF",
+		overtime_textontime = "What the fuck!",
+	}
+}
+
+PTSR.getCurrentModeMetadata = function()
+	return PTSR.gamemode_list[PTSR.gamemode]
+end
+
+PTSR.Register_Mode = function(name, table)
+	table.name = name
+	table.insert(PTSR.gamemode_list, table)
+end
+
 addHook("NetVars", function(net)
 	local sync_list = {
 		"spawn_location",
@@ -146,13 +184,6 @@ PTSR.end_location.y == 0 and
 PTSR.end_location.z == 0 and 
 PTSR.end_location.angle == 0
 ) -- returns true if at the defaults
-
-PTSR.gamemode_list = {
-	"Elimination Mode",
-	"Infection Mode",
-}
-
-PTSR.gamemode = 1
 
 rawset(_G, "PTSR_COUNT", do
 	local activeCount = 0

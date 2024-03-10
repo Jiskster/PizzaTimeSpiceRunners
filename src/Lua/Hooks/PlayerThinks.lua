@@ -34,7 +34,16 @@ addHook("PlayerSpawn", function(player)
 					player.pizzaface = true
 				end
 			else
-				player.spectator = true
+				if not player.ptsr_justrevived then
+					player.spectator = true -- default behavior
+				else
+					player.ptsr_justrevived = false
+					
+					if player.ptsr_revivelocation then
+						local revloc = player.ptsr_revivelocation 
+						P_SetOrigin(player.realmo, revloc.x, revloc.y, revloc.z)
+					end
+				end
 			end
 		end
 	end

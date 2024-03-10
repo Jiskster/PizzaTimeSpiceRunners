@@ -138,7 +138,9 @@ local bar_hud = function(v, player)
 						if PTSR.timeleft then
 							customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 						else
+							local gm_metadata = PTSR.getCurrentModeMetadata()
 							local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
+							local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 							customhud.CustomFontString(v, x, y, "OVERTIME!", "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, otcolor)
 						end
 					end

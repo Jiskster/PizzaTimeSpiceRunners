@@ -85,13 +85,16 @@ function PTSR:PizzaCollision(peppino, pizza)
 		else
 			P_KillMobj(peppino,pizza)
 		end
-	elseif PTSR.gamemode == 2 then
+	end
+	
+	/*
+		elseif PTSR.gamemode == 2 then
 		chatprint("\x83*"..peppino.player.name.."\x82 has been infected.")
 		if DiscordBot then
 			DiscordBot.Data.msgsrb2 = $ .. "[" .. #peppino.player .. "]:pizza: **" .. peppino.player.name .. "** has been infected!\n"
 		end
 		peppino.player.pizzaface = true
-	end
+	*/
 end
 
 function PTSR:PizzaCanTag(peppino, pizza)
@@ -261,6 +264,8 @@ end)
 
 -- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
+	local gm_metadata = PTSR.getCurrentModeMetadata()
+	
 	local nearest_player
 	local laughsound = mobj.laughsound or sfx_pizzah
 
@@ -364,10 +369,12 @@ addHook("MobjThinker", function(mobj)
 		end
 	end
 
-	if PTSR.timeover and not PTSR.gameover then
+	if PTSR.timeover and not PTSR.gameover and gm_metadata.dustdevil then
+		local timeend = gm_metadata.dustdeviltimer or CV_PTSR.dustdeviltimerend.value
+		
 		PTSR.dustdeviltimer = $ + 1
 		
-		if PTSR.dustdeviltimer >= CV_PTSR.dustdeviltimerend.value then
+		if PTSR.dustdeviltimer >= timeend then
 			P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_ALIVEDUSTDEVIL)
 			PTSR.dustdeviltimer = 0
 			local tornado_text = "\x86*A tornado spawned!"
@@ -456,8 +463,6 @@ addHook("PlayerThink", function(player)
 				end
 			end
 		end
-
-
 
 		if (not player.pizzamask or not player.pizzamask.valid) then
 			player.pizzamask = P_SpawnMobj(player.realmo.x,player.realmo.y,player.realmo.z,MT_PIZZAMASK)

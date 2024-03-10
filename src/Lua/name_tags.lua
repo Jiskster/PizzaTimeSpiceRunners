@@ -203,6 +203,8 @@ hud.add( function(v, player, camera)
 		local trans = min(9, (((distedit * 10) >> 16) / distlimit)) * V_10TRANS
 		
 		if name then
+			local gm_metadata = PTSR.getCurrentModeMetadata()
+			
 			local dsm = displayplayer.realmo
 
 			-- the z axis exists too yknow
@@ -210,12 +212,19 @@ hud.add( function(v, player, camera)
 			local dy = tmo.y-dsm.y
 			local dz = tmo.z-dsm.z
 			local obj_dist = (FixedHypot(FixedHypot(dx,dy),dz))/FU
+			
 			--luigi budd: regular FU values are too big to easily discern distance
 			--from the face, so divide by 10 to help with uh..... telling the distance
 			obj_dist = $/10
-			if tmo.type == MT_PT_DEATHRING and tmo.rings_kept then
-				name = $ + "["..tostring(tmo.rings_kept).."x]"
+			
+			if tmo.type == MT_PT_DEATHRING and (tmo.rings_kept or gm_metadata.allowrevive) then
+				if not gm_metadata.allowrevive then
+					name = $ + "["..tostring(tmo.rings_kept).."x]"
+				else
+					name = "REVIVE RING"
+				end
 			end
+			
 			customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, text_size, namecolor)
 			customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
 		end

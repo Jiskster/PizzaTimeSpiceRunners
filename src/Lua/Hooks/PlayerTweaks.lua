@@ -30,14 +30,57 @@ end)
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player
+	local gm_metadata = PTSR.getCurrentModeMetadata()
+	
 	if special and special.valid 
 	and toucher and toucher.valid 
 	and tplayer and tplayer.valid and not tplayer.pizzaface then
-		if special.rings_kept then
-			P_GivePlayerRings(tplayer, special.rings_kept)
-			print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
-			if DiscordBot then
-				DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
+		if special.deathring_used then return true end
+		
+		if not gm_metadata.allowrevive then
+			if special.rings_kept then
+				P_GivePlayerRings(tplayer, special.rings_kept)
+				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
+				if DiscordBot then
+					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
+				end
+				
+				special.deathring_used = true
+			end
+		else
+			if special.player_ref and special.player_ref.valid then -- dumb ass lua hack
+				local rplayer = special.player_ref
+				if rplayer == tplayer then return true end
+				
+				G_DoReborn(#rplayer)
+				rplayer.spectator = false
+				rplayer.ctfteam = 1
+				rplayer.playerstate = PST_REBORN
+
+				rplayer.ptsr_revivelocation = {
+					x = special.x,
+					y = special.y,
+					z = special.z
+				}
+				
+				special.deathring_used = true
+				
+				P_ResetPlayer(rplayer)
+				
+				rplayer.mo.health = 1
+				rplayer.mo.flags = mobjinfo[MT_PLAYER].flags
+				
+				print("\x83"..tplayer.name.." revived "..special.drop_name)
+				
+				print(rplayer.spectator)
+				
+				if DiscordBot then
+					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
+				end
+				
+				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
+				
+				rplayer_ptsr_gotrevivedonce = true -- variable to check if the player got revived before
 			end
 		end
 	end
@@ -57,11 +100,15 @@ end)
 
 addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
-	if target and target.valid and player and player.valid and player.rings then
+	local gm_metadata = PTSR.getCurrentModeMetadata()
+	
+	if target and target.valid and player and player.valid 
+	and (player.rings or gm_metadata.allowrevive) and not player.ptsr_gotrevivedonce then
 		local deathring = P_SpawnMobj(target.x, target.y, target.z, MT_PT_DEATHRING)
 		if deathring then
 			deathring.rings_kept = player.rings
 			deathring.drop_name = player.name
+			deathring.player_ref = player
 		end
 	end
 end, MT_PLAYER)

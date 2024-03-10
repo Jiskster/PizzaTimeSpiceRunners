@@ -43,6 +43,10 @@ addHook("MobjDeath", function(mobj)
 	return true
 end, MT_ALIVEDUSTDEVIL)
 
+addHook("TouchSpecial", function(special, toucher)
+	return true
+end, MT_ALIVEDUSTDEVIL)
+
 addHook("MobjThinker", function(mobj)
 	A_DustDevilThink(mobj)
 	

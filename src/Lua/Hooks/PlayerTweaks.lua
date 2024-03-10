@@ -63,6 +63,14 @@ addHook("TouchSpecial", function(special, toucher)
 					z = special.z
 				}
 				
+				if special.rings_kept then
+					rplayer["ptsr_revive_await_rings"] = special.rings_kept
+				end
+				
+				if special.score_kept then
+					rplayer["ptsr_revive_await_score"] = special.score_kept
+				end
+				
 				special.deathring_used = true
 				
 				P_ResetPlayer(rplayer)
@@ -80,7 +88,7 @@ addHook("TouchSpecial", function(special, toucher)
 				
 				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
 				
-				rplayer_ptsr_gotrevivedonce = true -- variable to check if the player got revived before
+				rplayer.ptsr_gotrevivedonce = true -- variable to check if the player got revived before
 			end
 		end
 	end
@@ -107,6 +115,7 @@ addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 		local deathring = P_SpawnMobj(target.x, target.y, target.z, MT_PT_DEATHRING)
 		if deathring then
 			deathring.rings_kept = player.rings
+			deathring.score_kept = player.score
 			deathring.drop_name = player.name
 			deathring.player_ref = player
 		end

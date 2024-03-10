@@ -24,6 +24,7 @@ addHook("PlayerSpawn", function(player)
 		if player.pizzaface then
 			return
 		end
+		
 		if PTSR.pizzatime and leveltime then
 			if PTSR.gamemode == 2 then
 				if not player.pizzaface then
@@ -42,6 +43,16 @@ addHook("PlayerSpawn", function(player)
 					if player.ptsr_revivelocation then
 						local revloc = player.ptsr_revivelocation 
 						P_SetOrigin(player.realmo, revloc.x, revloc.y, revloc.z)
+					end
+					
+					if player["ptsr_revive_await_rings"] then
+						player.rings = player["ptsr_revive_await_rings"]
+						player["ptsr_revive_await_rings"] = nil
+					end
+					
+					if player["ptsr_revive_await_score"] then
+						player.rings = player["ptsr_revive_await_score"]
+						player["ptsr_revive_await_score"] = nil
 					end
 				end
 			end

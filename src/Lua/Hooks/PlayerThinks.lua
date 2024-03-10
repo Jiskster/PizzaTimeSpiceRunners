@@ -51,7 +51,7 @@ addHook("PlayerSpawn", function(player)
 					end
 					
 					if player["ptsr_revive_await_score"] then
-						player.rings = player["ptsr_revive_await_score"]
+						player.score = player["ptsr_revive_await_score"]
 						player["ptsr_revive_await_score"] = nil
 					end
 				end

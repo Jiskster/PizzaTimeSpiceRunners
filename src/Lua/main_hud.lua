@@ -525,6 +525,7 @@ local fade_hud = function(v, player)
 	end
 	
 	local q_rank = v.cachePatch("PTSR_RANK_UNK")
+	
 	if i_tic > PTSR.intermission_act1 then
 		q_rank = PTSR.r2p(v,player.ptsr_rank)
 	end
@@ -536,6 +537,7 @@ local fade_hud = function(v, player)
 		zonenametween = ease.inquint(div3, 10*FU, -100*FU)
 		scoretween = ease.inquint(div3, 100*FU, 500*FU)
 	end
+	
 	if i_tic < PTSR.intermission_act_end then
 		if i_tic >= PTSR.intermission_act2  then
 			local x1,y1 = 160*FU,zonenametween
@@ -551,7 +553,7 @@ local fade_hud = function(v, player)
 	elseif not PTSR:isVoteOver() then
 		local vote_timeleft = (PTSR.intermission_vote_end - i_tic)/TICRATE
 	
-		for i=1,3 do
+		for i=1, CV_PTSR.levelsinvote.value do
 			local act_vote = clamp(0, i_tic - PTSR.intermission_act_end - (i*4), 35)
 			local act_vote_div = clamp(0, FixedDiv(act_vote*FU, 35*FU), 35*FU)
 			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 225*FU)
@@ -580,6 +582,7 @@ local fade_hud = function(v, player)
 			end
 			
 			v.drawString(act_vote_tween+FU, map_y+FU, current_map_name, V_SNAPTORIGHT, "thin-fixed")
+			
 			if current_map_act then
 				v.drawString(act_vote_tween+FU, map_y+(FU*9), "Act "..current_map_act, V_SNAPTORIGHT, "thin-fixed")
 			end

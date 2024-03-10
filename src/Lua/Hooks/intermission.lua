@@ -41,14 +41,16 @@ addHook("MobjThinker", function(mobj)
 end)
 
 addHook("ThinkFrame", do
+	local levelsinvote = CV_PTSR.levelsinvote.value
+
 	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
 	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
-		PTSR.vote_maplist = {
-			{votes = 0, mapnum = 1},
-			{votes = 0, mapnum = 1},
-			{votes = 0, mapnum = 1}
-		}  -- votes, mapnumber
+		PTSR.vote_maplist = {}  -- votes, mapnumber
+		
+		for i=1,levelsinvote do
+			table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1})
+		end
 		
 		local temp_maplist = {}
 		local temp_selected_maplist = {}
@@ -60,7 +62,7 @@ addHook("ThinkFrame", do
 			end
 		end
 		
-		for i=1,3 do
+		for i=1,levelsinvote do
 			local chosen = P_RandomRange(1,#temp_maplist)
 			table.insert(temp_selected_maplist,temp_maplist[chosen])
 			table.remove(temp_maplist,chosen)
@@ -74,24 +76,27 @@ addHook("ThinkFrame", do
 		end
 		
 		for player in players.iterate do 
-			player.ptvote_selection = P_RandomRange(1,3)
+			player.ptvote_selection = P_RandomRange(1,levelsinvote)
 		end
 		
 		S_StartSound(nil,sfx_s3kb3)
 		
 		S_ChangeMusic("P_INT", true)
 		mapmusname = "P_INT"
-		
-		
 	end
 	
 	if PTSR.intermission_tics == PTSR.intermission_vote_end then
-		local sorted_votes = PTSR_shallowcopy(PTSR.vote_maplist)
-
+		local sorted_votes = PTSR_shallowcopy(PTSR.vote_maplist) -- table
+		local raw_votes = {} -- just the votes numbers
+		
 		table.sort(sorted_votes,function(a,b) return a.votes > b.votes end)
 		
-		if allequals(sorted_votes[1].votes,sorted_votes[2].votes,sorted_votes[3].votes)
-			local chosenmap = P_RandomRange(1,3)
+		for i=1,#sortedvotes do
+			raw_votes[i] = sorted_votes[i].votes
+		end
+		
+		if allequals(table.unpack(raw_votes))
+			local chosenmap = P_RandomRange(1,levelsinvote)
 			
 			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a three way tie!")
 			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum

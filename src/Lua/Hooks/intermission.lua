@@ -118,7 +118,7 @@ addHook("ThinkFrame", do
 		if allequals(unpack(raw_votes))
 			local chosenmap = P_RandomRange(1,levelsinvote)
 			
-			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a three way tie!")
+			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a tie with all maps!")
 			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum 
 			
 			PTSR.nextmapvoted_info = sorted_votes[chosenmap]

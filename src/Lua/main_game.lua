@@ -127,7 +127,7 @@ PTSR.RegisterGamemode("What..",	{
 	allowrevive = true,
 	speedcap = 25*FRACUNIT,
 	overtime_music = "OVTWTF",
-	overtime_textontime = "What the fuck!",
+	overtime_textontime = "WHAT THE FUCK!",
 })
 
 PTSR.ChangeGamemode = function(gm)

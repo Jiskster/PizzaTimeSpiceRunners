@@ -138,7 +138,7 @@ local bar_hud = function(v, player)
 						if PTSR.timeleft then
 							customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 						else
-							local gm_metadata = PTSR.getCurrentModeMetadata()
+							local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 							local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
 							local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 							customhud.CustomFontString(v, x, y, "OVERTIME!", "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, otcolor)
@@ -334,11 +334,10 @@ local faceswap_hud = function(v, player)
 end
 
 local gamemode_hud = function(v, player)
-	local currentGamemode = PTSR.gamemode_list[PTSR.gamemode]
+	local currentGamemode = PTSR.gamemode_list[PTSR.gamemode].name or "Unnamed"
 	
 	if gametype ~= GT_PTSPICER then return end
-	if not PTSR.pizzatime then return end
-	if CV_PTSR.aimode.value or CV_PTSR.nopizza.value then return end
+	if CV_PTSR.nopizza.value then return end
 	
 	v.drawString(320, 0, "\x8A"..currentGamemode, V_SNAPTORIGHT|V_SNAPTOTOP|V_50TRANS|V_ADD, "thin-right")
 end
@@ -563,7 +562,6 @@ local fade_hud = function(v, player)
 			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 200*FU)
 			local map_y = 15*FU+((i-1)*30*FU)	
 			local current_map = PTSR.vote_maplist[i]
-			prtable("current_map", current_map)
 			local current_map_icon = v.cachePatch(G_BuildMapName(current_map.mapnum).."P")
 			local current_map_name = mapheaderinfo[current_map.mapnum].lvlttl
 			local current_map_act = mapheaderinfo[current_map.mapnum].actnum

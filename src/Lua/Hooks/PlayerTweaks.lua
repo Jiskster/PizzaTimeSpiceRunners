@@ -37,17 +37,7 @@ addHook("TouchSpecial", function(special, toucher)
 	and tplayer and tplayer.valid and not tplayer.pizzaface then
 		if special.deathring_used then return true end
 		
-		if special.deathringtype == "steal" then
-			if special.rings_kept then
-				P_GivePlayerRings(tplayer, special.rings_kept)
-				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
-				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
-				end
-				
-				special.deathring_used = true
-			end
-		else
+		if gm_metadata.allowrevive then 
 			if special.player_ref and special.player_ref.valid then -- dumb ass lua hack
 				local rplayer = special.player_ref
 				if rplayer == tplayer then return true end
@@ -87,6 +77,16 @@ addHook("TouchSpecial", function(special, toucher)
 				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
 				
 				rplayer.ptsr_gotrevivedonce = true -- variable to check if the player got revived before
+			end				
+		else
+			if special.rings_kept then
+				P_GivePlayerRings(tplayer, special.rings_kept)
+				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
+				if DiscordBot then
+					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
+				end
+				
+				special.deathring_used = true
 			end
 		end
 	end
@@ -117,12 +117,6 @@ addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 			deathring.score_kept = player.score
 			deathring.drop_name = player.name
 			deathring.player_ref = player
-			
-			if gm_metadata.allowrevive then
-				deathring.deathringtype = "revive"
-			else
-				deathring.deathringtype = "steal"
-			end
 		end
 	end
 end, MT_PLAYER)

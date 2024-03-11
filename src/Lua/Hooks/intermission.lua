@@ -82,8 +82,8 @@ addHook("ThinkFrame", do
 			local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
 			newgamemode = coremodes[gamemode_fromcoremodes] 
 		
-			if P_RandomChance(FRACUNIT/16) then
-				if #PTSR.gamemode_list > #PTSR.coremodes then
+			if P_RandomChance(CV_PTSR.special_gamemode_chance.value) then
+				if #PTSR.gamemode_list > #coremodes then
 					newgamemode = P_RandomRange(#PTSR.coremodes + 1, #PTSR.gamemode_list)
 				end
 			end

@@ -16,12 +16,6 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
 
-		if CV_PTSR.allowgamemodes.value and not CV_PTSR.aimode.value then
-			PTSR.gamemode = P_RandomRange(1,#PTSR.gamemode_list) -- gamemode rng
-		else
-			PTSR.gamemode = 1
-		end
-
 		if not CV_PTSR.aimode.value then
 			print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
 		end
@@ -42,8 +36,6 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		if thesign.subsector then
 			PTSR.endsector = thesign.subsector.sector
 		end
-		
-		
 		
 		PTSR.timeleft = CV_PTSR.timelimit.value*TICRATE*60
 		PTSR.maxtime = CV_PTSR.timelimit.value*TICRATE*60

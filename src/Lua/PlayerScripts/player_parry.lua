@@ -28,6 +28,8 @@ addHook("PlayerThink", function(player)
 	local cmd = player.cmd
 	local pmo = player.mo
 	
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	
 	if not player.mo.ptsr_parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
@@ -36,15 +38,16 @@ addHook("PlayerThink", function(player)
 					sfx_prepr2,
 					sfx_prepr3
 				}
-				
+				local friendlyfire = (CV_PTSR.parry_friendlyfire.value or gm_metadata.parry_friendlyfire)
 				local gotapf = false
 				local range = 1000*FU
 				local real_range = CV_PTSR.parry_radius.value
+				
 				searchBlockmap("objects", function(refmobj, foundmobj)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
-						or (foundmobj.type == MT_PLAYER and CV_PTSR.parry_friendlyfire.value and PTSR.pizzatime) then
+						or (foundmobj.type == MT_PLAYER and friendlyfire) then
 							if foundmobj.type == MT_PLAYER then
 								if foundmobj.player and foundmobj.player.valid 
 								and foundmobj.player.powers[pw_invulnerability] then

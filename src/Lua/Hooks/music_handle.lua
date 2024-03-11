@@ -11,7 +11,7 @@ addHook("ThinkFrame", function()
 			local mus = CV_PTSR.overtime_music.value
 			local mus_table = {[1] = "OVRTME", [2] = "OT_PH"} -- OVRTM2 for unfinished overtime music
 			local mus_str = mus_table[mus]
-			local gm_metadata = PTSR.getCurrentModeMetadata()
+			local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 			
 			if gm_metadata.overtime_music then
 				S_ChangeMusic(gm_metadata.overtime_music, true, player)

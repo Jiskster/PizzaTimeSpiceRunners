@@ -218,12 +218,10 @@ hud.add( function(v, player, camera)
 			obj_dist = $/10
 			
 			if tmo.type == MT_PT_DEATHRING then
-				if tmo.deathringtype == "revive" then
+				if gm_metadata.allowrevive then
 					name = "REVIVE RING"
-				elseif tmo.deathringtype == "steal" then
-					name = $ + "["..tostring(tmo.rings_kept).."x]"
 				else
-					name = "BROKEN NAME. CONTACT JISK"
+					name = $ + "["..tostring(tmo.rings_kept).."x]"
 				end
 			end
 			

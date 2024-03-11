@@ -252,3 +252,13 @@ addHook('ThinkFrame', function()
 		
 	end
 end)
+
+addHook("PlayerThink", function(player)
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	
+	if player.mo and player.mo.valid then
+		if gm_metadata and gm_metadata.speedcap then
+			L_SpeedCap(player.mo, gm_metadata.speedcap)
+		end
+	end
+end)

@@ -414,7 +414,14 @@ CV_PTSR.levelsinvote = CV_RegisterVar({
 	name = "PTSR_levelsinvote",
 	defaultvalue = "6",
 	flags = CV_NETVAR,
-	PossibleValue = CV_Unsigned, 
+	PossibleValue = {MIN = 1, MAX = 6}
+})
+
+CV_PTSR.special_gamemode_chance = CV_RegisterVar({
+	name = "PTSR_special_gamemode_chance",
+	defaultvalue = "0.083333", -- 1/12
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = FRACUNIT}, 
 })
 
 local luaOnly = "iamlua" .. P_RandomFixed()

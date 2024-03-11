@@ -203,7 +203,7 @@ hud.add( function(v, player, camera)
 		local trans = min(9, (((distedit * 10) >> 16) / distlimit)) * V_10TRANS
 		
 		if name then
-			local gm_metadata = PTSR.getCurrentModeMetadata()
+			local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 			
 			local dsm = displayplayer.realmo
 
@@ -217,11 +217,13 @@ hud.add( function(v, player, camera)
 			--from the face, so divide by 10 to help with uh..... telling the distance
 			obj_dist = $/10
 			
-			if tmo.type == MT_PT_DEATHRING and (tmo.rings_kept or gm_metadata.allowrevive) then
-				if not gm_metadata.allowrevive then
+			if tmo.type == MT_PT_DEATHRING then
+				if tmo.deathringtype == "revive" then
+					name = "REVIVE RING"
+				elseif tmo.deathringtype == "steal" then
 					name = $ + "["..tostring(tmo.rings_kept).."x]"
 				else
-					name = "REVIVE RING"
+					name = "BROKEN NAME. CONTACT JISK"
 				end
 			end
 			

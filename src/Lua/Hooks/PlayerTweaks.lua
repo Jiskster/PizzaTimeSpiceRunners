@@ -30,14 +30,14 @@ end)
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player
-	local gm_metadata = PTSR.getCurrentModeMetadata()
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	
 	if special and special.valid 
 	and toucher and toucher.valid 
 	and tplayer and tplayer.valid and not tplayer.pizzaface then
 		if special.deathring_used then return true end
 		
-		if not gm_metadata.allowrevive then
+		if special.deathringtype == "steal" then
 			if special.rings_kept then
 				P_GivePlayerRings(tplayer, special.rings_kept)
 				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
@@ -106,7 +106,7 @@ end)
 
 addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
-	local gm_metadata = PTSR.getCurrentModeMetadata()
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	
 	if target and target.valid and player and player.valid 
 	and ((player.rings and not gm_metadata.allowrevive) or (gm_metadata.allowrevive and PTSR.pizzatime)) 
@@ -117,6 +117,12 @@ addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 			deathring.score_kept = player.score
 			deathring.drop_name = player.name
 			deathring.player_ref = player
+			
+			if gm_metadata.allowrevive then
+				deathring.deathringtype = "revive"
+			else
+				deathring.deathringtype = "steal"
+			end
 		end
 	end
 end, MT_PLAYER)

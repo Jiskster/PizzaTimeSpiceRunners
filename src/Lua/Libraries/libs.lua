@@ -111,3 +111,30 @@ rawset(_G, "iclamp", function(low, value, high)
 	
 	return high-value
 end)
+
+rawset(_G, "prtable", function(text, t, prefix, cycles)
+    prefix = $ or ""
+    cycles = $ or {}
+
+    print(prefix..text.." = {")
+
+    for k, v in pairs(t)
+        if type(v) == "table"
+            if cycles[v]
+                print(prefix.."    "..tostring(k).." = "..tostring(v))
+            else
+                cycles[v] = true
+                prtable(k, v, prefix.."    ", cycles)
+            end
+        elseif type(v) == "string"
+            print(prefix.."    "..tostring(k)..' = "'..v..'"')
+        else
+			if type(v) == "userdata" and v.valid and v.name
+				v = v.name
+			end
+            print(prefix.."    "..tostring(k).." = "..tostring(v))
+        end
+    end
+
+    print(prefix.."}")
+end)

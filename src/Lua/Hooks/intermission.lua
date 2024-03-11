@@ -49,7 +49,7 @@ addHook("ThinkFrame", do
 		PTSR.vote_maplist = {}  -- votes, mapnumber
 		
 		for i=1,levelsinvote do
-			table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1})
+			table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
 		end
 		
 		local temp_maplist = {}
@@ -68,10 +68,30 @@ addHook("ThinkFrame", do
 			table.remove(temp_maplist,chosen)
 		end
 		
-		temp_maplist = {} -- clear leftover maps (idk)
-		
 		for i=1,#temp_selected_maplist do
+			-- assign gamemodes
+			local newgamemode = 1
+			local coremodes = {} -- EX: {1,2}
+			
+			for i,v in pairs(PTSR.coremodes) do
+				if v == true then
+					table.insert(coremodes, i)
+				end
+			end
+			
+			local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
+			newgamemode = coremodes[gamemode_fromcoremodes] 
+		
+			if P_RandomChance(FRACUNIT/16) then
+				if #PTSR.gamemode_list > #PTSR.coremodes then
+					newgamemode = P_RandomRange(#PTSR.coremodes + 1, #PTSR.gamemode_list)
+				end
+			end
+			
+			-- set mapvote var
 			PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]
+			PTSR.vote_maplist[i].gamemode = tonumber(newgamemode)
+
 			print(G_BuildMapTitle(temp_selected_maplist[i]))
 		end
 		
@@ -99,15 +119,21 @@ addHook("ThinkFrame", do
 			local chosenmap = P_RandomRange(1,levelsinvote)
 			
 			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a three way tie!")
-			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum
+			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum 
+			
+			PTSR.nextmapvoted_info = sorted_votes[chosenmap]
 		elseif sorted_votes[1].votes == sorted_votes[2].votes then
 			local chosenmap = P_RandomRange(1,2)
 			
 			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a two way tie!")
 			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum
+			
+			PTSR.nextmapvoted_info = sorted_votes[chosenmap]
 		else
 			print("\x82"..G_BuildMapTitle(sorted_votes[1].mapnum).. " was picked as the next map!")
 			PTSR.nextmapvoted = sorted_votes[1].mapnum
+			
+			PTSR.nextmapvoted_info = sorted_votes[1]
 		end
 		
 		for i,v in ipairs(sorted_votes) do
@@ -115,6 +141,8 @@ addHook("ThinkFrame", do
 		end
 		
 		S_StartSound(nil, sfx_s3kb3)
+		
+		PTSR.nextgamemode = tonumber(PTSR.nextmapvoted_info.gamemode)
 	end
 	
 	if PTSR.intermission_tics == PTSR.intermission_vote_end + 5*TICRATE then

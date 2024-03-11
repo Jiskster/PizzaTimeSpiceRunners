@@ -59,7 +59,7 @@ addHook("PostThinkFrame", function ()
 	end
 end)
 
-COM_AddCommand("ptsr_setgamemode", function(player, arg)
+COM_AddCommand("ptsr_setnextgamemode", function(player, arg)
 	if gametype ~= GT_PTSPICER then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
@@ -75,8 +75,8 @@ COM_AddCommand("ptsr_setgamemode", function(player, arg)
 		return
 	end
 
-	PTSR.gamemode = PTSR.gamemode_list[tonumber(arg)] and tonumber(arg) or 1
-	print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
+	PTSR.nextgamemode = PTSR.gamemode_list[tonumber(arg)] and tonumber(arg) or 1
+	print("An admin forced next gamemode to: ".. PTSR.getModeMetadata(PTSR.nextgamemode).name)
 end,1)
 
 COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)

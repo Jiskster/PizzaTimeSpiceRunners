@@ -15,12 +15,12 @@ local function InitMap()
 	PTSR.gameover = false
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
-	
-	PTSR.vote_maplist = {
-		{votes = 0, mapnum = 1},
-		{votes = 0, mapnum = 1},
-		{votes = 0, mapnum = 1}
-	} 
+
+	PTSR.vote_maplist = {} 
+
+	for i=1, CV_PTSR.levelsinvote.value do
+		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
+	end
 end
 
 local function InitMap2()
@@ -70,6 +70,14 @@ local function InitMap2()
 	end
 end
 
+local function InitMap3()
+	if PTSR.nextgamemode then
+		PTSR.ChangeGamemode(PTSR.nextgamemode)
+		PTSR.nextgamemode = 1
+	end
+end
+
 addHook("MapChange", InitMap)
 addHook("MapLoad", InitMap)
 addHook("MapLoad", InitMap2)
+addHook("MapLoad", InitMap3)

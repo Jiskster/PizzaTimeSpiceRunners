@@ -554,16 +554,23 @@ local fade_hud = function(v, player)
 		v.drawScaled(160*FRACUNIT - turnx + (shakex*FU), 60*FRACUNIT - turny + (shakey*FU), sizetween, q_rank)
 	elseif not PTSR:isVoteOver() then
 		local vote_timeleft = (PTSR.intermission_vote_end - i_tic)/TICRATE
-	
+		if #PTSR.vote_maplist ~= CV_PTSR.levelsinvote.value then return end
+		
 		for i=1, CV_PTSR.levelsinvote.value do
+			-- current_ = thing in current loop
 			local act_vote = clamp(0, i_tic - PTSR.intermission_act_end - (i*4), 35)
 			local act_vote_div = clamp(0, FixedDiv(act_vote*FU, 35*FU), 35*FU)
 			local act_vote_tween = ease.outexpo(act_vote_div, 500*FU, 200*FU)
 			local map_y = 15*FU+((i-1)*30*FU)	
 			local current_map = PTSR.vote_maplist[i]
+			prtable("current_map", current_map)
 			local current_map_icon = v.cachePatch(G_BuildMapName(current_map.mapnum).."P")
 			local current_map_name = mapheaderinfo[current_map.mapnum].lvlttl
 			local current_map_act = mapheaderinfo[current_map.mapnum].actnum
+			local current_gamemode = current_map.gamemode or 1
+			local current_gamemode_info = PTSR.gamemode_list[current_gamemode]
+			local current_gamemode_name = current_gamemode_info.name or "Unnamed"
+			
 			local cursor_patch = v.cachePatch("SLCT1LVL")
 			local cursor_patch2 = v.cachePatch("SLCT2LVL")
 			local size = FU/4
@@ -584,7 +591,6 @@ local fade_hud = function(v, player)
 				end
 			end
 			
-			
 			-- Map Act
 			if current_map_act then
 				mapoffset = FU*4
@@ -594,15 +600,16 @@ local fade_hud = function(v, player)
 			-- Map Name
 			v.drawString(act_vote_tween+(FU*40), map_y+mapoffset, current_map_name, V_SNAPTORIGHT, "thin-fixed")
 			
-
-			
+			if current_gamemode then
+				v.drawString(act_vote_tween, map_y, current_gamemode_name, V_SNAPTORIGHT, "small-thin-fixed")
+			end
+					
 			-- Map Votes
 			customhud.CustomFontString(v, act_vote_tween-(FU*16), map_y+(FU*4), tostring(PTSR.vote_maplist[i].votes), "PTFNT", V_SNAPTORIGHT, "center", FRACUNIT/2, SKINCOLOR_WHITE)
 		end
 		
 		-- Time Left
 		customhud.CustomFontString(v, 160*FU, 10*FU, tostring(vote_timeleft), "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_PINK)
-			
 	else
 		local chosen_map_icon = v.cachePatch(G_BuildMapName(PTSR.nextmapvoted).."P")
 		customhud.CustomFontString(v, 160*FU, 10*FU, G_BuildMapTitle(PTSR.nextmapvoted).." WINS!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_YELLOW)

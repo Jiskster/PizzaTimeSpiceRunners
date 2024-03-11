@@ -25,4 +25,5 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 				return true
 			end
 		end
+	end
 end, MT_PLAYER)

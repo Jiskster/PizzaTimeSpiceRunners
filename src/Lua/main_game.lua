@@ -33,6 +33,7 @@ end)
 
 local loaded_mods = false
 
+
 rawset(_G, "PTSR", { -- variables
 	spawn_location = 
 	{x = 0, y = 0, z = 0, angle = 0}, -- where the sign is at the start of the map
@@ -83,47 +84,61 @@ rawset(_G, "PTSR", { -- variables
 	
 	nextmapvoted = 0,
 	
+	nextmapvoted_info = {},
+	
 	dustdeviltimer = 0, -- when this reaches a certain number, every pizza face spawns an alive dust devil
+	
+	gamemode = 1,
+	
+	nextgamemode = 1,
 })
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
-PTSR.gamemode = 1
+PTSR.coremodes = {["1"] = true, ["2"] = true}
 
-PTSR.gamemode_list = {
-	{
-		name = "Casual",
-		parry_friendlyfire = false,
-		dustdevil = true,
-		dustdeviltimer = 90*TICRATE,
-		allowrevive = true,
-	},
-	{
-		name = "Competitive",
-		parry_friendlyfire = true,
-		dustdevil = true,
-		dustdeviltimer = 30*TICRATE,
-		allowrevive = false,
-	},
-	{
-		name = "What..",
-		parry_friendlyfire = true,
-		dustdevil = true,
-		dustdeviltimer = 20*TICRATE,
-		allowrevive = true,
-		speedcap = 25*FRACUNIT,
-		overtime_music = "OVTWTF",
-		overtime_textontime = "What the fuck!",
-	}
-}
+PTSR.gamemode_list = {}
 
-PTSR.getCurrentModeMetadata = function()
-	return PTSR.gamemode_list[PTSR.gamemode]
+PTSR.RegisterGamemode = function(name, input_table)
+	local table_new = PTSR_shallowcopy(input_table)
+	table_new.name = name
+	
+	table.insert(PTSR.gamemode_list, table_new)
 end
 
-PTSR.Register_Mode = function(name, table)
-	table.name = name
-	table.insert(PTSR.gamemode_list, table)
+PTSR.RegisterGamemode("Casual",	{
+	parry_friendlyfire = false,
+	dustdevil = true,
+	dustdeviltimer = 90*TICRATE,
+	allowrevive = true,
+})
+
+PTSR.RegisterGamemode("Competitive", {
+	parry_friendlyfire = true,
+	dustdevil = true,
+	dustdeviltimer = 30*TICRATE,
+	allowrevive = false,
+})
+
+PTSR.RegisterGamemode("What..",	{
+	parry_friendlyfire = true,
+	dustdevil = true,
+	dustdeviltimer = 20*TICRATE,
+	allowrevive = true,
+	speedcap = 25*FRACUNIT,
+	overtime_music = "OVTWTF",
+	overtime_textontime = "What the fuck!",
+})
+
+PTSR.ChangeGamemode = function(gm)
+	local newgamemode = gm or 1
+	local gm_metadata = PTSR.gamemode_list[gm]
+	
+	if newgamemode ~= PTSR.gamemode then -- dont print this if new gamemode is the same
+		print("PTSR Gamemode changed to " .. (gm_metadata.name or "Unnamed Mode"))
+	end
+	
+	PTSR.gamemode = newgamemode
 end
 
 addHook("NetVars", function(net)
@@ -163,7 +178,11 @@ addHook("NetVars", function(net)
 		
 		"nextmapvoted",
 		
+		"nextmapvoted_info",
+		
 		"dustdeviltimer",
+		
+		"nextgamemode",
 	}
 	
 	for i,v in ipairs(sync_list) do

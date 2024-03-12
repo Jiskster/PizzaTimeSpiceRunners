@@ -350,7 +350,7 @@ CV_PTSR.parry_height = CV_RegisterVar({
 
 CV_PTSR.parry_friendlyfire = CV_RegisterVar({
 	name = "PTSR_parry_friendlyfire",
-	defaultvalue = "on",
+	defaultvalue = "off",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff,
 })

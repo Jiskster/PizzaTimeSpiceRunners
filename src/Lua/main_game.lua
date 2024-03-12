@@ -104,6 +104,8 @@ PTSR.RegisterGamemode = function(name, input_table)
 	table_new.name = name
 	
 	table.insert(PTSR.gamemode_list, table_new)
+	
+	return #PTSR.gamemode_list
 end
 
 -- TODO: make every PTSR.gamemode_list[PTSR.gamemode], use this function
@@ -112,20 +114,20 @@ PTSR.currentModeMetadata = function()
 	return PTSR.gamemode_list[PTSR.gamemode]
 end
 
-PTSR.RegisterGamemode("Casual",	{
+PTSR.gm_casual = PTSR.RegisterGamemode("Casual", {
 	parry_friendlyfire = false,
 	dustdevil = true,
 	dustdeviltimer = 90*TICRATE,
 	allowrevive = true,
 })
 
-PTSR.RegisterGamemode("Competitive", {
+PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
 })
 
-PTSR.RegisterGamemode("Hard Mode",	{
+PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	dustdevil = true,
 	dustdeviltimer = 30*TICRATE,
 	allowrevive = true,
@@ -133,13 +135,20 @@ PTSR.RegisterGamemode("Hard Mode",	{
 	instant_overtime = true,
 })
 
-PTSR.RegisterGamemode("Spice Walkers",	{
+PTSR.gm_spicewalkers = PTSR.RegisterGamemode("Spice Walkers", {
 	dustdevil = true,
 	dustdeviltimer = 90*TICRATE,
 	allowrevive = true,
 	overtime_music = "OVTWTF",
 	overtime_textontime = "WHAT THE FUCK!",
 	speedcap = 26*FRACUNIT,
+})
+
+PTSR.gm_blackhole = PTSR.RegisterGamemode("Blackhole", {
+	dustdevil = true,
+	dustdeviltimer = 30*TICRATE,
+	allowrevive = true,
+	overtime_music = "BHOLEM",
 })
 
 PTSR.ChangeGamemode = function(gm)

@@ -76,7 +76,7 @@ COM_AddCommand("ptsr_setnextgamemode", function(player, arg)
 	end
 
 	PTSR.nextgamemode = PTSR.gamemode_list[tonumber(arg)] and tonumber(arg) or 1
-	print("An admin forced next gamemode to: ".. PTSR.getModeMetadata(PTSR.nextgamemode).name)
+	print("An admin forced next gamemode to: ".. PTSR.gamemode_list[PTSR.nextgamemode].name)
 end,1)
 
 COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)

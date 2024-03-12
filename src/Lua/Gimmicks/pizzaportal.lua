@@ -110,7 +110,9 @@ addHook("MobjThinker", function(mobj)
 
 		mobj.spritexscale = ese
 		mobj.spriteyscale = ese
+		
 		player.powers[pw_nocontrol] = 1
+		player.powers[pw_invulnerability] = $ + 1
 		
 		L_SpeedCap(mobj, 0)
 		
@@ -139,6 +141,8 @@ addHook("MobjThinker", function(mobj)
 	if mobj.pizza_out then
 		local div = FixedDiv(mobj.pizza_out*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.inquint(div, maxspritescale, minspritescale)
+		player.powers[pw_invulnerability] = $ + 1
+		
 		mobj.pizza_out = $ - 1
 		
 		mobj.spritexscale = ese

@@ -76,6 +76,11 @@ addHook("TouchSpecial", function(special, toucher)
 				
 				rplayer.powers[pw_invulnerability] = 5*TICRATE
 				
+				if rplayer == consoleplayer then
+					displayplayer = consoleplayer -- go back in your view boi
+					chatprintf(consoleplayer, "\x83You have been revived!")
+				end
+				
 				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
 				
 				rplayer.ptsr_gotrevivedonce = true -- variable to check if the player got revived before

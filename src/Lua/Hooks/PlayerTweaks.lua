@@ -74,6 +74,8 @@ addHook("TouchSpecial", function(special, toucher)
 					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
 				end
 				
+				rplayer.powers[pw_invulnerability] = 5*TICRATE
+				
 				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
 				
 				rplayer.ptsr_gotrevivedonce = true -- variable to check if the player got revived before

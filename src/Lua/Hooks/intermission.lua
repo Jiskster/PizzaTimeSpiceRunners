@@ -82,11 +82,14 @@ addHook("ThinkFrame", do
 			local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
 			newgamemode = coremodes[gamemode_fromcoremodes] 
 		
-			if P_RandomChance(CV_PTSR.special_gamemode_chance.value) then
+			if P_RandomChance(FU/8) then
 				if #PTSR.gamemode_list > #coremodes then
-					newgamemode = P_RandomRange(#PTSR.coremodes + 1, #PTSR.gamemode_list)
+					newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
 				end
 			end
+						
+			print(#coremodes + 1)
+			print(#PTSR.gamemode_list)
 			
 			-- set mapvote var
 			PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]

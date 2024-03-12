@@ -87,9 +87,6 @@ addHook("ThinkFrame", do
 					newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
 				end
 			end
-						
-			print(#coremodes + 1)
-			print(#PTSR.gamemode_list)
 			
 			-- set mapvote var
 			PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]

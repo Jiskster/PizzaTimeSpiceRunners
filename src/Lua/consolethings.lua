@@ -417,6 +417,13 @@ CV_PTSR.levelsinvote = CV_RegisterVar({
 	PossibleValue = {MIN = 1, MAX = 6}
 })
 
+CV_PTSR.voteseconds = CV_RegisterVar({
+	name = "PTSR_voteseconds",
+	defaultvalue = "20",
+	flags = CV_NETVAR,
+	PossibleValue = CV_Unsigned, 
+})
+
 local luaOnly = "iamlua" .. P_RandomFixed()
 
 COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)

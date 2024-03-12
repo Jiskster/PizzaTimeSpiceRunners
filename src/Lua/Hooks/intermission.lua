@@ -1,3 +1,9 @@
+PTSR.intermission_act1 = 324 -- last drum beat of the music
+PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
+PTSR.intermission_act_end = PTSR.intermission_act2 + 5*TICRATE
+PTSR.intermission_vote_end = PTSR.intermission_act_end + CV_PTSR.voteseconds.value*TICRATE
+
+
 function PTSR:inVoteScreen()
 	return PTSR.intermission_tics > PTSR.intermission_act_end
 end

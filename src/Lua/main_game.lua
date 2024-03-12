@@ -106,6 +106,12 @@ PTSR.RegisterGamemode = function(name, input_table)
 	table.insert(PTSR.gamemode_list, table_new)
 end
 
+-- TODO: make every PTSR.gamemode_list[PTSR.gamemode], use this function
+-- Im not doing this now because uhh i think it breaks when i use this function idk why
+PTSR.currentModeMetadata = function()
+	return PTSR.gamemode_list[PTSR.gamemode]
+end
+
 PTSR.RegisterGamemode("Casual",	{
 	parry_friendlyfire = false,
 	dustdevil = true,
@@ -115,19 +121,25 @@ PTSR.RegisterGamemode("Casual",	{
 
 PTSR.RegisterGamemode("Competitive", {
 	parry_friendlyfire = true,
-	dustdevil = true,
-	dustdeviltimer = 30*TICRATE,
+	dustdevil = false,
 	allowrevive = false,
 })
 
-PTSR.RegisterGamemode("What..",	{
-	parry_friendlyfire = true,
+PTSR.RegisterGamemode("Hard Mode",	{
 	dustdevil = true,
-	dustdeviltimer = 20*TICRATE,
+	dustdeviltimer = 30*TICRATE,
 	allowrevive = true,
-	speedcap = 25*FRACUNIT,
+	overtime_music = "OTHARD",
+	instant_overtime = true,
+})
+
+PTSR.RegisterGamemode("Spice Walkers",	{
+	dustdevil = true,
+	dustdeviltimer = 90*TICRATE,
+	allowrevive = true,
 	overtime_music = "OVTWTF",
 	overtime_textontime = "WHAT THE FUCK!",
+	speedcap = 26*FRACUNIT,
 })
 
 PTSR.ChangeGamemode = function(gm)
@@ -250,8 +262,10 @@ addHook("ThinkFrame", do
 				if PTSR.timeleft == 3*TICRATE then
 					S_FadeMusic(0, 3000)
 				end
-				if not PTSR.timeleft then
+				if PTSR.timeleft <= 0 then
+					PTSR.timeleft = 0
 					PTSR.timeover = true
+					
 					local timeover_text = "\x8F*Overtime!"
 					chatprint(timeover_text)
 					

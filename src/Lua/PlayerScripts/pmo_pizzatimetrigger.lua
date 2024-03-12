@@ -1,4 +1,6 @@
 PTSR.PizzaTimeTrigger = function(mobj)
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+
 	if not (PTSR.pizzatime and PTSR.spawn_location_atdefault) then
 		if DiscordBot then
 			local discord_pizzatime_text = "This text isn't supposed to show. Uh oh!"
@@ -39,6 +41,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		
 		PTSR.timeleft = CV_PTSR.timelimit.value*TICRATE*60
 		PTSR.maxtime = CV_PTSR.timelimit.value*TICRATE*60
+		
 		PTSR.maxlaps = CV_PTSR.default_maxlaps.value
 
 		-- Custom timelimit Header 
@@ -53,6 +56,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		-- Custon maxlaps header
 		if mapheaderinfo[gamemap].ptsr_maxlaps and CV_PTSR.default_maxlaps.value then -- if header and not 0
 			PTSR.maxlaps = tonumber(mapheaderinfo[gamemap].ptsr_maxlaps)
+		end
+		
+		if gm_metadata["instant_overtime"] then
+			PTSR.timeleft = 1
 		end
 		
 		PTSR.laps = 1 -- new day new me

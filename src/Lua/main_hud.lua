@@ -14,11 +14,6 @@ PTSR.r2f = function(v,rank)
 	end
 end
 
-PTSR.intermission_act1 = 324 -- last drum beat of the music
-PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
-PTSR.intermission_act_end = PTSR.intermission_act2 + 5*TICRATE
-PTSR.intermission_vote_end = PTSR.intermission_act_end + 12*TICRATE
-
 /*
 local hud_debug = CV_RegisterVar({
 	name = "hud_debug",

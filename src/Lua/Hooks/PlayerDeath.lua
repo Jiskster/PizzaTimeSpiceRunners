@@ -15,6 +15,7 @@ addHook("MobjDeath", function(mobj)
 					DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:skull: **" .. player.name .. "** died.\n"
 				end
 			end
+			
 			if P_RandomChance(FRACUNIT/4) and CV_PTSR.screams.value and lastScreamTic ~= leveltime then
 				lastScreamTic = leveltime
 				S_StartSound(nil, sfx_pepdie)

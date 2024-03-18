@@ -179,9 +179,6 @@ function PTSR:SpawnPFAI(forcestyle)
 					PTSR.end_location.y*FRACUNIT,
 					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
-				
-	// TODO this is debug
-	forcestyle = "gooch"
 
 	-- choose a random PF style if nothing was provided
 	local style = forcestyle

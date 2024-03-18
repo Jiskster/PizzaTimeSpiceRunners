@@ -72,6 +72,17 @@ PTSR.PFMaskData = {
 		aiselectable = true,
 		tagcolor = SKINCOLOR_ORANGE
 	},
+	{
+		name = "Gooch",
+	    state = S_GOOCH_PF,
+		scale = FU,
+		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
+		sound = sfx_pizzah,
+		emoji = ":slight_smile:",
+		tagcolor = SKINCOLOR_RED,
+		momentum = true,
+		aiselectable = true
+	}
 }
 
 
@@ -168,6 +179,9 @@ function PTSR:SpawnPFAI(forcestyle)
 					PTSR.end_location.y*FRACUNIT,
 					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
+				
+	// TODO this is debug
+	forcestyle = "gooch"
 
 	-- choose a random PF style if nothing was provided
 	local style = forcestyle
@@ -257,6 +271,7 @@ addHook("MobjThinker", function(mobj)
 	
 	local nearest_player
 	local laughsound = mobj.laughsound or sfx_pizzah
+	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
 	if not PTSR.pizzatime then return end
 
@@ -330,13 +345,34 @@ addHook("MobjThinker", function(mobj)
 		local tx = nearest_player.mo.x
 		local ty = nearest_player.mo.y
 		local tz = nearest_player.mo.z
-
-		P_FlyTo(mobj, tx, ty, tz, speed, true)
 		
+		if maskdata.momentum then
+			-- a bit of yoink from FlyTo
+			local sped = 3*speed/2
+			local flyto = P_AproxDistance(P_AproxDistance(tx - mobj.x, ty - mobj.y), tz - mobj.z)
+			if flyto < 1 then
+				flyto = 1
+			end
+            local tmomx = FixedMul(FixedDiv(tx - mobj.x, flyto), sped)
+            local tmomy = FixedMul(FixedDiv(ty - mobj.y, flyto), sped)
+            local tmomz = FixedMul(FixedDiv(tz - mobj.z, flyto), sped)
+			-- and again
+			local sped2 = speed/15
+			local flyto2 = P_AproxDistance(P_AproxDistance(tmomx - mobj.momx, tmomy - mobj.momy), tmomz - mobj.momz)
+			if flyto2 < 1 then
+				flyto2 = 1
+			end
+            mobj.momx = $ + FixedMul(FixedDiv(tmomx - mobj.momx, flyto2), sped2)
+            mobj.momy = $ + FixedMul(FixedDiv(tmomy - mobj.momy, flyto2), sped2)
+            mobj.momz = $ + FixedMul(FixedDiv(tmomz - mobj.momz, flyto2), sped2)
+			L_SpeedCap(mobj, sped)
+		else
+			P_FlyTo(mobj, tx, ty, tz, speed, true)
+		end
 		mobj.angle = R_PointToAngle2(mobj.x, mobj.y, tx, ty)
 
 		if not (leveltime % 6) then
-			local colors = PTSR.PFMaskData[mobj.pizzastyle or 1].trails
+			local colors = maskdata.trails
 			local ghost = P_SpawnGhostMobj(mobj)
 			P_SetOrigin(ghost, mobj.x, mobj.y, mobj.z)
 			ghost.fuse = 22
@@ -351,7 +387,9 @@ addHook("MobjThinker", function(mobj)
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
 		end
 
-		L_SpeedCap(mobj, speed+(offset_speed))
+		if not maskdata.momentum then
+			L_SpeedCap(mobj, speed+(offset_speed))
+		end
 	else
 		if not mobj.pfstunmomentum then
 			L_SpeedCap(mobj, 0)

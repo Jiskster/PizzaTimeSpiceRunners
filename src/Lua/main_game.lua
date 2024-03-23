@@ -131,30 +131,6 @@ PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	allowrevive = false,
 })
 
-PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
-	dustdevil = true,
-	dustdeviltimer = 30*TICRATE,
-	allowrevive = true,
-	overtime_music = "OTHARD",
-	instant_overtime = true,
-})
-
-PTSR.gm_spicewalkers = PTSR.RegisterGamemode("Spice Walkers", {
-	dustdevil = true,
-	dustdeviltimer = 90*TICRATE,
-	allowrevive = true,
-	overtime_music = "OVTWTF",
-	overtime_textontime = "WHAT THE FUCK!",
-	speedcap = 26*FRACUNIT,
-})
-
-PTSR.gm_blackhole = PTSR.RegisterGamemode("Blackhole", {
-	dustdevil = true,
-	dustdeviltimer = 30*TICRATE,
-	allowrevive = true,
-	overtime_music = "BHOLEM",
-})
-
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]

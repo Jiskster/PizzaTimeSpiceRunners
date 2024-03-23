@@ -38,6 +38,7 @@ addHook("PlayerThink", function(player)
 					sfx_prepr2,
 					sfx_prepr3
 				}
+				
 				local friendlyfire = (CV_PTSR.parry_friendlyfire.value or gm_metadata.parry_friendlyfire)
 				local gotapf = false
 				local range = 1000*FU
@@ -47,7 +48,7 @@ addHook("PlayerThink", function(player)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
-						or (foundmobj.type == MT_PLAYER and friendlyfire) then
+						or (foundmobj.type == MT_PLAYER and friendlyfire and PTSR.pizzatime) then
 							if foundmobj.type == MT_PLAYER then
 								if foundmobj.player and foundmobj.player.valid 
 								and foundmobj.player.powers[pw_invulnerability] then

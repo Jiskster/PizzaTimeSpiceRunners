@@ -17,7 +17,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR.pizzatime = true
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
-
+		PTAnimFunctions.NewAnimation('redjohn', 'REDJOHN', 1, 22, true)
+		
 		if not CV_PTSR.aimode.value then
 			print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
 		end

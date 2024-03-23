@@ -1,5 +1,12 @@
 local hudmodname = "spicerunners"
 
+-- time expected to reach to the final tween position, when pizza time starts
+local pthud_expectedtime = TICRATE*3 
+-- pt animation position start
+local pthud_start_pos = 225*FRACUNIT 
+-- pt animation position end
+local pthud_finish_pos = 175*FRACUNIT
+
 -- rank to patch
 PTSR.r2p = function(v,rank) 
 	if v.cachePatch("PTSR_RANK_"..rank:upper()) then
@@ -39,9 +46,9 @@ local BARSECTIONWIDTH = 172*FU
 local TIMEMODFAC = 4*BARSECTIONWIDTH/FU
 
 --[[@param v videolib]]
-local function drawBarFill(v, x, y, scale, progress)
+local function drawBarFill(v, x, y, scale, progress, patch)
 	local clampedProg = max(0, min(progress, FU))
-	local patch = v.cachePatch("BARFILL")
+	local patch = v.cachePatch(patch)
 	local drawwidth = FixedMul(clampedProg, BARWIDTH)
 	local barOffset = ((leveltime%TIMEMODFAC)*FU/4)%BARSECTIONWIDTH
 	v.drawCropped(
@@ -56,16 +63,19 @@ end
 local bar_hud = function(v, player)
 	if gametype ~= GT_PTSPICER then return end
 	if PTSR.pizzatime then
-		local expectedtime = TICRATE*3
-		local start = 300*FRACUNIT -- animation position start
-		local finish = 175*FRACUNIT -- animation position end
 		local bar_finish = 1475*FRACUNIT/10
 		local TLIM = PTSR.maxtime or 0 
+		
+		local barfill = PTSR.isOvertime() and "BARFILL2" or "BARFILL"
+		
 		-- "TLIM" is time limit number converted to seconds to minutes
 		--example, if CV_PTSR.timelimit.value is 4, it goes to 4*35 to 4*35*60 making it 4 minutes
+
+		local div = ( (FU) / (pthud_expectedtime) )*PTSR.pizzatime_tics
 		
-		--for the fade in
-		local ese = ease.inoutcubic(( (FU) / (expectedtime) )*PTSR.pizzatime_tics, start, finish)
+		local ese = (PTSR.pizzatime_tics < pthud_expectedtime) and 
+		ease.linear(div, pthud_start_pos, pthud_finish_pos) or pthud_finish_pos  -- ese is y axis tween
+		
 
 		local pfEase = min(max(PTSR.pizzatime_tics - CV_PTSR.pizzatimestun.value*TICRATE - 50, 0), 100)
 		pfEase = (pfEase*pfEase) * FU / 22
@@ -80,16 +90,23 @@ local bar_hud = function(v, player)
 		if animationtable['pizzaface'] // dont wanna risk anything yknow
 			pizzaface = v.cachePatch(animationtable['pizzaface'].display_name)
 		end
-
-		local john = v.cachePatch('JOHN1')
-		if animationtable['john']
-			john = v.cachePatch(animationtable['john'].display_name)
+		
+		local john
+		
+		if not PTSR.isOvertime() then
+			john = v.cachePatch('JOHN1')
+			if animationtable['john']
+				john = v.cachePatch(animationtable['john'].display_name)
+			end
+		else
+			john = v.cachePatch('REDJOHN1')
+			if animationtable['redjohn']
+				john = v.cachePatch(animationtable['redjohn'].display_name)
+			end
 		end
 
 		--ease.linear(fixed_t t, [[fixed_t start], fixed_t end])
 		if PTSR.maxtime then
-
-			
 			--for the bar length calculations
 			local progress = FixedDiv(TLIM*FRACUNIT-PTSR.timeleft*FRACUNIT, TLIM*FRACUNIT)
 			local johnx = FixedMul(progress, bar_finish)
@@ -103,45 +120,32 @@ local bar_hud = function(v, player)
 			local johnscale = (FU/2) -- + (FU/4)
 
 			-- during animation
-			if PTSR.pizzatime_tics < expectedtime then 
-				--purple bar, +1 fracunit because i want it inside the box 
-				-- MAX VALUE FOR HSCALE: FRACUNIT*150
-				-- v.drawStretched(91*FRACUNIT, ese + (5*FU)/3, min(themath,bar_finish), (FU/2) - (FU/12), bar2, V_SNAPTOBOTTOM)
-				drawBarFill(v, 90*FRACUNIT, ese, (FU/2), progress)
-				--brown overlay
-				v.drawScaled(90*FRACUNIT, ese, FU/2, bar, V_SNAPTOBOTTOM)
-				v.drawScaled((82*FU) + min(johnx,bar_finish), ese + (6*johnscale), johnscale, john, V_SNAPTOBOTTOM)
-				v.drawScaled(230*FU, ese - (8*FU) + pfEase, FU/3, pizzaface, V_SNAPTOBOTTOM)
+			--purple bar, +1 fracunit because i want it inside the box 
+			-- MAX VALUE FOR HSCALE: FRACUNIT*150
+			-- v.drawStretched(91*FRACUNIT, ese + (5*FU)/3, min(themath,bar_finish), (FU/2) - (FU/12), bar2, V_SNAPTOBOTTOM)
+			
+			drawBarFill(v, 90*FRACUNIT, ese, (FU/2), progress, barfill)
+			--brown overlay
+			v.drawScaled(90*FRACUNIT, ese, FU/2, bar, V_SNAPTOBOTTOM)
+			v.drawScaled((82*FU) + min(johnx,bar_finish), ese + (6*johnscale), johnscale, john, V_SNAPTOBOTTOM)
+			v.drawScaled(230*FU, ese - (8*FU) + pfEase, FU/3, pizzaface, V_SNAPTOBOTTOM)
+			
+			local timestring = G_TicsToMTIME(PTSR.timeleft)
+			local x = 165*FRACUNIT
+			local y = 176*FRACUNIT + FRACUNIT/2
+			local y_offset = (3*FRACUNIT)/2
+			
+			if PTSR.timeleft then
+				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
+			else
+				local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+				local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
+				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 				
-			-- after animation
-			else 
-				// v.drawStretched(91*FRACUNIT, finish + (5*FU)/2, min(themath,bar_finish), (FU/2) - (FU/12), bar2, V_SNAPTOBOTTOM)
-				drawBarFill(v, 90*FRACUNIT, finish, (FU/2), progress)
-				v.drawScaled(90*FRACUNIT, finish, FU/2, bar, V_SNAPTOBOTTOM)
-				v.drawScaled((82*FU) + min(johnx,bar_finish), finish + (6*johnscale), johnscale, john, V_SNAPTOBOTTOM)
-				v.drawScaled(230*FU, finish - (8*FU) + pfEase, FU/3, pizzaface, V_SNAPTOBOTTOM)
-				--v.drawString(int x, int y, string text, [int flags, [string align]])
-				if timeafteranimation then
-					local timestring = G_TicsToMTIME(PTSR.timeleft)
-					local x = 165*FRACUNIT
-					local y = 176*FRACUNIT + FRACUNIT/2
-					--drawSuperText(v, 160, 183+120-PTHUD.PizzaTimeTimerY,str,{font = 'PTFNT', flags = V_SNAPTOBOTTOM, align = 'center'})
-					if timeafteranimation < 10 then
-						--v.drawString(165, y + 5, timestring, V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT , "center")
-						customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM|(10-timeafteranimation)<<V_ALPHASHIFT), "center", FRACUNIT/2, SKINCOLOR_WHITE)
-					else
-						if PTSR.timeleft then
-							customhud.CustomFontString(v, x, y, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
-						else
-							local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
-							local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
-							local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
-							customhud.CustomFontString(v, x, y, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, otcolor)
-						end
-					end
-				end
-				timeafteranimation = $ + 1
+				customhud.CustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, otcolor)
 			end
+			
+			timeafteranimation = $ + 1
 		end
 	else
 		timeafteranimation = 0
@@ -182,6 +186,13 @@ local tooltips_hud = function(v, player)
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
 	local lapstext = "\x82\* LAPS: "..player.lapsdid.." / "..PTSR.maxlaps.." *"
+	
+	local pthud_offset = -8*FU
+	local div = ( (FU) / (pthud_expectedtime) )*PTSR.pizzatime_tics
+	local ese = PTSR.pizzatime_tics < pthud_expectedtime and
+	ease.linear(div, pthud_start_pos+pthud_offset, pthud_finish_pos+pthud_offset) or pthud_finish_pos+pthud_offset
+	-- y axis tween
+
 
 	if (not player.pizzaface) and (player.ptsr_outofgame) and (player.playerstate ~= PST_DEAD) 
 	and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) and not PTSR.gameover then
@@ -198,32 +209,29 @@ local tooltips_hud = function(v, player)
 			v.drawString(160, 100, "You will be unfrozen in: "..player.stuntime/TICRATE.. " seconds.", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
 		end
 		
-		if timeafteranimation then
-			local addtransflag = (timeafteranimation < 10) and (10-timeafteranimation)<<V_ALPHASHIFT or 0 
-
-			if (count.active == 1) then -- practice mode
-				v.drawString(165, 157,practicemodetext , V_SNAPTOBOTTOM|addtransflag, "thin-center")
+		if (count.active == 1) then -- practice mode
+			v.drawString(165*FU, ese-(FU*8), practicemodetext , V_SNAPTOBOTTOM, "thin-fixed-center")
+		end
+		
+		if player.pizzaface then
+			if player.pizzachargecooldown then
+				v.drawString(165*FU, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
+			elseif player.pizzacharge then
+				local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)/FRACUNIT
+				
+				v.drawString(165*FU, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM, "thin-center")
+			else
+				v.drawString(165*FU, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM, "thin-center")
 			end
-			
-			if player.pizzaface then
-				if player.pizzachargecooldown then
-					v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				elseif player.pizzacharge then
-					local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)/FRACUNIT
-					
-					v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				else
-					v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM|addtransflag, "thin-center")
-				end
-			end
-			-- Early returns start here --
-			if player.pizzaface then return end
-			
-			if CV_PTSR.default_maxlaps.value then
-				v.drawString(165, 165, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
-			else -- infinite laps
-				v.drawString(165, 165, infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM|addtransflag, "thin-center")
-			end
+		end
+		
+		-- Early returns start here, no pizza face code allowed beyond here --
+		if player.pizzaface then return end
+		
+		if CV_PTSR.default_maxlaps.value then
+			v.drawString(165*FU, ese, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
+		else -- infinite laps
+			v.drawString(165*FU, ese, infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 	end
 end

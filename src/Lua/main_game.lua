@@ -93,6 +93,10 @@ rawset(_G, "PTSR", { -- variables
 	nextgamemode = 1,
 })
 
+PTSR.isOvertime = function()
+	return PTSR.timeover
+end
+
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
 PTSR.coremodes = {["1"] = true, ["2"] = true}

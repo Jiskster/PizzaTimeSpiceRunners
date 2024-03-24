@@ -257,6 +257,8 @@ local RANKMUS = {
 	D = "RNK_D"
 }
 
+PTSR.RANKMUS = RANKMUS
+
 addHook("ThinkFrame", do
 	local count = PTSR_COUNT()
 

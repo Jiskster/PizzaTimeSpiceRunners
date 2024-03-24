@@ -90,8 +90,15 @@ end)
 local elimination_timer_hud = function(v, player)
 	if PTSR.gamemode ~= PTSR.gm_elimination and PTSR.pizzatime then return end
 	
+	local count = PTSR_COUNT()
+	
 	if PTSR.elimination_timer ~= nil and not PTSR.gameover then
+		local y = 148*FU
 		local output
+		
+		if (count.active ~= 1) then -- lower if not practice mode
+			y = $ + 8*FU
+		end
 		
 		if EL_GetPlayerCount() > 1 then
 			output = "NEXT ELIMINATION: " ..tostring(PTSR.elimination_timer/TICRATE)
@@ -99,17 +106,34 @@ local elimination_timer_hud = function(v, player)
 			output = "GAME ENDING IN: " ..tostring(PTSR.elimination_timer/TICRATE)
 		end
 			
-		customhud.CustomFontString(v, 160*FU, 148*FU, output, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/4, SKINCOLOR_WHITE)
+		customhud.CustomFontString(v, 165*FU, y, output, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/4, SKINCOLOR_WHITE)
 	end
 end
 
 local elimination_warning_hud = function(v, player)
 	if PTSR.gamemode ~= PTSR.gm_elimination and PTSR.pizzatime then return end
 	
-	if PTSR.elimination_timer ~= nil and not PTSR.gameover then
+	local count = PTSR_COUNT()
+	
+	if PTSR.elimination_timer ~= nil and not PTSR.gameover and PTSR.leaderboard ~= nil and #PTSR.leaderboard ~= 0 then
 		if PTSR.leaderboard[#PTSR.leaderboard] and PTSR.leaderboard[#PTSR.leaderboard].valid then
 			if PTSR.leaderboard[#PTSR.leaderboard] == player and EL_GetPlayerCount() > 1 then
-				v.drawString(160*FU, 140*FU, "\x85\You are in last place!", (V_SNAPTOBOTTOM), "thin-fixed-center")
+				local lastplace_y = 140*FU
+				local lastplacetonext_y = 132*FU
+				
+				if (count.active ~= 1) then -- lower if not practice mode
+					lastplace_y = $ + 8*FU
+					lastplacetonext_y = $ + 8*FU
+				end
+				
+				v.drawString(165*FU, lastplace_y, "\x85\You are in last place!", (V_SNAPTOBOTTOM), "thin-fixed-center")
+				
+				if PTSR.leaderboard[(#PTSR.leaderboard) - 1] and PTSR.leaderboard[(#PTSR.leaderboard) - 1].valid then
+					local nextplayer = PTSR.leaderboard[(#PTSR.leaderboard) - 1]
+					local diff = nextplayer.score - player.score
+					
+					v.drawString(165*FU, lastplacetonext_y, "\x85".. diff .. " score to go!", (V_SNAPTOBOTTOM), "thin-fixed-center")
+				end
 			end
 		end
 	end

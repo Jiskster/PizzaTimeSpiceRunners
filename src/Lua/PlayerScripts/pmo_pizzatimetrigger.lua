@@ -65,6 +65,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		
 		PTSR.laps = 1 -- new day new me
 		
+		PTSR_DoHook("onpizzatime")
+		
 		-- player pf only stuff
 		if not CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
 			local count = PTSR_COUNT()

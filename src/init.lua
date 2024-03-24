@@ -159,6 +159,9 @@ dofile "name_tags.lua"
 dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/alivedustdevil.lua"
 
+dofile "InbuiltModeScripts/elimination.lua"
+dofile "InbuiltModeScripts/juggernaut.lua"
+
 dofile "Hooks/intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"

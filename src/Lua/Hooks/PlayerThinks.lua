@@ -236,9 +236,11 @@ addHook('ThinkFrame', function()
 			end
 			
 		end
+		
 		table.sort(PTSR.leaderboard, function(a,b)
 			local p1 = a
 			local p2 = b
+			
 			if ranktonum[a.ptsr_rank] ~= ranktonum[b.ptsr_rank]
 				if ranktonum[a.ptsr_rank] > ranktonum[b.ptsr_rank]
 					return true

@@ -131,12 +131,30 @@ PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	allowrevive = false,
 })
 
+PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
+	parry_friendlyfire = false,
+	dustdevil = false,
+	allowrevive = false,
+	elimination_cooldown = 45*TICRATE
+})
+
+PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
+	parry_friendlyfire = true,
+	dustdevil = false,
+	allowrevive = false,
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]
 	
 	if newgamemode ~= PTSR.gamemode then -- dont print this if new gamemode is the same
-		print("PTSR Gamemode changed to " .. (gm_metadata.name or "Unnamed Mode"))
+		local output_text = "PTSR Gamemode changed to " .. (gm_metadata.name or "Unnamed Mode")
+		print(output_text)
+		
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. ":bar_chart: ".. output_text.. "\n"
+		end
 	end
 	
 	PTSR.gamemode = newgamemode

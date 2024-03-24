@@ -174,11 +174,13 @@ addHook("MobjThinker", function(mobj)
 	-- despawn timer
 	if mobj.crownorphan then
 		 mobj.crownorphan = $ - 1
-		 if not mobj.crownorphan and JG_GetPlayerCount() > 1 then
+		 
+		 if not mobj.crownorphan and JG_GetPlayerCount() ~= 0 then
 			JN_FindAndMakeNewJuggernaut()
 	
 			mobj.invalidcrown = true
 			P_KillMobj(mobj)
+			return
 		 end
 	end
 	

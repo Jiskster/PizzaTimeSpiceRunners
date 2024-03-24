@@ -127,6 +127,7 @@ addHook("MobjThinker", function(mobj)
 	
 	if mobj.crowntimeout then
 		mobj.frame = $ | (FF_TRANS50 | FF_ADD)
+		L_SpeedCap(mobj, FU/2)
 	else
 		mobj.frame = $ & ~ (FF_TRANS50 | FF_ADD)
 	end

@@ -93,7 +93,9 @@ hud.add( function(v, player, camera)
 			end
 		end
 		
-		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER or tmo.type == MT_PT_DEATHRING or tmo.type == MT_ALIVEDUSTDEVIL) then
+		if not (tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER 
+				or tmo.type == MT_PT_DEATHRING or tmo.type == MT_ALIVEDUSTDEVIL
+				or tmo.type == MT_PT_JUGGERNAUTCROWN) then
 			continue
 		end
 			
@@ -102,7 +104,7 @@ hud.add( function(v, player, camera)
 		--how far away is the other mobj?
 		local distance = R_PointToDist(tmo.x, tmo.y) 
 
-		local distlimit = 10000
+		local distlimit = 16000
 		if distance > distlimit*FRACUNIT then continue end
 
 		--Angle between camera vector and target
@@ -157,6 +159,8 @@ hud.add( function(v, player, camera)
 		local namecolor = SKINCOLOR_ORANGE
 		local text_size = FRACUNIT/4
 		
+		local nodrawstuff = false
+		
 		if tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER then
 			local maskdata = nil
 			if tmo.type == MT_PLAYER then
@@ -177,6 +181,8 @@ hud.add( function(v, player, camera)
 			name = "TORNADO"
 			text_size = FRACUNIT/4
 			namecolor = SKINCOLOR_GREY
+		elseif tmo.type == MT_PT_JUGGERNAUTCROWN then
+			nodrawstuff = true
 		end
 		
 
@@ -202,20 +208,20 @@ hud.add( function(v, player, camera)
 		local distedit = max(0, distance - ((distlimit*FU)>>1)) * 2
 		local trans = min(9, (((distedit * 10) >> 16) / distlimit)) * V_10TRANS
 		
+		local dsm = displayplayer.realmo
+
+		-- the z axis exists too yknow
+		local dx = tmo.x-dsm.x
+		local dy = tmo.y-dsm.y
+		local dz = tmo.z-dsm.z
+		local obj_dist = (FixedHypot(FixedHypot(dx,dy),dz))/FU
+		obj_dist = $/10
+		
 		if name then
 			local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
-			
-			local dsm = displayplayer.realmo
 
-			-- the z axis exists too yknow
-			local dx = tmo.x-dsm.x
-			local dy = tmo.y-dsm.y
-			local dz = tmo.z-dsm.z
-			local obj_dist = (FixedHypot(FixedHypot(dx,dy),dz))/FU
-			
 			--luigi budd: regular FU values are too big to easily discern distance
 			--from the face, so divide by 10 to help with uh..... telling the distance
-			obj_dist = $/10
 			
 			if tmo.type == MT_PT_DEATHRING then
 				if gm_metadata.allowrevive then
@@ -225,8 +231,16 @@ hud.add( function(v, player, camera)
 				end
 			end
 			
-			customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, text_size, namecolor)
-			customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
+			if not nodrawstuff then
+				customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, text_size, namecolor)
+				customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
+			end
+		end
+		
+		if tmo.type == MT_PT_JUGGERNAUTCROWN and not P_CheckSight(tmo, displayplayer.realmo) then
+			local crown_spr = v.getSpritePatch(SPR_C9W3)
+			v.drawScaled(hpos+(24*FRACUNIT), vpos, FU/4, crown_spr)
+			v.drawString(hpos+(12*FRACUNIT), vpos, obj_dist.."fu", nil, "thin-fixed")
 		end
 		--v.drawString(hpos, vpos, name, nameflags|trans|V_ALLOWLOWERCASE, namefont)
 		--v.drawString(hpos, vpos+(lineheight*FRACUNIT), health, rflags|trans|V_ALLOWLOWERCASE, ringfont)
@@ -273,7 +287,7 @@ end, "game")
 
 addHook("PostThinkFrame", function()
 	sorted_mobjs = {}
-	local range = 1024*FRACUNIT*8
+	local range = 1024*FRACUNIT*16
 	local dplay
 	if (displayplayer and displayplayer.valid and 
 	displayplayer.mo and displayplayer.mo.valid) then

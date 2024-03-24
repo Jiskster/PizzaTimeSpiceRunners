@@ -37,7 +37,7 @@ mobjinfo[MT_PT_JUGGERNAUTCROWN] = {
 	deathstate = S_NULL,
 	radius = 32*FU,
 	height = 32*FU,
-	flags = MF_SPECIAL
+	flags = MF_SPECIAL|MF_BOSS
 }
 
 states[S_PT_JUGGERNAUTCROWN] = {
@@ -68,13 +68,11 @@ PTSR_AddHook("onparry", function(pmo, victim)
 	end
 end)
 
-PTSR_AddHook("onpizzatime", function(pmo, victim)
-	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
-
+local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid then
+		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD then
 			table.insert(player_range, player)
 		end
 	end
@@ -97,6 +95,12 @@ PTSR_AddHook("onpizzatime", function(pmo, victim)
 	newcrown.flags = $ | (MF_NOCLIP | MF_NOGRAVITY)
 	
 	print(chosen_player.name.. " has been chosen as a Juggernaut!")
+end
+
+PTSR_AddHook("onpizzatime", function()
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	JN_FindAndMakeNewJuggernaut()
 end)
 
 addHook("MobjThinker", function(mobj)
@@ -139,6 +143,12 @@ addHook("MobjThinker", function(mobj)
 	else
 		mobj.frame = $ & ~ (FF_TRANS50 | FF_ADD)
 	end
+	
+	if P_CheckDeathPitCollide(mobj) and not mobj.equip_pmo then
+		JN_FindAndMakeNewJuggernaut()
+		
+		mobj.invalidcrown = true
+	end
 end, MT_PT_JUGGERNAUTCROWN)
 
 addHook("TouchSpecial", function(special, toucher)
@@ -162,4 +172,14 @@ addHook("TouchSpecial", function(special, toucher)
 	end
 	
 	return true
+end, MT_PT_JUGGERNAUTCROWN)
+
+addHook("MobjDeath", function(mobj)
+	if not mobj.invalidcrown then
+		-- SRB2 does some stuff before we can stop it so
+		mobj.flags = $ | MF_SPECIAL
+		mobj.health = 1000
+		
+		return true
+	end
 end, MT_PT_JUGGERNAUTCROWN)

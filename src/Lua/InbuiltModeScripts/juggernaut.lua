@@ -101,11 +101,7 @@ end)
 PTSR_AddHook("pfthink", function(pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
-	if not PTSR.juggernaut_crownholder then
-		mobj.pizza_target = nil
-	else
-		mobj.pizza_target = PTSR.juggernaut_crownholder
-	end
+	pizza.pizza_target = PTSR.juggernaut_crownholder
 end)
 
 PTSR_AddHook("pfdamage", function(toucher, pizza)

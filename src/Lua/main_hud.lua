@@ -424,6 +424,15 @@ local scoreboard_hud = function(v, player)
 		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.lapsdid, (commonflags), "thin-fixed")
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	
+		-- show crown in leaderboard
+		-- GAMEMODE: JUGGERNAUT exclusive
+		if _player.realmo.hascrown then
+			local crown_spr = v.getSpritePatch(SPR_C9W3)
+			
+			v.drawScaled(_xcoord, _ycoord+(4*FU), FRACUNIT/4,
+			crown_spr, (commonflags)|aliveflag)
+		end
+		
 		-- [Finish Flag] --
 		if (_player.ptsr_outofgame)
 			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
@@ -431,7 +440,6 @@ local scoreboard_hud = function(v, player)
 				(commonflags)|V_FLIP
 			)		
 		end
-		
 	end 
 
 	customhud.CustomFontString(v, zinger_x, zinger_y, zinger_text, "PTFNT", (V_SNAPTOTOP), "center", FRACUNIT/4, SKINCOLOR_BLUE)

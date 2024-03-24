@@ -181,7 +181,7 @@ hud.add( function(v, player, camera)
 			name = "TORNADO"
 			text_size = FRACUNIT/4
 			namecolor = SKINCOLOR_GREY
-		elseif tmo.type == MT_PT_JUGGERNAUTCROWN then
+		elseif tmo.type == MT_PT_JUGGERNAUTCROWN then -- GAMEMODE: JUGGERNAUT exclusive
 			nodrawstuff = true
 		end
 		
@@ -237,6 +237,7 @@ hud.add( function(v, player, camera)
 			end
 		end
 		
+		-- GAMEMODE: JUGGERNAUT exclusive
 		if tmo.type == MT_PT_JUGGERNAUTCROWN and not P_CheckSight(tmo, displayplayer.realmo) then
 			local crown_spr = v.getSpritePatch(SPR_C9W3)
 			v.drawScaled(hpos+(24*FRACUNIT), vpos, FU/4, crown_spr)

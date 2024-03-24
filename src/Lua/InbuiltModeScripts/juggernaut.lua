@@ -20,6 +20,20 @@ local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 	P_AddPlayerScore(player, stolen)
 end
 
+local function JG_GetPlayerCount()
+	local player_range = {}
+	
+	for player in players.iterate do
+		if player.mo and player.mo.valid 
+		and player.playerstate ~= PST_DEAD  
+		and not player.ptsr_outofgame then
+			table.insert(player_range, player)
+		end
+	end
+	
+	return #player_range
+end
+
 mobjinfo[MT_PT_JUGGERNAUTCROWN] = {
 	doomednum = -1,
 	spawnstate = S_PT_JUGGERNAUTCROWN,
@@ -123,6 +137,17 @@ addHook("MobjThinker", function(mobj)
 		mobj.crowntimeout = $ - 1
 	end
 	
+	-- despawn timer
+	if mobj.crownorphan then
+		 mobj.crownorphan = $ - 1
+		 if not mobj.crownorphan and JG_GetPlayerCount() > 1 then
+			JN_FindAndMakeNewJuggernaut()
+	
+			mobj.invalidcrown = true
+			P_KillMobj(mobj)
+		 end
+	end
+	
 	if mobj.equip_pmo and mobj.equip_pmo.valid then
 		local pmo = mobj.equip_pmo
 		
@@ -132,6 +157,7 @@ addHook("MobjThinker", function(mobj)
 			local player = pmo.player
 			local normalclock = (leveltime % TICRATE) == 0
 			local overtimeclock = (leveltime % 17) == 0
+			mobj.crownorphan = 15*TICRATE
 			
 			if normalclock and not PTSR.timeover then
 				P_StealPlayerScoreButOOG(player, 25)
@@ -146,10 +172,19 @@ addHook("MobjThinker", function(mobj)
 				pmo.crownref = nil
 				pmo.hascrown = false
 			end
+			
+			if pmo.player.ptsr_outofgame and JG_GetPlayerCount() > 1 then
+				JN_FindAndMakeNewJuggernaut()
+		
+				mobj.invalidcrown = true
+				P_KillMobj(mobj)
+			end
 		else
 			mobj.equip_pmo = nil
 			mobj.flags = $ & ~(MF_NOCLIP | MF_NOGRAVITY)
 		end
+	else
+	
 	end
 	
 	if mobj.crowntimeout then

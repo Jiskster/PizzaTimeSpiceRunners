@@ -30,7 +30,14 @@ local function EL_EliminateLastPlayer()
 	and PTSR.leaderboard[#PTSR.leaderboard].valid then
 		local chosen_player = PTSR.leaderboard[#PTSR.leaderboard] 
 		P_KillMobj(chosen_player.realmo)
-		chatprint("\x85".. chosen_player.name .. " has been eliminated!")
+		
+		local output_text = chosen_player.name .. " has been eliminated!"
+		
+		chatprint("\x85".. "*" ..output_text)
+
+		if DiscordBot then
+			DiscordBot.Data.msgsrb2 = $ .. ":x: " .. output_text.. "\n"
+		end
 	end
 end
 
@@ -41,7 +48,7 @@ PTSR_AddHook("onpizzatime", function()
 	
 	PTSR.elimination_timer = gm_metadata.elimination_cooldown or 60*TICRATE
 	
-	chatprint("\x85\Elimination! Don't be last!")
+	chatprint("\x85\*Elimination! Don't be last!")
 end)
 
 addHook("ThinkFrame", function()
@@ -60,7 +67,7 @@ addHook("ThinkFrame", function()
 			else
 				if PTSR.leaderboard[1] and PTSR.leaderboard[1].valid then
 					local output_text = PTSR.leaderboard[1].name.. " won the game!"
-					chatprint("\x85".. output_text)
+					chatprint("\x85".. "*"..output_text)
 					
 					if DiscordBot then
 						DiscordBot.Data.msgsrb2 = $ .. ":trophy: ".. output_text.. "\n"

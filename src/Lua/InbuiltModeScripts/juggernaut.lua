@@ -119,6 +119,14 @@ addHook("MobjThinker", function(mobj)
 			elseif overtimeclock and PTSR.timeover then
 				P_StealPlayerScoreButOOG(player, 100)
 			end
+			
+			if pmo.player.playerstate == PST_DEAD then
+				mobj.equip_pmo = nil
+				mobj.flags = $ & ~(MF_NOCLIP | MF_NOGRAVITY)
+				mobj.crowntimeout = 0
+				pmo.crownref = nil
+				pmo.hascrown = false
+			end
 		else
 			mobj.equip_pmo = nil
 			mobj.flags = $ & ~(MF_NOCLIP | MF_NOGRAVITY)

@@ -108,6 +108,16 @@ PTSR_AddHook("onpizzatime", function()
 	JN_FindAndMakeNewJuggernaut()
 end)
 
+addHook("PlayerThink", function(player)
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	if player.mo and player.mo.valid then
+		if not player.mo.hascrown and PTSR.timeover then
+			player.powers[pw_sneakers] = 1
+		end
+	end
+end)
+
 addHook("MobjThinker", function(mobj)
 	if mobj.crowntimeout then
 		mobj.crowntimeout = $ - 1

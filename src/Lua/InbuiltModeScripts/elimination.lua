@@ -75,6 +75,13 @@ addHook("ThinkFrame", function()
 				end
 				
 				PTSR.gameover = true
+				
+				print("GAME OVER!")
+				
+				if consoleplayer and consoleplayer.valid then
+					S_ChangeMusic(RANKMUS[consoleplayer.ptsr_rank], false, player)
+					mapmusname = RANKMUS[consoleplayer.ptsr_rank]
+				end
 			end
 		end
 	end
@@ -84,7 +91,8 @@ local elimination_timer_hud = function(v, player)
 	if PTSR.gamemode ~= PTSR.gm_elimination and PTSR.pizzatime then return end
 	
 	if PTSR.elimination_timer ~= nil and not PTSR.gameover then
-		customhud.CustomFontString(v, 25*FU, 156*FU, tostring(PTSR.elimination_timer/TICRATE), "PTFNT", (V_SNAPTOLEFT|V_SNAPTOBOTTOM), nil, FRACUNIT/2, SKINCOLOR_WHITE)
+		local output = "NEXT ELIMINATION: " ..tostring(PTSR.elimination_timer/TICRATE)
+		customhud.CustomFontString(v, 160*FU, 148*FU, output, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/4, SKINCOLOR_WHITE)
 	end
 end
 

@@ -56,7 +56,7 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
-							if PTSR_DoHook("onparry", pmo) == true then
+							if PTSR_DoHook("onparry", pmo, foundmobj) == true then
 								return true
 							end
 							

@@ -131,6 +131,18 @@ PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	allowrevive = false,
 })
 
+PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
+	parry_friendlyfire = false,
+	dustdevil = false,
+	allowrevive = false,
+})
+
+PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
+	parry_friendlyfire = true,
+	dustdevil = false,
+	allowrevive = false,
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]

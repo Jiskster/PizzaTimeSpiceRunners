@@ -4,6 +4,7 @@ hooks.onlap = {}
 hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}
+hooks.onpizzatime = {}
 
 local override_register = false
 /*

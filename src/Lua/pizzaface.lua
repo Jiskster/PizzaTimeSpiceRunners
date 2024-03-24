@@ -270,7 +270,6 @@ end)
 addHook("MobjThinker", function(mobj)
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	
-	local nearest_pmo = mobj.pizza_target -- mobj_t
 	local laughsound = mobj.laughsound or sfx_pizzah
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
@@ -301,17 +300,17 @@ addHook("MobjThinker", function(mobj)
 		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
 		and not player.spectator and not player.quittime and not player.pizzaface
 		and not player.mo.pizza_out and not player.mo.pizza_in then
-			if not (nearest_pmo and nearest_pmo.valid) then -- nearest player is mobj_t
-				nearest_pmo = player.mo
+			if not (mobj.pizza_target and mobj.pizza_target.valid) then -- nearest player is mobj_t
+				mobj.pizza_target = player.mo
 			else
-				if player.mo == nearest_pmo then continue end
+				if player.mo == mobj.pizza_target then continue end
 
-				if nearest_pmo and nearest_pmo.valid then
-					local dist_nptopizza = R_PointToDist2(nearest_pmo.x, nearest_pmo.y, mobj.x, mobj.y)
+				if mobj.pizza_target and mobj.pizza_target.valid then
+					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
 					
 					if dist_newplayertopizza < dist_nptopizza then
-						nearest_pmo = player.mo
+						mobj.pizza_target = player.mo
 					end
 				end
 			end
@@ -320,11 +319,11 @@ addHook("MobjThinker", function(mobj)
 
 	PTSR_DoHook("pfthink", mobj)
 	
-	if nearest_pmo and nearest_pmo.valid and nearest_pmo.health and nearest_pmo.player and nearest_pmo.player.valid and
-	not nearest_pmo.player.ptsr_outofgame and not nearest_pmo.player.quittime and not nearest_pmo.player.spectator 
-	and not nearest_pmo.player.pizzaface then
+	if mobj.pizza_target and mobj.pizza_target.valid and mobj.pizza_target.health and mobj.pizza_target.player and mobj.pizza_target.player.valid and
+	not mobj.pizza_target.player.ptsr_outofgame and not mobj.pizza_target.player.quittime and not mobj.pizza_target.player.spectator 
+	and not mobj.pizza_target.player.pizzaface then
 		local speed = CV_PTSR.aispeed.value
-		local dist = R_PointToDist2(nearest_pmo.x, nearest_pmo.y, mobj.x, mobj.y)
+		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
 		
 		if CV_PTSR.airubberband.value then
@@ -354,9 +353,9 @@ addHook("MobjThinker", function(mobj)
 		end
 
 		-- t in tx means "player that we're TARGETING"
-		local tx = nearest_pmo.x
-		local ty = nearest_pmo.y
-		local tz = nearest_pmo.z
+		local tx = mobj.pizza_target.x
+		local ty = mobj.pizza_target.y
+		local tz = mobj.pizza_target.z
 		
 		if maskdata.momentum then
 			-- a bit of yoink from FlyTo
@@ -381,6 +380,7 @@ addHook("MobjThinker", function(mobj)
 		else
 			P_FlyTo(mobj, tx, ty, tz, speed, true)
 		end
+		
 		mobj.angle = R_PointToAngle2(mobj.x, mobj.y, tx, ty)
 
 		if not (leveltime % 6) then

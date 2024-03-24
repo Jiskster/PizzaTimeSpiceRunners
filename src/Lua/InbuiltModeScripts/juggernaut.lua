@@ -200,7 +200,7 @@ addHook("MobjThinker", function(mobj)
 			if normalclock and not PTSR.timeover then
 				P_StealPlayerScoreButOOG(player, 25)
 			elseif overtimeclock and PTSR.timeover then
-				P_StealPlayerScoreButOOG(player, 100)
+				P_StealPlayerScoreButOOG(player, 35)
 			end
 			
 			if pmo.player.playerstate == PST_DEAD then
@@ -211,11 +211,14 @@ addHook("MobjThinker", function(mobj)
 				pmo.hascrown = false
 			end
 			
-			if pmo.player.ptsr_outofgame and JG_GetPlayerCount() > 1 then
+			if player.ptsr_outofgame and JG_GetPlayerCount() > 0 then
 				JN_FindAndMakeNewJuggernaut()
 		
 				mobj.invalidcrown = true
+				pmo.crownref = nil
+				pmo.hascrown = false
 				P_KillMobj(mobj)
+				return
 			end
 		else
 			mobj.equip_pmo = nil

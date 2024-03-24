@@ -73,6 +73,7 @@ end
 local function InitMap3()
 	if PTSR.nextgamemode then
 		PTSR.ChangeGamemode(PTSR.nextgamemode)
+		
 		PTSR.nextgamemode = 1
 	end
 end

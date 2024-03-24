@@ -53,6 +53,13 @@ PTSR_AddHook("onparry", function(pmo, victim)
 			
 			if victim.player and victim.player.valid then
 				P_DoPlayerPain(victim.player)
+				
+				local output_text = victim.player.name.. " lost their crown!"
+				chatprint("\x82".. output_text)
+				
+				if DiscordBot then
+					DiscordBot.Data.msgsrb2 = $ .. ":grimacing: ".. output_text.. "\n"
+				end
 			end
 		end
 	end
@@ -84,7 +91,13 @@ local function JN_FindAndMakeNewJuggernaut()
 	
 	newcrown.flags = $ | (MF_NOCLIP | MF_NOGRAVITY)
 	
-	print(chosen_player.name.. " has been chosen as a Juggernaut!")
+	local output_text = chosen_player.name.. " has been chosen as a Juggernaut!"
+	
+	print(output_text)
+	
+	if DiscordBot then
+		DiscordBot.Data.msgsrb2 = $ .. ":crown: " .. output_text.. "\n"
+	end
 end
 
 PTSR_AddHook("onpizzatime", function()
@@ -158,6 +171,13 @@ addHook("TouchSpecial", function(special, toucher)
 			special.equip_pmo = toucher
 			
 			S_StartSound(nil, sfx_s24f)
+			
+			local output_text = player.name.. " picked up a crown!"
+			chatprint("\x82".. output_text)
+			
+			if DiscordBot then
+				DiscordBot.Data.msgsrb2 = $ .. ":crown: ".. output_text.. "\n"
+			end
 			
 			special.flags = $ | (MF_NOCLIP | MF_NOGRAVITY)
 		end

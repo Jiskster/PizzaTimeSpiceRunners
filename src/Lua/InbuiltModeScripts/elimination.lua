@@ -59,7 +59,12 @@ addHook("ThinkFrame", function()
 				EL_EliminateLastPlayer()
 			else
 				if PTSR.leaderboard[1] and PTSR.leaderboard[1].valid then
-					chatprint("\x85"..PTSR.leaderboard[1].name.. " won the game!")
+					local output_text = PTSR.leaderboard[1].name.. " won the game!"
+					chatprint("\x85".. output_text)
+					
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. ":trophy: ".. output_text.. "\n"
+					end
 				end
 				
 				PTSR.gameover = true

@@ -287,7 +287,7 @@ CV_PTSR.aitpstuntime = CV_RegisterVar({
 
 CV_PTSR.aispeed = CV_RegisterVar({
 	name = "PTSR_aispeed",
-	defaultvalue = "30",
+	defaultvalue = "25",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
 })
@@ -308,7 +308,7 @@ CV_PTSR.airubberband = CV_RegisterVar({
 
 CV_PTSR.parrycooldown = CV_RegisterVar({
 	name = "PTSR_parrycooldown",
-	defaultvalue = "90",
+	defaultvalue = "30",
 	flags = CV_NETVAR,
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })
@@ -336,14 +336,14 @@ CV_PTSR.parryknockback_z = CV_RegisterVar({
 
 CV_PTSR.parry_radius = CV_RegisterVar({
 	name = "PTSR_parry_radius",
-	defaultvalue = "175",
+	defaultvalue = "300",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
 
 CV_PTSR.parry_height = CV_RegisterVar({
 	name = "PTSR_parry_height",
-	defaultvalue = "185",
+	defaultvalue = "200",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })

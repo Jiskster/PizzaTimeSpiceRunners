@@ -135,6 +135,7 @@ PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = false,
+	elimination_cooldown = 45*TICRATE
 })
 
 PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {

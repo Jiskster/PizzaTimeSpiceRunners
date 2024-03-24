@@ -1,15 +1,5 @@
 freeslot("MT_PT_JUGGERNAUTCROWN", "S_PT_JUGGERNAUTCROWN", "SPR_C9W3")
 
-PTSR.juggernaut_chosenplayer = nil
-
-addHook("NetVars", function(net)
-	PTSR.juggernaut_chosenplayer = net($)
-end)
-
-addHook("MapLoad", function()
-	PTSR.juggernaut_chosenplayer = nil
-end)
-
 local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 	local stolen = 0
 
@@ -99,6 +89,8 @@ end
 
 PTSR_AddHook("onpizzatime", function()
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	chatprint("\x82\Juggernaut! Get that crown!")
 	
 	JN_FindAndMakeNewJuggernaut()
 end)

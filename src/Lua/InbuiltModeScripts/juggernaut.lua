@@ -182,6 +182,8 @@ addHook("TouchSpecial", function(special, toucher)
 			
 			S_StartSound(nil, sfx_s24f)
 			
+			player.powers[pw_invulnerability] = $ + 3*TICRATE
+			
 			local output_text = player.name.. " picked up a crown!"
 			chatprint("\x82".. "*"..output_text)
 			

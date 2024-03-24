@@ -5,6 +5,8 @@ hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}
 hooks.onpizzatime = {}
+hooks.pfthink = {}
+hooks.pfdamage = {}
 
 local override_register = false
 /*

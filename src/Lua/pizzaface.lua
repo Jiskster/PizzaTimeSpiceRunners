@@ -239,6 +239,10 @@ addHook("TouchSpecial", function(special, toucher)
 			return true
 		end
 		
+		if PTSR_DoHook("pfdamage", toucher, special) == true then
+			return true
+		end
+		
 		if not PTSR:PizzaCanTag(toucher, special) then return true end
 
 		PTSR:PizzaCollision(toucher, special)
@@ -266,7 +270,7 @@ end)
 addHook("MobjThinker", function(mobj)
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	
-	local nearest_player
+	local nearest_player = mobj.pizza_target
 	local laughsound = mobj.laughsound or sfx_pizzah
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
@@ -311,6 +315,8 @@ addHook("MobjThinker", function(mobj)
 		end
 	end
 
+	PTSR_DoHook("pfthink", mobj)
+	
 	if nearest_player and nearest_player.valid and nearest_player.mo
 	and nearest_player.mo.valid and nearest_player.mo.health and not nearest_player.ptsr_outofgame
 	and not nearest_player.quittime and not nearest_player.spectator and not nearest_player.pizzaface then

@@ -1,5 +1,22 @@
 freeslot("MT_PT_JUGGERNAUTCROWN", "S_PT_JUGGERNAUTCROWN", "SPR_C9W3")
 
+PTSR.juggernaut_crownholder = nil
+
+addHook("NetVars", function(net)
+	PTSR.juggernaut_crownholder = net($)
+end)
+
+addHook("MapLoad", function()
+	PTSR.juggernaut_crownholder = nil
+	
+	for player in players.iterate do
+		if player.mo and player.mo.valid then
+			player.mo.hascrown = false
+			player.mo.crownref = nil
+		end
+	end
+end)
+
 local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 	local stolen = 0
 
@@ -66,6 +83,8 @@ PTSR_AddHook("onparry", function(pmo, victim)
 			victim.crownref = nil
 			
 			if victim.player and victim.player.valid then
+				PTSR.juggernaut_crownholder = nil
+			
 				P_DoPlayerPain(victim.player)
 				
 				local output_text = victim.player.name.. " lost their crown!"
@@ -76,6 +95,24 @@ PTSR_AddHook("onparry", function(pmo, victim)
 				end
 			end
 		end
+	end
+end)
+
+PTSR_AddHook("pfthink", function(pizza)
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	if not PTSR.juggernaut_crownholder then
+		mobj.pizza_target = nil
+	else
+		mobj.pizza_target = PTSR.juggernaut_crownholder
+	end
+end)
+
+PTSR_AddHook("pfdamage", function(toucher, pizza)
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	if PTSR.juggernaut_crownholder ~= toucher then
+		return true
 	end
 end)
 
@@ -100,6 +137,7 @@ local function JN_FindAndMakeNewJuggernaut()
 	newcrown.equip_pmo = chosen_player.realmo
 	chosen_player.realmo.hascrown = true
 	chosen_player.realmo.crownref = newcrown
+	PTSR.juggernaut_crownholder = chosen_player.realmo
 	
 	S_StartSound(nil, sfx_s24f)
 	
@@ -158,6 +196,8 @@ addHook("MobjThinker", function(mobj)
 			local normalclock = (leveltime % TICRATE) == 0
 			local overtimeclock = (leveltime % 17) == 0
 			mobj.crownorphan = 15*TICRATE
+			
+			PTSR.juggernaut_crownholder = pmo
 			
 			if normalclock and not PTSR.timeover then
 				P_StealPlayerScoreButOOG(player, 25)

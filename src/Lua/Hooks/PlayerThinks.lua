@@ -55,11 +55,13 @@ addHook("PlayerSpawn", function(player)
 end)
 
 addHook("PlayerThink", function(player)
+	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+
 	if player.deadtimer > 5*TICRATE and PTSR.pizzatime and not player.spectator then
 		player.playerstate = PST_REBORN
 	end
 
-	if PTSR.pizzatime and PTSR.timeover then
+	if PTSR.pizzatime and PTSR.timeover and not gm_metadata.disableovertimeshoes then
 		player.powers[pw_sneakers] = 1
 	end
 end)

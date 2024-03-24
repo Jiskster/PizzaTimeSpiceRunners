@@ -337,6 +337,12 @@ addHook("MobjThinker", function(mobj)
 
 			speed = FixedMul($, yum)
 		end
+		
+		if gm_metadata.pfspeedmulti then
+			local newspeed = gm_metadata.pfspeedmulti
+			
+			speed = FixedMul($, newspeed)
+		end
 
 		if dist > CV_PTSR.aileash.value then
 			if not mobj.pfstuntime then

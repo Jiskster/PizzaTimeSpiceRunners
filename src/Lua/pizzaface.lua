@@ -130,7 +130,7 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 
 	for peppino in players.iterate() do
 		if not peppino.pizzaface and (peppino.mo and peppino.mo.valid) and
-		not peppino.spectator and not peppino.ptsr_outofgame and (peppino.playerstate == PST_LIVE)
+		not peppino.spectator and not peppino.ptsr_outofgame and (peppino.playerstate ~= PST_DEAD)
 		and not peppino.quittime then
 			table.insert(peppinos, #peppino)
 		end
@@ -138,6 +138,8 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 
 	local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
 	local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
+	local peppino_pmo = players[chosen_peppino].realmo
+	pizza.next_pfteleport = peppino_pmo -- next player object (mobj_t) to teleport to
 
 	if peppinos ~= {} then
 		if pizza.player then -- If Real Player
@@ -152,23 +154,30 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 				player.stuntime = (CV_PTSR.pizzatpstuntime.value)/3
 			end
 
-			P_SetOrigin(player.mo, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
+			P_SetOrigin(player.mo, pizza.next_pfteleport.x, pizza.next_pfteleport.y, pizza.next_pfteleport.z)
+			
 			if uselaugh == true then
 				S_StartSound(player.mo, PTSR.PFMaskData[player.PTSR_pizzastyle].sound)
 			end
+			
+			pizza.next_pfteleport = nil
 		else -- If AI Pizza Face
+			PTSR_DoHook("pfteleport", pizza)
+			
 			if not PTSR.timeover then
 				pizza.pfstuntime = CV_PTSR.aitpstuntime.value
 			else
 				pizza.pfstuntime = (CV_PTSR.aitpstuntime.value)/3
 			end
 
-			P_SetOrigin(pizza, players[chosen_peppino].mo.x,players[chosen_peppino].mo.y,players[chosen_peppino].mo.z)
-
+			P_SetOrigin(pizza, pizza.next_pfteleport.x, pizza.next_pfteleport.y, pizza.next_pfteleport.z)
+			
 			if uselaugh == true then
 				local laughsound = pizza.laughsound or sfx_pizzah
 				S_StartSound(pizza, laughsound)
 			end
+			
+			pizza.next_pfteleport = nil
 		end
 	end
 end

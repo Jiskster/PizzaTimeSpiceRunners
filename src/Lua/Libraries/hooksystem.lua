@@ -7,6 +7,7 @@ hooks.onlapbonus = {}
 hooks.onpizzatime = {}
 hooks.pfthink = {}
 hooks.pfdamage = {}
+hooks.pfteleport = {}
 
 local override_register = false
 /*

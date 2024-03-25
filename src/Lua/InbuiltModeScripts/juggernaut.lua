@@ -116,6 +116,14 @@ PTSR_AddHook("pfdamage", function(toucher, pizza)
 	end
 end)
 
+PTSR_AddHook("pfteleport", function(pizza)
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+
+	if PTSR.juggernaut_crownholder then
+		pizza.next_pfteleport = PTSR.juggernaut_crownholder
+	end
+end)
+
 local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}
 	

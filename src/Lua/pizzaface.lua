@@ -299,7 +299,7 @@ addHook("MobjThinker", function(mobj)
 	for player in players.iterate do
 		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
 		and not player.spectator and not player.quittime and not player.pizzaface
-		and not player.mo.pizza_out and not player.mo.pizza_in then
+		and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD then
 			if not (mobj.pizza_target and mobj.pizza_target.valid) then -- nearest player is mobj_t
 				mobj.pizza_target = player.mo
 			else

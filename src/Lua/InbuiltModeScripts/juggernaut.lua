@@ -207,7 +207,7 @@ addHook("MobjThinker", function(mobj)
 			local player = pmo.player
 			local normalclock = (leveltime % TICRATE) == 0
 			local overtimeclock = (leveltime % 17) == 0
-			mobj.crownorphan = 15*TICRATE
+			mobj.crownorphan = 10*TICRATE
 			
 			PTSR.juggernaut_crownholder = pmo
 			

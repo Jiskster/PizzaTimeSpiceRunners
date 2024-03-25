@@ -116,7 +116,7 @@ local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD then
+		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD and not player.ptsr_outofgame then
 			table.insert(player_range, player)
 		end
 	end

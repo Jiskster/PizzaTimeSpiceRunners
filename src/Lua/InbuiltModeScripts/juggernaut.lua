@@ -207,14 +207,15 @@ addHook("MobjThinker", function(mobj)
 			local player = pmo.player
 			local normalclock = (leveltime % TICRATE) == 0
 			local overtimeclock = (leveltime % 17) == 0
+			
 			mobj.crownorphan = 10*TICRATE
 			
 			PTSR.juggernaut_crownholder = pmo
 			
 			if normalclock and not PTSR.timeover then
-				P_StealPlayerScoreButOOG(player, 25)
+				P_StealPlayerScoreButOOG(player, 50)
 			elseif overtimeclock and PTSR.timeover then
-				P_StealPlayerScoreButOOG(player, 35)
+				P_StealPlayerScoreButOOG(player, 65)
 			end
 			
 			if pmo.player.playerstate == PST_DEAD then

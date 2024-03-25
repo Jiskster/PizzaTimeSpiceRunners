@@ -168,6 +168,7 @@ PTSR_AddHook("onpizzatime", function()
 	JN_FindAndMakeNewJuggernaut()
 end)
 
+/*
 addHook("PlayerThink", function(player)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
@@ -177,6 +178,7 @@ addHook("PlayerThink", function(player)
 		end
 	end
 end)
+*/
 
 addHook("MobjThinker", function(mobj)
 	if mobj.crowntimeout then

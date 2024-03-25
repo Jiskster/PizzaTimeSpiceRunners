@@ -142,7 +142,7 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	disableovertimeshoes = true,
+	--disableovertimeshoes = true,
 })
 
 PTSR.ChangeGamemode = function(gm)

@@ -102,10 +102,6 @@ PTSR_AddHook("pfthink", function(pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
 	pizza.pizza_target = PTSR.juggernaut_crownholder
-	
-	if not pizza.pizza_target then
-		P_SetObjectMomZ(pizza, 5*FU)
-	end
 end)
 
 PTSR_AddHook("pfdamage", function(toucher, pizza)
@@ -113,6 +109,9 @@ PTSR_AddHook("pfdamage", function(toucher, pizza)
 	
 	if PTSR.juggernaut_crownholder ~= toucher then
 		return true
+	else
+		P_SetOrigin(pizza, pizza.x, pizza.y, pizza.z + 512*FU)
+		return false
 	end
 end)
 

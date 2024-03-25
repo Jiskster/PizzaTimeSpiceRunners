@@ -56,8 +56,8 @@ mobjinfo[MT_PT_JUGGERNAUTCROWN] = {
 	spawnstate = S_PT_JUGGERNAUTCROWN,
 	spawnhealth = 1000,
 	deathstate = S_NULL,
-	radius = 32*FU,
-	height = 32*FU,
+	radius = 64*FU,
+	height = 64*FU,
 	flags = MF_SPECIAL|MF_BOSS
 }
 

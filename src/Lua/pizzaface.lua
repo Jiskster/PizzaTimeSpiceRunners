@@ -275,6 +275,35 @@ addHook("PlayerCmd", function (player, cmd)
 	end
 end)
 
+local function PF_FindNewPlayer(mobj)
+	local activeplayers = {}
+	
+	for player in players.iterate do
+		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
+		and not player.spectator and not player.quittime and not player.pizzaface
+		and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD then
+			table.insert(activeplayers, player)
+		end
+	end
+	
+	for i,player in ipairs(activeplayers) do
+		if player.mo and player.mo.valid then
+			if not (mobj.pizza_target and mobj.pizza_target.valid) or not (mobj.pizza_target.health) then
+				mobj.pizza_target = player.mo
+			else
+				if (mobj.pizza_target and mobj.pizza_target.valid) then
+					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
+					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
+					
+					if dist_newplayertopizza < dist_nptopizza then
+						mobj.pizza_target = player.mo
+					end
+				end
+			end
+		end	
+	end
+end
+
 -- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
@@ -302,35 +331,17 @@ addHook("MobjThinker", function(mobj)
 			end
 			mobj.pfstunmomentum = false
 		end
+		print("stun")
 		return
 	end
-
-	for player in players.iterate do
-		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
-		and not player.spectator and not player.quittime and not player.pizzaface
-		and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD then
-			if not (mobj.pizza_target and mobj.pizza_target.valid) then -- nearest player is mobj_t
-				mobj.pizza_target = player.mo
-			else
-				if player.mo == mobj.pizza_target then continue end
-
-				if mobj.pizza_target and mobj.pizza_target.valid then
-					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
-					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
-					
-					if dist_newplayertopizza < dist_nptopizza then
-						mobj.pizza_target = player.mo
-					end
-				end
-			end
-		end
-	end
-
+	
+	PF_FindNewPlayer(mobj)
 	PTSR_DoHook("pfthink", mobj)
 	
 	if mobj.pizza_target and mobj.pizza_target.valid and mobj.pizza_target.health and mobj.pizza_target.player and mobj.pizza_target.player.valid and
 	not mobj.pizza_target.player.ptsr_outofgame and not mobj.pizza_target.player.quittime and not mobj.pizza_target.player.spectator 
 	and not mobj.pizza_target.player.pizzaface then
+		print("move")
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0

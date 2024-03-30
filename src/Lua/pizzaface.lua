@@ -331,7 +331,6 @@ addHook("MobjThinker", function(mobj)
 			end
 			mobj.pfstunmomentum = false
 		end
-		print("stun")
 		return
 	end
 	
@@ -341,7 +340,6 @@ addHook("MobjThinker", function(mobj)
 	if mobj.pizza_target and mobj.pizza_target.valid and mobj.pizza_target.health and mobj.pizza_target.player and mobj.pizza_target.player.valid and
 	not mobj.pizza_target.player.ptsr_outofgame and not mobj.pizza_target.player.quittime and not mobj.pizza_target.player.spectator 
 	and not mobj.pizza_target.player.pizzaface then
-		print("move")
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0

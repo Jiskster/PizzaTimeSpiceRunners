@@ -120,8 +120,7 @@ end
 
 PTSR.gm_casual = PTSR.RegisterGamemode("Casual", {
 	parry_friendlyfire = false,
-	dustdevil = true,
-	dustdeviltimer = 90*TICRATE,
+	dustdevil = false,
 	allowrevive = true,
 })
 

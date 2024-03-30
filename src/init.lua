@@ -126,7 +126,6 @@ customhud.SetupFont("SCRPT", -2, 4)
 
 dofile "main_game.lua"
 
-dofile "Functions/reset_playervars.lua"
 dofile "Functions/return_ptmusic.lua"
 dofile "Functions/get_ringcount.lua"
 dofile "Init/initmap.lua"
@@ -138,6 +137,7 @@ dofile "Hooks/PlayerDeath.lua"
 dofile "Hooks/PlayerTweaks.lua"
 dofile "Hooks/LineTriggerSystem.lua"
 
+dofile "PlayerScripts/player_resetplayervars.lua"
 dofile "PlayerScripts/player_parry.lua"
 dofile "PlayerScripts/player_killwhilerunning.lua"
 dofile "PlayerScripts/player_ringdrophandle.lua"

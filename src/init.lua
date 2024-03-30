@@ -114,10 +114,10 @@ states[S_GOOCH_PF] = {
 }
 
 --this is UGLY.
-dofile "HUD Animation/Init.lua"
-dofile "HUD Animation/UpdatePerFrame.lua"
+dofile "SaxAnimation/Init.lua"
+dofile "SaxAnimation/UpdatePerFrame.lua"
 
-dofile "customhudlib.lua"
+dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"
 

@@ -176,6 +176,7 @@ dofile "name_tags.lua"
 dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/deathring.lua"
 dofile "Gimmicks/alivedustdevil.lua"
+dofile "Gimmicks/powerbubble.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"

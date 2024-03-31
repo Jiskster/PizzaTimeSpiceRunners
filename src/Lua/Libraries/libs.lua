@@ -138,3 +138,16 @@ rawset(_G, "prtable", function(text, t, prefix, cycles)
 
     print(prefix.."}")
 end)
+
+rawset(_G, "L_ThrustXYZ", function(mo,xyangle,zangle,speed,relative)
+	local xythrust = P_ReturnThrustX(nil,zangle,speed)
+	local zthrust = P_ReturnThrustY(nil,zangle,speed)
+	if relative then
+		P_Thrust(mo,xyangle,xythrust)		
+		mo.momz = $+zthrust	
+	else
+		P_InstaThrust(mo,xyangle,xythrust)		
+		mo.momz = zthrust	
+	end
+	return xythrust/FRACUNIT, zthrust/FRACUNIT
+end)

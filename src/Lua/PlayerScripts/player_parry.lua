@@ -66,8 +66,6 @@ addHook("PlayerThink", function(player)
 							PTSR.DoParryAnim(player.mo, true)
 							PTSR.DoParryAnim(foundmobj)
 
-							L_SpeedCap(player.mo, 30*FRACUNIT)
-
 							player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
 
 							gotapf = true

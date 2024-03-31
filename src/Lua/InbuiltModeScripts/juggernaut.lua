@@ -180,6 +180,8 @@ end)
 */
 
 addHook("MobjThinker", function(mobj)
+	PTSR.addw2sobject(mobj)
+
 	if mobj.crowntimeout then
 		mobj.crowntimeout = $ - 1
 	end

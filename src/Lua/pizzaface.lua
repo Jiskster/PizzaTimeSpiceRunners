@@ -311,6 +311,8 @@ addHook("MobjThinker", function(mobj)
 	local laughsound = mobj.laughsound or sfx_pizzah
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
+	PTSR.addw2sobject(mobj)
+
 	if not PTSR.pizzatime then return end
 
 	if mobj.pfstuntime then

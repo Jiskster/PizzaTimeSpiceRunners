@@ -23,6 +23,8 @@ addHook("ThinkFrame", function()
 		for i,deathring in ipairs(PTSR.deathrings) do
 			if not deathring or not deathring.valid then
 				table.remove(PTSR.deathrings, i)
+			else
+				PTSR.addw2sobject(deathring)
 			end
 		end
 	end

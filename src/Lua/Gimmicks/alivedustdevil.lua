@@ -50,6 +50,8 @@ end, MT_ALIVEDUSTDEVIL)
 addHook("MobjThinker", function(mobj)
 	A_DustDevilThink(mobj)
 	
+	PTSR.addw2sobject(mobj)
+	
 	if (leveltime % 15) == 0 
 		P_SupermanLook4Players(mobj)
 	end

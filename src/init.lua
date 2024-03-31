@@ -153,6 +153,8 @@ dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
 dofile "pizzaface.lua"
 
+dofile "HUD/name_tags.lua"
+
 dofile "HUD/main_hud.lua"
 dofile "HUD/hud_bar.lua"
 dofile "HUD/hud_itspizzatime.lua"
@@ -171,7 +173,7 @@ dofile "HUD/hud_score.lua"
 dofile "HUD/hud_time.lua"
 
 dofile "discord_botleaderboard.lua"
-dofile "name_tags.lua"
+
 
 dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/deathring.lua"
@@ -185,3 +187,6 @@ dofile "Hooks/intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"
 dofile "Exit Signs/exitsign_thinkers.lua"
+
+
+

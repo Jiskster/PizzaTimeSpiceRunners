@@ -3,8 +3,22 @@
 
 --Nearly every division operation is replaced with bit shifting where it is possible
 
-local sorted_mobjs = {}
+PTSR.w2s_mobjs = {}
 
+function PTSR.addw2sobject(mobj)
+	local exists = false
+	
+	for i,v in ipairs(PTSR.w2s_mobjs) do
+		if v == mobj then
+			exists = true
+			break
+		end
+	end
+	
+	if not exists then
+		table.insert(PTSR.w2s_mobjs, mobj)
+	end
+end
 
 local string_linebreak = function(view, message, flags)
 	--print("string_linebreak( "..message..", "..flags..")")
@@ -82,7 +96,7 @@ hud.add( function(v, player, camera)
 	--the "distance" the HUD plane is projected from the player
 	local hud_distance = FixedDiv(hudwidth>>1, tan(fov>>1))
 
-	for _, tmo in pairs(sorted_mobjs) do
+	for _, tmo in pairs(PTSR.w2s_mobjs) do
 		if not tmo or not tmo.valid then continue end
 		
 		if tmo.player and player == tmo.player then continue end
@@ -286,46 +300,9 @@ hud.add(function(v, player, camera)
 	consoleplayer_camera = camera
 end, "game")
 
-addHook("PostThinkFrame", function()
-	sorted_mobjs = {}
-	local range = 1024*FRACUNIT*16
-	local dplay
-	if (displayplayer and displayplayer.valid and 
-	displayplayer.mo and displayplayer.mo.valid) then
-		dplay = displayplayer
-	end
-	
-	local function drawThink()
-		searchBlockmap("objects", function(refmobj,foundmobj)
-			if dplay and foundmobj.health then
-				
-				if foundmobj.player then
-					--print(foundmobj.player.name)
-				end
-				
-				local cam = dplay.realmo
-				if consoleplayer_camera and consoleplayer_camera.chase
-					cam = consoleplayer_camera
-				end
-				local thok = P_SpawnMobj(cam.x, cam.y, cam.z, MT_NULL)
-				--local sight = P_CheckSight(thok, foundmobj)
-				P_RemoveMobj(thok)
-				/*
-				if not sight -- if not sight
-					return
-				end
-				*/
-				
-				table.insert(sorted_mobjs, foundmobj)
-			end
-		end,dplay.mo,dplay.mo.x-range,dplay.mo.x+range,dplay.mo.y-range,dplay.mo.y+range)
-		
-		table.sort(sorted_mobjs, function(a, b)
-			return R_PointToDist(a.mo.x, a.mo.y) > R_PointToDist(b.mo.x, b.mo.y)
-		end)
-	end
-	
-	pcall(drawThink)
+-- clear every frame
+addHook("PreThinkFrame", function()
+	PTSR.w2s_mobjs = {}
 end)
 
 addHook("MapLoad", function()

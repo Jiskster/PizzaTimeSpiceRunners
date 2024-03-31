@@ -1,11 +1,11 @@
-freeslot("MT_PT_BUBBLE", "S_PT_BUBBLE", "SPR_PBBL")
+freeslot("MT_PT_BUBBLE", "S_PT_BUBBLE", "SPR_PBBL", "sfx_bblpop")
 
 mobjinfo[MT_PT_BUBBLE] = {
 	doomednum = -1,
 	spawnstate = S_PT_BUBBLE,
 	spawnhealth = 1000,
 	deathstate = S_SPRK1,
-	deathsound = sfx_hidden,
+	deathsound = sfx_bblpop,
 	radius = 16*FU,
 	height = 24*FU,
 	flags = MF_SLIDEME|MF_SPECIAL|MF_NOGRAVITY|MF_NOCLIPHEIGHT

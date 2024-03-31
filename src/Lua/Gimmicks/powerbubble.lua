@@ -63,8 +63,11 @@ states[S_PT_BUBBLE3] = {
     nextstate = S_PT_BUBBLE3,
 }
 
+PTSR.BubblePowers = {
+
+}
+
 function A_PT_BubbleFloatAnim(actor)
-	local maxangle = 0xFFFFFFFE
 	local angles = 16
 	local thrust_factor = 30*FRACUNIT
 	
@@ -96,6 +99,7 @@ addHook("MapThingSpawn", function(mobj)
 	
 	if mobj.info.doomednum >= monitor_range[1] and mobj.info.doomednum <= monitor_range[2] then
 		local bubble = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_BUBBLE)
+		bubble.bubblepower = 1
 		bubble.displaypower = P_SpawnMobj(bubble.x, bubble.y, bubble.z+24*FU, MT_PT_BUBBLEPOWER)
 		bubble.displaypower.sprite = SPR_TVRI
 		bubble.displaypower.frame = C

@@ -75,6 +75,7 @@ function A_PT_BubbleFloatAnim(actor)
 			local div2 = FixedAngle((360*FRACUNIT)/angles)*ii
 			
 			local b_mo = P_SpawnMobj(actor.x , actor.y, actor.z, MT_PT_BUBBLEEFFECT)
+			b_mo.divrem3 = P_RandomRange(FU/3, FU/6)
 			b_mo.color = SKINCOLOR_AZURE
 			
 			L_ThrustXYZ(b_mo, div, div2, thrust_factor)
@@ -112,10 +113,10 @@ addHook("MobjSpawn", function(mobj)
 end, MT_PT_BUBBLEEFFECT)
 
 addHook("MobjThinker", function(mobj)
-	if mobj and mobj.valid then
-		mobj.momx = FixedMul($, FU - FU/4)
-		mobj.momy = FixedMul($, FU - FU/4)
-		mobj.momz = FixedMul($, FU - FU/4)
+	if mobj and mobj.valid and mobj.divrem3 then
+		mobj.momx = FixedMul($, FU - mobj.divrem3)
+		mobj.momy = FixedMul($, FU - mobj.divrem3)
+		mobj.momz = FixedMul($, FU - mobj.divrem3)
 		
 		mobj.frame = $ | ((10-mobj.fuse)<<FF_TRANSSHIFT)
 	end

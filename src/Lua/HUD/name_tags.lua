@@ -190,7 +190,7 @@ hud.add( function(v, player, camera)
 		elseif tmo.type == MT_PT_DEATHRING then
 			name = "DEATH RING"
 			text_size = FRACUNIT/6
-			namecolor = SKINCOLOR_GREEN
+			namecolor = SKINCOLOR_SHAMROCK
 		elseif tmo.type == MT_ALIVEDUSTDEVIL then
 			name = "TORNADO"
 			text_size = FRACUNIT/4

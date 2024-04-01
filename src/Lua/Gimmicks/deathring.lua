@@ -14,7 +14,7 @@ mobjinfo[MT_PT_DEATHRING] = {
 addHook("MobjSpawn", function(mobj)
 	mobj.scale = $*2
 	mobj.colorized = true
-	mobj.color = SKINCOLOR_GREEN
+	mobj.color = SKINCOLOR_CHARTREUSE
 	table.insert(PTSR.deathrings, mobj)
 end, MT_PT_DEATHRING)
 
@@ -34,11 +34,11 @@ addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	
+	if tplayer.pizzaface then return true end
+	
 	if special and special.valid 
 	and toucher and toucher.valid 
 	and tplayer and tplayer.valid and not tplayer.pizzaface then
-		if tplayer.pizzaface then return true end
-	
 		if special.deathring_used then return true end
 		
 		if gm_metadata.allowrevive then 

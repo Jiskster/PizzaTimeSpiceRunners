@@ -521,6 +521,7 @@ addHook("PlayerThink", function(player)
 						player.facechangecooldown = TICRATE/3
 						local changeTo = (player.PTSR_pizzastyle + change + #PTSR.PFMaskData - 1) % #PTSR.PFMaskData + 1
 						player.PTSR_pizzastyle = changeTo
+						
 						/* TODO: Make these save with an i/o system
 						if consoleplayer == player then
 							CV_StealthSet(CV_PTSR.pizzastyle, changeTo)

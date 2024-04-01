@@ -37,6 +37,8 @@ addHook("TouchSpecial", function(special, toucher)
 	if special and special.valid 
 	and toucher and toucher.valid 
 	and tplayer and tplayer.valid and not tplayer.pizzaface then
+		if tplayer.pizzaface then return true end
+	
 		if special.deathring_used then return true end
 		
 		if gm_metadata.allowrevive then 

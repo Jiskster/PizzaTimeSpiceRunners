@@ -23,6 +23,7 @@ end
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
 	if (player.playerstate == PST_DEAD) or (player.ptsr_outofgame) then return end 
+	if (player.pizzaface) then return end
 	if PTSR.gameover then return end
 
 	local cmd = player.cmd
@@ -48,11 +49,20 @@ addHook("PlayerThink", function(player)
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
-						or (foundmobj.type == MT_PLAYER and friendlyfire and PTSR.pizzatime) then
+						or (foundmobj.type == MT_PLAYER) then
 							if foundmobj.type == MT_PLAYER then
-								if foundmobj.player and foundmobj.player.valid 
-								and foundmobj.player.powers[pw_invulnerability] then
-									return
+								if foundmobj.player and foundmobj.player.valid and not foundmobj.player.pizzaface then				
+									if PTSR.pizzatime then
+										return
+									end
+									
+									if not friendlyfire then
+										return
+									end
+								
+									if foundmobj.player.powers[pw_invulnerability] then
+										return
+									end
 								end
 							end
 							

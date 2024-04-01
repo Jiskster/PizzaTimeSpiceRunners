@@ -152,6 +152,13 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	instant_overtime = true,
 })
 
+PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
+	parry_friendlyfire = false,
+	dustdevil = false,
+	allowrevive = true,
+	player_pizzaface = true,
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]
@@ -251,7 +258,7 @@ rawset(_G, "PTSR_COUNT", do
 	return {
 		inactive = inactiveCount, -- includes pizza faces
 		active = activeCount,
-		pizzas = pizzacount
+		pizzas = pizzaCount
 	}
 end)
 

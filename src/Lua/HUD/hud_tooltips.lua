@@ -33,13 +33,13 @@ local tooltips_hud = function(v, player)
 		
 		if player.pizzaface then
 			if player.pizzachargecooldown then
-				v.drawString(165*FU, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
+				v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
 			elseif player.pizzacharge then
 				local percentage = (FixedDiv(player.pizzacharge*FRACUNIT, 35*FRACUNIT)*100)/FRACUNIT
 				
-				v.drawString(165*FU, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM, "thin-center")
+				v.drawString(165, 157, "\x85\* CHARGING \$percentage\% *", V_SNAPTOBOTTOM, "thin-center")
 			else
-				v.drawString(165*FU, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM, "thin-center")
+				v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM, "thin-center")
 			end
 		end
 		

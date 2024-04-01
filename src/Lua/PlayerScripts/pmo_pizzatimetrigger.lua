@@ -1,11 +1,17 @@
 PTSR.PizzaTimeTrigger = function(mobj)
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 
+	local aimode = true
+
+	if gm_metadata.player_pizzaface then
+		aimode = false
+	end
+
 	if not (PTSR.pizzatime and PTSR.spawn_location_atdefault) then
 		if DiscordBot then
 			local discord_pizzatime_text = "This text isn't supposed to show. Uh oh!"
 			
-			if not CV_PTSR.aimode.value then
+			if aimode then
 				discord_pizzatime_text = ":pizza: Pizza Time has started!\n"
 			else
 				discord_pizzatime_text = ":pizza: Pizza Time has started! Pizzas:\n"
@@ -18,19 +24,11 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
 		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
 		PTAnimFunctions.NewAnimation('redjohn', 'REDJOHN', 1, 22, true)
-		
-		if not CV_PTSR.aimode.value then
-			print("Changed Gamemode to: ".. PTSR.gamemode_list[PTSR.gamemode])
-		end
-
-		if DiscordBot and not CV_PTSR.aimode.value then
-			DiscordBot.Data.msgsrb2 = $ .. ":pizza: **" .. PTSR.gamemode_list[PTSR.gamemode] .. "** is the new gamemode!\n"
-		end
 
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
-		if CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
+		if aimode and not CV_PTSR.nopizza.value then
 			PTSR:SpawnPFAI()
 		end
 		
@@ -68,7 +66,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR_DoHook("onpizzatime")
 		
 		-- player pf only stuff
-		if not CV_PTSR.aimode.value and not CV_PTSR.nopizza.value then
+		if not aimode and not CV_PTSR.nopizza.value then
 			local count = PTSR_COUNT()
 
 			if count.active > 1 then
@@ -96,8 +94,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 								player.spectator = true
 								continue
 							end
-							table.insert(active_playernums, #player)
 							
+							table.insert(active_playernums, #player)
 						end
 						-- loop for every pizza needed
 						for i=1,playerschoosing do

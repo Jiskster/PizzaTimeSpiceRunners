@@ -135,19 +135,11 @@ PTSR.PizzaTimeTrigger = function(mobj)
 				player.mo.momy = 0
 				player.mo.momz = 0
 			end
-		end   
+		end
 		
 		if PTSR.john and PTSR.john.valid then
 			local john = PTSR.john
-			john.state = S_PILLARJOHN_PAIN
-			john.flags = $ | MF_NOCLIP | MF_NOCLIPHEIGHT
-			john.momx = -cos(john.angle)*8
-			john.momy = -sin(john.angle)*8
-			john.momz = P_MobjFlip(john)*8*FU
-			S_StartSound(nil, sfx_jpilr)
-			if consoleplayer and consoleplayer.valid then
-				P_FlashPal(consoleplayer, 1, 2)
-			end
+			PTSR.KnockJohnPillar(john)
 		end
 		
 		if not PTSR.timeover then

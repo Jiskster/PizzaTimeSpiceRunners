@@ -12,34 +12,6 @@ sfxinfo[sfx_coneba].caption = "Coneball laughs"
 sfxinfo[sfx_pepdie].caption = "Death"
 sfxinfo[sfx_lap2].caption = "New lap!"
 
-freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ", "sfx_jpilr")
-
-mobjinfo[MT_PILLARJOHN] = {
-	doomednum = -1,
-	spawnstate = S_PILLARJOHN,
-	spawnhealth = 1000,
-	deathstate = S_NULL,
-	radius = 16*FU,
-	height = 48*FU,
-	flags = MF_SCENERY
-}
-
-states[S_PILLARJOHN] = {
-    sprite = SPR_PILJ,
-    frame = FF_ANIMATE|A,
-    tics = -1,
-    var1 = 11,
-    var2 = 3,
-    nextstate = S_PILLARJOHN
-}
-
-states[S_PILLARJOHN_PAIN] = {
-    sprite = SPR_PILJ,
-    frame = 12,
-    tics = -1,
-    nextstate = S_PILLARJOHN_PAIN
-}
-
 rawset(_G, "FUNC_PTSR", {}) -- functions
 
 freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah", "S_GOOCH_PF", "SPR_PZAD")
@@ -179,6 +151,7 @@ dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/deathring.lua"
 dofile "Gimmicks/alivedustdevil.lua"
 dofile "Gimmicks/powerbubble.lua"
+dofile "Gimmicks/johnpillar.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"

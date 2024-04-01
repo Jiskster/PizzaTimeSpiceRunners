@@ -21,13 +21,15 @@ addHook("MobjLineCollide", function(mobj, line)
 		local SSF_REALEXIT = 1<<7 -- the ssf_exit is wrong lmao
 		--local SSF_REALEXIT = SSF_EXIT | SSF_SPECIALSTAGEPIT | SSF_RETURNFLAG -- this is wrong for testing
 		
+		/* TODO: V2 (Remove this whole comment chunk)
 		if (line.frontsector and GetSecSpecial(line.frontsector.special, 4) == 2) 
         or (line.backsector and GetSecSpecial(line.backsector.special, 4) == 2)
         or (line.frontsector and (line.frontsector.specialflags & SSF_REALEXIT)) 
         or (line.backsector and (line.backsector.specialflags & SSF_REALEXIT)) then 
 			PTSR.PizzaTimeTrigger(mobj)
 		end
-
+		*/
+		
 		-- Sign at start check.
 		if ((line.backsector and line.backsector == PTSR.endsector)
 		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.ptsr_outofgame and not player.spectator

@@ -144,6 +144,14 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	--disableovertimeshoes = true,
 })
 
+PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
+	dustdevil = true,
+	dustdeviltimer = 30*TICRATE,
+	allowrevive = true,
+	overtime_music = "OTHARD",
+	instant_overtime = true,
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]

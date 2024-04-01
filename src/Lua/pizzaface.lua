@@ -275,20 +275,24 @@ addHook("PlayerCmd", function (player, cmd)
 	end
 end)
 
+local function PF_PlayerIsChasable(player)
+	return (not player.ptsr_outofgame and not player.spectator and not player.quittime and not player.pizzaface
+			and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD
+			and player.mo.health)
+end
+
 local function PF_FindNewPlayer(mobj)
 	local activeplayers = {}
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.mo.health and not player.ptsr_outofgame
-		and not player.spectator and not player.quittime and not player.pizzaface
-		and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD then
+		if player.mo and player.mo.valid and PF_PlayerIsChasable(player) then
 			table.insert(activeplayers, player)
 		end
 	end
 	
 	for i,player in ipairs(activeplayers) do
 		if player.mo and player.mo.valid then
-			if not (mobj.pizza_target and mobj.pizza_target.valid) or not (mobj.pizza_target.health) then
+			if not (mobj.pizza_target and mobj.pizza_target.valid) or not PF_PlayerIsChasable(mobj.pizza_target.player)then
 				mobj.pizza_target = player.mo
 			else
 				if (mobj.pizza_target and mobj.pizza_target.valid) then

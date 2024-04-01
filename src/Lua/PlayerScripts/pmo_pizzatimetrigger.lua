@@ -130,10 +130,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			
 			if not player.pizzaface then
 				player.powers[pw_invulnerability] = CV_PTSR.tpinv.value*TICRATE+20
-				player.powers[pw_nocontrol] = 20
-				player.mo.momx = 0
-				player.mo.momy = 0
-				player.mo.momz = 0
+				--player.powers[pw_nocontrol] = 20
+				L_SpeedCap(player.mo, 0)
+				local thrust = FixedHypot(player.mo.momx, player.mo.momy)*2
+				P_InstaThrust(player.mo, player.mo.angle, thrust)
 			end
 		end
 		

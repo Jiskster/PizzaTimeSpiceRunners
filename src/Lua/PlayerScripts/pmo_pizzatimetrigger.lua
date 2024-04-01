@@ -72,7 +72,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			if count.active > 1 then
 				if CV_PTSR.pizzachoosetype.value == 1 then
 					mobj.player.pizzaface = true
-					mobj.player.stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
+					mobj.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
 					chatprint("\x85*"..mobj.player.name.." has become a pizza!") 
 					if DiscordBot then
 						DiscordBot.Data.msgsrb2 = $ .. "- [" .. #mobj.player .. "] **" .. mobj.player.name .. "**\n"
@@ -102,11 +102,13 @@ PTSR.PizzaTimeTrigger = function(mobj)
 							local chosen_playernum = P_RandomRange(1,#active_playernums) -- random entry in table
 							local chosen_player = active_playernums[chosen_playernum] -- get the chosen value in table
 							players[chosen_player].pizzaface = true
-							players[chosen_player].stuntime = TICRATE*CV_PTSR.pizzatimestun.value+20
+							players[chosen_player].realmo.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
+							
 							chatprint("\x85*"..players[chosen_player].name.." has become a pizza!") 
 							if DiscordBot then
 								DiscordBot.Data.msgsrb2 = $ .. "- [" .. chosen_player .. "] **" .. players[chosen_player].name .. "**\n"
 							end
+							
 							table.remove(active_playernums, chosen_playernum) -- so we dont repeat the pizza given
 						end
 					end

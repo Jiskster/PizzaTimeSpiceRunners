@@ -63,6 +63,9 @@ addHook("PlayerThink", function(player)
 									if foundmobj.player.powers[pw_invulnerability] then
 										return
 									end
+								elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE and 
+								foundmobj.player and foundmobj.player.valid and foundmobj.player.pizzaface then -- cant parry pf while pt game starting
+									return
 								end
 							end
 							

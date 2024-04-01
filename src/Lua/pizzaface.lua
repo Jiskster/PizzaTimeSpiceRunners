@@ -114,7 +114,7 @@ function PTSR:PizzaCanTag(peppino, pizza)
 	if peppino.pizza_out or peppino.pizza_in then return false end -- in pizza portal? then dont kill
 
 	if pizza.player and pizza.player.valid and pizza.player.pizzaface then
-		if pizza.player.stuntime then return false end
+		if pizza.pfstuntime then return false end
 		if not L_ZCollide(peppino,pizza) then return false end
 		return true
 	elseif pizza.type == MT_PIZZA_ENEMY then
@@ -148,10 +148,10 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 			player.pizzacharge = 0
 			if not PTSR.timeover then
 				player.pizzachargecooldown = CV_PTSR.pizzatpcooldown.value
-				player.stuntime = CV_PTSR.pizzatpstuntime.value
+				pizza.pfstuntime = CV_PTSR.pizzatpstuntime.value
 			else
 				player.pizzachargecooldown = (CV_PTSR.pizzatpcooldown.value)/3
-				player.stuntime = (CV_PTSR.pizzatpstuntime.value)/3
+				pizza.pfstuntime = (CV_PTSR.pizzatpstuntime.value)/3
 			end
 
 			P_SetOrigin(player.mo, pizza.next_pfteleport.x, pizza.next_pfteleport.y, pizza.next_pfteleport.z)
@@ -268,7 +268,7 @@ end, MT_PLAYER)
 
 
 addHook("PlayerCmd", function (player, cmd)
-	if player.pizzaface and player.stuntime then
+	if player.pizzaface and player.realmo.pfstuntime then
 		cmd.buttons = 0
 		cmd.forwardmove = 0
 		-- dont do sidemove cuz face swapping
@@ -462,14 +462,13 @@ addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
 	mobj.spriteyscale = $ / 2
 
-	mobj.pfstuntime = CV_PTSR.aistuntime.value
+	mobj.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
 end, MT_PIZZA_ENEMY)
 
---Pizza Face Thinker
-
+--Player Pizza Face Thinker
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
-	player.stuntime = $ or 0
+	player.realmo.pfstuntime = $ or 0
 	if gametype ~= GT_PTSPICER then return end
 	if player.realmo and player.realmo.valid and player.pizzaface and leveltime then
 		if player.redgreen == nil then
@@ -481,16 +480,18 @@ addHook("PlayerThink", function(player)
 		player.realmo.scale = 2*FU
 		player.spectator = false -- dont give up! dont spectate as pizzaface! (theres another check when spawning so idk
 
-		if player.stuntime then -- player freeze decrement (mainly for pizza faces)
-			player.stuntime = $ - 1
+		if player.realmo.pfstuntime then -- player freeze decrement (mainly for pizza faces)
+			player.realmo.pfstuntime = $ - 1
 			-- # No Momentum # --
-			player.mo.momx = 0
-			player.mo.momy = 0
-			player.mo.momz = 0
-			L_SpeedCap(player.mo, 0)
+			if not player.realmo.pfstunmomentum then
+				player.mo.momx = 0
+				player.mo.momy = 0
+				player.mo.momz = 0
+				L_SpeedCap(player.mo, 0)
+			end
 			-- # No Momentum # --
 			--player.pflags = $|PF_FULLSTASIS
-			if not player.stuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
+			if not player.realmo.pfstuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
 				if CV_PTSR.pizzalaugh.value and not player.pizzachargecooldown
 					S_StartSound(player.mo, PTSR.PFMaskData[player.PTSR_pizzastyle].sound)
 				end
@@ -502,7 +503,9 @@ addHook("PlayerThink", function(player)
 						anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
 					end
 				end
-			elseif PTSR.pizzatime_tics < TICRATE*CV_PTSR.pizzatimestun.value+20 then
+				
+				player.realmo.pfstunmomentum = false
+			elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
 				player.mo.momz = P_MobjFlip(player.mo)*-FU
 				if player.facechangecooldown then
 					player.facechangecooldown = $ - 1
@@ -518,9 +521,11 @@ addHook("PlayerThink", function(player)
 						player.facechangecooldown = TICRATE/3
 						local changeTo = (player.PTSR_pizzastyle + change + #PTSR.PFMaskData - 1) % #PTSR.PFMaskData + 1
 						player.PTSR_pizzastyle = changeTo
+						/* TODO: Make these save with an i/o system
 						if consoleplayer == player then
 							CV_StealthSet(CV_PTSR.pizzastyle, changeTo)
 						end
+						*/
 					end
 				end
 			end
@@ -562,7 +567,7 @@ addHook("PlayerThink", function(player)
 			player.pizzacharge = 0
 		end
 		if not player.ptsr_outofgame and (player.cmd.buttons & BT_ATTACK)
-		and not PTSR.quitting and not player.stuntime and not player.pizzachargecooldown then -- basically check if you're active in general
+		and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
 			else
@@ -576,7 +581,7 @@ addHook("PlayerThink", function(player)
 			player.pizzachargecooldown = $ - 1
 		end
 
-		if PTSR.timeover and not player.stuntime then
+		if PTSR.timeover and not player.realmo.pfstuntime then
 			local pmo = player.mo
 			local findrange = 2500*FRACUNIT
 			local zrange = 400*FU

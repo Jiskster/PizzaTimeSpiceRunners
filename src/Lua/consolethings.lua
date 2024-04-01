@@ -153,11 +153,11 @@ CV_PTSR.default_maxlaps = CV_RegisterVar({
 	PossibleValue = CV_Unsigned, 
 })
 
-CV_PTSR.pizzatimestun = CV_RegisterVar({
+CV_PTSR.pizzatimestun = CV_RegisterVar({ -- in seconds
 	name = "PTSR_pizzatimestun",
 	defaultvalue = "10",
 	flags = CV_NETVAR,
-	PossibleValue = CV_Unsigned, 
+	PossibleValue = {MIN = 0, MAX = 60}, 
 })
 
 CV_PTSR.fakelapstun = CV_RegisterVar({
@@ -262,13 +262,6 @@ CV_PTSR.screams = CV_RegisterVar({
 	defaultvalue = "off",
 	flags = CV_SAVE,
 	PossibleValue = CV_OnOff, 
-})
-
-CV_PTSR.aistuntime = CV_RegisterVar({
-	name = "PTSR_aistuntime",
-	defaultvalue = "350",
-	flags = CV_NETVAR,
-	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
 CV_PTSR.aitpstuntime = CV_RegisterVar({
@@ -376,6 +369,7 @@ CV_PTSR.dustdeviltimerend = CV_RegisterVar({
 	PossibleValue = CV_Unsigned, 
 })
 
+/* TODO: Make these save with an i/o system
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",
 	defaultvalue = "pizzaface",
@@ -395,6 +389,7 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 		end
 	end 
 })
+*/
 
 CV_PTSR.overtime_music = CV_RegisterVar({
 	name = "PTSR_overtime_music",
@@ -428,6 +423,7 @@ COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)
 	player.PTSR_pizzastyle = tonumber(set)
 end)
 
+/*
 addHook("ThinkFrame", function ()
 	if not consoleplayer then return end
 	
@@ -435,6 +431,7 @@ addHook("ThinkFrame", function ()
 		COM_BufInsertText(consoleplayer, "_PTSR_pizzastyle_sync " .. luaOnly .. " " .. CV_PTSR.pizzastyle.value)
 	end
 end)
+*/
 
 
 CV_PTSR.oldmusic = CV_RegisterVar({

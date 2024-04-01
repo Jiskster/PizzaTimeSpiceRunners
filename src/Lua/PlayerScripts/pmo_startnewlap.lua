@@ -27,8 +27,10 @@ PTSR.StartNewLap = function(mobj)
 			player.mo.elfilin_portal.fuse = 1
 		end
 
-		if not PTSR.timeover then
-			S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+		if not CV_PTSR.nomusic.value then -- if music on
+			if not PTSR.timeover then
+				S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+			end
 		end
 	else -- FAKE LAP -- 
 		mobj.player.stuntime = TICRATE*CV_PTSR.fakelapstun.value

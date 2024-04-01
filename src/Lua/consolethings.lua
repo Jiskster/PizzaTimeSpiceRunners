@@ -405,9 +405,9 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 
 CV_PTSR.overtime_music = CV_RegisterVar({
 	name = "PTSR_overtime_music",
-	defaultvalue = "1",
+	defaultvalue = "on",
 	flags = 0,
-	PossibleValue = {old = 1, new = 2}, 
+	PossibleValue = CV_OnOff, 
 })
 
 CV_PTSR.levelsinvote = CV_RegisterVar({

@@ -267,8 +267,9 @@ addHook("ThinkFrame", do
 
 		if CV_PTSR.timelimit.value then
 			if PTSR.timeleft and (count.inactive ~= count.active) then
+				local otmus = CV_PTSR.overtime_music.value 
 				PTSR.timeleft = $ - 1
-				if PTSR.timeleft == 3*TICRATE then
+				if otmus and PTSR.timeleft == 3*TICRATE then
 					S_FadeMusic(0, 3000)
 				end
 				if PTSR.timeleft <= 0 then

@@ -299,7 +299,7 @@ local function PF_FindNewPlayer(mobj)
 					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
 					
-					if dist_newplayertopizza < dist_nptopizza then
+					if dist_newplayertopizza < dist_nptopizza and PF_PlayerIsChasable(player) then
 						mobj.pizza_target = player.mo
 					end
 				end
@@ -344,8 +344,7 @@ addHook("MobjThinker", function(mobj)
 	PTSR_DoHook("pfthink", mobj)
 	
 	if mobj.pizza_target and mobj.pizza_target.valid and mobj.pizza_target.health and mobj.pizza_target.player and mobj.pizza_target.player.valid and
-	not mobj.pizza_target.player.ptsr_outofgame and not mobj.pizza_target.player.quittime and not mobj.pizza_target.player.spectator 
-	and not mobj.pizza_target.player.pizzaface then
+	PF_PlayerIsChasable(mobj.pizza_target.player) then
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0

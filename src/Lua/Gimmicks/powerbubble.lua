@@ -240,7 +240,8 @@ end, MT_PT_BUBBLE)
 addHook("MapThingSpawn", function(mobj)
 	local monitor_range = {400,452} -- range of thingnum
 	
-	if mobj.info.doomednum >= monitor_range[1] and mobj.info.doomednum <= monitor_range[2] then
+	if (mobj.info.doomednum >= monitor_range[1] and mobj.info.doomednum <= monitor_range[2]) 
+		or (mobj.flags & MF_MONITOR) then
 		local bubble = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_BUBBLE)
 		
 		P_RemoveMobj(mobj)

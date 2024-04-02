@@ -159,7 +159,7 @@ PTSR:AddBubblePower({
 		if toucher and toucher.valid and toucher.player and toucher.player.valid then
 			local player = toucher.player
 			
-			P_SwitchShield(player, SH_FORCE)
+			P_SwitchShield(player, SH_FORCE|1)
 			P_SpawnShieldOrb(player)
 			S_StartSound(toucher, sfx_forcsg)
 		end

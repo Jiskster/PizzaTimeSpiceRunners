@@ -23,15 +23,15 @@ local tooltips_hud = function(v, player)
 	end
 
 	if PTSR.pizzatime then
-		if player.realmo.pfstuntime then
-			v.drawString(160, 100, "You will be unfrozen in: "..player.realmo.pfstuntime/TICRATE.. " seconds.", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
-		end
-		
 		if (count.active == 1) then -- practice mode
 			v.drawString(165*FU, ese-(FU*8), practicemodetext , V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 		
 		if player.pizzaface then
+			if player.realmo.pfstuntime then
+				v.drawString(160, 100, "You will be unfrozen in: "..player.realmo.pfstuntime/TICRATE.. " seconds.", V_TRANSLUCENT|V_SNAPTOBOTTOM|V_PERPLAYER, "thin-center")
+			end
+		
 			if player.pizzachargecooldown then
 				v.drawString(165, 157, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
 			elseif player.pizzacharge then

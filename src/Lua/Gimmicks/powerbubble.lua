@@ -1,13 +1,21 @@
+PTSR.BubblePowers = {}
+
+function PTSR:AddBubblePower(input_table)
+	table.insert(self.BubblePowers, input_table)
+	
+	return #self.BubblePowers
+end
+
 freeslot("MT_PT_BUBBLE", "S_PT_BUBBLE", "SPR_PBBL", "sfx_bblpop")
 freeslot("MT_PT_BUBBLEEFFECT", "S_PT_BUBBLE2") -- effect
 freeslot("MT_PT_BUBBLEPOWER", "S_PT_BUBBLE3") -- display power
+
+freeslot("SPR_50BI", "sfx_bb_50r") -- 50 ring sprite
 
 mobjinfo[MT_PT_BUBBLE] = {
 	doomednum = -1,
 	spawnstate = S_PT_BUBBLE,
 	spawnhealth = 1000,
-	--deathstate = S_SPRK1,
-	deathsound = sfx_bblpop,
 	radius = 64*FU,
 	height = 32*FU,
 	dispoffset = 0,
@@ -63,11 +71,106 @@ states[S_PT_BUBBLE3] = {
     nextstate = S_PT_BUBBLE3,
 }
 
-PTSR.BubblePowers = {
+PTSR:AddBubblePower({
+	name = "10 Rings",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_GivePlayerRings(player, 10)
+			S_StartSound(toucher, sfx_itemup)
+		end
+	end,
+	sprite = SPR_TVRI,
+	frame = C,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_YELLOW
+})
 
-}
+PTSR:AddBubblePower({
+	name = "50 Rings",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_GivePlayerRings(player, 50)
+			S_StartSound(toucher, sfx_bb_50r)
+		end
+	end,
+	sprite = SPR_50BI,
+	frame = A,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_ORANGE
+})
 
-function A_PT_BubbleFloatAnim(actor)
+PTSR:AddBubblePower({
+	name = "1 Up",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_GivePlayerRings(player, 100)
+			S_StartSound(toucher, sfx_cdpcm4)
+		end
+	end,
+	sprite = SPR_TV1U,
+	frame = C,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_BLUE
+})
+
+PTSR:AddBubblePower({
+	name = "Pity Shield",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_SwitchShield(player, SH_PITY)
+			P_SpawnShieldOrb(player)
+			S_StartSound(toucher, sfx_shield)
+		end
+	end,
+	sprite = SPR_TVPI,
+	frame = C,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_MOSS
+})
+
+PTSR:AddBubblePower({
+	name = "Whirlwind Shield",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_SwitchShield(player, SH_WHIRLWIND)
+			P_SpawnShieldOrb(player)
+			S_StartSound(toucher, sfx_wirlsg)
+		end
+	end,
+	sprite = SPR_TVWW,
+	frame = C,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_WHITE
+})
+
+PTSR:AddBubblePower({
+	name = "Force Shield",
+	pickup_func = function(toucher)
+		if toucher and toucher.valid and toucher.player and toucher.player.valid then
+			local player = toucher.player
+			
+			P_SwitchShield(player, SH_FORCE)
+			P_SpawnShieldOrb(player)
+			S_StartSound(toucher, sfx_forcsg)
+		end
+	end,
+	sprite = SPR_TVFO,
+	frame = C,
+	disable_popsound = true,
+	pop_color = SKINCOLOR_GALAXY
+})
+
+function A_PT_BubbleFloatAnim(actor, var1) -- var1: color
 	local angles = 16
 	local thrust_factor = 30*FRACUNIT
 	
@@ -79,7 +182,7 @@ function A_PT_BubbleFloatAnim(actor)
 			
 			local b_mo = P_SpawnMobj(actor.x , actor.y, actor.z, MT_PT_BUBBLEEFFECT)
 			b_mo.divrem3 = P_RandomRange(FU/3, FU/6)
-			b_mo.color = SKINCOLOR_AZURE
+			b_mo.color = var1 or SKINCOLOR_GREEN
 			
 			L_ThrustXYZ(b_mo, div, div2, thrust_factor)
 		end
@@ -87,11 +190,51 @@ function A_PT_BubbleFloatAnim(actor)
 end
 
 addHook("TouchSpecial", function(special, toucher)
+	local popcolor = SKINCOLOR_AZURE
+	
 	if special.displaypower and special.displaypower.valid then
 		P_SpawnGhostMobj(special.displaypower)
 		P_RemoveMobj(special.displaypower)
 	end
-	A_PT_BubbleFloatAnim(special)
+	
+	if special.bubblepower and PTSR.BubblePowers[special.bubblepower] then
+		if PTSR.BubblePowers[special.bubblepower].pickup_func then
+			PTSR.BubblePowers[special.bubblepower].pickup_func(toucher)
+		end
+		
+		if not PTSR.BubblePowers[special.bubblepower].disable_popsound then
+			S_StartSound(toucher, sfx_bblpop)
+		end
+		
+		if PTSR.BubblePowers[special.bubblepower].pop_color then
+			popcolor = PTSR.BubblePowers[special.bubblepower].pop_color
+		end
+	end
+	
+	A_PT_BubbleFloatAnim(special, popcolor)
+end, MT_PT_BUBBLE)
+
+addHook("MobjSpawn", function(bubble)
+	bubble.bubblepower = P_RandomRange(1, #PTSR.BubblePowers)
+	bubble.displaypower = P_SpawnMobj(bubble.x, bubble.y, bubble.z+24*FU, MT_PT_BUBBLEPOWER)
+	
+	local powerdef = PTSR.BubblePowers[bubble.bubblepower] or PTSR.BubblePowers[1] or error("No bubbledefs exist.")
+	
+	if powerdef.offset_z then
+		P_SetOrigin(bubble.displaypower, bubble.x, bubble.y, bubble.z+powerdef.offset_z)
+	end
+	
+	if powerdef.sprite == nil then
+		bubble.displaypower.sprite = SPR_TVRI 
+	else
+		bubble.displaypower.sprite = powerdef.sprite
+	end
+	
+	if powerdef.frame == nil then
+		bubble.displaypower.frame = C
+	else
+		bubble.displaypower.frame = powerdef.frame
+	end
 end, MT_PT_BUBBLE)
 
 addHook("MapThingSpawn", function(mobj)
@@ -99,10 +242,6 @@ addHook("MapThingSpawn", function(mobj)
 	
 	if mobj.info.doomednum >= monitor_range[1] and mobj.info.doomednum <= monitor_range[2] then
 		local bubble = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_BUBBLE)
-		bubble.bubblepower = 1
-		bubble.displaypower = P_SpawnMobj(bubble.x, bubble.y, bubble.z+24*FU, MT_PT_BUBBLEPOWER)
-		bubble.displaypower.sprite = SPR_TVRI
-		bubble.displaypower.frame = C
 		
 		P_RemoveMobj(mobj)
 		return true

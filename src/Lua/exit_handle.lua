@@ -16,7 +16,6 @@ addHook("ThinkFrame", function()
 		if leveltime then -- just a safety check
 			if (player.lapsdid > PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
 				player.ptsr_outofgame = 1
-				print(2)
 			elseif (count.inactive - count.pizzas) == count.active then
 				if player.valid and not (player.ptsr_outofgame) then
 					player.ptsr_outofgame = 1

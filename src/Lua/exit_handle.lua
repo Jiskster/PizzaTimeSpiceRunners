@@ -28,6 +28,7 @@ addHook("ThinkFrame", function()
 	
 	for player in players.iterate() do
 		if player.ptsr_outofgame then
+			player.powers[pw_underwater] = 9999 -- dont drown on me buddy!
 			player.ptsr_outofgame = 1
 		end
 

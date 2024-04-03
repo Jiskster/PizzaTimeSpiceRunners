@@ -85,6 +85,19 @@ PTSR.PFMaskData = {
 	}
 }
 
+function PTSR:ForceShieldParry(toucher, special)
+	PTSR.DoParry(toucher, special)
+	
+	PTSR.DoParryAnim(toucher, true)
+	PTSR.DoParryAnim(special)
+	
+	if toucher.player.powers[pw_shield] & SH_FORCEHP then
+		toucher.player.powers[pw_shield] = SH_FORCE
+	else
+		toucher.player.powers[pw_shield] = SH_NONE
+		P_DoPlayerPain(toucher.player)
+	end
+end
 
 function PTSR:PizzaCollision(peppino, pizza)
 	if peppino.player.lastparryframe and (leveltime - peppino.player.lastparryframe) <= CV_PTSR.parry_safeframes.value then
@@ -236,6 +249,7 @@ function PTSR:SpawnPFAI(forcestyle)
 
 	return newpizaface
 end
+
 -- Player Touches AI
 addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
@@ -244,21 +258,10 @@ addHook("TouchSpecial", function(special, toucher)
 	if special.pfstuntime then return true end
 
 	local player = toucher.player
+	
 	if player and player.valid then
 		if player.powers[pw_shield] & SH_FORCE then
-		
-			PTSR.DoParry(toucher, special)
-			
-			PTSR.DoParryAnim(toucher, true)
-			PTSR.DoParryAnim(special)
-			
-			if player.powers[pw_shield] & SH_FORCEHP then
-				player.powers[pw_shield] = SH_FORCE
-			else
-				player.powers[pw_shield] = SH_NONE
-				P_DoPlayerPain(player)
-			end
-			
+			PTSR:ForceShieldParry(toucher, special)
 			return true
 		end
 	
@@ -279,8 +282,21 @@ end, MT_PIZZA_ENEMY)
 
 -- Player touches human pizzaface
 addHook("MobjCollide", function(peppino, pizza)
+	local player = peppino.player
+	local pizza_player = pizza.player
+	
+	if not (player and player.valid) then return end
+	if not (pizza_player and pizza_player.valid) then return end
+	if not (pizza_player.pizzaface) then return end
+
 	if not PTSR:PizzaCanTag(peppino, pizza) then return end
 
+	if player.powers[pw_shield] & SH_FORCE then
+		PTSR:ForceShieldParry(peppino, pizza)
+		
+		return
+	end
+	
 	PTSR:PizzaCollision(peppino, pizza)
 end, MT_PLAYER)
 
@@ -609,12 +625,14 @@ addHook("PlayerThink", function(player)
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
 						if foundmobj.player and foundmobj.player.valid and
-						not foundmobj.player.spectator and foundmobj.player.pizzaface then
+						(foundmobj.player.spectator or foundmobj.player.pizzaface or foundmobj.player.ptsr_outofgame) then
 							return
 						end
+						
 						if P_IsObjectOnGround(foundmobj) then
 							strength = $ * 4
 						end
+						
 						P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,strength,true)
 					end
 				end

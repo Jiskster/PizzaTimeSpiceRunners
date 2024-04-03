@@ -12,11 +12,23 @@ end
 
 PTSR.DoParry = function(parrier, victim)
 	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
-
+	
+	local haswhirlwind = false
+	
+	if parrier.player and parrier.player.valid then
+		haswhirlwind = (parrier.player.powers[pw_shield] & SH_WHIRLWIND)
+	end
+	
 	victim.pfstunmomentum = true
 	victim.pfstuntime = CV_PTSR.parrystuntime.value
-	P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value)
-	P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value)
+	
+	if not haswhirlwind then
+		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value)
+		P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value)
+	else
+		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value*2)
+		P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value*2)
+	end
 end
 
 -- Parry Stuff
@@ -46,6 +58,7 @@ addHook("PlayerThink", function(player)
 				local real_range = CV_PTSR.parry_radius.value
 				
 				searchBlockmap("objects", function(refmobj, foundmobj)
+				
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY

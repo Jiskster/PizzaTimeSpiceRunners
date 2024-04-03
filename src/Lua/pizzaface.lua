@@ -607,12 +607,14 @@ addHook("PlayerThink", function(player)
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
 						if foundmobj.player and foundmobj.player.valid and
-						not foundmobj.player.spectator and foundmobj.player.pizzaface then
+						(foundmobj.player.spectator or foundmobj.player.pizzaface or foundmobj.player.ptsr_outofgame) then
 							return
 						end
+						
 						if P_IsObjectOnGround(foundmobj) then
 							strength = $ * 4
 						end
+						
 						P_FlyTo(foundmobj,pmo.x,pmo.y,pmo.z,strength,true)
 					end
 				end

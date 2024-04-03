@@ -1,5 +1,5 @@
 local tooltips_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	local count = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"

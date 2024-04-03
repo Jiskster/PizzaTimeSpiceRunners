@@ -16,7 +16,15 @@ local function InitMap()
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
 
-	PTSR.vote_maplist = {} 
+	PTSR.vote_maplist = {}
+	
+	-- titlecards
+	if not multiplayer then
+		local current_titlecard = PTSR.titlecards[gamemap] or PTSR.titlecards[0]
+		PTSR.titlecard_time = current_titlecard.time
+	else
+		PTSR.titlecard_time = 0
+	end
 
 	for i=1, CV_PTSR.levelsinvote.value do
 		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
@@ -24,7 +32,7 @@ local function InitMap()
 end
 
 local function InitMap2()
-    if gametype ~= GT_PTSPICER then return end
+    if not PTSR.IsPTSR() then return end
 	PTSR.john = nil
     for map in mapthings.iterate do
         if map.type == 1 then
@@ -61,7 +69,14 @@ local function InitMap2()
 		-- INCREMENT OVER --
 		PTSR.ResetPlayerVars(player)
 	end
-	
+	-- as saxashitter i am removing thwt fucking signpost
+	if not multiplayer then
+		for mobj in mobjs.iterate() do
+			if mobj.type == MT_SIGN and mobj.valid then
+				P_RemoveMobj(mobj)
+			end
+		end
+	end
 	if mapheaderinfo[gamemap].ptsr_s_rank_points ~= nil 
 	and tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points) then -- custom maxrankpoints
 		PTSR.maxrankpoints = tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points)

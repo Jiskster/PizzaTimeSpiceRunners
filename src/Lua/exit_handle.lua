@@ -1,5 +1,23 @@
+addHook("PostThinkFrame", function()
+	if not (PTSR.IsPTSR() and not multiplayer) then return end
+	-- hi im saxashitter and your looking at the code that stops the player...
+	-- ...from exiting in singleplayer
+	
+	for p in players.iterate do
+		if not p then continue end
+		if not p.mo then removevars(p) continue end
+		if not p.mo.valid then removevars(p) continue end
+
+		if ((p.pflags & PF_FINISHED) or p.exiting)
+		and p.mo.subsector.sector.special == 8192 then
+			p.exiting = 0
+			p.pflags = $ & ~(PF_FINISHED | PF_FULLSTASIS)
+		end
+	end
+end)
+
 addHook("ThinkFrame", function()
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 	local count = PTSR_COUNT()
 	

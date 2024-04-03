@@ -3,7 +3,7 @@ local rank_hud = function(v, player)
 		x = 110*FRACUNIT,
 		y = 20*FRACUNIT
 	}
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	
 	if player.pizzaface then return end
 

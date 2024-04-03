@@ -45,6 +45,7 @@ rawset(_G, "PTSR", { -- variables
 	laps = 0,
 	quitting = false,
 	pizzatime_tics = 0,
+	titlecard_time = 0,
 	
 	maxlaps = 5,
 
@@ -282,29 +283,35 @@ addHook("ThinkFrame", do
 
 		if CV_PTSR.timelimit.value then
 			if PTSR.timeleft and (count.inactive ~= count.active) then
-				local otmus = CV_PTSR.overtime_music.value 
-				PTSR.timeleft = $ - 1
-				if otmus and PTSR.timeleft == 3*TICRATE then
-					S_FadeMusic(0, 3000)
+				PTSR.timeleft = max(0, $ - 1)
+				if multiplayer then
+					local otmus = CV_PTSR.overtime_music.value 
+					if otmus and PTSR.timeleft == 3*TICRATE then
+						S_FadeMusic(0, 3000)
+					end
 				end
 				if PTSR.timeleft <= 0 then
 					PTSR.timeleft = 0
-					PTSR.timeover = true
-					
-					local timeover_text = "\x8F*Overtime!"
-					chatprint(timeover_text)
-					
-					S_StartSound(nil, P_RandomRange(41,43)) -- lightning
-					--S_StartSound(nil, sfx_pizzao)
-					
-					for i,deathring in ipairs(PTSR.deathrings) do
-						if deathring and deathring.valid and deathring.rings_kept then
-							deathring.rings_kept = $ * 3
+					if multiplayer then
+						PTSR.timeover = true
+						
+						local timeover_text = "\x8F*Overtime!"
+						chatprint(timeover_text)
+						
+						S_StartSound(nil, P_RandomRange(41,43)) -- lightning
+						--S_StartSound(nil, sfx_pizzao)
+						
+						for i,deathring in ipairs(PTSR.deathrings) do
+							if deathring and deathring.valid and deathring.rings_kept then
+								deathring.rings_kept = $ * 3
+							end
 						end
-					end
-					
-					if DiscordBot then
-						DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+						
+						if DiscordBot then
+							DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+						end
+					elseif not PTSR.showtime
+						PTSR:SpawnPFAI()
 					end
 				end
 			end

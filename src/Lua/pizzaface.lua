@@ -216,6 +216,24 @@ function PTSR:SpawnPFAI(forcestyle)
 	newpizaface.spriteyscale = PTSR.PFMaskData[style].scale
 	newpizaface.pizzastyle = style
 
+	if not multiplayer and consoleplayer and consoleplayer.mo then
+		local cmo = consoleplayer.mo
+		P_SetOrigin(newpizaface, cmo.x, cmo.y, cmo.z)
+	end
+	
+	if not multiplayer then
+		local laughsound = newpizaface.laughsound or sfx_pizzah
+		if not PTSR.showtime // hiiii adding onto this for showtime
+			PTSR.showtime = true
+			local anim = animationtable["pizzaface"]
+			if anim then
+				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+			end
+
+			S_StartSound(nil, laughsound)
+		end
+	end
+
 	return newpizaface
 end
 -- Player Touches AI
@@ -461,14 +479,14 @@ addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
 	mobj.spriteyscale = $ / 2
 
-	mobj.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
+	mobj.pfstuntime = multiplayer and CV_PTSR.pizzatimestun.value*TICRATE or TICRATE
 end, MT_PIZZA_ENEMY)
 
 --Player Pizza Face Thinker
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
 	player.realmo.pfstuntime = $ or 0
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if player.realmo and player.realmo.valid and player.pizzaface and leveltime then
 		if player.redgreen == nil then
 			player.redgreen = $ or false
@@ -609,7 +627,7 @@ end)
 
 -- Pizza Mask Thinker
 addHook("MobjThinker", function(mobj)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if mobj.targetplayer and mobj.targetplayer.valid and mobj.targetplayer.mo and mobj.targetplayer.mo.valid then
 		local targetplayer = mobj.targetplayer
 		P_MoveOrigin(mobj, targetplayer.mo.x, targetplayer.mo.y, targetplayer.mo.z)

@@ -1,5 +1,5 @@
 local lap_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if not player.laptime then return end
 	if player.pizzaface then return end
 	if not (consoleplayer and consoleplayer.valid) then return end

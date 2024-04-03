@@ -1,6 +1,6 @@
 -- Doesn't limit to grabbing rings. you get extra score on killing other stuff too
 addHook("MobjDeath", function(target, inflictor, source)
-	if CV_PTSR.scoreonkill.value and gametype == GT_PTSPICER and source and source.valid and source.player and source.player.valid then
+	if CV_PTSR.scoreonkill.value and PTSR.IsPTSR() and source and source.valid and source.player and source.player.valid then
 		local player = source.player
 		if (target.flags & MF_ENEMY) then 
 			P_AddPlayerScore(player, 800)

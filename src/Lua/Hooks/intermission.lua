@@ -30,7 +30,7 @@ local function allequals(...)
 end
 
 addHook("ThinkFrame", do
-	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
+	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
 	if PTSR.gameover then
 		P_SwitchWeather(0)
 		for sector in sectors.iterate do
@@ -49,7 +49,7 @@ end)
 addHook("ThinkFrame", do
 	local levelsinvote = CV_PTSR.levelsinvote.value
 
-	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
+	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
 	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
 		PTSR.vote_maplist = {}  -- votes, mapnumber

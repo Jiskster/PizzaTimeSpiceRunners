@@ -40,8 +40,8 @@ local function InitMap2()
             PTSR.end_location.z = map.z
             PTSR.end_location.angle = map.angle
 			local john = P_SpawnMobj(
-				map.x*FU - cos(map.angle*ANG1)*200, 
-				map.y*FU - sin(map.angle*ANG1)*200, 
+				map.x*FU, 
+				map.y*FU, 
 				map.z*FU,
 				MT_PILLARJOHN
 			)

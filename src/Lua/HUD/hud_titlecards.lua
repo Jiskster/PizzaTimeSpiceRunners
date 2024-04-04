@@ -11,7 +11,6 @@ local titlecard_hud = function(v)
 	-- alpha should start at 10, then end at 0, then go back to 10
 	local alpha = max(0, min(min(ct.time - PTSR.titlecard_time, PTSR.titlecard_time), 10))
 	alpha = 10 - alpha
-	print(alpha)
 
 	v.drawFill()
 	local flags = V_SNAPTOTOP

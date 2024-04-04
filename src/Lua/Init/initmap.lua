@@ -15,11 +15,16 @@ local function InitMap()
 	PTSR.gameover = false
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
+	PTSR.aipf = nil
 
 	PTSR.vote_maplist = {}
 	
 	-- titlecards
 	if not multiplayer then
+		COM_BufInsertText(consoleplayer, "devmode 1")
+		COM_BufInsertText(consoleplayer, "devmode 0")
+		COM_BufInsertText(consoleplayer, "setlives 3")
+
 		local current_titlecard = PTSR.titlecards[gamemap] or PTSR.titlecards[0]
 		PTSR.titlecard_time = current_titlecard.time
 	else
@@ -45,7 +50,11 @@ local function InitMap2()
         if map.type == 501 then
             PTSR.end_location.x = map.x
             PTSR.end_location.y = map.y
-            PTSR.end_location.z = map.z
+            
+            -- forgive me for the double var define shit
+            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, 0, 64*FU)
+            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, $+(map.z*FU), 64*FU)
+ 
             PTSR.end_location.angle = map.angle
 			local john = P_SpawnMobj(
 				map.x*FU, 

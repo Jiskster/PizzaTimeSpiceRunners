@@ -5,6 +5,7 @@ hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}
 hooks.onpizzatime = {}
+hooks.ondamage = {}
 hooks.pfthink = {}
 hooks.pfdamage = {}
 hooks.pfteleport = {}

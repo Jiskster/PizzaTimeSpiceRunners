@@ -184,10 +184,19 @@ end
 
 -- spawns at the uhh normal spot where it spawns
 function PTSR:SpawnPFAI(forcestyle)
+	if not multiplayer then
+		if PTSR.aipf and PTSR.aipf.valid then
+			PTSR:RNGPizzaTP(PTSR.aipf, true)
+			return
+		end
+	end
 	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
 					PTSR.end_location.y*FRACUNIT,
 					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
+	if not multiplayer then
+		PTSR.aipf = newpizaface
+	end
 
 	-- choose a random PF style if nothing was provided
 	local style = forcestyle
@@ -387,7 +396,10 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedMul($, newspeed)
 		end
 
-		if dist > CV_PTSR.aileash.value then
+		local val = CV_PTSR.aileash.value
+		if not multiplayer then val = 1000*FU end --prevent ai from despawning
+
+		if dist > val then
 			if not mobj.pfstuntime then
 				PTSR:RNGPizzaTP(mobj, true)
 			end

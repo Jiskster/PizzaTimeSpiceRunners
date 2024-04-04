@@ -58,7 +58,7 @@ addHook("ThinkFrame", function()
 		and PTSR.timeleft <= 56*TICRATE
 		and not IS_PANIC then
 			S_ChangeMusic("PIZTIM", false, consoleplayer)
-			S_SetMusicPosition(length-(56*1000))
+			S_SetMusicPosition(length-(PTSR.timeleft/TICRATE*1000))
 			IS_PANIC = true
 		end
 	end

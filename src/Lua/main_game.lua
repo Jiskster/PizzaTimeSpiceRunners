@@ -310,7 +310,8 @@ addHook("ThinkFrame", do
 						if DiscordBot then
 							DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
 						end
-					elseif not PTSR.showtime
+					elseif not (PTSR.aipf
+					and PTSR.aipf.valid)
 						PTSR:SpawnPFAI()
 					end
 				end

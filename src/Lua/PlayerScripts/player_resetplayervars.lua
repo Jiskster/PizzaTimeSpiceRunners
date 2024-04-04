@@ -7,6 +7,7 @@ PTSR.ResetPlayerVars = function(player)
 	player.ptsr_outofgame = 0
 	player.ptsr_gotrevivedonce = false
 	player.ptsr_justrevived = false
+	player.lastparryframe = nil
 	player.ptvote_selection = 0
 	player.ptvote_voted = false
 	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)

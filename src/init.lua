@@ -149,7 +149,7 @@ dofile "HUD/hud_leaderboard.lua"
 dofile "HUD/hud_rankings.lua"
 dofile "HUD/hud_score.lua"
 dofile "HUD/hud_time.lua"
-dofile "HUD/hud_titlecards.lua"
+-- dofile "HUD/hud_titlecards.lua" (disabled)
 
 dofile "discord_botleaderboard.lua"
 

@@ -98,8 +98,10 @@ customhud.SetupFont("SCRPT", -2, 4)
 
 dofile "main_game.lua"
 
+/*
 -- SAXA HERE HI I DO DA TITLECARDIANERY
 dofile "titlecards.lua"
+*/
 
 dofile "Functions/return_ptmusic.lua"
 dofile "Functions/get_ringcount.lua"

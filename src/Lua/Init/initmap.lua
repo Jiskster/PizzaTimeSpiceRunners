@@ -18,7 +18,7 @@ local function InitMap()
 	PTSR.aipf = nil
 
 	PTSR.vote_maplist = {}
-	
+	/* Unused
 	-- titlecards
 	if not multiplayer then
 		COM_BufInsertText(consoleplayer, "devmode 1")
@@ -30,6 +30,7 @@ local function InitMap()
 	else
 		PTSR.titlecard_time = 0
 	end
+	*/
 
 	for i=1, CV_PTSR.levelsinvote.value do
 		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})

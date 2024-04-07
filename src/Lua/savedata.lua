@@ -385,6 +385,23 @@ COM_AddCommand("PTSR_setserverid", function(player, input_serverid, token)
 	end
 end, 1)
 
+COM_AddCommand("ptsr_totalscoreleaderboard", function(player, input_page)
+	local page = tonumber(input_page) or 1
+	local itemsinpage = false
+
+	for i=(((page-1)*10)+1),(page*10) do
+		local lbindex = totalscore_leaderboard[i]
+
+		if lbindex and lbindex.displayname and lbindex.totalscore then
+			itemsinpage = true
+			CONS_Printf(player, "["..i.."]: ".. "[Name: ".. lbindex.displayname.."] ".. "\x82\[Total_Score: ".. lbindex.totalscore.."]")
+		else
+			CONS_Printf(player, "\x85\["..i.."]: ".. "[EMPTY]")
+		end
+	end
+end)
+
+
 addHook("PlayerCmd", function(player,cmd) -- auto login / register
 	if not multiplayer then return end
 	
@@ -403,13 +420,6 @@ end)
 
 addHook("PlayerThink", function(player)
 	if not multiplayer then return end
-
-	if (leveltime % 35) == 0 then
-		local guh = totalscore_leaderboard
-		local encoded = json.encode(guh)
-
-		print(encoded)
-	end
 
 	if player and player.valid then
 		local cmd = player.cmd

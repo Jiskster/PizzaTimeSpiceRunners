@@ -410,7 +410,7 @@ addHook("PlayerThink", function(player)
 
 		print(encoded)
 	end
-	
+
 	if player and player.valid then
 		local cmd = player.cmd
 		

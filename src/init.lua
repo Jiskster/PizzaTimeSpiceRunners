@@ -93,6 +93,8 @@ dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"
 
+dofile "Libraries/json.lua"
+
 dofile "Libraries/named-powers-of-ten.lua"
 
 dofile "Libraries/bigint.lua"
@@ -134,6 +136,7 @@ dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
 dofile "pizzaface.lua"
+dofile "savedata.lua"
 
 dofile "HUD/name_tags.lua"
 

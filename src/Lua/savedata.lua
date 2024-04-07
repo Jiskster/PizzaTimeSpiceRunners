@@ -22,6 +22,18 @@ if isserver then
 
 		if content:len() > 2 then
 			totalscore_leaderboard = json.decode(content)
+
+			table.sort(totalscore_leaderboard, function(a,b)
+				local p1 = a
+				local p2 = b
+				
+				local isnoteachother = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), "~=")
+				local agreaterthanb = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), ">")
+		
+				if agreaterthanb then
+					return true
+				end
+			end)
 		end
 	end
 end
@@ -167,7 +179,7 @@ local function SetFileServerID(input_serverid)
 	return false
 end
 
-local function FindUsernameOnLeaderboard(username)
+local function FindUsernameOnTSLeaderboard(username)
 	for i,v in ipairs(totalscore_leaderboard) do
 		if v.username == username then
 			return v
@@ -177,10 +189,20 @@ local function FindUsernameOnLeaderboard(username)
 	return false
 end
 
+local function GetTSLeaderboardPlacement(username)
+	for i,v in ipairs(totalscore_leaderboard) do
+		if v.username == username then
+			return i
+		end
+	end
+
+	return "No Placement"
+end
+
 local function UpdateTotalScoreLeaderboard()
 	for player in players.iterate do
         if player.registered and player.registered_user then
-			local userlb = FindUsernameOnLeaderboard(player.registered_user) -- table
+			local userlb = FindUsernameOnTSLeaderboard(player.registered_user) -- table
 			
             if userlb then
                 userlb.displayname = player.name
@@ -206,6 +228,17 @@ local function UpdateTotalScoreLeaderboard()
 			return true
 		end
 	end)
+end
+
+-- https://stackoverflow.com/questions/20694133/how-to-to-add-th-or-rd-to-the-date
+local function ordinal_numbers(n)
+	local ordinal, digit = {"st", "nd", "rd"}, string.sub(n, -1)
+
+	if tonumber(digit) > 0 and tonumber(digit) <= 3 and string.sub(n,-2) ~= 11 and string.sub(n,-2) ~= 12 and string.sub(n,-2) ~= 13 then
+		return n .. ordinal[tonumber(digit)]
+	else
+		return n .. "th"
+	end
 end
 
 COM_AddCommand("PTSR_registeraccount", function(player, tplayer)
@@ -378,12 +411,26 @@ addHook("GameQuit", function(quitting)
             savePlayerData(player)
         end
 
+		UpdateTotalScoreLeaderboard()
 		saveTSLeaderBoardData()
     end
 end)
 
 PTSR_AddHook("ongameend", function()
 	UpdateTotalScoreLeaderboard()
+
+
+	for player in players.iterate do
+		if player.registered and player.registered_user and player.ptsr_totalscore then
+			local placement = GetTSLeaderboardPlacement(player.registered_user)
+
+			if type(placement) == "number" then
+				placement = ordinal_numbers($)
+			end
+			CONS_Printf(player, "\x82\Server TotalScore Placement: ".. "\x8C"..placement)
+			CONS_Printf(player, "\x88\Your TotalScore on this server: ".. player.ptsr_totalscore)
+		end
+	end
 end)
 
 COM_AddCommand("PTSR_setserverid", function(player, input_serverid, token)

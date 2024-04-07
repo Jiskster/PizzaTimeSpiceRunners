@@ -281,7 +281,7 @@ addHook("PlayerThink", function(player)
 end)
 
 addHook("PlayerSpawn", function(player)
-	if player.mo and player.mo.valid then
-		player.ptsr_totalscore = $ or "0"
+	if not player.ptsr_totalscore then
+		player.ptsr_totalscore = "0"
 	end
 end)

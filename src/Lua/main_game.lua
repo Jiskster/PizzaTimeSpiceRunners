@@ -337,11 +337,6 @@ addHook("ThinkFrame", do
 						if player.ptsr_totalscore and player.playerstate ~= PST_DEAD 
 						and not player.spectator then
 							player.ptsr_totalscore = bigint.unserialize(bigint.new($) + bigint.new(player.score))
-							
-							print(
-								"totalscore: " ..
-								player.ptsr_totalscore
-							)
 						end
 					end
 

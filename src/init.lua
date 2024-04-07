@@ -98,8 +98,14 @@ customhud.SetupFont("SCRPT", -2, 4)
 
 dofile "main_game.lua"
 
+/*
+-- SAXA HERE HI I DO DA TITLECARDIANERY
+dofile "titlecards.lua"
+*/
+
 dofile "Functions/return_ptmusic.lua"
 dofile "Functions/get_ringcount.lua"
+dofile "Functions/is_ptsr.lua"
 dofile "Init/initmap.lua"
 
 dofile "consolethings.lua"
@@ -143,6 +149,7 @@ dofile "HUD/hud_leaderboard.lua"
 dofile "HUD/hud_rankings.lua"
 dofile "HUD/hud_score.lua"
 dofile "HUD/hud_time.lua"
+-- dofile "HUD/hud_titlecards.lua" (disabled)
 
 dofile "discord_botleaderboard.lua"
 

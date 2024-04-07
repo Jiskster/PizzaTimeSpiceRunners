@@ -6,6 +6,7 @@ local function InitMap()
 	PTSR.laps = 0
 	PTSR.quitting = false
 	PTSR.pizzatime_tics = 0 
+	PTSR.timeover_tics = 0 
 	PTSR.timeleft = 0
 	PTSR.timeover = false
 	PTSR.showtime = false
@@ -15,8 +16,29 @@ local function InitMap()
 	PTSR.gameover = false
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
+	PTSR.aipf = nil
 
-	PTSR.vote_maplist = {} 
+	PTSR.vote_maplist = {}
+	
+	if not multiplayer then
+		if consoleplayer then
+			consoleplayer.score = 0
+			consoleplayer.lives = 3
+		end
+		mapmusname = mapheaderinfo[gamemap].musname or string.format("MAP%02dM", gamemap)
+		COM_BufInsertText(consoleplayer, "devmode 1")
+		COM_BufInsertText(consoleplayer, "devmode 0")
+	end
+	
+	/* Unused
+	-- titlecards
+	if not multiplayer then
+		local current_titlecard = PTSR.titlecards[gamemap] or PTSR.titlecards[0]
+		PTSR.titlecard_time = current_titlecard.time
+	else
+		PTSR.titlecard_time = 0
+	end
+	*/
 
 	for i=1, CV_PTSR.levelsinvote.value do
 		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
@@ -24,7 +46,7 @@ local function InitMap()
 end
 
 local function InitMap2()
-    if gametype ~= GT_PTSPICER then return end
+    if not PTSR.IsPTSR() then return end
 	PTSR.john = nil
     for map in mapthings.iterate do
         if map.type == 1 then
@@ -37,7 +59,11 @@ local function InitMap2()
         if map.type == 501 then
             PTSR.end_location.x = map.x
             PTSR.end_location.y = map.y
-            PTSR.end_location.z = map.z
+            
+            -- forgive me for the double var define shit
+            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, 0, 64*FU)
+            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, $+(map.z*FU), 64*FU)
+ 
             PTSR.end_location.angle = map.angle
 			local john = P_SpawnMobj(
 				map.x*FU, 
@@ -61,7 +87,14 @@ local function InitMap2()
 		-- INCREMENT OVER --
 		PTSR.ResetPlayerVars(player)
 	end
-	
+	-- as saxashitter i am removing thwt fucking signpost
+	if not multiplayer then
+		for mobj in mobjs.iterate() do
+			if mobj.type == MT_SIGN and mobj.valid then
+				P_RemoveMobj(mobj)
+			end
+		end
+	end
 	if mapheaderinfo[gamemap].ptsr_s_rank_points ~= nil 
 	and tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points) then -- custom maxrankpoints
 		PTSR.maxrankpoints = tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points)

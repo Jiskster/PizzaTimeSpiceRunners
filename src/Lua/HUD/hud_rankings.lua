@@ -1,5 +1,6 @@
 local scoreboard_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
+	if not multiplayer then return end
 
 	local zinger_text = "LEADERBOARD"
 	local zinger_x = 160*FRACUNIT

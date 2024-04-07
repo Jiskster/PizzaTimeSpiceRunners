@@ -1,7 +1,7 @@
 rawset(_G, "CV_PTSR", {}) -- for console vars
 
 COM_AddCommand("ptsr_makepizza", function(player, arg)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -30,7 +30,7 @@ end,1)
 
 
 COM_AddCommand("ptsr_pizzatimenow", function(player)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -40,7 +40,7 @@ end,1)
 local forcePT = false
 
 COM_AddCommand("ptsr_debug_forcept", function(player)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		forcePT = true
 	end
 end,1)
@@ -60,7 +60,7 @@ addHook("PostThinkFrame", function ()
 end)
 
 COM_AddCommand("ptsr_setnextgamemode", function(player, arg)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -80,7 +80,7 @@ COM_AddCommand("ptsr_setnextgamemode", function(player, arg)
 end,1)
 
 COM_AddCommand("ptsr_spawnpfai", function(player, randomplayer, pftype)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -96,7 +96,7 @@ end,1)
 
 
 COM_AddCommand("ptsr_printcoords", function(player)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -107,7 +107,7 @@ COM_AddCommand("ptsr_printcoords", function(player)
 end)
 
 COM_AddCommand("ptsr_printangle", function(player)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
@@ -116,7 +116,7 @@ COM_AddCommand("ptsr_printangle", function(player)
 end)
 
 COM_AddCommand("ptsr_timeto1", function(player)
-	if gametype ~= GT_PTSPICER then
+	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end

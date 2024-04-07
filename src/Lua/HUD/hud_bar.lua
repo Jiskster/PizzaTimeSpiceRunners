@@ -22,7 +22,7 @@ local function drawBarFill(v, x, y, scale, progress, patch)
 end
 
 local bar_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if PTSR.pizzatime then
 		local bar_finish = 1475*FRACUNIT/10
 		local TLIM = PTSR.maxtime or 0 
@@ -37,9 +37,16 @@ local bar_hud = function(v, player)
 		local ese = (PTSR.pizzatime_tics < pthud_expectedtime) and 
 		ease.linear(div, pthud_start_pos, pthud_finish_pos) or pthud_finish_pos  -- ese is y axis tween
 		
+		-- hi saxa here BAR GO DOWN
+		local time_offset = 60
+		if not multiplayer and PTSR.timeover_tics >= time_offset then
+			local tween = (PTSR.timeover_tics-time_offset)*FU/pthud_expectedtime
+			ese = tween < FU and ease.linear(tween, pthud_finish_pos, pthud_start_pos) or pthud_start_pos
+		end
 
 		local pfEase = min(max(PTSR.pizzatime_tics - CV_PTSR.pizzatimestun.value*TICRATE - 50, 0), 100)
 		pfEase = (pfEase*pfEase) * FU / 22
+		if not multiplayer then pfEase = 0 end
 
 		local bar = v.cachePatch("SHOWTIMEBAR") -- the orange border
 		local bar2 = v.cachePatch("SHOWTIMEBAR2") -- the purple thing
@@ -96,7 +103,7 @@ local bar_hud = function(v, player)
 			local y = 176*FRACUNIT + FRACUNIT/2
 			local y_offset = (3*FRACUNIT)/2
 			
-			if PTSR.timeleft then
+			if PTSR.timeleft or not multiplayer then
 				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 			else
 				local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]

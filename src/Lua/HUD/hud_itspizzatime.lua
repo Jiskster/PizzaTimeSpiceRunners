@@ -1,5 +1,5 @@
 local itspizzatime_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if PTSR.pizzatime and PTSR.pizzatime_tics then
 		/*
 		if PTSR.pizzatime_tics < 85

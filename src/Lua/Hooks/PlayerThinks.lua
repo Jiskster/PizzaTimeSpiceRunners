@@ -55,9 +55,17 @@ addHook("PlayerSpawn", function(player)
 end)
 
 addHook("PlayerThink", function(player)
+	if not PTSR.IsPTSR() then return end
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
 
-	if player.deadtimer > 5*TICRATE and PTSR.pizzatime and not player.spectator then
+	if not multiplayer then
+		if player.exiting then
+			player.exiting = 4
+		end
+		player.deadtimer = 10
+	end
+
+	if multiplayer and player.deadtimer > 5*TICRATE and PTSR.pizzatime and not player.spectator then
 		player.playerstate = PST_REBORN
 	end
 
@@ -223,7 +231,7 @@ addHook('ThinkFrame', function()
 		return
 	end
 	
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	
 	if PTSR.pizzatime
 		PTSR.leaderboard = {}

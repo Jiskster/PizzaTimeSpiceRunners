@@ -7,7 +7,8 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 				return 
 			end
 			
-			if not player.ptsr_outofgame then
+			if not player.ptsr_outofgame
+			and not PTSR_DoHook('ondamage', target, inflictor, source, damage, damagetype) then
 				if player.rings < 125 then
 					S_StartSound(target, sfx_s3kb9) -- ring loss sound
 					P_PlayerRingBurst(player, 5)
@@ -22,8 +23,8 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 				
 				player.score = ($*3)/4 -- 3/4 remaining
 				P_DoPlayerPain(player, source, inflictor)
-				return true
 			end
+			return true
 		end
 	end
 end, MT_PLAYER)

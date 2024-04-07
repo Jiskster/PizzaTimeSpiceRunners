@@ -30,7 +30,7 @@ local function allequals(...)
 end
 
 addHook("ThinkFrame", do
-	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
+	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
 	if PTSR.gameover then
 		P_SwitchWeather(0)
 		for sector in sectors.iterate do
@@ -49,7 +49,7 @@ end)
 addHook("ThinkFrame", do
 	local levelsinvote = CV_PTSR.levelsinvote.value
 
-	if gametype ~= GT_PTSPICER or gamestate ~= GS_LEVEL then return end --stop the trolling
+	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
 	
 	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
 		PTSR.vote_maplist = {}  -- votes, mapnumber
@@ -78,19 +78,20 @@ addHook("ThinkFrame", do
 			-- assign gamemodes
 			local newgamemode = 1
 			local coremodes = {} -- EX: {1,2}
-			
-			for i,v in pairs(PTSR.coremodes) do
-				if v == true then
-					table.insert(coremodes, i)
+			if multiplayer then
+				for i,v in pairs(PTSR.coremodes) do
+					if v == true then
+						table.insert(coremodes, i)
+					end
 				end
-			end
+				
+				local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
+				newgamemode = coremodes[gamemode_fromcoremodes] 
 			
-			local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
-			newgamemode = coremodes[gamemode_fromcoremodes] 
-		
-			if P_RandomChance(FU/3) then
-				if #PTSR.gamemode_list > #coremodes then
-					newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
+				if P_RandomChance(FU/3) then
+					if #PTSR.gamemode_list > #coremodes then
+						newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
+					end
 				end
 			end
 			

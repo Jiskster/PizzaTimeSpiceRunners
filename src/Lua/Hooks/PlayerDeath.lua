@@ -6,6 +6,7 @@
 local lastScreamTic = -1
 
 addHook("MobjDeath", function(mobj)
+	if not PTSR.IsPTSR() then return end
 	local player = mobj.player
 	if PTSR.pizzatime then
 		if not player.pizzaface then

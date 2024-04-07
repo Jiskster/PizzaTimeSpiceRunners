@@ -28,7 +28,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
 		
-		if aimode and not CV_PTSR.nopizza.value then
+		if multiplayer and aimode and not CV_PTSR.nopizza.value then
 			PTSR:SpawnPFAI()
 		end
 		
@@ -66,7 +66,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTSR_DoHook("onpizzatime")
 		
 		-- player pf only stuff
-		if not aimode and not CV_PTSR.nopizza.value then
+		if multiplayer and not aimode and not CV_PTSR.nopizza.value then
 			local count = PTSR_COUNT()
 
 			if count.active > 1 then

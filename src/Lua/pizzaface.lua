@@ -197,10 +197,19 @@ end
 
 -- spawns at the uhh normal spot where it spawns
 function PTSR:SpawnPFAI(forcestyle)
+	if not multiplayer then
+		if PTSR.aipf and PTSR.aipf.valid then
+			PTSR:RNGPizzaTP(PTSR.aipf, true)
+			return
+		end
+	end
 	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
 					PTSR.end_location.y*FRACUNIT,
 					PTSR.end_location.z*FRACUNIT,
 					MT_PIZZA_ENEMY)
+	if not multiplayer then
+		PTSR.aipf = newpizaface
+	end
 
 	-- choose a random PF style if nothing was provided
 	local style = forcestyle
@@ -228,6 +237,24 @@ function PTSR:SpawnPFAI(forcestyle)
 	newpizaface.spritexscale = PTSR.PFMaskData[style].scale
 	newpizaface.spriteyscale = PTSR.PFMaskData[style].scale
 	newpizaface.pizzastyle = style
+
+	if not multiplayer and consoleplayer and consoleplayer.mo then
+		local cmo = consoleplayer.mo
+		P_SetOrigin(newpizaface, cmo.x, cmo.y, cmo.z)
+	end
+	
+	if not multiplayer then
+		local laughsound = newpizaface.laughsound or sfx_pizzah
+		if not PTSR.showtime // hiiii adding onto this for showtime
+			PTSR.showtime = true
+			local anim = animationtable["pizzaface"]
+			if anim then
+				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
+			end
+
+			S_StartSound(nil, laughsound)
+		end
+	end
 
 	return newpizaface
 end
@@ -385,7 +412,12 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedMul($, newspeed)
 		end
 
-		if dist > CV_PTSR.aileash.value then
+		local val = CV_PTSR.aileash.value
+		if not multiplayer then
+			val = min($, 5000*FU) --prevents despawning
+		end
+
+		if dist > val then
 			if not mobj.pfstuntime then
 				PTSR:RNGPizzaTP(mobj, true)
 			end
@@ -477,14 +509,14 @@ addHook("MobjSpawn", function(mobj)
 	mobj.spritexscale = $ / 2
 	mobj.spriteyscale = $ / 2
 
-	mobj.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
+	mobj.pfstuntime = multiplayer and CV_PTSR.pizzatimestun.value*TICRATE or TICRATE
 end, MT_PIZZA_ENEMY)
 
 --Player Pizza Face Thinker
 addHook("PlayerThink", function(player)
 	player.PTSR_pizzastyle = $ or 1
 	player.realmo.pfstuntime = $ or 0
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if player.realmo and player.realmo.valid and player.pizzaface and leveltime then
 		if player.redgreen == nil then
 			player.redgreen = $ or false
@@ -627,7 +659,7 @@ end)
 
 -- Pizza Mask Thinker
 addHook("MobjThinker", function(mobj)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if mobj.targetplayer and mobj.targetplayer.valid and mobj.targetplayer.mo and mobj.targetplayer.mo.valid then
 		local targetplayer = mobj.targetplayer
 		P_MoveOrigin(mobj, targetplayer.mo.x, targetplayer.mo.y, targetplayer.mo.z)

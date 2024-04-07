@@ -77,7 +77,7 @@ hud.add( function(v, player, camera)
 		return
 	end
 	
-	if (gametype ~= GT_PTSPICER) then return end
+	if (not PTSR.IsPTSR()) then return end
 	if PTSR.gameover then return end
 
 	local width = 320

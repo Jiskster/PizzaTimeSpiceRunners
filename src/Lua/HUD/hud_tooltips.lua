@@ -1,5 +1,5 @@
 local tooltips_hud = function(v, player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	local count = PTSR_COUNT()
 	local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.lapsdid.." *"
@@ -10,6 +10,13 @@ local tooltips_hud = function(v, player)
 	local ese = PTSR.pizzatime_tics < pthud_expectedtime and
 	ease.linear(div, pthud_start_pos+pthud_offset, pthud_finish_pos+pthud_offset) or pthud_finish_pos+pthud_offset
 	-- y axis tween
+	
+	-- hi saxa here BAR GO DOWN
+	local time_offset = 60
+	if not multiplayer and PTSR.timeover_tics >= time_offset then
+		local tween = (PTSR.timeover_tics-time_offset)*FU/pthud_expectedtime
+		ese = tween < FU and ease.linear(tween, pthud_finish_pos+pthud_offset, (200*FU)+pthud_offset) or (200*FU)+pthud_offset
+	end
 
 
 	if (not player.pizzaface) and (player.ptsr_outofgame) and (player.playerstate ~= PST_DEAD) 
@@ -23,7 +30,7 @@ local tooltips_hud = function(v, player)
 	end
 
 	if PTSR.pizzatime then
-		if (count.active == 1) then -- practice mode
+		if (count.active == 1 and multiplayer) then -- practice mode
 			v.drawString(165*FU, ese-(FU*8), practicemodetext , V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 		

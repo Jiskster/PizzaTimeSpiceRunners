@@ -72,7 +72,7 @@ addHook("MapThingSpawn",function(mo,mt)
 	//looks like an ERROR in a source game!
 	mo.flags2 = $|MF2_DONTDRAW
 	
-	if gametype == GT_PIZZATIMEJISK
+	if PTSR.IsPTSR()
 		local mul = 14
 		if isIcy
 			local gus = P_SpawnMobjFromMobj(mo,0,0,(mo.height*mul),MT_GUSTAVO_EXITSIGN)

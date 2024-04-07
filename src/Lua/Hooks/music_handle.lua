@@ -1,5 +1,6 @@
+local IS_PANIC = false
 addHook("ThinkFrame", function()
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if CV_PTSR.nomusic.value then return end
 	if PTSR.gameover then return end
 	
@@ -44,6 +45,21 @@ addHook("ThinkFrame", function()
 		elseif laps >= 5 and mapmusname ~= "PASTVI" then
 			S_ChangeMusic("PASTVI", true, player)
 			mapmusname = "PASTVI"
+		end
+		
+		if S_MusicName() ~= "PIZTIM" then
+			IS_PANIC = false
+		end
+		
+		local length = S_GetMusicLength()
+
+		if not multiplayer
+		and S_MusicName() == "PIZTIM"
+		and PTSR.timeleft <= 56*TICRATE
+		and not IS_PANIC then
+			S_ChangeMusic("PIZTIM", false, consoleplayer)
+			S_SetMusicPosition(length-(PTSR.timeleft/TICRATE*1000))
+			IS_PANIC = true
 		end
 	end
 end)

@@ -93,6 +93,10 @@ dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"
 
+dofile "Libraries/named-powers-of-ten.lua"
+
+dofile "Libraries/bigint.lua"
+
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 

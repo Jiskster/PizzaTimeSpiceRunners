@@ -93,6 +93,10 @@ addHook("ThinkFrame", do
 						newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
 					end
 				end
+				
+				if not multiplayer then
+					newgamemode = 1
+				end
 			end
 			
 			-- set mapvote var

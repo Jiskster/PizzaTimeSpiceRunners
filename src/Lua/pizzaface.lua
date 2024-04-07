@@ -229,9 +229,11 @@ function PTSR:SpawnPFAI(forcestyle)
 			end
 		end
 	end
-	if not PTSR.PFMaskData[style] then
+	
+	if not PTSR.PFMaskData[style] or not multiplayer then
 		style = 1
 	end
+	
 	newpizaface.laughsound = PTSR.PFMaskData[style].sound
 	newpizaface.state = PTSR.PFMaskData[style].state
 	newpizaface.spritexscale = PTSR.PFMaskData[style].scale

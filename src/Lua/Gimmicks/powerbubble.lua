@@ -238,6 +238,8 @@ addHook("MobjSpawn", function(bubble)
 end, MT_PT_BUBBLE)
 
 addHook("MapThingSpawn", function(mobj)
+	if not multiplayer then return end
+	
 	local monitor_range = {400,452} -- range of thingnum
 	
 	if (mobj.info.doomednum >= monitor_range[1] and mobj.info.doomednum <= monitor_range[2]) 

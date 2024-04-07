@@ -194,6 +194,18 @@ local function UpdateTotalScoreLeaderboard()
             end
         end
     end
+
+	table.sort(totalscore_leaderboard, function(a,b)
+		local p1 = a
+		local p2 = b
+		
+		local isnoteachother = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), "~=")
+		local agreaterthanb = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), ">")
+
+		if agreaterthanb then
+			return true
+		end
+	end)
 end
 
 COM_AddCommand("PTSR_registeraccount", function(player, tplayer)

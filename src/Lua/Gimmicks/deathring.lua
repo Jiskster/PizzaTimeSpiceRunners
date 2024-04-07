@@ -106,6 +106,7 @@ end, MT_PT_DEATHRING)
 addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
 	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	if not multiplayer then return end
 	
 	if target and target.valid and player and player.valid 
 	and ((player.rings and not gm_metadata.allowrevive) or (gm_metadata.allowrevive and PTSR.pizzatime)) 

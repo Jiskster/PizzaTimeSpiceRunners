@@ -103,7 +103,7 @@ end
 local function gsFileSave(gsfile, player)
 	if gsfile then
 		gsfile:write(json.encode({
-			totalscore = bigint.unserialize(player.ptsr_totalscore or bigint.new(0)),
+			totalscore = (player.ptsr_totalscore or "0"),
 			prevname = player.name
 		}))
 		
@@ -344,7 +344,7 @@ COM_AddCommand("PTSR_jsonimport", function(player, playernum, jsondata, token)
 			local decoded_data = json.decode(jsondata:gsub("'",'"'))
 			
 			if decoded_data.totalscore ~= nil then
-				player.ptsr_totalscore = bigint.new(decoded_data.totalscore)
+				player.ptsr_totalscore = decoded_data.totalscore
 			end
 		end
 	end

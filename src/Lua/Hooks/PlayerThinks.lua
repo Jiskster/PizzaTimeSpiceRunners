@@ -274,3 +274,9 @@ addHook("PlayerThink", function(player)
 		end
 	end
 end)
+
+addHook("PlayerSpawn", function(player)
+	if player.mo and player.mo.valid then
+		player.ptsr_totalscore = $ or bigint.new(0)
+	end
+end)

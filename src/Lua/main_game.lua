@@ -282,6 +282,9 @@ addHook("ThinkFrame", do
 		PTSR.pizzatime_tics = $ + 1
 
 		if CV_PTSR.timelimit.value then
+			if not (PTSR.timeleft) then
+				PTSR.timeover_tics = $ + 1
+			end
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
 				if multiplayer then

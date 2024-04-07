@@ -37,6 +37,12 @@ local bar_hud = function(v, player)
 		local ese = (PTSR.pizzatime_tics < pthud_expectedtime) and 
 		ease.linear(div, pthud_start_pos, pthud_finish_pos) or pthud_finish_pos  -- ese is y axis tween
 		
+		-- hi saxa here BAR GO DOWN
+		local time_offset = 60
+		if not multiplayer and PTSR.timeover_tics >= time_offset then
+			local tween = (PTSR.timeover_tics-time_offset)*FU/pthud_expectedtime
+			ese = tween < FU and ease.linear(tween, pthud_finish_pos, pthud_start_pos) or pthud_start_pos
+		end
 
 		local pfEase = min(max(PTSR.pizzatime_tics - CV_PTSR.pizzatimestun.value*TICRATE - 50, 0), 100)
 		pfEase = (pfEase*pfEase) * FU / 22

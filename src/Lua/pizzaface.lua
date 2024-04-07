@@ -413,7 +413,9 @@ addHook("MobjThinker", function(mobj)
 		end
 
 		local val = CV_PTSR.aileash.value
-		if not multiplayer then val = 1000*FU end --prevent ai from despawning
+		if not multiplayer then
+			val = min($, 5000*FU) --prevents despawning
+		end
 
 		if dist > val then
 			if not mobj.pfstuntime then

@@ -6,6 +6,7 @@ local function InitMap()
 	PTSR.laps = 0
 	PTSR.quitting = false
 	PTSR.pizzatime_tics = 0 
+	PTSR.timeover_tics = 0 
 	PTSR.timeleft = 0
 	PTSR.timeover = false
 	PTSR.showtime = false
@@ -18,13 +19,20 @@ local function InitMap()
 	PTSR.aipf = nil
 
 	PTSR.vote_maplist = {}
+	
+	if not multiplayer then
+		if consoleplayer then
+			consoleplayer.score = 0
+			consoleplayer.lives = 3
+		end
+		mapmusname = mapheaderinfo[gamemap].musname or string.format("MAP%02dM", gamemap)
+		COM_BufInsertText(consoleplayer, "devmode 1")
+		COM_BufInsertText(consoleplayer, "devmode 0")
+	end
+	
 	/* Unused
 	-- titlecards
 	if not multiplayer then
-		COM_BufInsertText(consoleplayer, "devmode 1")
-		COM_BufInsertText(consoleplayer, "devmode 0")
-		COM_BufInsertText(consoleplayer, "setlives 3")
-
 		local current_titlecard = PTSR.titlecards[gamemap] or PTSR.titlecards[0]
 		PTSR.titlecard_time = current_titlecard.time
 	else

@@ -15,6 +15,7 @@ local rankcolor = {
 
 local leaderboard_hud = function(v,p)
 	if not PTSR.gameover then return end
+	if not multiplayer then return end
 	
 	if PTSR:inVoteScreen()
 	and #PTSR.leaderboard > 0

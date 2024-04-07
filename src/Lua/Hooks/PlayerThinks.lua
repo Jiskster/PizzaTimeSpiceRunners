@@ -20,6 +20,7 @@ states[S_PT_PARRY] = {
 addHook("PlayerSpawn", function(player)
 	player.lapsdid = $ or 0
 	player.laptime = $ or 0 
+	
 	if player.realmo and player.realmo.valid then
 		if player.pizzaface then
 			return
@@ -29,6 +30,10 @@ addHook("PlayerSpawn", function(player)
 			if not player.ptsr_justrevived then
 				player.spectator = true -- default behavior
 			else
+				player.ptsr_lastscore = nil
+				player.ptsr_lastrank = nil
+				player.ptsr_lastlaps = nil
+			
 				player.ptsr_justrevived = false
 				
 				if player.ptsr_revivelocation then

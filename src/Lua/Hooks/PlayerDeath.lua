@@ -17,6 +17,15 @@ addHook("MobjDeath", function(mobj)
 				end
 			end
 			
+			-- [ptsr_last... variables]
+			-- this is for making sure rank screen gets a score
+			-- saves score and rank before you go to spectator after you die.
+			-- reason: when you go to spectator, it resets all your score and stuff
+			
+			player.ptsr_lastscore = player.score
+			player.ptsr_lastrank = player.ptsr_rank
+			player.ptsr_lastlaps = player.lapsdid
+			
 			if P_RandomChance(FRACUNIT/4) and CV_PTSR.screams.value and lastScreamTic ~= leveltime then
 				lastScreamTic = leveltime
 				S_StartSound(nil, sfx_pepdie)

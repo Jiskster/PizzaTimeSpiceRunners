@@ -70,19 +70,23 @@ local function isRegisteredUser(player)
 	return player.registered_user and player.registered
 end
 
+local function gsFileSave(gsfile)
+	if gsfile then
+		gsfile:write(json.encode({
+			totalscore = bigint.unserialize(player.ptsr_totalscore or bigint.new(0)),
+			prevname = player.name
+		}))
+		
+		gsfile:close()
+	end
+end
+
 local function saveData(player)
 	if isRegisteredUser(player) and player.ptsr_totalscore ~= nil then
 		local gspath = "PTSRDATA/"..player.registered_user.."/gamesave.sav2"
 		local gsfile = io.openlocal(gspath, "w+")
 		
-		if gsfile then
-			gsfile:write(json.encode({
-				totalscore = bigint.unserialize(player.ptsr_totalscore or bigint.new(0)),
-				prevname = player.name
-			}))
-			
-			gsfile:close()
-		end
+		gsFileSave(gsfile)
 	end
 end
 
@@ -159,14 +163,7 @@ COM_AddCommand("PTSR_registeraccount", function(player, tplayer)
 				end
 				
 				
-				if gsfile then
-					gsfile:write(json.encode({
-						totalscore = bigint.unserialize(player.ptsr_totalscore or bigint.new(0)),
-						prevname = player.name
-					}))
-					
-					gsfile:close()
-				end
+				gsFileSave(gsfile)
             end
 
             if (target_player == consoleplayer) then -- Client
@@ -186,6 +183,8 @@ COM_AddCommand("PTSR_registeraccount", function(player, tplayer)
 			if (PTSR.showloginprint.value) or (isserver) then
 				print(target_player.name.." created an account ("..gen_username..")")
 			end
+			
+			target_player.login_timeout = nil
         end
     end
 end)
@@ -260,6 +259,8 @@ COM_AddCommand("PTSR_importdata", function(player, playernum, username, token) -
 		if (PTSR.showloginprint.value) or (isserver) then
 			print(target_player.name.." logged in as "..username)
 		end
+		
+		target_player.login_timeout = nil
 	end
 end, 1)
 
@@ -320,6 +321,22 @@ addHook("PlayerCmd", function(player,cmd) -- auto login / register
 			file:close()
 		elseif (leveltime % 3) == 0 then
 			COM_BufInsertText(player, "PTSR_registeraccount")
+		end
+	end
+end)
+
+addHook("PlayerThink", function(player)
+	if player and player.valid then
+		local cmd = player.cmd
+		
+		if (cmd.buttons or cmd.forwardmove) and (not (player.registered) 
+		and not (player.registered_user)) and PTSR.autologin.value and serverid then
+			player.login_timeout = $ or 0
+			player.login_timeout = $ + 1
+			
+			if player.login_timeout > 4 * TICRATE then
+				COM_BufInsertText(server, "kick " .. #player.. " NetXCMD timeout.")
+			end
 		end
 	end
 end)

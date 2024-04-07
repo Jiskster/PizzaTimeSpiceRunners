@@ -7,7 +7,6 @@ PTSR.ResetPlayerVars = function(player)
 	player.ptsr_outofgame = 0
 	player.ptsr_gotrevivedonce = false
 	player.ptsr_justrevived = false
-	player.ptsr_totalscore = $ or 0 -- the value that saves with the account system
 	player.lastparryframe = nil
 	player.ptvote_selection = 0
 	player.ptvote_voted = false

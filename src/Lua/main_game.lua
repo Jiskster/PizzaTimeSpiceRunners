@@ -343,6 +343,8 @@ addHook("ThinkFrame", do
 							)
 						end
 					end
+
+					PTSR_DoHook("ongameend")
 				end
 			else
 				PTSR.untilend = 0

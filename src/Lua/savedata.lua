@@ -1,6 +1,35 @@
 local _rchars_ = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 local commandtoken = P_RandomKey(FRACUNIT)
 local serverid
+local totalscore_leaderboard = {
+	/*
+	{
+		username = "Jiskster_rdWqGyxX"
+		displayname = "Jisk" -- prevname from json or player.nam
+		totalscore = 2424,
+	}
+	*/
+}
+
+local ts_lb_path = "PTSRDATA/totalscore_leaderboard.sav2"
+
+if isserver then
+	
+	local file = io.openlocal(ts_lb_path, "r")
+	
+	if file then
+		local content = file:read("*a")
+
+		if content:len() > 2 then
+			totalscore_leaderboard = json.decode(content)
+		end
+	end
+end
+
+
+-- have table
+-- add to table if nobody here
+-- save to table as json in file on quit
 
 PTSR.autologin = CV_RegisterVar({
 	name = "PTSR_autologin",
@@ -19,6 +48,7 @@ PTSR.showloginprint = CV_RegisterVar({
 addHook("NetVars", function(net)
     commandtoken = net($)
 	serverid = net($)
+	totalscore_leaderboard = net($)
 end)
 
 local function stringfile(str)
@@ -70,7 +100,7 @@ local function isRegisteredUser(player)
 	return player.registered_user and player.registered
 end
 
-local function gsFileSave(gsfile)
+local function gsFileSave(gsfile, player)
 	if gsfile then
 		gsfile:write(json.encode({
 			totalscore = bigint.unserialize(player.ptsr_totalscore or bigint.new(0)),
@@ -81,12 +111,23 @@ local function gsFileSave(gsfile)
 	end
 end
 
-local function saveData(player)
+local function savePlayerData(player)
 	if isRegisteredUser(player) and player.ptsr_totalscore ~= nil then
 		local gspath = "PTSRDATA/"..player.registered_user.."/gamesave.sav2"
 		local gsfile = io.openlocal(gspath, "w+")
 		
-		gsFileSave(gsfile)
+		gsFileSave(gsfile, player)
+	end
+end
+
+-- only use on GameQuit
+local function saveTSLeaderBoardData()
+	local file = io.openlocal(ts_lb_path, "w+")
+
+	if file then
+		local encoded = json.encode(totalscore_leaderboard)
+
+		file:write(encoded)
 	end
 end
 
@@ -126,6 +167,35 @@ local function SetFileServerID(input_serverid)
 	return false
 end
 
+local function FindUsernameOnLeaderboard(username)
+	for i,v in ipairs(totalscore_leaderboard) do
+		if v.username == username then
+			return v
+		end
+	end
+
+	return false
+end
+
+local function UpdateTotalScoreLeaderboard()
+	for player in players.iterate do
+        if player.registered and player.registered_user then
+			local userlb = FindUsernameOnLeaderboard(player.registered_user) -- table
+			
+            if userlb then
+                userlb.displayname = player.name
+                userlb.totalscore = player.ptsr_totalscore
+            else
+                table.insert(totalscore_leaderboard, {
+                    username = player.registered_user,
+                    displayname = player.name,
+                    totalscore = player.ptsr_totalscore
+                })
+            end
+        end
+    end
+end
+
 COM_AddCommand("PTSR_registeraccount", function(player, tplayer)
 	if not multiplayer then return end
 	
@@ -163,7 +233,7 @@ COM_AddCommand("PTSR_registeraccount", function(player, tplayer)
 				end
 				
 				
-				gsFileSave(gsfile)
+				gsFileSave(gsfile, target_player)
             end
 
             if (target_player == consoleplayer) then -- Client
@@ -240,7 +310,7 @@ COM_AddCommand("PTSR_importdata", function(player, playernum, username, token) -
                 if gsfile then
                     local gsread = gsfile:read("*a")
                     if gsread then
-						local command_format = string.format("PTSR_jsonimport %s %s %s", playernum, gsread:gsub('"',"'"), commandtoken)
+						local command_format = string.format('PTSR_jsonimport %s "%s" %s', playernum, gsread:gsub('"',"'"), commandtoken)
 						COM_BufInsertText(player, command_format)
                     end
 					
@@ -284,7 +354,7 @@ addHook("PlayerQuit", function(player)
 	if not multiplayer then return end
 	
 	if (isserver) then
-		saveData(player)
+		savePlayerData(player)
 	end
 end)
 
@@ -293,9 +363,15 @@ addHook("GameQuit", function(quitting)
 	
     if (isserver) then
         for player in players.iterate do 
-            saveData(player)
+            savePlayerData(player)
         end
+
+		saveTSLeaderBoardData()
     end
+end)
+
+PTSR_AddHook("ongameend", function()
+	UpdateTotalScoreLeaderboard()
 end)
 
 COM_AddCommand("PTSR_setserverid", function(player, input_serverid, token)
@@ -326,6 +402,15 @@ addHook("PlayerCmd", function(player,cmd) -- auto login / register
 end)
 
 addHook("PlayerThink", function(player)
+	if not multiplayer then return end
+
+	if (leveltime % 35) == 0 then
+		local guh = totalscore_leaderboard
+		local encoded = json.encode(guh)
+
+		print(encoded)
+	end
+	
 	if player and player.valid then
 		local cmd = player.cmd
 		

@@ -50,7 +50,7 @@ addHook("MapLoad", function(map)
 				local portal = P_SpawnMobj(portal_x*FU, portal_y*FU, portal_z*FU, MT_PIZZAPORTAL)
 
 				-- give angle
-				if portal_angle and tonumber(portal_angle) then
+				if portal_angle ~= nil and tonumber(portal_angle) then
 					portal.angle = FixedAngle(portal_angle*FRACUNIT) + ANGLE_90
 				end
 			else

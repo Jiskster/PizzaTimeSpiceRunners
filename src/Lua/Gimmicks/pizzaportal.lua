@@ -94,6 +94,30 @@ addHook("MobjThinker", function(mobj)
 			mobj.frame = $ & ~FF_TRANS50
 		end
 	end
+
+	-- push player pfs away from portal
+	local findrange = 2500*FRACUNIT
+	local zrange = 200*FU
+	searchBlockmap("objects", function(refmobj, foundmobj)
+		local strength = -3*FRACUNIT
+		if foundmobj and abs(mobj.z-foundmobj.z) < zrange
+		and foundmobj.valid and P_CheckSight(mobj, foundmobj) then
+			if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
+				if foundmobj.player and foundmobj.player.valid and
+				(not foundmobj.player.pizzaface) then
+					return
+				end
+				
+				if P_IsObjectOnGround(foundmobj) then
+					strength = $ * 4
+				end
+				
+				P_FlyTo(foundmobj,mobj.x,mobj.y,mobj.z,strength,true)
+			end
+		end
+	end,mobj,
+	mobj.x-findrange,mobj.x+findrange,
+	mobj.y-findrange,mobj.y+findrange)
 end, MT_PIZZAPORTAL)
 
 -- pizza portal enter animations

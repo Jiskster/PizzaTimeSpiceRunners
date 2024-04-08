@@ -64,21 +64,22 @@ addHook("PlayerThink", function(player)
 						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
 						or (foundmobj.type == MT_PLAYER) then
 							if foundmobj.type == MT_PLAYER then
-								if foundmobj.player and foundmobj.player.valid and not foundmobj.player.pizzaface then				
-									if PTSR.pizzatime then
-										return
-									end
+								if foundmobj.player and foundmobj.player.valid then	
+									if not foundmobj.player.pizzaface then
+										if not friendlyfire then
+											return
+										end
 									
-									if not friendlyfire then
+										if not PTSR.pizzatime then
+											return
+										end
+										
+										if foundmobj.player.powers[pw_invulnerability] then
+											return
+										end
+									elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
 										return
 									end
-								
-									if foundmobj.player.powers[pw_invulnerability] then
-										return
-									end
-								elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE and 
-								foundmobj.player and foundmobj.player.valid and foundmobj.player.pizzaface then -- cant parry pf while pt game starting
-									return
 								end
 							end
 							

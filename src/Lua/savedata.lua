@@ -444,7 +444,7 @@ COM_AddCommand("PTSR_setserverid", function(player, input_serverid, token)
 	end
 end, 1)
 
-COM_AddCommand("ptsr_totalscoreleaderboard", function(player, input_page)
+COM_AddCommand("ptsr_scoreleaderboard", function(player, input_page)
 	local page = tonumber(input_page) or 1
 	local itemsinpage = false
 

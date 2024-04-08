@@ -50,6 +50,8 @@ addHook("PlayerSpawn", function(player)
 					player.score = player["ptsr_revive_await_score"]
 					player["ptsr_revive_await_score"] = nil
 				end
+				
+				player.powers[pw_invulnerability] = 5*TICRATE
 			end
 		end
 	end

@@ -78,8 +78,6 @@ addHook("TouchSpecial", function(special, toucher)
 					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
 				end
 				
-				rplayer.powers[pw_invulnerability] = 5*TICRATE
-				
 				if rplayer == consoleplayer then
 					displayplayer = consoleplayer -- go back in your view boi
 					chatprintf(consoleplayer, "\x83You have been revived!")

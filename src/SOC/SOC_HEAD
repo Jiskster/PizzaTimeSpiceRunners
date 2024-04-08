@@ -102,6 +102,22 @@ Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_lapangle = 103
 #see act 1
 
+Level 7
+Levelname = Deep Sea
+Act = 1
+Keywords = DSZ1
+Music = DSZ1
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 8
+SkyNum = 8
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 32
+FlickyList = Fish,Fish,Seal
+Lua.ptsr_timelimit_secs = 120
+#Flicky selection is final. Two sets of fish because they come in two colours.
+
 Level 25
 Levelname = Black Core
 Act = 1

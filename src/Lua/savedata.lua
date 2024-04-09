@@ -1,6 +1,8 @@
 local _rchars_ = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 local commandtoken = P_RandomKey(FRACUNIT)
 local serverid
+local totalscore_leaderboard_loaded = false
+
 local totalscore_leaderboard = {
 	/*
 	{
@@ -61,6 +63,7 @@ addHook("NetVars", function(net)
     commandtoken = net($)
 	serverid = net($)
 	totalscore_leaderboard = net($)
+	totalscore_leaderboard_loaded = net($)
 end)
 
 local function stringfile(str)
@@ -500,5 +503,32 @@ addHook("MapLoad", function()
 		local new_serverid = GetServerIDFromFile() or GenerateRandomChars(32)
 		SetFileServerID(new_serverid)
 		COM_BufInsertText(server, "PTSR_setserverid ".. new_serverid.. " ".. commandtoken)
+	end
+	
+	if isserver and not totalscore_leaderboard_loaded then
+
+		local file = io.openlocal(ts_lb_path, "r")
+
+		if file then
+			local content = file:read("*a")
+
+			if content:len() > 2 then
+				totalscore_leaderboard = json.decode(content)
+			end
+		end
+		
+		table.sort(totalscore_leaderboard, function(a,b)
+			local p1 = a
+			local p2 = b
+			
+			local isnoteachother = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), "~=")
+			local agreaterthanb = bigint.compare(bigint.new(a.totalscore), bigint.new(b.totalscore), ">")
+	
+			if agreaterthanb then
+				return true
+			end
+		end)
+		
+		totalscore_leaderboard_loaded = true
 	end
 end)

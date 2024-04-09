@@ -127,7 +127,7 @@ local function gsFileSave(gsfile, player)
 end
 
 local function savePlayerData(player)
-	if isRegisteredUser(player) and player.ptsr_totalscore ~= nil then
+	if isRegisteredUser(player) and player.ptsr_totalscore ~= nil and player.jointime >= 10*TICRATE then
 		local gspath = "PTSRDATA/"..player.registered_user.."/gamesave.sav2"
 		local gsfile = io.openlocal(gspath, "w+")
 		

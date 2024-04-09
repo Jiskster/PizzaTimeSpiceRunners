@@ -403,7 +403,7 @@ addHook("MobjThinker", function(mobj)
 		end
 
 		if PTSR.timeover then
-			local yum = FRACUNIT + (PTSR.timeover_tics*25)
+			local yum = FRACUNIT + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
 
 			speed = FixedMul($, yum)
 		end

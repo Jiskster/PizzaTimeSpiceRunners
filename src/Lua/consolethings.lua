@@ -369,6 +369,14 @@ CV_PTSR.dustdeviltimerend = CV_RegisterVar({
 	PossibleValue = CV_Unsigned, 
 })
 
+CV_PTSR.overtime_speed = CV_RegisterVar({
+	name = "PTSR_overtime_speed",
+	defaultvalue = "0.00025",
+	flags = CV_NETVAR|CV_FLOAT,
+	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
+})
+
+
 /* TODO: Make these save with an i/o system
 CV_PTSR.pizzastyle = CV_RegisterVar({
 	name = "PTSR_pizzastyle",

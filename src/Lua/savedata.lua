@@ -531,4 +531,13 @@ addHook("MapLoad", function()
 		
 		totalscore_leaderboard_loaded = true
 	end
+	
+	if (isserver) then
+        for player in players.iterate do 
+            savePlayerData(player)
+        end
+
+		UpdateTotalScoreLeaderboard()
+		saveTSLeaderBoardData()
+    end
 end)

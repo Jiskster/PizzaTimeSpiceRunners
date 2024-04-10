@@ -101,6 +101,9 @@ end
 PTSR.ring_score = 100
 PTSR.enemy_score = 800
 
+PTSR.lapbonus = 777
+PTSR.ringlapbonus = 13
+
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
 PTSR.coremodes = {["1"] = true, ["2"] = true}
@@ -132,20 +135,27 @@ PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
+	ring_score = 200,
+	ringlapbonus = PTSR.ringlapbonus*4,
 })
 
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = false,
-	elimination_cooldown = 35*TICRATE
+	elimination_cooldown = 35*TICRATE,
+	ring_score = 300,
+	enemy_score = 3000,
+	ringlapbonus = 0,
+	lapbonus = 0,
 })
 
 PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	--disableovertimeshoes = true,
+	ringlapbonus = 0,
+	lapbonus = PTSR.lapbonus*2,
 })
 
 PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
@@ -154,8 +164,10 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	allowrevive = true,
 	overtime_music = "OTHARD",
 	instant_overtime = true,
-	ring_score = 250,
+	ring_score = 50,
 	enemy_score = 2000,
+	ringlapbonus = PTSR.ringlapbonus*2,
+	lapbonus = PTSR.lapbonus*4,
 })
 
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
@@ -163,6 +175,10 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	dustdevil = false,
 	allowrevive = true,
 	player_pizzaface = true,
+	ring_score = 10,
+	enemy_score = 100,
+	ringlapbonus = 5,
+	lapbonus = 300,
 })
 
 PTSR.ChangeGamemode = function(gm)

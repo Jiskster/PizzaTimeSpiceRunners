@@ -5,14 +5,16 @@ PTSR.ChatLapStatus = function(player)
 	chatprint(lapstring, true)
 end
 
-PTSR.DoLapBonus = function(player)		
+PTSR.DoLapBonus = function(player)
+	local gm_metadata = PTSR.currentModeMetadata()
+	
 	PTSR.ChatLapStatus(player)
 	
 	if player.lapsdid ~= nil then
 		local escapebonus = true
-	
-		local lapbonus = (player.lapsdid*777)
-		local ringbonus = (player.rings*13)
+		
+		local lapbonus = player.lapsdid * (gm_metadata.lapbonus or PTSR.lapbonus)
+		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		
 		if PTSR_DoHook("onbonus", player) == true then
 			escapebonus = false

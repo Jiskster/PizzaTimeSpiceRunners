@@ -281,9 +281,3 @@ addHook("PlayerThink", function(player)
 		end
 	end
 end)
-
-addHook("PlayerSpawn", function(player)
-	if not player.ptsr_totalscore then
-		player.ptsr_totalscore = "0"
-	end
-end)

@@ -332,13 +332,6 @@ addHook("ThinkFrame", do
 						S_ChangeMusic(RANKMUS[consoleplayer.ptsr_rank], false, player)
 						mapmusname = RANKMUS[consoleplayer.ptsr_rank]
 					end
-					
-					for player in players.iterate do
-						if player.ptsr_totalscore and player.playerstate ~= PST_DEAD 
-						and not player.spectator then
-							player.ptsr_totalscore = bigint.unserialize(bigint.new($) + bigint.new(player.score))
-						end
-					end
 
 					PTSR_DoHook("ongameend")
 				end

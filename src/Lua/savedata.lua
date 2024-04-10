@@ -420,20 +420,34 @@ addHook("GameQuit", function(quitting)
 end)
 
 PTSR_AddHook("ongameend", function()
-	UpdateTotalScoreLeaderboard()
-
-
 	for player in players.iterate do
+		-- increment total score
+		if player.ptsr_totalscore and player.playerstate ~= PST_DEAD 
+		and not player.spectator then
+			player.ptsr_totalscore = bigint.unserialize(bigint.new($) + bigint.new(player.score))
+		end
+	
+		-- print leaderboard stuff to player
 		if player.registered and player.registered_user and player.ptsr_totalscore then
 			local placement = GetTSLeaderboardPlacement(player.registered_user)
 
 			if type(placement) == "number" then
 				placement = ordinal_numbers($)
 			end
+			
 			CONS_Printf(player, "\x82\Server TotalScore Placement: ".. "\x8C"..placement)
 			CONS_Printf(player, "\x88\Your TotalScore on this server: ".. player.ptsr_totalscore)
 		end
 	end
+
+	if (isserver) then
+        for player in players.iterate do 
+            savePlayerData(player)
+        end
+
+		UpdateTotalScoreLeaderboard()
+		saveTSLeaderBoardData()
+    end
 end)
 
 COM_AddCommand("PTSR_setserverid", function(player, input_serverid, token)
@@ -540,4 +554,10 @@ addHook("MapLoad", function()
 		UpdateTotalScoreLeaderboard()
 		saveTSLeaderBoardData()
     end
+end)
+
+addHook("PlayerThink", function(player)
+	if not player.ptsr_totalscore then
+		player.ptsr_totalscore = "0"
+	end
 end)

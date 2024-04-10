@@ -98,6 +98,9 @@ PTSR.isOvertime = function()
 	return PTSR.timeover
 end
 
+PTSR.ring_score = 100
+PTSR.enemy_score = 800
+
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
 PTSR.coremodes = {["1"] = true, ["2"] = true}
@@ -151,6 +154,8 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	allowrevive = true,
 	overtime_music = "OTHARD",
 	instant_overtime = true,
+	ring_score = 250,
+	enemy_score = 2000,
 })
 
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {

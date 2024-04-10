@@ -41,7 +41,7 @@ addHook("PlayerThink", function(player)
 	local cmd = player.cmd
 	local pmo = player.mo
 	
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if not player.mo.ptsr_parry_cooldown then
 		if cmd.buttons & BT_ATTACK then

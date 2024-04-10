@@ -63,7 +63,7 @@ end)
 
 addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 
 	if not multiplayer then
 		if player.exiting then
@@ -273,7 +273,7 @@ addHook('ThinkFrame', function()
 end)
 
 addHook("PlayerThink", function(player)
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if player.mo and player.mo.valid then
 		if gm_metadata and gm_metadata.speedcap then

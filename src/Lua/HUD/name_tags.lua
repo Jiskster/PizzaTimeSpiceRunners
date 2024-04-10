@@ -232,7 +232,7 @@ hud.add( function(v, player, camera)
 		obj_dist = $/10
 		
 		if name then
-			local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+			local gm_metadata = PTSR.currentModeMetadata()
 
 			--luigi budd: regular FU values are too big to easily discern distance
 			--from the face, so divide by 10 to help with uh..... telling the distance

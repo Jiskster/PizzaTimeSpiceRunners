@@ -18,7 +18,7 @@ end)
 
 addHook("ThinkFrame", function()
 	if not PTSR.IsPTSR() then return end
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	local count = PTSR_COUNT()
 	
 	local playerpfmode = gm_metadata.player_pizzaface

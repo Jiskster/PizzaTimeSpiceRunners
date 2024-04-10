@@ -355,7 +355,7 @@ end
 
 -- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	local laughsound = mobj.laughsound or sfx_pizzah
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]

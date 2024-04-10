@@ -1,5 +1,5 @@
 PTSR.PizzaTimeTrigger = function(mobj)
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 
 	local aimode = true
 

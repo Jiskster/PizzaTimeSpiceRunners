@@ -44,7 +44,7 @@ end
 PTSR_AddHook("onpizzatime", function()
 	if PTSR.gamemode ~= PTSR.gm_elimination then return end
 
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	PTSR.elimination_timer = gm_metadata.elimination_cooldown or 60*TICRATE
 	
@@ -54,7 +54,7 @@ end)
 addHook("ThinkFrame", function()
 	if PTSR.gamemode ~= PTSR.gm_elimination then return end
 	
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if PTSR.elimination_timer and not PTSR.gameover then -- its also pizza time in here
 		PTSR.elimination_timer = $ - 1

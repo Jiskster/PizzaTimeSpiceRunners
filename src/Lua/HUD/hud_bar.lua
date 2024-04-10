@@ -106,7 +106,7 @@ local bar_hud = function(v, player)
 			if PTSR.timeleft or not multiplayer then
 				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 			else
-				local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+				local gm_metadata = PTSR.currentModeMetadata()
 				local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
 				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 				

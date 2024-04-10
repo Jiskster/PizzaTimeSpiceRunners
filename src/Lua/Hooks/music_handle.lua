@@ -11,7 +11,7 @@ addHook("ThinkFrame", function()
 		if PTSR.timeover and leveltime then
 			local mus = CV_PTSR.overtime_music.value
 			local mus_str = "OVRTME"
-			local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+			local gm_metadata = PTSR.currentModeMetadata()
 			
 			if mus then
 				if gm_metadata.overtime_music then

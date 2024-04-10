@@ -32,7 +32,7 @@ end)
 
 addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if tplayer.pizzaface then return true end
 	
@@ -103,7 +103,7 @@ end, MT_PT_DEATHRING)
 
 addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	local player = target.player
-	local gm_metadata = PTSR.gamemode_list[PTSR.gamemode]
+	local gm_metadata = PTSR.currentModeMetadata()
 	if not multiplayer then return end
 	
 	if target and target.valid and player and player.valid 

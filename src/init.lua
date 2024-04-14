@@ -93,12 +93,6 @@ dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"
 
-dofile "Libraries/json.lua"
-
-dofile "Libraries/named-powers-of-ten.lua"
-
-dofile "Libraries/bigint.lua"
-
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 
@@ -136,7 +130,6 @@ dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
 dofile "pizzaface.lua"
-dofile "savedata.lua"
 
 dofile "HUD/name_tags.lua"
 

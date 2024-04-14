@@ -168,6 +168,7 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	enemy_score = 2000,
 	ringlapbonus = PTSR.ringlapbonus*2,
 	lapbonus = PTSR.lapbonus*4,
+	pfspeedmulti = (FU*7)/4, -- 1.75x
 })
 
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {

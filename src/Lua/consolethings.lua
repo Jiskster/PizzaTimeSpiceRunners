@@ -450,7 +450,7 @@ CV_PTSR.lapbroadcast_type = CV_RegisterVar({
 	name = "PTSR_lapbroadcast_type",
 	defaultvalue = "console",
 	flags = 0,
-	PossibleValue = {MIN = 1, MAX = 2, console = 1, chat = 2},
+	PossibleValue = {console = 1, chat = 2},
 })
 
 CV_PTSR.allowgamemodes = CV_RegisterVar({

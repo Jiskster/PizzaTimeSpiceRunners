@@ -261,6 +261,39 @@ function PTSR:SpawnPFAI(forcestyle)
 	return newpizaface
 end
 
+function PTSR.PlayerIsChasable(player)
+	return (not player.ptsr_outofgame and not player.spectator and not player.quittime and not player.pizzaface
+			and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD
+			and player.mo.health)
+end
+
+local function PF_FindNewPlayer(mobj)
+	local activeplayers = {}
+	
+	for player in players.iterate do
+		if player.mo and player.mo.valid and PTSR.PlayerIsChasable(player) then
+			table.insert(activeplayers, player)
+		end
+	end
+	
+	for i,player in ipairs(activeplayers) do
+		if player.mo and player.mo.valid then
+			if not (mobj.pizza_target and mobj.pizza_target.valid) or not PTSR.PlayerIsChasable(mobj.pizza_target.player)then
+				mobj.pizza_target = player.mo
+			else
+				if (mobj.pizza_target and mobj.pizza_target.valid) then
+					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
+					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
+					
+					if dist_newplayertopizza < dist_nptopizza and PTSR.PlayerIsChasable(player) then
+						mobj.pizza_target = player.mo
+					end
+				end
+			end
+		end	
+	end
+end
+
 -- Player Touches AI
 addHook("TouchSpecial", function(special, toucher)
 	-- toucher: player
@@ -271,6 +304,10 @@ addHook("TouchSpecial", function(special, toucher)
 	local player = toucher.player
 	
 	if player and player.valid then
+		if not PTSR.PlayerIsChasable(player) then
+			return true
+		end
+	
 		if player.powers[pw_shield] & SH_FORCE then
 			PTSR:ForceShieldParry(toucher, special)
 			return true
@@ -302,6 +339,8 @@ addHook("MobjCollide", function(peppino, pizza)
 
 	if not PTSR:PizzaCanTag(peppino, pizza) then return end
 
+	if not PTSR.PlayerIsChasable(player) then return end
+	
 	if player.powers[pw_shield] & SH_FORCE then
 		PTSR:ForceShieldParry(peppino, pizza)
 		
@@ -319,39 +358,6 @@ addHook("PlayerCmd", function (player, cmd)
 		-- dont do sidemove cuz face swapping
 	end
 end)
-
-local function PF_PlayerIsChasable(player)
-	return (not player.ptsr_outofgame and not player.spectator and not player.quittime and not player.pizzaface
-			and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD
-			and player.mo.health)
-end
-
-local function PF_FindNewPlayer(mobj)
-	local activeplayers = {}
-	
-	for player in players.iterate do
-		if player.mo and player.mo.valid and PF_PlayerIsChasable(player) then
-			table.insert(activeplayers, player)
-		end
-	end
-	
-	for i,player in ipairs(activeplayers) do
-		if player.mo and player.mo.valid then
-			if not (mobj.pizza_target and mobj.pizza_target.valid) or not PF_PlayerIsChasable(mobj.pizza_target.player)then
-				mobj.pizza_target = player.mo
-			else
-				if (mobj.pizza_target and mobj.pizza_target.valid) then
-					local dist_nptopizza = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
-					local dist_newplayertopizza = R_PointToDist2(player.mo.x, player.mo.y, mobj.x, mobj.y)
-					
-					if dist_newplayertopizza < dist_nptopizza and PF_PlayerIsChasable(player) then
-						mobj.pizza_target = player.mo
-					end
-				end
-			end
-		end	
-	end
-end
 
 -- Ai Pizza Face Thinker
 addHook("MobjThinker", function(mobj)
@@ -389,7 +395,7 @@ addHook("MobjThinker", function(mobj)
 	PTSR_DoHook("pfthink", mobj)
 	
 	if mobj.pizza_target and mobj.pizza_target.valid and mobj.pizza_target.health and mobj.pizza_target.player and mobj.pizza_target.player.valid and
-	PF_PlayerIsChasable(mobj.pizza_target.player) then
+	PTSR.PlayerIsChasable(mobj.pizza_target.player) then
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0

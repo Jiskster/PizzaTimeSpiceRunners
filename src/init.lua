@@ -153,7 +153,6 @@ dofile "HUD/hud_time.lua"
 
 dofile "discord_botleaderboard.lua"
 
-
 dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/deathring.lua"
 dofile "Gimmicks/alivedustdevil.lua"
@@ -167,6 +166,3 @@ dofile "Hooks/intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"
 dofile "Exit Signs/exitsign_thinkers.lua"
-
-
-

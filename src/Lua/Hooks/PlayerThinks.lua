@@ -58,7 +58,7 @@ addHook("PlayerSpawn", function(player)
 end)
 
 addHook("PlayerSpawn", function(player)
-	player["PT@hudstuff"] = PTSR.hudstuff
+	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
 end)
 
 addHook("PlayerThink", function(player)

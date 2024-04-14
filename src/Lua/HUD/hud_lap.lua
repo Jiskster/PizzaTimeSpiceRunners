@@ -9,6 +9,9 @@ local lap_hud = function(v, player)
 	local lap2flag = v.cachePatch("LAP2FLAG")
 	local hudst = player["PT@hudstuff"]
 	
+	local shakex = v.RandomRange(-FU/2,FU/2)
+	local shakey = v.RandomRange(-FU/2,FU/2)
+	
 	local cz = {
 		x = 120*FU,
 		start = -100*FU, 
@@ -16,6 +19,9 @@ local lap_hud = function(v, player)
 	}
 	
 	cz.y = ease.linear(FixedDiv(hudst.anim*FRACUNIT, 45*FRACUNIT), cz.start, cz.finish)
+
+	cz.x = $ + shakex
+	cz.y = $ + shakey
 
 	if cz.y ~= nil and hudst.anim_active then
 		if player.lapsdid == 2

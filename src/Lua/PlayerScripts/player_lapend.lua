@@ -2,7 +2,14 @@
 
 PTSR.ChatLapStatus = function(player)
 	local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
-	chatprint(lapstring, true)
+	local isonconsole = CV_PTSR.lapbroadcast_type.value == 1
+	local isonchat = CV_PTSR.lapbroadcast_type.value == 2
+
+	if isonconsole then
+		print(lapstring)
+	elseif isonchat then
+		chatprint(lapstring, true)
+	end
 end
 
 PTSR.DoLapBonus = function(player)

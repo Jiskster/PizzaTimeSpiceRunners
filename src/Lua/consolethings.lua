@@ -431,17 +431,6 @@ COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)
 	player.PTSR_pizzastyle = tonumber(set)
 end)
 
-/*
-addHook("ThinkFrame", function ()
-	if not consoleplayer then return end
-	
-	if consoleplayer.PTSR_pizzastyle ~= CV_PTSR.pizzastyle.value then
-		COM_BufInsertText(consoleplayer, "_PTSR_pizzastyle_sync " .. luaOnly .. " " .. CV_PTSR.pizzastyle.value)
-	end
-end)
-*/
-
-
 CV_PTSR.oldmusic = CV_RegisterVar({
 	name = "PTSR_oldmusic",
 	defaultvalue = "off",
@@ -455,6 +444,13 @@ CV_PTSR.oldmusic = CV_RegisterVar({
 			CONS_Printf(consoleplayer, "Lap 4 will now play Pasta La Vista by Oofator.")
 		end
 	end
+})
+
+CV_PTSR.lapbroadcast_type = CV_RegisterVar({
+	name = "PTSR_lapbroadcast_type",
+	defaultvalue = "console",
+	flags = 0,
+	PossibleValue = {MIN = 1, MAX = 2, console = 1, chat = 2},
 })
 
 CV_PTSR.allowgamemodes = CV_RegisterVar({

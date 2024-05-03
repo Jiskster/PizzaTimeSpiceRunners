@@ -108,7 +108,7 @@ addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	
 	if target and target.valid and player and player.valid 
 	and ((player.rings and not gm_metadata.allowrevive) or (gm_metadata.allowrevive and PTSR.pizzatime)) 
-	and not player.ptsr_gotrevivedonce then
+	and not player.ptsr_gotrevivedonce and not PTSR.isOvertime() then
 		local deathring = P_SpawnMobj(target.x, target.y, target.z, MT_PT_DEATHRING)
 		if deathring then
 			deathring.rings_kept = player.rings

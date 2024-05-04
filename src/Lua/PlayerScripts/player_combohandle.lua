@@ -13,6 +13,7 @@ function PTSR:AddCombo(player, amount)
 		player.ptsr.combo_count = $ + (amount or 1)
 	else
 		self:StartCombo(player)
+		player.ptsr.combo_count = $ + (amount or 1)
 	end
 end
 
@@ -43,10 +44,11 @@ addHook("PlayerThink", function(player)
 		player.ptsr.combo_timeleft = $ - 1
 		
 		if not player.ptsr.combo_timeleft then
-			player.ptsr.combo_active = false
-			player.ptsr.combo_count = 0
+			PTSR:EndCombo(player)
 		end
 	end
 	
-	player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
+	if (leveltime % 2) == 0 then
+		player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
+	end
 end)

@@ -95,6 +95,7 @@ dofile "Libraries/hooksystem.lua"
 
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
+customhud.SetupFont("COMBO", -1, 4)
 
 dofile "main_game.lua"
 

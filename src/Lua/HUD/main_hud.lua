@@ -20,6 +20,6 @@ PTSR.r2f = function(v,rank)
 	end
 end
 
-
-
+PTSR.debug_x = CV_RegisterVar({name = "ptsr_debug_x", defaultvalue = 0})
+PTSR.debug_y = CV_RegisterVar({name = "ptsr_debug_y", defaultvalue = 0})
 

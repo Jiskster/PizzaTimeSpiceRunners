@@ -1,3 +1,5 @@
+PTSR.combotween = 10
+
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
@@ -26,10 +28,14 @@ end
 function PTSR:AddComboTime(player, amount)
 	if self.PlayerHasCombo(player) then
 		if (player.ptsr.combo_timeleft + amount) > player.ptsr.combo_maxtime then
+			player.ptsr.combo_tweentime = PTSR.combotween
+			player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
 			player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
 		elseif (player.ptsr.combo_timeleft + amount) < 0 then
 			self:EndCombo(player)
 		else
+			player.ptsr.combo_tweentime = PTSR.combotween
+			player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
 			player.ptsr.combo_timeleft = $ + amount
 		end
 	end
@@ -39,6 +45,10 @@ addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
 	if not (player.mo and player.mo.valid) then return end
 	
+	if player.ptsr.combo_tweentime then
+		player.ptsr.combo_tweentime = $ - 1
+	end
+	
 	if player.ptsr.combo_timeleft then
 		player.ptsr.combo_active = true
 		player.ptsr.combo_timeleft = $ - 1
@@ -46,9 +56,5 @@ addHook("PlayerThink", function(player)
 		if not player.ptsr.combo_timeleft then
 			PTSR:EndCombo(player)
 		end
-	end
-	
-	if (leveltime % 2) == 0 then
-		player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
 	end
 end)

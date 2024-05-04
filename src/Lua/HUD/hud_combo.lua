@@ -9,13 +9,16 @@ local combo_hud = function(v, player)
 	local bar_y = 30*FU
 	local indic_max = 67*FU
 	local combo_timeleft = player.ptsr.combo_timeleft
-	local combo_timelimit_prev = player.ptsr.combo_timeleft_prev
+	local combo_timeleft_prev = player.ptsr.combo_timeleft_prev
+	local combo_tween_time = player.ptsr.combo_tweentime or 0
 	local combo_maxtime = player.ptsr.combo_maxtime
 	local combo_count = player.ptsr.combo_count
 	local belowhalf = (player.ptsr.combo_timeleft < player.ptsr.combo_maxtime/2)
 
+	local ese = ease.outexpo(FU - FixedDiv(combo_tween_time*FU, PTSR.combotween*FU), combo_timeleft_prev, combo_timeleft)
+	local meat = combo_tween_time and ese or combo_timeleft
 	-- (tl/maxtime)*indic_max
-	local indic_newx = FixedMul(FixedDiv(combo_timeleft*FU, combo_maxtime*FU), indic_max)
+	local indic_newx = FixedMul(FixedDiv(meat*FU, combo_maxtime*FU), indic_max)
 	
 	if belowhalf then
 		bar_y = $ + sin(FixedAngle(FU)*(leveltime*32)*2)*2

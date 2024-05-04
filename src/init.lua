@@ -125,6 +125,7 @@ dofile "PlayerScripts/player_lapend.lua"
 dofile "PlayerScripts/player_laptp.lua"
 dofile "PlayerScripts/pmo_startnewlap.lua"
 dofile "PlayerScripts/pmo_pizzatimetrigger.lua"
+dofile "PlayerScripts/player_combohandle.lua"
 
 dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"

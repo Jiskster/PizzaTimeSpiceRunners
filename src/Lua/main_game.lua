@@ -110,11 +110,20 @@ PTSR.coremodes = {["1"] = true, ["2"] = true}
 
 PTSR.default_playervars = {
 	rank = "D",
+	
 	pizzaface = false,
 	pizzamask = nil,
+	
 	laps = 0,
 	laptime = 0,
+	
 	outofgame = 0,
+	
+	combo_count = 0,
+	combo_active = false,
+	combo_timeleft = 0,
+	combo_maxtime = 7*TICRATE,
+	
 	gotrevivedonce = false,
 	justrevived = false,
 	

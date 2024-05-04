@@ -22,6 +22,8 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 				end
 				
 				player.score = ($*3)/4 -- 3/4 remaining
+				
+				PTSR:AddComboTime(player, -(TICRATE + TICRATE/2))
 				P_DoPlayerPain(player, source, inflictor)
 			end
 			return true

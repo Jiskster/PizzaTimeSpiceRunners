@@ -6,8 +6,8 @@ local overtime_hud = function(v, player)
 	local text_its = v.cachePatch("OT_ITS")
 	local text_overtime = v.cachePatch("OT_OVERTIME")
 	
-	local anim_len = 5*TICRATE/3 -- 1.6__ secs
-	local anim_delay = 1*TICRATE
+	local anim_len = 7*TICRATE/4 -- 1.75 secs
+	local anim_delay = 2*TICRATE
 	local anim_lastframe = (anim_len*2)+(anim_delay)
 	local left_end = 0 -- end pos of left
 	local right_end = 110 -- end pos of right

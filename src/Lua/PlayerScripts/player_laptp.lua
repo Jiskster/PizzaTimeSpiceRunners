@@ -1,7 +1,7 @@
 -- doesnt actually trigger or increment lap, just tps you
 PTSR.LapTP = function(player, invincibility)
 	if not player and not player.mo and not player.mo.valid then return end -- safety
-	player.ptsr_outofgame = 0
+	player.ptsr.outofgame = 0
 	P_SetOrigin(player.mo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 	player.mo.angle = PTSR.end_location.angle - ANGLE_90
 	

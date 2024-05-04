@@ -68,7 +68,7 @@ addHook("TouchSpecial", function(special, toucher)
 	end
 	
 	if toucher and toucher.valid and tplayer and tplayer.valid then
-		local lastlap_perplayer = (tplayer.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value)
+		local lastlap_perplayer = (tplayer.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value)
 		if not toucher.pizza_in and not toucher.pizza_out and PTSR.pizzatime and not lastlap_perplayer then -- start lap portal in sequence
 			toucher.pizza_in = portal_time
 			S_StartSound(toucher, sfx_lapin)
@@ -88,7 +88,7 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	if displayplayer and displayplayer.valid then
-		if (displayplayer.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) or not PTSR.pizzatime then
+		if (displayplayer.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) or not PTSR.pizzatime then
 			mobj.frame = $|FF_TRANS50
 		else
 			mobj.frame = $ & ~FF_TRANS50
@@ -104,7 +104,7 @@ addHook("MobjThinker", function(mobj)
 		and foundmobj.valid and P_CheckSight(mobj, foundmobj) then
 			if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
 				if foundmobj.player and foundmobj.player.valid and
-				(not foundmobj.player.pizzaface) then
+				(not foundmobj.player.ptsr.pizzaface) then
 					return
 				end
 				
@@ -124,10 +124,10 @@ end, MT_PIZZAPORTAL)
 -- the easings are the opposites because the counter is going down, ex: out being in and in being out
 addHook("MobjThinker", function(mobj)
 	local player = mobj.player
-	if player.spectator or player.pizzaface then return end
+	if player.spectator or player.ptsr.pizzaface then return end
 	
 	if mobj.pizza_in then
-		local hudst = player["PT@hudstuff"]
+		local hudst = player.hudstuff
 		local div = FixedDiv(mobj.pizza_in*FRACUNIT, portal_time*FRACUNIT)
 		local ese = ease.outquint(div, minspritescale, maxspritescale)
 		mobj.pizza_in = $ - 1

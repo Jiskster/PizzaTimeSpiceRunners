@@ -21,7 +21,7 @@ local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 	local stolen = 0
 
 	for refplayer in players.iterate do
-		if player == refplayer or refplayer.ptsr_outofgame then
+		if player == refplayer or refplayer.ptsr.outofgame then
 			continue 
 		end
 			
@@ -43,7 +43,7 @@ local function JG_GetPlayerCount()
 	for player in players.iterate do
 		if player.mo and player.mo.valid 
 		and player.playerstate ~= PST_DEAD  
-		and not player.ptsr_outofgame then
+		and not player.ptsr.outofgame then
 			table.insert(player_range, player)
 		end
 	end
@@ -127,7 +127,7 @@ local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD and not player.ptsr_outofgame then
+		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD and not player.ptsr.outofgame then
 			table.insert(player_range, player)
 		end
 	end
@@ -227,7 +227,7 @@ addHook("MobjThinker", function(mobj)
 				pmo.hascrown = false
 			end
 			
-			if player.ptsr_outofgame and JG_GetPlayerCount() > 0 then
+			if player.ptsr.outofgame and JG_GetPlayerCount() > 0 then
 				JN_FindAndMakeNewJuggernaut()
 		
 				mobj.invalidcrown = true

@@ -10,16 +10,16 @@ PTSR.ReturnPizzaTimeMusic = function()
 	songdata["Pasta La Vista"] = 'PASTVI'
 
 	if PTSR.pizzatime and consoleplayer and consoleplayer.valid then
-		if consoleplayer.lapsdid == 2 then
+		if consoleplayer.ptsr.laps == 2 then
 			song = "The Death That I Deservioli"
-		elseif consoleplayer.lapsdid == 3 then
+		elseif consoleplayer.ptsr.laps == 3 then
 			song = "Pillar John's Revenge"
-		elseif consoleplayer.lapsdid == 4 then
+		elseif consoleplayer.ptsr.laps == 4 then
 			song = "Gluten Getaway"
-		elseif consoleplayer.lapsdid >= 5 then
+		elseif consoleplayer.ptsr.laps >= 5 then
 			song = "Pasta La Vista"
 		else
-			if consoleplayer.lapsdid <= 1 then
+			if consoleplayer.ptsr.laps <= 1 then
 				song = "It's Pizza Time!"
 			end
 		end

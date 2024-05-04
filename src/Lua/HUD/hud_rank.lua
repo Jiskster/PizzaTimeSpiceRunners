@@ -5,13 +5,13 @@ local rank_hud = function(v, player)
 	}
 	if not PTSR.IsPTSR() then return end
 	
-	if player.pizzaface then return end
+	if player.ptsr.pizzaface then return end
 
 	--get the percent to next rank
 	local per = (PTSR.maxrankpoints)/8
 	local percent = per
 	local score = 0
-	local rank = player.ptsr_rank
+	local rank = player.ptsr.rank
 	
 	if (rank == "D")
 		score = player.score
@@ -29,13 +29,13 @@ local rank_hud = function(v, player)
 	end
 	--
 
-	if player.ptsr_rank then
-		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr_rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
+	if player.ptsr.rank then
+		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
 		--luigi budd: the fill
 		if per
-		and (player.ptsr_rank ~= "P")
+		and (player.ptsr.rank ~= "P")
 			
-			local patch = PTSR.r2f(v,player.ptsr_rank)
+			local patch = PTSR.r2f(v,player.ptsr.rank)
 			local max = percent
 			local erm = FixedDiv(score,max)
 			

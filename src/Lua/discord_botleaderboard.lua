@@ -21,22 +21,22 @@ local function registerIt(successValue)
 				elseif (ping < 195) then statms = ':ping_yellow: '
 				elseif (ping < 256) then statms = ':ping_red: ' end
 				local rank = ':unknown: '
-				if player.pizzaface and leveltime then
-					rank = PTSR.PFMaskData[player.PTSR_pizzastyle or 1].emoji or ":pizza: "
+				if player.ptsr.pizzaface and leveltime then
+					rank = PTSR.PFMaskData[player.ptsr.pizzastyle or 1].emoji or ":pizza: "
 				elseif player.spectator or player.playerstate == PST_DEAD
 					rank = ':dead: '
-				elseif player.ptsr_rank
-					rank = '['..player.ptsr_rank:upper()..']'
+				elseif player.ptsr.rank
+					rank = '['..player.ptsr.rank:upper()..']'
 				end
-				--if player.mo and ((player.pflags & PF_FINISHED) or player.ptsr_outofgame) then pffinished = ":completed: " end
+				--if player.mo and ((player.pflags & PF_FINISHED) or player.ptsr.outofgame) then pffinished = ":completed: " end
 				if IsPlayerAdmin(player) then admin = ":remote_admin: " end
 				if player.playtime == nil then player.playtime = 0 end
 				local seconds = G_TicsToSeconds(player.playtime)
 				if string.len(seconds) == 1 then seconds = "0"..tostring(seconds) end
 				local pptime = G_TicsToMinutes(player.playtime, true)..":"..seconds
 				local line = statms..iconskin..rank..admin.."["..#player.."] `"..pname.."`: Score - "..player.score
-				if not player.pizzaface and player.ptsr_rank and player.lapsdid then
-					line = $ .. "; Laps - "..player.lapsdid -- .." / "..PTSR.maxlaps
+				if not player.ptsr.pizzaface and player.ptsr.rank and player.ptsr.laps then
+					line = $ .. "; Laps - "..player.ptsr.laps -- .." / "..PTSR.maxlaps
 					line = $ .. "; Rings -"..player.rings
 				end
 				playerstats = $ + line.."\n"

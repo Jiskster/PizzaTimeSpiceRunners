@@ -16,28 +16,29 @@ states[S_PT_PARRY] = {
 }
 
 
--- simple midgame joining blocker & more
+-- simple midgame joining blocker, variable init & more
 addHook("PlayerSpawn", function(player)
-	player.lapsdid = $ or 0
-	player.laptime = $ or 0 
+	player.ptsr = $ or PTSR_shallowcopy(PTSR.default_playervars)
+	player.ptsr.laps = $ or 0
+	player.ptsr.laptime = $ or 0 
 	
 	if player.realmo and player.realmo.valid then
-		if player.pizzaface then
+		if player.ptsr.pizzaface then
 			return
 		end
 		
 		if PTSR.pizzatime and leveltime then
-			if not player.ptsr_justrevived then
+			if not player.ptsr.justrevived then
 				player.spectator = true -- default behavior
 			else
-				player.ptsr_lastscore = nil
-				player.ptsr_lastrank = nil
-				player.ptsr_lastlaps = nil
+				player.ptsr.deathscore = nil
+				player.ptsr.deathrank = nil
+				player.ptsr.deathlaps = nil
 			
-				player.ptsr_justrevived = false
+				player.ptsr.justrevived = false
 				
-				if player.ptsr_revivelocation then
-					local revloc = player.ptsr_revivelocation 
+				if player.ptsr.revivelocation then
+					local revloc = player.ptsr.revivelocation 
 					P_SetOrigin(player.realmo, revloc.x, revloc.y, revloc.z)
 				end
 				
@@ -58,7 +59,7 @@ addHook("PlayerSpawn", function(player)
 end)
 
 addHook("PlayerSpawn", function(player)
-	player["PT@hudstuff"] = PTSR_shallowcopy(PTSR.hudstuff)
+	player.hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
 end)
 
 addHook("PlayerThink", function(player)
@@ -82,7 +83,7 @@ addHook("PlayerThink", function(player)
 end)
 
 addHook("PlayerThink", function(player)
-	local hudst = player["PT@hudstuff"]
+	local hudst = player.hudstuff
 	
 	if hudst then
 		if not hudst.wait_tics then
@@ -114,7 +115,7 @@ end)
 
 addHook("PlayerThink", function(player)
 	local pmo = player.mo
-	local hudst = player["PT@hudstuff"]
+	local hudst = player.hudstuff
 	local maxholdtime = PTSR.laphold -- HOLDFORLAP
 
 	if player.mo and player.mo.valid then
@@ -134,9 +135,9 @@ addHook("PlayerThink", function(player)
 		end 
 		
 		-- increment laptime
-		if player.laptime ~= nil and PTSR.pizzatime and not player.ptsr_outofgame 
+		if player.ptsr.laptime ~= nil and PTSR.pizzatime and not player.ptsr.outofgame 
 		and not player.mo.pizza_in and not player.mo.pizza_out then
-			player.laptime = $ + 1
+			player.ptsr.laptime = $ + 1
 		end
 		
 		-- elfilin support: KILL THE DAMN PLAYER WHEN TRYING TO RIDE A PIZZAFACE
@@ -144,7 +145,7 @@ addHook("PlayerThink", function(player)
 		if player.elfilin and player.elfilin.ridingplayer 
 		and player.mo and player.mo.valid and
 		player.elfilin.ridingplayer.valid and
-		player.elfilin.ridingplayer.player.pizzaface and player.playerstate == PST_LIVE then
+		player.elfilin.ridingplayer.player.ptsr.pizzaface and player.playerstate == PST_LIVE then
 			--P_KillMobj(player.mo,player.elfilin.ridingplayer)
 			player.elfilin.ridingplayer = 0
 		end
@@ -203,23 +204,23 @@ addHook("PlayerThink", function(player)
 	end
 	*/
 
-	--player.ptsr_rank = "P"
+	--player.ptsr.rank = "P"
 	-- boy what the hellllll o ma god way ayyaay
 	
 	if player.score < pec then
 		-- this is real p rank
 		-- cry like a wittle babyy!
-		player.ptsr_rank = "D"
+		player.ptsr.rank = "D"
 	elseif player.score <= pec*2 then
-		player.ptsr_rank = "C"	
+		player.ptsr.rank = "C"	
 	elseif player.score <= pec*4 then
-		player.ptsr_rank = "B"
+		player.ptsr.rank = "B"
 	elseif player.score <= PTSR.maxrankpoints then
-		player.ptsr_rank = "A"
+		player.ptsr.rank = "A"
 	elseif player.score <= pec*16 then
-		player.ptsr_rank = "S"
+		player.ptsr.rank = "S"
 	else		
-		player.ptsr_rank = "P"
+		player.ptsr.rank = "P"
 	end
 end)
 
@@ -246,7 +247,7 @@ addHook('ThinkFrame', function()
 		for p in players.iterate
 			
 			if (PTSR.pizzatime)
-				local outofgame = p.spectator or p.pizzaface or (p.playerstate == PST_DEAD and PTSR.pizzatime)
+				local outofgame = p.spectator or p.ptsr.pizzaface or (p.playerstate == PST_DEAD and PTSR.pizzatime)
 				if not outofgame
 					table.insert(PTSR.leaderboard,p)
 				end
@@ -258,8 +259,8 @@ addHook('ThinkFrame', function()
 			local p1 = a
 			local p2 = b
 			
-			if ranktonum[a.ptsr_rank] ~= ranktonum[b.ptsr_rank]
-				if ranktonum[a.ptsr_rank] > ranktonum[b.ptsr_rank]
+			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank]
+				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank]
 					return true
 				end
 			else

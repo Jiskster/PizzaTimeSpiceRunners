@@ -34,11 +34,11 @@ addHook("TouchSpecial", function(special, toucher)
 	local tplayer = toucher.player -- touching player
 	local gm_metadata = PTSR.currentModeMetadata()
 	
-	if tplayer.pizzaface then return true end
+	if tplayer.ptsr.pizzaface then return true end
 	
 	if special and special.valid 
 	and toucher and toucher.valid 
-	and tplayer and tplayer.valid and not tplayer.pizzaface then
+	and tplayer and tplayer.valid and not tplayer.ptsr.pizzaface then
 		if special.deathring_used then return true end
 		
 		if gm_metadata.allowrevive then 
@@ -51,7 +51,7 @@ addHook("TouchSpecial", function(special, toucher)
 				rplayer.ctfteam = 1
 				rplayer.playerstate = PST_REBORN
 
-				rplayer.ptsr_revivelocation = {
+				rplayer.ptsr.revivelocation = {
 					x = special.x,
 					y = special.y,
 					z = special.z
@@ -83,9 +83,9 @@ addHook("TouchSpecial", function(special, toucher)
 					chatprintf(consoleplayer, "\x83You have been revived!")
 				end
 				
-				rplayer.ptsr_justrevived = true -- variable for the hack to respawn 1 frame later
+				rplayer.ptsr.justrevived = true -- variable for the hack to respawn 1 frame later
 				
-				rplayer.ptsr_gotrevivedonce = true -- variable to check if the player got revived before
+				rplayer.ptsr.gotrevivedonce = true -- variable to check if the player got revived before
 			end				
 		else
 			if special.rings_kept then
@@ -108,7 +108,7 @@ addHook("MobjDeath", function(target, inflictor, source, damage, damagetype)
 	
 	if target and target.valid and player and player.valid 
 	and ((player.rings and not gm_metadata.allowrevive) or (gm_metadata.allowrevive and PTSR.pizzatime)) 
-	and not player.ptsr_gotrevivedonce and not PTSR.isOvertime() then
+	and not player.ptsr.gotrevivedonce and not PTSR.isOvertime() then
 		local deathring = P_SpawnMobj(target.x, target.y, target.z, MT_PT_DEATHRING)
 		if deathring then
 			deathring.rings_kept = player.rings

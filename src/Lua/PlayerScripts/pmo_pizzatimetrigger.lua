@@ -71,7 +71,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 
 			if count.active > 1 then
 				if CV_PTSR.pizzachoosetype.value == 1 then
-					mobj.player.pizzaface = true
+					mobj.player.ptsr.pizzaface = true
 					mobj.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
 					chatprint("\x85*"..mobj.player.name.." has become a pizza!") 
 					if DiscordBot then
@@ -101,7 +101,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 						for i=1,playerschoosing do
 							local chosen_playernum = P_RandomRange(1,#active_playernums) -- random entry in table
 							local chosen_player = active_playernums[chosen_playernum] -- get the chosen value in table
-							players[chosen_player].pizzaface = true
+							players[chosen_player].ptsr_pizzaface = true
 							players[chosen_player].realmo.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
 							
 							chatprint("\x85*"..players[chosen_player].name.." has become a pizza!") 
@@ -119,7 +119,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		for player in players.iterate() do
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
-			player.lapsdid = 1
+			player.ptsr.laps = 1
 			P_SetOrigin(pmo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			
@@ -128,7 +128,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
 			
-			if not player.pizzaface then
+			if not player.ptsr.pizzaface then
 				player.powers[pw_invulnerability] = CV_PTSR.tpinv.value*TICRATE+20
 				--player.powers[pw_nocontrol] = 20
 				L_SpeedCap(player.mo, 0)

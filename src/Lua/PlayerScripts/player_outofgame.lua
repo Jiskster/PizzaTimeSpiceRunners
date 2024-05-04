@@ -2,7 +2,7 @@
 local function isPlayerOutOfGame(mobj)
 	local player = mobj.player
 	
-	return player.ptsr_outofgame or false
+	return player.ptsr.outofgame or false
 end
 
 addHook("MobjDamage", isPlayerOutOfGame, MT_PLAYER)
@@ -10,7 +10,7 @@ addHook("MobjDamage", isPlayerOutOfGame, MT_PLAYER)
 addHook("MobjDeath", isPlayerOutOfGame, MT_PLAYER)
 
 addHook("PlayerThink", function(player)
-	if player.ptsr_outofgame then
+	if player.ptsr.outofgame then
 		player.powers[pw_nocontrol] = 1
 	end
 end)

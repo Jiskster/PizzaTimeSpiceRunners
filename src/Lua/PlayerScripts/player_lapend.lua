@@ -1,7 +1,7 @@
 // TODO: Make DoLapBonus not call ChatLapStatus, and seperately use them when they're needed.
 
 PTSR.ChatLapStatus = function(player)
-	local lapstring = "\x82\*LAP ".. player.lapsdid.. " ("..player.name.." "..G_TicsToMTIME(player.laptime, true)..")"
+	local lapstring = "\x82\*LAP ".. player.ptsr.laps.. " ("..player.name.." "..G_TicsToMTIME(player.ptsr.laptime, true)..")"
 	local isonconsole = CV_PTSR.lapbroadcast_type.value == 1
 	local isonchat = CV_PTSR.lapbroadcast_type.value == 2
 
@@ -17,10 +17,10 @@ PTSR.DoLapBonus = function(player)
 	
 	PTSR.ChatLapStatus(player)
 	
-	if player.lapsdid ~= nil then
+	if player.ptsr.laps ~= nil then
 		local escapebonus = true
 		
-		local lapbonus = player.lapsdid * (gm_metadata.lapbonus or PTSR.lapbonus)
+		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
 		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		
 		if PTSR_DoHook("onbonus", player) == true then
@@ -38,7 +38,7 @@ PTSR.DoLapBonus = function(player)
 		if escapebonus then
 			P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
 			if lapbonus or ringbonus then
-				CONS_Printf(player, "** Lap "..player.lapsdid.." bonuses **")
+				CONS_Printf(player, "** Lap "..player.ptsr.laps.." bonuses **")
 			end
 			
 			if lapbonus then

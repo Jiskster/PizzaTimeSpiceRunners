@@ -27,25 +27,25 @@ addHook("ThinkFrame", function()
 	-- better than the old code since it started a new iteration on every IF block.
 	
 	for player in players.iterate() do
-		if player.ptsr_outofgame then
+		if player.ptsr.outofgame then
 			player.powers[pw_underwater] = 9999 -- dont drown on me buddy!
-			player.ptsr_outofgame = 1
+			player.ptsr.outofgame = 1
 		end
 
 		if leveltime then -- just a safety check
-			if (player.lapsdid > PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
-				player.ptsr_outofgame = 1
+			if (player.ptsr.laps > PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then
+				player.ptsr.outofgame = 1
 			elseif (count.inactive - count.pizzas) == count.active then
-				if player.valid and not (player.ptsr_outofgame) then
-					player.ptsr_outofgame = 1
+				if player.valid and not (player.ptsr.outofgame) then
+					player.ptsr.outofgame = 1
 				end	
 			elseif (playerpfmode and not count.pizzas and PTSR.pizzatime) then -- no pizzas in playerpf mode
-				if player.valid and not (player.ptsr_outofgame) then
-					player.ptsr_outofgame = 1
+				if player.valid and not (player.ptsr.outofgame) then
+					player.ptsr.outofgame = 1
 				end	
 			else
-				if player.valid and (player.pizzaface or player.spectator) and not (player.lapsdid > PTSR.maxlaps) then
-					player.ptsr_outofgame = 0
+				if player.valid and (player.ptsr.pizzaface or player.spectator) and not (player.ptsr.laps > PTSR.maxlaps) then
+					player.ptsr.outofgame = 0
 				end
 			end
 		end

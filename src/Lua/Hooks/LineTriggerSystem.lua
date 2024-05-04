@@ -32,14 +32,14 @@ addHook("MobjLineCollide", function(mobj, line)
 		
 		-- Sign at start check.
 		if ((line.backsector and line.backsector == PTSR.endsector)
-		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.ptsr_outofgame and not player.spectator
-		and player.mo and player.mo.valid and player.lapsdid ~= nil then 
-			if player.pizzaface then
+		or (line.frontsector and line.frontsector == PTSR.endsector)) and not player.ptsr.outofgame and not player.spectator
+		and player.mo and player.mo.valid and player.ptsr.laps ~= nil then 
+			if player.ptsr.pizzaface then
 				PTSR.StartNewLap(mobj)
 				return
 			end
 			
-			player.ptsr_outofgame = 1
+			player.ptsr.outofgame = 1
 			
 			if CV_PTSR.forcelap.value
 			and PTSR_DoHook("onlap", toucher) ~= true then 

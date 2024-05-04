@@ -6,7 +6,7 @@ addHook("ThinkFrame", function()
 	
 	if not consoleplayer then return end
 	
-	local laps = consoleplayer.lapsdid
+	local laps = consoleplayer.ptsr.laps
 	if PTSR.pizzatime then
 		if PTSR.timeover and leveltime then
 			local mus = CV_PTSR.overtime_music.value

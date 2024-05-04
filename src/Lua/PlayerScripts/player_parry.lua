@@ -34,8 +34,8 @@ end
 -- Parry Stuff
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
-	if (player.playerstate == PST_DEAD) or (player.ptsr_outofgame) then return end 
-	if (player.pizzaface) then return end
+	if (player.playerstate == PST_DEAD) or (player.ptsr.outofgame) then return end 
+	if (player.ptsr.pizzaface) then return end
 	if PTSR.gameover then return end
 
 	local cmd = player.cmd
@@ -43,7 +43,7 @@ addHook("PlayerThink", function(player)
 	
 	local gm_metadata = PTSR.currentModeMetadata()
 	
-	if not player.mo.ptsr_parry_cooldown then
+	if not player.mo.ptsr.parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
 				local failparrysfx = {
@@ -65,7 +65,7 @@ addHook("PlayerThink", function(player)
 						or (foundmobj.type == MT_PLAYER) then
 							if foundmobj.type == MT_PLAYER then
 								if foundmobj.player and foundmobj.player.valid then	
-									if not foundmobj.player.pizzaface then
+									if not foundmobj.player.ptsr.pizzaface then
 										if not friendlyfire then
 											return
 										end
@@ -88,12 +88,12 @@ addHook("PlayerThink", function(player)
 							end
 							
 							PTSR.DoParry(player.mo, foundmobj)
-							player.lastparryframe = leveltime
+							player.ptsr.lastparryframe = leveltime
 							
 							PTSR.DoParryAnim(player.mo, true)
 							PTSR.DoParryAnim(foundmobj)
 
-							player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
+							player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 
 							gotapf = true
 						end
@@ -110,8 +110,8 @@ addHook("PlayerThink", function(player)
 					tryparry.fuse = 2
 					P_SetScale(tryparry, (3*FRACUNIT)/2)
 					L_SpeedCap(player.mo, 5*FRACUNIT)
-					player.lastparryframe = leveltime
-					player.mo.ptsr_parry_cooldown = CV_PTSR.parrycooldown.value
+					player.ptsr.lastparryframe = leveltime
+					player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 				end
 			
 				player.mo.pre_parry = true
@@ -121,9 +121,9 @@ addHook("PlayerThink", function(player)
 		end
 	end
 	
-	if player.mo.ptsr_parry_cooldown then
-		player.mo.ptsr_parry_cooldown = $ - 1
-		if not player.mo.ptsr_parry_cooldown then
+	if player.mo.ptsr.parry_cooldown then
+		player.mo.ptsr.parry_cooldown = $ - 1
+		if not player.mo.ptsr.parry_cooldown then
 			S_StartSound(player.mo, sfx_ngskid)
 			local tryparry = P_SpawnGhostMobj(player.mo)
 			tryparry.color = SKINCOLOR_GOLDENROD

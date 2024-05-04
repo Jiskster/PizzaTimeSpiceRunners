@@ -1,13 +1,13 @@
 local lap_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
-	if not player.laptime then return end
-	if player.pizzaface then return end
+	if not player.ptsr.laptime then return end
+	if player.ptsr.pizzaface then return end
 	if not (consoleplayer and consoleplayer.valid) then return end
 
 	if not player == consoleplayer then return end
 	
 	local lap2flag = v.cachePatch("LAP2FLAG")
-	local hudst = player["PT@hudstuff"]
+	local hudst = player.hudstuff
 	
 	local shakex = v.RandomRange(-FU/2,FU/2)
 	local shakey = v.RandomRange(-FU/2,FU/2)
@@ -24,16 +24,16 @@ local lap_hud = function(v, player)
 	cz.y = $ + shakey
 
 	if cz.y ~= nil and hudst.anim_active then
-		if player.lapsdid == 2
+		if player.ptsr.laps == 2
 			v.drawScaled(cz.x,cz.y,FRACUNIT/3, lap2flag, V_SNAPTOTOP)
-		elseif player.lapsdid == 3 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.lapsdid, V_SNAPTOTOP)
-		elseif player.lapsdid == 4 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.lapsdid, V_SNAPTOTOP|V_YELLOWMAP)
-		elseif player.lapsdid == 5 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.lapsdid, V_SNAPTOTOP|V_PURPLEMAP)
-		elseif player.lapsdid >= 6 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.lapsdid, V_SNAPTOTOP|V_REDMAP)
+		elseif player.ptsr.laps == 3 then
+			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP)
+		elseif player.ptsr.laps == 4 then
+			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_YELLOWMAP)
+		elseif player.ptsr.laps == 5 then
+			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_PURPLEMAP)
+		elseif player.ptsr.laps >= 6 then
+			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_REDMAP)
 		end
 	end
 end

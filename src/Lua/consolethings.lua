@@ -16,8 +16,8 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 	
 	if players[tonumber(arg)] then
 		local targetplayer = players[tonumber(arg)]
-		if targetplayer and targetplayer.valid and not targetplayer.pizzaface then
-			targetplayer.pizzaface = true
+		if targetplayer and targetplayer.valid and not targetplayer.ptsr.pizzaface then
+			targetplayer.ptsr.pizzaface = true
 			chatprint("\x85*"..targetplayer.name.." has become a pizza!")
 			if DiscordBot then
 				DiscordBot.Data.msgsrb2 = $ .. "**".. targetplayer.name .. "** has magically become a pizza!\n"
@@ -428,7 +428,7 @@ COM_AddCommand("_PTSR_pizzastyle_sync", function(player, blah, set)
 		return
 	end
 	
-	player.PTSR_pizzastyle = tonumber(set)
+	player.ptsr.pizzastyle = tonumber(set)
 end)
 
 CV_PTSR.oldmusic = CV_RegisterVar({

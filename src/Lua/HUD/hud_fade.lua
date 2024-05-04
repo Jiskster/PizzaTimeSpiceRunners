@@ -5,7 +5,7 @@ local fade_hud = function(v, player)
 	local i_tic = PTSR.intermission_tics
 	if not PTSR.gameover then return end
 	
-	local p_rank = (player.ptsr_rank == "P") or (player.ptsr_lastrank == "P")
+	local p_rank = (player.ptsr.rank == "P") or (player.ptsr.deathrank == "P")
 	
 	local div = min(FixedDiv(i_tic*FU, 129*FRACUNIT), FRACUNIT)
 	local div2 = min(FixedDiv(i_tic*FU, PTSR.intermission_act1*FRACUNIT),FRACUNIT)
@@ -75,7 +75,7 @@ local fade_hud = function(v, player)
 	end
 	
 	if i_tic > PTSR.intermission_act1 then
-		q_rank = PTSR.r2p(v,player.ptsr_lastrank or player.ptsr_rank)
+		q_rank = PTSR.r2p(v,player.ptsr.deathrank or player.ptsr.rank)
 	end
 	
 	local shakex = i_tic > PTSR.intermission_act1 and v.RandomRange(-c1/2,c1/2) or 0 
@@ -165,8 +165,8 @@ local fade_hud = function(v, player)
 			v.drawScaled(x5, y5, scale, patch, V_SNAPTOLEFT, v.getColormap(nil,player.skincolor))
 			
 			customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
-			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.ptsr_lastscore or player.score), "PTFNT", nil, "right", FRACUNIT/2, SKINCOLOR_BLUE)
-			customhud.CustomFontString(v, x4, y4, "LAPS: "..(player.ptsr_lastlaps or player.lapsdid), "PTFNT", nil, "right", FRACUNIT/2, SKINCOLOR_BLUE)
+			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.ptsr.deathscore or player.score), "PTFNT", nil, "right", FRACUNIT/2, SKINCOLOR_BLUE)
+			customhud.CustomFontString(v, x4, y4, "LAPS: "..(player.ptsr.deathlaps or player.ptsr.laps), "PTFNT", nil, "right", FRACUNIT/2, SKINCOLOR_BLUE)
 			
 			customhud.CustomFontString(v, x3, y3, "STILL WORKING ON RANK SCREEN!", "PTFNT", nil, "center", FRACUNIT/2, SKINCOLOR_RED)
 		end

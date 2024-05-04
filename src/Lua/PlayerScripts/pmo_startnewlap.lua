@@ -1,7 +1,7 @@
 PTSR.StartNewLap = function(mobj)
 	local player = mobj.player
 
-	if not player.pizzaface and not player.spectator and player.playerstate ~= PST_DEAD and mobj.valid then
+	if not player.ptsr.pizzaface and not player.spectator and player.playerstate ~= PST_DEAD and mobj.valid then
 		PTSR.LapTP(player, true)
 
 		S_StartSound(nil, sfx_lap2, player)
@@ -9,17 +9,17 @@ PTSR.StartNewLap = function(mobj)
 			PTSR:SpawnPFAI()
 		end
 		
-		player.laptime = 0
+		player.ptsr.laptime = 0
 		
 		
-		player.lapsdid = $ + 1
+		player.ptsr.laps = $ + 1
 		PTSR.laps = $ + 1
 		
 		
 		
 		/* Unused code idk what tf this is for
-		if player.lapsdid > PTSR.laps
-			PTSR.laps = player.lapsdid
+		if player.ptsr.laps > PTSR.laps
+			PTSR.laps = player.ptsr.laps
 		end
 		*/
 		

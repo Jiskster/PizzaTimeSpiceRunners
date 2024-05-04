@@ -167,7 +167,7 @@ addHook("PreThinkFrame", function()
 		
 		player.hold_newlap = $ or 0
 		
-		if player.ptsr_outofgame and not (player.lapsdid >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
+		if player.ptsr.outofgame and not (player.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
 			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
 				player.hold_newlap = $ + 1
 			else
@@ -244,7 +244,7 @@ addHook("PreThinkFrame", function()
 			end
 		end
 		
-		if PTSR:inVoteScreen() or player.ptsr_outofgame then
+		if PTSR:inVoteScreen() or player.ptsr.outofgame then
 			cmd.buttons = 0
 			cmd.forwardmove = 0
 			cmd.sidemove = 0	

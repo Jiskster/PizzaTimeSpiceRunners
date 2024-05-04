@@ -102,7 +102,7 @@ hud.add( function(v, player, camera)
 		if tmo.player and player == tmo.player then continue end
 		
 		if tmo.player and tmo.player.valid then
-			if not tmo.player.pizzaface then
+			if not tmo.player.ptsr.pizzaface then
 				continue
 			end
 		end
@@ -178,7 +178,7 @@ hud.add( function(v, player, camera)
 		if tmo.type == MT_PIZZA_ENEMY or tmo.type == MT_PLAYER then
 			local maskdata = nil
 			if tmo.type == MT_PLAYER then
-				maskdata = PTSR.PFMaskData[tmo.player.PTSR_pizzastyle or 1]
+				maskdata = PTSR.PFMaskData[tmo.player.ptsr.pizzastyle or 1]
 			else
 				maskdata = PTSR.PFMaskData[tmo.pizzastyle or 1]
 			end

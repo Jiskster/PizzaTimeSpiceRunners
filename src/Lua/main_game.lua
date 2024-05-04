@@ -108,6 +108,25 @@ PTSR.laphold = 10*TICRATE -- hold fire to lap
 
 PTSR.coremodes = {["1"] = true, ["2"] = true}
 
+PTSR.default_playervars = {
+	rank = "D",
+	pizzaface = false,
+	pizzamask = nil,
+	laps = 0,
+	laptime = 0,
+	outofgame = 0,
+	gotrevivedonce = false,
+	justrevived = false,
+	
+	-- exists to save score when you die, is for rank screen when you die.
+	lastscore = nil, 
+	lastrank = nil,
+	lastlaps = nil,
+
+	lastparryframe = nil,
+	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
+}
+
 PTSR.gamemode_list = {}
 
 PTSR.RegisterGamemode = function(name, input_table)
@@ -269,10 +288,10 @@ rawset(_G, "PTSR_COUNT", do
 
 	for player in players.iterate
 		if player.valid
-			if player.pizzaface then
+			if player.ptsr.pizzaface then
 				pizzaCount = $+1
 			end
-			if player.ptsr_outofgame or player.spectator or player.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
+			if player.ptsr.outofgame or player.spectator or player.ptsr.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
 				inactiveCount = $+1
 			end
 		end
@@ -352,8 +371,8 @@ addHook("ThinkFrame", do
 					PTSR.gameover = true
 					print("GAME OVER!")
 					if consoleplayer and consoleplayer.valid then
-						S_ChangeMusic(RANKMUS[consoleplayer.ptsr_rank], false, player)
-						mapmusname = RANKMUS[consoleplayer.ptsr_rank]
+						S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
+						mapmusname = RANKMUS[consoleplayer.ptsr.rank]
 					end
 
 					PTSR_DoHook("ongameend")
@@ -370,6 +389,11 @@ addHook("ThinkFrame", do
 		end
 	end 
 end)
+
+-- we love mobjs too
+addHook("MobjSpawn", function(mobj)
+	mobj.ptsr = {}
+end, MT_PLAYER)
 
 rawset(_G, "GT_PIZZATIMEJISK", GT_PTSPICER)
 rawset(_G, "PTJE", PTSR)

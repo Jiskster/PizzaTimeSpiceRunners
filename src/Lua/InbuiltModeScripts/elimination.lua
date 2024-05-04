@@ -17,7 +17,7 @@ local function EL_GetPlayerCount()
 	for player in players.iterate do
 		if player.mo and player.mo.valid 
 		and player.playerstate ~= PST_DEAD  
-		and not player.ptsr_outofgame then
+		and not player.ptsr.outofgame then
 			table.insert(player_range, player)
 		end
 	end
@@ -79,8 +79,8 @@ addHook("ThinkFrame", function()
 				print("GAME OVER!")
 				
 				if consoleplayer and consoleplayer.valid then
-					S_ChangeMusic(PTSR.RANKMUS[consoleplayer.ptsr_rank], false, player)
-					mapmusname = PTSR.RANKMUS[consoleplayer.ptsr_rank]
+					S_ChangeMusic(PTSR.RANKMUS[consoleplayer.ptsr.rank], false, player)
+					mapmusname = PTSR.RANKMUS[consoleplayer.ptsr.rank]
 				end
 			end
 		end

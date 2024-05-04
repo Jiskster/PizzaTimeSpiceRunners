@@ -134,7 +134,7 @@ addHook("MobjThinker",function(mo)
 				if found and found.valid
 				and found.health
 				and found.player
-				and not (found.player.pizzaface)
+				and not (found.player.ptsr.pizzaface)
 				and (P_CheckSight(mo,found))
 					if mo.icygus
 						mo.state = S_GUSTAVO_ICE_RALLY
@@ -197,7 +197,7 @@ addHook("MobjThinker",function(mo)
 				if found and found.valid
 				and found.health
 				and found.player
-				and not (found.player.pizzaface)
+				and not (found.player.ptsr.pizzaface)
 				and (P_CheckSight(mo,found))
 					mo.state = S_STICK_EXIT_FALL
 					mo.alreadyfell = true

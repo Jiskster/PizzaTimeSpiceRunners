@@ -9,7 +9,7 @@ local scoreboard_hud = function(v, player)
 
 	local player_list = {}
 	for _player in players.iterate do
-		if not _player.spectator and not _player.pizzaface then
+		if not _player.spectator and not _player.ptsr.pizzaface then
 			table.insert(player_list, _player)
 		end
 	end
@@ -53,7 +53,7 @@ local scoreboard_hud = function(v, player)
 
 		-- [Player Rank] --
 		v.drawScaled(_xcoord - 16*FRACUNIT + 8*FRACUNIT, _ycoord + 8*FRACUNIT, FRACUNIT/4, 
-		PTSR.r2p(v,_player.ptsr_rank), commonflags)
+		PTSR.r2p(v,_player.ptsr.rank), commonflags)
 
 		/*
 		if _player.timeshit then -- no p rank for you noob, but on score hud
@@ -76,7 +76,7 @@ local scoreboard_hud = function(v, player)
 		v.drawString(_xcoord + 16*FRACUNIT, _ycoord + 8*FRACUNIT, tostring(_player.score), (commonflags), "thin-fixed")
 
 		v.drawString( _xcoord +8*FRACUNIT+(scorewidth*FU), _ycoord+8*FRACUNIT,  _player.ping.."ms", (commonflags|playerpingcolor), "thin-fixed")
-		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.lapsdid, (commonflags), "thin-fixed")
+		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.ptsr.laps, (commonflags), "thin-fixed")
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	
 		-- show crown in leaderboard
@@ -89,7 +89,7 @@ local scoreboard_hud = function(v, player)
 		end
 		
 		-- [Finish Flag] --
-		if (_player.ptsr_outofgame)
+		if (_player.ptsr.outofgame)
 			v.drawScaled(_xcoord - 6*FRACUNIT,_ycoord+11*FRACUNIT,FU/2,
 				v.getSpritePatch(SPR_FNSF,A,0),
 				(commonflags)|V_FLIP

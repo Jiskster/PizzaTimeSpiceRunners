@@ -41,6 +41,14 @@ function PTSR:AddComboTime(player, amount)
 	end
 end
 
+function PTSR.CanComboTimeDecrease(player)
+	if player.mo and player.mo.valid then
+		return not (player.mo.pizza_in or player.mo.pizza_out)
+	end
+	
+	return false
+end
+
 addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
 	if not (player.mo and player.mo.valid) then return end
@@ -49,7 +57,7 @@ addHook("PlayerThink", function(player)
 		player.ptsr.combo_tweentime = $ - 1
 	end
 	
-	if player.ptsr.combo_timeleft then
+	if player.ptsr.combo_timeleft and PTSR.CanComboTimeDecrease(player) then
 		player.ptsr.combo_active = true
 		player.ptsr.combo_timeleft = $ - 1
 		

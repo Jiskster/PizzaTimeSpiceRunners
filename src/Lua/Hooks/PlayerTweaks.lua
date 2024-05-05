@@ -9,7 +9,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 		if (target.flags & MF_ENEMY) then 
 			P_AddPlayerScore(player, enemy_score)
 			PTSR:AddCombo(player)
-			PTSR:AddComboTime(player, 3*TICRATE)
+			PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
 		elseif (target.type == MT_RING or target.type == MT_COIN)
 			P_AddPlayerScore(player, ring_score)
 			PTSR:AddComboTime(player, 1*TICRATE)

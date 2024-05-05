@@ -140,6 +140,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		if PTSR.john and PTSR.john.valid then
 			local john = PTSR.john
 			PTSR.KnockJohnPillar(john)
+			PTSR:AddComboTime(mobj.player, mobj.player.ptsr.combo_maxtime)
 		end
 		
 		if not PTSR.timeover then

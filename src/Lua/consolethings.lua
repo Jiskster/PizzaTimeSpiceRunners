@@ -399,6 +399,13 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 })
 */
 
+CV_PTSR.combotime = CV_RegisterVar({
+	name = "PTSR_combotime",
+	defaultvalue = "10",
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 60}, 
+})
+
 CV_PTSR.overtime_music = CV_RegisterVar({
 	name = "PTSR_overtime_music",
 	defaultvalue = "on",

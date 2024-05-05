@@ -122,10 +122,13 @@ PTSR.default_playervars = {
 	combo_count = 0,
 	combo_active = false,
 	combo_timeleft = 0,
-	combo_maxtime = 7*TICRATE,
+	combo_maxtime = 8*TICRATE,
 	combo_elapsed = 0, -- timer used for tweening the combo in when starting a combo
 	combo_timesfailed = 0,
 	combo_times_started = 0,
+	
+	combo_outro_count = 0, -- i want to keep the old combo visible when exiting
+	combo_outro_tics = 0,
 	
 	gotrevivedonce = false,
 	justrevived = false,

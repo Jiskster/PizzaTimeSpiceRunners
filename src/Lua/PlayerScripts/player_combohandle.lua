@@ -1,7 +1,9 @@
 PTSR.combotween = 10
+PTSR.combo_outro_tics = 6*TICRATE
 
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
+		player.ptsr.combo_outro_tics = 0
 		player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
 		player.ptsr.combo_times_started = $ + 1
 	end
@@ -64,12 +66,25 @@ addHook("PlayerThink", function(player)
 		player.ptsr.combo_elapsed = $ + 1
 		
 		if not player.ptsr.combo_timeleft then
+			player.ptsr.combo_outro_count = player.ptsr.combo_count
 			PTSR:EndCombo(player)
-			player.ptsr.combo_elapsed = 0
+			
 			
 			if not player.ptsr.outofgame then
 				player.ptsr.combo_timesfailed = $ + 1
 			end
+			
+			player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+			S_StartSound(player.mo, sfx_s1c5, player)
+		end
+	end
+	
+	if player.ptsr.combo_outro_tics then
+		player.ptsr.combo_outro_tics = $ - 1
+		player.ptsr.combo_elapsed = $ + 1
+		
+		if not player.ptsr.combo_outro_tics then
+			player.ptsr.combo_elapsed = 0
 		end
 	end
 end)

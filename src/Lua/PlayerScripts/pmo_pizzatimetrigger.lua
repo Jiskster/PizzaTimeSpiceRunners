@@ -101,7 +101,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 						for i=1,playerschoosing do
 							local chosen_playernum = P_RandomRange(1,#active_playernums) -- random entry in table
 							local chosen_player = active_playernums[chosen_playernum] -- get the chosen value in table
-							players[chosen_player].ptsr_pizzaface = true
+							players[chosen_player].ptsr.pizzaface = true
 							players[chosen_player].realmo.pfstuntime = CV_PTSR.pizzatimestun.value*TICRATE
 							
 							chatprint("\x85*"..players[chosen_player].name.." has become a pizza!") 

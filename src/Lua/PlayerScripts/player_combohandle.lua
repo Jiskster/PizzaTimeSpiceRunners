@@ -3,6 +3,7 @@ PTSR.combotween = 10
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
+		player.ptsr.combo_times_started = $ + 1
 	end
 end
 
@@ -60,9 +61,15 @@ addHook("PlayerThink", function(player)
 	if player.ptsr.combo_timeleft and PTSR.CanComboTimeDecrease(player) then
 		player.ptsr.combo_active = true
 		player.ptsr.combo_timeleft = $ - 1
+		player.ptsr.combo_elapsed = $ + 1
 		
 		if not player.ptsr.combo_timeleft then
 			PTSR:EndCombo(player)
+			player.ptsr.combo_elapsed = 0
+			
+			if not player.ptsr.outofgame then
+				player.ptsr.combo_timesfailed = $ + 1
+			end
 		end
 	end
 end)

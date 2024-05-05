@@ -14,11 +14,17 @@ local combo_hud = function(v, player)
 	local combo_maxtime = player.ptsr.combo_maxtime
 	local combo_count = player.ptsr.combo_count
 	local belowhalf = (player.ptsr.combo_timeleft < player.ptsr.combo_maxtime/2)
+	local tween_popin_time = TICRATE
+	local tween_popin_div = FixedDiv(min(player.ptsr.combo_elapsed, tween_popin_time), tween_popin_time)
+	
+	local ese_popin = ease.outback(tween_popin_div, -100*FU, 0)
 
 	local ese = ease.outexpo(FU - FixedDiv(combo_tween_time*FU, PTSR.combotween*FU), combo_timeleft_prev, combo_timeleft)
 	local meat = combo_tween_time and ese or combo_timeleft
 	-- (tl/maxtime)*indic_max
 	local indic_newx = FixedMul(FixedDiv(meat*FU, combo_maxtime*FU), indic_max)
+	
+	bar_x = $ + ese_popin
 	
 	if belowhalf then
 		bar_y = $ + sin(FixedAngle(FU)*(leveltime*32)*2)*2
@@ -26,7 +32,7 @@ local combo_hud = function(v, player)
 
 	v.drawScaled(bar_x + indic_newx, bar_y+20*FU, FU/2, indic, V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
 	v.drawScaled(bar_x, bar_y, FU/2, bar, V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
-	
+
 	-- very normal code
 	local combostring = tostring(combo_count)
 	local input = combostring:reverse() -- HACK: grrr i cant indent to the right so i do this

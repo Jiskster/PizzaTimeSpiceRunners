@@ -219,8 +219,13 @@ addHook("PlayerThink", function(player)
 		player.ptsr.rank = "A"
 	elseif player.score <= pec*16 then
 		player.ptsr.rank = "S"
-	else		
-		player.ptsr.rank = "P"
+	else
+		if player.ptsr.combo_timesfailed == 0 
+		and player.ptsr.combo_times_started == 1 then -- never gave up, one chance
+			player.ptsr.rank = "P"
+		else
+			player.ptsr.rank = "S"
+		end
 	end
 end)
 

@@ -60,7 +60,7 @@ local leaderboard_hud = function(v,p)
 				)
 				v.drawString(tweenx-(lifepatch.width*scale/2),
 					y+18*FU,
-					rankcolor[ldr[i].ptsr_rank]..ldr[i].ptsr_rank.."\x80 - "..ldr[i].score,
+					rankcolor[ldr[i].ptsr.rank]..ldr[i].ptsr.rank.."\x80 - "..ldr[i].score,
 					V_SNAPTOLEFT|V_ALLOWLOWERCASE,
 					"thin-fixed-center"
 				)

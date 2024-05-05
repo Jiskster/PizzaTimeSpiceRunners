@@ -23,9 +23,11 @@ local rank_hud = function(v, player)
 	elseif (rank == "A")
 		score = player.score-(per*4)
 		percent = $*4
+	/*
 	elseif (rank == "S")
 		score = player.score-(PTSR.maxrankpoints)
 		percent = $*8
+	*/
 	end
 	--
 

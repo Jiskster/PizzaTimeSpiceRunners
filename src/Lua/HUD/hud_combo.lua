@@ -3,7 +3,7 @@ local combo_hud = function(v, player)
 	if not PTSR.PlayerHasCombo(player) then return end
 	
 	local bar = v.cachePatch("PTSR_COMBOBAR")
-	local indic = v.cachePatch("PTSR_INDIC01") -- in dick :skull:
+	local indic = v.cachePatch("PTSR_INDIC0"..tostring((leveltime%8)+1)) -- in dick :skull:
 	local colormap = v.getColormap(player.skin, player.skincolor)
 	local bar_x = 5*FU; bar_x = $ + sin(FixedAngle(FU)*(leveltime*4))*2 -- sway side to side
 	local bar_y = 30*FU

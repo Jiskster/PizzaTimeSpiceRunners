@@ -12,7 +12,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 			PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
 		elseif (target.type == MT_RING or target.type == MT_COIN)
 			P_AddPlayerScore(player, ring_score)
-			PTSR:AddComboTime(player, 1*TICRATE)
+			PTSR:AddComboTime(player, TICRATE/2)
 		end
 	end
 end)

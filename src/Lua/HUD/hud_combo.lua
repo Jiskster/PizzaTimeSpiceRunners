@@ -20,7 +20,7 @@ local combo_hud = function(v, player)
 	local bar_x = 5*FU; 
 	
 	
-	local bar_y = 30*FU
+	local bar_y = 40*FU
 	local indic_max = 67*FU
 	local combo_timeleft = player.ptsr.combo_timeleft
 	local combo_timeleft_prev = player.ptsr.combo_timeleft_prev

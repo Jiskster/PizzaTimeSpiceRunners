@@ -81,7 +81,7 @@ local fade_hud = function(v, player)
 	local shakex = i_tic > PTSR.intermission_act1 and v.RandomRange(-c1/2,c1/2) or 0 
 	local shakey = i_tic > PTSR.intermission_act1 and v.RandomRange(-c1/2,c1/2) or 0
 	
-	if p_rank then
+	if p_rank and skins[player.skin].sprites[SPR2_RUN_].numframes then
 		local s_width = v.width()/v.dupx()*FU
 		local s_height = v.height()/v.dupy()*FU
 		local runfr = leveltime % skins[player.skin].sprites[SPR2_RUN_].numframes

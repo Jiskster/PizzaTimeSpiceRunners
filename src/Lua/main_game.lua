@@ -103,6 +103,7 @@ PTSR.enemy_score = 800
 
 PTSR.lapbonus = 777
 PTSR.ringlapbonus = 13
+PTSR.combobonus = 125
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 

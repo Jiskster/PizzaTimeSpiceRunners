@@ -4,6 +4,7 @@ hooks.onlap = {}
 hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}
+hooks.oncombobonus = {}
 hooks.onpizzatime = {}
 hooks.ondamage = {}
 hooks.ongameend = {}

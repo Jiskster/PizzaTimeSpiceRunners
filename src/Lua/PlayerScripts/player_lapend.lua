@@ -22,6 +22,7 @@ PTSR.DoLapBonus = function(player)
 		
 		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
 		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
+		local combobonus = player.ptsr.combo_count * (gm_metadata.combobonus or PTSR.combobonus)
 		
 		if PTSR_DoHook("onbonus", player) == true then
 			escapebonus = false
@@ -32,6 +33,11 @@ PTSR.DoLapBonus = function(player)
 		end
 		
 		if PTSR_DoHook("onringbonus", player) == true then
+			ringbonus = 0
+		end
+		
+		-- This might get deleted later. TODO: Remove this comment if this stays in final release
+		if PTSR_DoHook("oncombobonus", player) == true then
 			ringbonus = 0
 		end
 		
@@ -47,6 +53,10 @@ PTSR.DoLapBonus = function(player)
 			
 			if ringbonus then
 				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
+			end
+			
+			if combobonus then
+				CONS_Printf(player, "* "..combobonus.." combo bonus!")
 			end
 		end
 	end

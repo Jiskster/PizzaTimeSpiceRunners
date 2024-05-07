@@ -123,6 +123,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			P_SetOrigin(pmo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			
+			PTSR:AddComboTime(player, player.ptsr.combo_maxtime) -- give everyone combo time cause IM NICE!
+			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
 			if angle_frompotal and tonumber(angle_frompotal) then
 				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
@@ -140,7 +142,6 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		if PTSR.john and PTSR.john.valid then
 			local john = PTSR.john
 			PTSR.KnockJohnPillar(john)
-			PTSR:AddComboTime(mobj.player, mobj.player.ptsr.combo_maxtime)
 		end
 		
 		if not PTSR.timeover then

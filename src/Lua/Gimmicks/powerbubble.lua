@@ -211,6 +211,11 @@ addHook("TouchSpecial", function(special, toucher)
 		end
 	end
 	
+	if toucher.player and toucher.player.valid then
+		local player = toucher.player
+		PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
+	end
+	
 	A_PT_BubbleFloatAnim(special, popcolor)
 end, MT_PT_BUBBLE)
 

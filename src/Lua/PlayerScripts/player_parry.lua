@@ -87,12 +87,17 @@ addHook("PlayerThink", function(player)
 								return true
 							end
 							
+							if foundmobj.type == MT_PIZZA_ENEMY or (foundmobj.player and foundmobj.player.valid 
+							and foundmobj.player.ptsr and foundmobj.player.ptsr.pizzaface) then
+								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
+							end
+							
 							PTSR.DoParry(player.mo, foundmobj)
 							player.ptsr.lastparryframe = leveltime
 							
 							PTSR.DoParryAnim(player.mo, true)
 							PTSR.DoParryAnim(foundmobj)
-
+							
 							player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 
 							gotapf = true

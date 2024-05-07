@@ -78,7 +78,7 @@ addHook("TouchSpecial", function(special, toucher)
 					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
 				end
 				
-				PTSR:AddComboTime(tplayer, player.ptsr.combo_maxtime)
+				PTSR:AddComboTime(tplayer, tplayer.ptsr.combo_maxtime)
 				
 				if rplayer == consoleplayer then
 					displayplayer = consoleplayer -- go back in your view boi
@@ -93,7 +93,7 @@ addHook("TouchSpecial", function(special, toucher)
 			if special.rings_kept then
 				P_GivePlayerRings(tplayer, special.rings_kept)
 				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
-				PTSR:AddComboTime(tplayer, player.ptsr.combo_maxtime)
+				PTSR:AddComboTime(tplayer, tplayer.ptsr.combo_maxtime)
 				
 				if DiscordBot then
 					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)

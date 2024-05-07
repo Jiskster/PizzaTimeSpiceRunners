@@ -218,8 +218,6 @@ addHook("PlayerThink", function(player)
 	elseif player.score <= PTSR.maxrankpoints then
 		player.ptsr.rank = "A"
 	elseif player.score <= pec*16 then
-		player.ptsr.rank = "S"
-	else
 		if player.ptsr.combo_timesfailed == 0 
 		and player.ptsr.combo_times_started == 1 then -- never gave up, one chance
 			player.ptsr.rank = "P"

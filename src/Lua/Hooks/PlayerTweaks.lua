@@ -17,7 +17,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 			P_AddPlayerScore(player, ring_score)
 			
 			if not player.ptsr.pizzaface then
-				PTSR:AddComboTime(player, TICRATE/2)
+				PTSR:AddComboTime(player, TICRATE)
 			end
 		end
 	end

@@ -369,7 +369,8 @@ addHook("MobjThinker", function(mobj)
 	PTSR.addw2sobject(mobj)
 
 	if not PTSR.pizzatime then return end
-
+	if (mobj.takis_flingme ~= false) then mobj.takis_flingme = false end
+	
 	if mobj.pfstuntime then
 		mobj.pfstuntime = $ - 1
 		if not mobj.pfstunmomentum then
@@ -399,9 +400,12 @@ addHook("MobjThinker", function(mobj)
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
+		local rubber_range = 250*mobj.pizza_target.scale
 		
 		if CV_PTSR.airubberband.value then
-			offset_speed = (10*FU)
+			offset_speed = FixedMul(speed, FU+FixedDiv(dist - rubber_range, rubber_range))
+			offset_speed = $-speed
+			if offset_speed < 0 then offset_speed = 0 end
 		end
 		
 		if mobj.eflags & MFE_UNDERWATER then
@@ -420,11 +424,11 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedMul($, newspeed)
 		end
 
+
 		local val = CV_PTSR.aileash.value
 		if not multiplayer then
 			val = min($, 5000*FU) --prevents despawning
 		end
-
 		if dist > val then
 			if not mobj.pfstuntime then
 				PTSR:RNGPizzaTP(mobj, true)
@@ -469,11 +473,7 @@ addHook("MobjThinker", function(mobj)
 			ghost.fuse = 22
 			ghost.colorized = true
 
-			if mobj.redgreen then
-				ghost.color = colors[1]
-			else
-				ghost.color = colors[2]
-			end
+			ghost.color = (mobj.redgreen or true) and colors[1] or colors[2]
 			mobj.redgreen = not mobj.redgreen
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
 		end

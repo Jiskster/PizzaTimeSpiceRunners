@@ -203,7 +203,7 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	enemy_score = 2000,
 	ringlapbonus = PTSR.ringlapbonus*2,
 	lapbonus = PTSR.lapbonus*4,
-	pfspeedmulti = (FU*7)/4, -- 1.75x
+	pfspeedmulti = (FU/4)*5, -- 1.25x
 	overtime_textontime = "HARD MODE!",
 })
 

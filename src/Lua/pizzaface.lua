@@ -369,7 +369,6 @@ addHook("MobjThinker", function(mobj)
 	PTSR.addw2sobject(mobj)
 
 	if not PTSR.pizzatime then return end
-	if (mobj.takis_flingme ~= false) then mobj.takis_flingme = false end
 	
 	PTSR_DoHook("pfprestunthink", mobj)
 	

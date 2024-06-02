@@ -371,7 +371,7 @@ CV_PTSR.dustdeviltimerend = CV_RegisterVar({
 
 CV_PTSR.overtime_speed = CV_RegisterVar({
 	name = "PTSR_overtime_speed",
-	defaultvalue = "0.00025",
+	defaultvalue = "0.00050",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })
@@ -401,7 +401,7 @@ CV_PTSR.pizzastyle = CV_RegisterVar({
 
 CV_PTSR.combotime = CV_RegisterVar({
 	name = "PTSR_combotime",
-	defaultvalue = "10",
+	defaultvalue = "15",
 	flags = CV_NETVAR,
 	PossibleValue = {MIN = 0, MAX = 60}, 
 })

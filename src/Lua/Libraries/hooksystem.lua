@@ -9,6 +9,7 @@ hooks.onpizzatime = {}
 hooks.ondamage = {}
 hooks.ongameend = {}
 hooks.pfthink = {}
+hooks.pfprestunthink = {}
 hooks.pfdamage = {}
 hooks.pfteleport = {}
 

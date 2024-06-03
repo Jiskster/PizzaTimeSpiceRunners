@@ -99,11 +99,11 @@ PTSR.isOvertime = function()
 end
 
 PTSR.ring_score = 100
-PTSR.enemy_score = 800
+PTSR.enemy_score = 1200
 
-PTSR.lapbonus = 777
-PTSR.ringlapbonus = 13
-PTSR.combobonus = 80
+PTSR.lapbonus = 333
+PTSR.ringlapbonus = 7
+PTSR.combobonus = 350
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
@@ -170,8 +170,8 @@ PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	ring_score = 200,
-	ringlapbonus = PTSR.ringlapbonus*4,
+	ring_score = 14,
+	ringlapbonus = PTSR.ringlapbonus*2,
 })
 
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {

@@ -401,6 +401,7 @@ addHook("MobjThinker", function(mobj)
 		local speed = CV_PTSR.aispeed.value
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
+		local p_target = mobj.pizza_target
 		local rubber_range = 250*mobj.pizza_target.scale
 		
 		if CV_PTSR.airubberband.value then
@@ -409,8 +410,8 @@ addHook("MobjThinker", function(mobj)
 			if offset_speed < 0 then offset_speed = 0 end
 		end
 		
-		if mobj.eflags & MFE_UNDERWATER then
-			speed = $ / 3
+		if p_target.eflags & MFE_UNDERWATER then
+			speed = FixedDiv($, 2*FRACUNIT)
 		end
 
 		if PTSR.timeover then

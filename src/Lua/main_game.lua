@@ -99,11 +99,11 @@ PTSR.isOvertime = function()
 end
 
 PTSR.ring_score = 100
-PTSR.enemy_score = 1200
+PTSR.enemy_score = 1000
 
 PTSR.lapbonus = 333
 PTSR.ringlapbonus = 7
-PTSR.combobonus = 350
+PTSR.combobonus = 450
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 

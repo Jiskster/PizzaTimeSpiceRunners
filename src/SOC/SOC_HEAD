@@ -118,6 +118,96 @@ FlickyList = Fish,Fish,Seal
 Lua.ptsr_timelimit_secs = 120
 #Flicky selection is final. Two sets of fish because they come in two colours.
 
+Level 8
+Levelname = Deep Sea
+Act = 2
+Keywords = DSZ2
+Music = DSZ2
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 9
+SkyNum = 8
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 32
+FlickyList = Fish,Fish,Seal
+
+Level 10
+Levelname = Castle Eggman
+Act = 1
+Keywords = CEZ1
+Music = CEZ1
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 11
+SkyNum = 10
+RecordAttack = true
+LevelSelect = 1
+Weather = PRECIP_STORM
+SkyboxScale = 64
+SaveGame = true
+FlickyList = Rat,Bear
+#Flicky selection is final.
+
+Level 11
+Levelname = Castle Eggman
+Act = 2
+Keywords = CEZ2
+Music = CEZ2
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 12
+SkyNum = 11
+Weather = PRECIP_STORM_NORAIN
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 16
+FlickyList = Rat,Bear
+#Flicky selection is final.
+
+Level 13
+Levelname = Arid Canyon
+Act = 1
+Keywords = ACZ1
+Music = ACZ1
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 14
+SkyNum = 13
+RecordAttack = true
+LevelSelect = 1
+SkyboxScale = 64
+SaveGame = true
+FlickyList = Canary,Ram
+#Flicky selection is final.
+
+Level 14
+Levelname = Arid Canyon
+Act = 2
+Keywords = ACZ2
+Music = ACZ2
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 15
+SkyNum = 14
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 32
+FlickyList = Canary,Ram
+
+Level 22
+Levelname = Egg Rock
+Act = 1
+Keywords = ERZ1
+Music = ERZ1
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 23
+SkyNum = 22
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+FlickyList = All
+#Probably final.
+
+
 Level 25
 Levelname = Black Core
 Act = 1

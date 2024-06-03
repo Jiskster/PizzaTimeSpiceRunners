@@ -410,7 +410,7 @@ addHook("MobjThinker", function(mobj)
 		end
 		
 		if mobj.eflags & MFE_UNDERWATER then
-			speed = $ / 2
+			speed = $ / 3
 		end
 
 		if PTSR.timeover then

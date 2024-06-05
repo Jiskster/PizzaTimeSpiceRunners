@@ -101,7 +101,7 @@ end
 PTSR.ring_score = 100
 PTSR.enemy_score = 1000
 
-PTSR.lapbonus = 333
+PTSR.lapbonus = 444
 PTSR.ringlapbonus = 7
 PTSR.combobonus = 450
 

@@ -71,6 +71,7 @@ addHook("TouchSpecial", function(special, toucher)
 		local lastlap_perplayer = (tplayer.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value)
 		if not toucher.pizza_in and not toucher.pizza_out and PTSR.pizzatime and not lastlap_perplayer then -- start lap portal in sequence
 			toucher.pizza_in = portal_time
+			PTSR:FillCombo(tplayer)
 			S_StartSound(toucher, sfx_lapin)
 			S_StartSound(special, sfx_yuck34)
 		end

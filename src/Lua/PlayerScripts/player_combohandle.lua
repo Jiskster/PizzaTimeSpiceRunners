@@ -22,6 +22,10 @@ function PTSR:AddCombo(player, amount)
 	end
 end
 
+function PTSR:FillCombo(player)
+	PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
+end
+
 function PTSR:EndCombo(player)
 	player.ptsr.combo_count = 0
 	player.ptsr.combo_timeleft = 0

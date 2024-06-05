@@ -475,7 +475,7 @@ addHook("MobjThinker", function(mobj)
 			ghost.fuse = 22
 			ghost.colorized = true
 
-			ghost.color = (mobj.redgreen or true) and colors[1] or colors[2]
+			ghost.color = (mobj.redgreen) and colors[1] or colors[2]
 			mobj.redgreen = not mobj.redgreen
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
 		end

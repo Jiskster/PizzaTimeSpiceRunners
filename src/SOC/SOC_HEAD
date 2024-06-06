@@ -207,6 +207,19 @@ SaveGame = true
 FlickyList = All
 #Probably final.
 
+Level 23
+Levelname = Egg Rock
+Act = 2
+Keywords = ERZ2
+Music = ERZ2
+TypeOfLevel = Singleplayer,Co-op,Competition,Race,PTSR
+NextLevel = 25
+SkyNum = 22
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+FlickyList = All
+
 
 Level 25
 Levelname = Black Core

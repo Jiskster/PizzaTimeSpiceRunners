@@ -29,6 +29,7 @@ local leaderboard_hud = function(v,p)
 				local tweenx = ease.outexpo(tweendiv, -400*FU, 95*FU)
 				local y = 15*FU+((i-1)*60*FU)+25*FU
 				local scale = FU*2
+				local color = v.getColormap(ldr[i].skin, ldr[i].skincolor)
 				
 				lifepatch = v.getSprite2Patch(ldr[i].skin,
 					SPR2_LIFE,
@@ -40,7 +41,7 @@ local leaderboard_hud = function(v,p)
 					scale,
 					lifepatch,
 					V_SNAPTOLEFT,
-					v.getColormap(nil,ldr[i].skincolor)
+					color
 				)
 				
 				local placepatch = v.cachePatch("LDRB_"..i)
@@ -49,7 +50,7 @@ local leaderboard_hud = function(v,p)
 					FU/2,
 					placepatch,
 					V_SNAPTOLEFT,
-					v.getColormap(nil,ldr[i].skincolor)
+					color
 				)
 				
 				v.drawString(tweenx-(lifepatch.width*scale/2),

@@ -31,7 +31,9 @@ PTSR.StartNewLap = function(mobj)
 
 		if not CV_PTSR.nomusic.value then -- if music on
 			if not PTSR.timeover then
-				S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+				if PTSR.MusicList.Laps[player.ptsr.laps] and mapmusname ~= PTSR.MusicList.Laps[player.ptsr.laps] then
+					S_ChangeMusic(PTSR.MusicList.Laps[player.ptsr.laps], true)
+				end
 			end
 		end
 	else -- FAKE LAP -- 

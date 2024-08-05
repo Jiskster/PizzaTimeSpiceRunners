@@ -3,8 +3,6 @@ PTSR.MusicList = {
 		[1] = "PIZTIM",
 		[2] = "DEAOLI",
 		[3] = "PIJORE",
-		[4] = "GLUWAY",
-		[5] = "PASTVI",
 	}
 }
 
@@ -47,8 +45,6 @@ else
 	ps_auto_file = io.openlocal(ps_auto, "w")
 	ps_auto_file:close()
 end
-
-
 
 local IS_PANIC = false
 

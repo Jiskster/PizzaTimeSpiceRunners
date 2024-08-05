@@ -145,7 +145,9 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		end
 		
 		if not PTSR.timeover then
-			S_ChangeMusic(PTSR.ReturnPizzaTimeMusic(mobj.player), true)
+			if PTSR.MusicList.Laps[1] and mapmusname ~= PTSR.MusicList.Laps[1] then
+				S_ChangeMusic(PTSR.MusicList.Laps[1], true)
+			end
 		end
 	end
 end

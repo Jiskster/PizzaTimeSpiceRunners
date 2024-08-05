@@ -104,7 +104,6 @@ dofile "main_game.lua"
 dofile "titlecards.lua"
 */
 
-dofile "Functions/return_ptmusic.lua"
 dofile "Functions/get_ringcount.lua"
 dofile "Functions/is_ptsr.lua"
 dofile "Init/initmap.lua"

@@ -107,10 +107,18 @@ local bar_hud = function(v, player)
 				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 			else
 				local gm_metadata = PTSR.currentModeMetadata()
-				local otcolor = ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
+				local otcolornum --= ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
+				local ot_color_table = {
+					SKINCOLOR_RED,
+					SKINCOLOR_PEPPER,
+					SKINCOLOR_SALMON
+				}
+				
+				otcolornum = 1+abs(sin(FixedAngle(leveltime*15*FRACUNIT))*2)/FRACUNIT
+				
 				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 				
-				customhud.CustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, otcolor)
+				customhud.CustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, ot_color_table[otcolornum])
 			end
 			
 			timeafteranimation = $ + 1

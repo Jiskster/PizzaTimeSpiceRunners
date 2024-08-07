@@ -4,8 +4,8 @@ PTSR.MusicList = {
 		[2] = "DEAOLI",
 		[3] = "PIJORE",
 	},
-	Overtime = "OTMUSB",
-	HurryUp = "OTMUSA",
+	Overtime = "OTMUSB", -- default
+	HurryUp = "OTMUSA", -- default
 }
 
 PTSR.client_allowhurryupmusic = true
@@ -27,7 +27,7 @@ local commands = {
 			return
 		end
 		
-		if not (arg1:lower() = "true" or arg1:lower() = "false") then
+		if not (arg1:lower() == "true" or arg1:lower() == "false") then
 			return
 		end
 		

@@ -287,7 +287,7 @@ CV_PTSR.aileash = CV_RegisterVar({
 
 CV_PTSR.airubberband = CV_RegisterVar({
 	name = "PTSR_airubberband",
-	defaultvalue = "off",
+	defaultvalue = "on",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 
 })

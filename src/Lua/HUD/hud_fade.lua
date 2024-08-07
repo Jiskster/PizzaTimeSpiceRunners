@@ -162,7 +162,7 @@ local fade_hud = function(v, player)
 			local x3,y3 = 160*FU,180*FU
 			local x4,y4 = 300*FU,lapstween
 			local x5,y5 = ease.inquint(div3, -patchheight/3, -patchwidth),(200*FU/2)-(patchheight/2)
-			v.drawScaled(x5, y5, scale, patch, V_SNAPTOLEFT, v.getColormap(nil,player.skincolor))
+			v.drawScaled(x5, y5, scale, patch, V_SNAPTOLEFT)
 			
 			customhud.CustomFontString(v, x1, y1, G_BuildMapTitle(gamemap), "PTFNT", nil, "center", FRACUNIT/2)
 			customhud.CustomFontString(v, x2, y2, "SCORE: "..(player.ptsr.deathscore or player.score), "PTFNT", nil, "right", FRACUNIT/2, SKINCOLOR_BLUE)

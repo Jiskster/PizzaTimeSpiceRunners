@@ -89,8 +89,6 @@ states[S_GOOCH_PF] = {
 dofile "SaxAnimation/Init.lua"
 dofile "SaxAnimation/UpdatePerFrame.lua"
 
-dofile "Libraries/sglib.lua"
-
 dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"

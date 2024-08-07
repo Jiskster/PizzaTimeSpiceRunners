@@ -111,10 +111,11 @@ local bar_hud = function(v, player)
 				local ot_color_table = {
 					SKINCOLOR_RED,
 					SKINCOLOR_PEPPER,
-					SKINCOLOR_SALMON
+					SKINCOLOR_SALMON,
+					SKINCOLOR_WHITE,
 				}
 				
-				otcolornum = 1+abs(sin(FixedAngle(leveltime*15*FRACUNIT))*2)/FRACUNIT
+				otcolornum = 1+abs(sin(FixedAngle(leveltime*15*FRACUNIT))*#ot_color_table-1)/FRACUNIT
 				
 				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 				

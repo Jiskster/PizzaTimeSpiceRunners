@@ -83,11 +83,17 @@ addHook("ThinkFrame", function()
 					return
 				end
 			elseif PTSR.timeleft <= 20*TICRATE and multiplayer then -- Hurry up
+				local mus = CV_PTSR.overtime_music.value
+				
 				local mus_str = "OTMUSA"
 				
 				if S_MusicName() ~= mus_str then
 					S_ChangeMusic(mus_str, false, player)
 					mapmusname = mus_str
+				end
+				
+				if mus then
+					return
 				end
 			end
 		end

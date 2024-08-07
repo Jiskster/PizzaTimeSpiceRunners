@@ -367,7 +367,7 @@ addHook("MobjThinker", function(mobj)
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
 	PTSR.addw2sobject(mobj)
-	
+
 	if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
 		mobj.frame = $|TR_TRANS70
 	else
@@ -427,10 +427,10 @@ addHook("MobjThinker", function(mobj)
 		and (p_target.player.speed <= 15*p_target.scale) then
 			speed = FixedDiv($, 2*FRACUNIT)
 		end
-
+		
 		if PTSR.timeover then
 			local yum = FRACUNIT + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
-
+			
 			speed = FixedMul($, yum)
 		end
 		

@@ -345,12 +345,7 @@ addHook("ThinkFrame", do
 			end
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
-				if multiplayer then
-					local otmus = CV_PTSR.overtime_music.value 
-					if otmus and PTSR.timeleft == 3*TICRATE then
-						S_FadeMusic(0, 3000)
-					end
-				end
+				
 				if PTSR.timeleft <= 0 then
 					PTSR.timeleft = 0
 					if multiplayer then

@@ -3,8 +3,12 @@ PTSR.MusicList = {
 		[1] = "PIZTIM",
 		[2] = "DEAOLI",
 		[3] = "PIJORE",
-	}
+	},
+	Overtime = "OTMUSB", -- default
+	HurryUp = "OTMUSA", -- default
 }
+
+PTSR.client_allowhurryupmusic = true
 
 local commands = {
 	["#CLEAR_LAP_MUSIC"] = function()
@@ -17,6 +21,39 @@ local commands = {
 		end
 		
 		PTSR.MusicList.Laps[tonumber(arg1)] = arg2
+	end,
+	["#TOGGLE_HURRYUP_MUSIC"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		
+		if not (arg1:lower() == "true" or arg1:lower() == "false") then
+			return
+		end
+		
+		if arg1:lower() == "true" then
+			PTSR.client_allowhurryupmusic = true
+		elseif arg1:lower() == "false"
+			PTSR.client_allowhurryupmusic = false
+		end
+	end,
+	["#DEFAULT_OVERTIME_MUS"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		
+		if S_MusicExists(arg1) then
+			PTSR.MusicList.Overtime = arg1
+		end
+	end,
+	["#DEFAULT_HURRYUP_MUS"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		
+		if S_MusicExists(arg1) then
+			PTSR.MusicList.HurryUp = arg1
+		end
 	end,
 }
 
@@ -46,6 +83,10 @@ else
 	ps_auto_file:close()
 end
 
+function PTSR.IsOverTimeMusicInPriority()
+	return (PTSR.timeleft <= 20*TICRATE and multiplayer and PTSR.client_allowhurryupmusic) or PTSR.timeover
+end
+
 local IS_PANIC = false
 
 addHook("ThinkFrame", function()
@@ -57,26 +98,45 @@ addHook("ThinkFrame", function()
 	local laps = consoleplayer.ptsr.laps
 	
 	if PTSR.pizzatime then
-		if PTSR.timeover and leveltime then
-			local mus = CV_PTSR.overtime_music.value
-			local mus_str = "OVRTME"
-			local gm_metadata = PTSR.currentModeMetadata()
-			
-			if mus then
-				if gm_metadata.overtime_music then
-					S_ChangeMusic(gm_metadata.overtime_music, true, player)
-					mapmusname = gm_metadata.overtime_music
-				elseif mapmusname ~= mus_str then
-					S_ChangeMusic(mus_str, true, player)
+		--PTSR.timeleft <= 56*TICRATE
+		if leveltime then -- srb2 is super slow tbh
+			if PTSR.timeover then
+				
+				local mus = CV_PTSR.overtime_music.value
+				
+				local mus_str = PTSR.MusicList.Overtime
+				local gm_metadata = PTSR.currentModeMetadata()
+				
+				if mus then
+					if gm_metadata.overtime_music then
+						S_ChangeMusic(gm_metadata.overtime_music, true, player)
+						mapmusname = gm_metadata.overtime_music
+					elseif mapmusname ~= mus_str then
+						S_ChangeMusic(mus_str, true, player)
+						mapmusname = mus_str
+					end
+				end
+				
+				P_SetupLevelSky(34)
+				P_SetSkyboxMobj(nil)
+				
+				if mus then
+					return
+				end
+			elseif PTSR.timeleft <= 20*TICRATE and multiplayer
+			and PTSR.client_allowhurryupmusic then -- Hurry up
+				local mus = CV_PTSR.overtime_music.value
+				
+				local mus_str = PTSR.MusicList.HurryUp
+				
+				if S_MusicName() ~= mus_str then
+					S_ChangeMusic(mus_str, false, player)
 					mapmusname = mus_str
 				end
-			end
-			
-			P_SetupLevelSky(34)
-			P_SetSkyboxMobj(nil)
-			
-			if mus then
-				return
+				
+				if mus then
+					return
+				end
 			end
 		end
 	

@@ -30,7 +30,7 @@ PTSR.StartNewLap = function(mobj)
 		end
 
 		if not CV_PTSR.nomusic.value then -- if music on
-			if not PTSR.timeover then
+			if not PTSR.IsOverTimeMusicInPriority() then
 				if PTSR.MusicList.Laps[player.ptsr.laps] and mapmusname ~= PTSR.MusicList.Laps[player.ptsr.laps] then
 					S_ChangeMusic(PTSR.MusicList.Laps[player.ptsr.laps], true, player)
 				end
@@ -41,5 +41,4 @@ PTSR.StartNewLap = function(mobj)
 		P_SetOrigin(mobj, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
 		mobj.angle = PTSR.end_location.angle - ANGLE_90
 	end
-	
 end 

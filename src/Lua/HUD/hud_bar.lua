@@ -29,6 +29,7 @@ local function drawBarFill(v, x, y, scale, progress, patch)
 		drawwidth, patch.height*FU)
 end
 
+-- always give scale or die
 local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, scale)
 	if not (type(str) == "string") then
 		warn("No string given in FlashSnakeCustomFontString");
@@ -75,8 +76,11 @@ local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, 
 
 	for i = 1,str:len() do
 		local otcolornum = 1+(((leveltime+i)/2)%#ot_color_table)
+		local iMul = (i*4)
+		local iMulAndLT = leveltime+iMul
+		local yAdd = cos(FixedAngle(iMulAndLT*FRACUNIT*20))*4
 		local nextByte = str:byte(i,i);
-		nextx = customhud.CustomFontChar(v, nextx, y, nextByte, fontName, flags, scale, ot_color_table[otcolornum]);
+		nextx = customhud.CustomFontChar(v, nextx, y+yAdd, nextByte, fontName, flags, scale, ot_color_table[otcolornum]);
 	end
 end
 

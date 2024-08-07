@@ -207,6 +207,7 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	overtime_textontime = "HARD MODE!",
 })
 
+/*
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	parry_friendlyfire = false,
 	dustdevil = false,
@@ -217,6 +218,7 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	ringlapbonus = 5,
 	lapbonus = 300,
 })
+*/
 
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1

@@ -1,0 +1,69 @@
+Freeslot
+MT_STUPIDRAT
+MT_TREERAT
+S_STUPIDRAT1
+S_STUPIDRAT2
+S_STUPIDRAT3
+S_TREERAT1
+S_TREERAT2
+S_TREERAT3
+SPR_SRAT
+SPR_TRAT
+
+State S_STUPIDRAT1
+next = S_STUPIDRAT2
+SpriteName = SPR_SRAT
+SpriteFrame = A
+Duration = 3
+
+State S_STUPIDRAT2
+next = S_STUPIDRAT3
+SpriteName = SPR_SRAT
+SpriteFrame = B
+Duration = 3
+
+State S_STUPIDRAT3
+next = S_STUPIDRAT1
+SpriteName = SPR_SRAT
+SpriteFrame = C
+Duration = 3
+
+State S_TREERAT1
+next = S_TREERAT2
+SpriteName = SPR_TRAT
+SpriteFrame = A
+Duration = 3
+
+State S_TREERAT2
+next = S_TREERAT3
+SpriteName = SPR_TRAT
+SpriteFrame = B
+Duration = 3
+
+State S_TREERAT3
+next = S_TREERAT1
+SpriteName = SPR_TRAT
+SpriteFrame = C
+Duration = 3
+
+Object MT_STUPIDRAT
+#$Name Stupid Rat Prop
+#$Sprite SRATA0
+MapThingNum = 1990
+SpawnState = S_STUPIDRAT1
+deathstate = S_STUPIDRAT1
+spawnhealth = 1000
+radius = 32*FRACUNIT
+height = 74*FRACUNIT
+flags = MF_SOLID
+
+Object MT_TREERAT
+#$Name Stupid Tree Rat Prop
+#$Sprite TRATA0
+MapThingNum = 1991
+SpawnState = S_TREERAT1
+deathstate = S_TREERAT1
+spawnhealth = 1000
+radius = 37*FRACUNIT
+height = 140*FRACUNIT
+flags = MF_SOLID

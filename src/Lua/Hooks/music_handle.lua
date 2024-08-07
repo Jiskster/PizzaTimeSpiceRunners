@@ -1,61 +1,12 @@
-PTSR.MusicList = {
-	Laps = {
-		[1] = "PIZTIM",
-		[2] = "DEAOLI",
-		[3] = "PIJORE",
-	}
-}
-
-local commands = {
-	["#CLEAR_LAP_MUSIC"] = function()
-		PTSR.MusicList.Laps = {}
-	end,
-	["#LAPMUS"] = function(arg1, arg2)
-		if (arg1 == nil) or not tonumber(arg1) 
-		or (arg2 == nil) then
-			return
-		end
-		
-		PTSR.MusicList.Laps[tonumber(arg1)] = arg2
-	end,
-}
-
-local ps_auto = "client/SpiceRunners/ps_autoload.txt"-- auto pizza script path
-
-local ps_auto_file = io.openlocal(ps_auto, "r")
-
-if ps_auto_file then
-	local line_count = 0
-	
-	for line in ps_auto_file:lines() do
-		line_count = $ + 1
-		
-		if line:len() <= 1 then continue end
-		
-		if line:sub(1,1) == "#" then
-			local split_command = line:split(" ")
-			--
-			if split_command[1] and commands[split_command[1]] then
-				commands[split_command[1]](split_command[2], split_command[3])
-			end
-		end
-	end
-	ps_auto_file:close()
-else
-	ps_auto_file = io.openlocal(ps_auto, "w")
-	ps_auto_file:close()
-end
-
 local IS_PANIC = false
-
 addHook("ThinkFrame", function()
 	if not PTSR.IsPTSR() then return end
 	if CV_PTSR.nomusic.value then return end
 	if PTSR.gameover then return end
+	
 	if not consoleplayer then return end
 	
 	local laps = consoleplayer.ptsr.laps
-	
 	if PTSR.pizzatime then
 		if PTSR.timeover and leveltime then
 			local mus = CV_PTSR.overtime_music.value
@@ -74,20 +25,26 @@ addHook("ThinkFrame", function()
 			
 			P_SetupLevelSky(34)
 			P_SetSkyboxMobj(nil)
-			
 			if mus then
 				return
 			end
 		end
 	
-		if PTSR.MusicList.Laps[laps] and mapmusname ~= PTSR.MusicList.Laps[laps] then
-			local newmus = PTSR.MusicList.Laps[laps]
-			if S_MusicExists(newmus) then
-				S_ChangeMusic(newmus, true, player)
-				mapmusname = newmus
-			else
-				S_StopMusic(player)
-			end
+		if laps <= 1 and mapmusname ~= "PIZTIM" then
+			S_ChangeMusic("PIZTIM", true, player)
+			mapmusname = "PIZTIM"
+		elseif laps == 2 and mapmusname ~= "DEAOLI" then
+			S_ChangeMusic("DEAOLI", true, player)
+			mapmusname = "DEAOLI"
+		elseif laps == 3 and mapmusname ~= "PIJORE" then
+			S_ChangeMusic("PIJORE", true, player)
+			mapmusname = "PIJORE"
+		elseif laps == 4 and mapmusname ~= "GLUWAY" then
+			S_ChangeMusic("GLUWAY", true, player)
+			mapmusname = "GLUWAY"
+		elseif laps >= 5 and mapmusname ~= "PASTVI" then
+			S_ChangeMusic("PASTVI", true, player)
+			mapmusname = "PASTVI"
 		end
 		
 		if S_MusicName() ~= "PIZTIM" then

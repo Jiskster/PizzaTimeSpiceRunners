@@ -92,7 +92,7 @@ function PTSR:ForceShieldParry(toucher, special)
 	PTSR.DoParryAnim(special)
 	
 	if toucher.player.powers[pw_shield] & SH_FORCEHP then
-		toucher.player.powers[pw_shield] = SH_FORCE
+		toucher.player.powers[pw_shield] = SH_FORCE|((toucher.player.powers[pw_shield] & SH_FORCEHP) - 1)
 	else
 		toucher.player.powers[pw_shield] = SH_NONE
 		P_DoPlayerPain(toucher.player)
@@ -367,7 +367,13 @@ addHook("MobjThinker", function(mobj)
 	local maskdata = PTSR.PFMaskData[mobj.pizzastyle or 1]
 
 	PTSR.addw2sobject(mobj)
-
+	
+	if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
+		mobj.frame = $|TR_TRANS70
+	else
+		mobj.frame = $ &~TR_TRANS70
+	end
+	
 	if not PTSR.pizzatime then return end
 	
 	PTSR_DoHook("pfprestunthink", mobj)
@@ -402,7 +408,9 @@ addHook("MobjThinker", function(mobj)
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
 		local p_target = mobj.pizza_target
-		local rubber_range = 250*mobj.pizza_target.scale
+		
+		--higher range = weaker banding
+		local rubber_range = 400*mobj.pizza_target.scale
 		
 		if CV_PTSR.airubberband.value then
 			offset_speed = FixedMul(speed, FU+FixedDiv(dist - rubber_range, rubber_range))
@@ -411,6 +419,12 @@ addHook("MobjThinker", function(mobj)
 		end
 		
 		if p_target.eflags & MFE_UNDERWATER then
+			speed = FixedDiv($, 2*FRACUNIT)
+		end
+		
+		--Slow down if our target is springing next to a wall
+		if (p_target.player.panim == PA_SPRING)
+		and (p_target.player.speed <= 15*p_target.scale) then
 			speed = FixedDiv($, 2*FRACUNIT)
 		end
 
@@ -478,6 +492,8 @@ addHook("MobjThinker", function(mobj)
 			ghost.color = (mobj.redgreen) and colors[1] or colors[2]
 			mobj.redgreen = not mobj.redgreen
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
+			--WEird ass interpolation is PISSing me off
+			P_SetOrigin(ghost,ghost.x,ghost.y,ghost.z)
 		end
 
 		if not maskdata.momentum then

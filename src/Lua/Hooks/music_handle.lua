@@ -46,6 +46,10 @@ else
 	ps_auto_file:close()
 end
 
+function PTSR.IsOverTimeMusicInPriority()
+	return (PTSR.timeleft <= 20*TICRATE and multiplayer) or PTSR.timeover
+end
+
 local IS_PANIC = false
 
 addHook("ThinkFrame", function()

@@ -5,6 +5,14 @@ local BARYOFF = 5*FU
 local BARWIDTH = 295*FU
 local BARSECTIONWIDTH = 172*FU
 local TIMEMODFAC = 4*BARSECTIONWIDTH/FU
+local ot_color_table = {
+	SKINCOLOR_RED,
+	SKINCOLOR_PEPPER,
+	SKINCOLOR_SALMON,
+	SKINCOLOR_WHITE,
+	SKINCOLOR_SALMON,
+	SKINCOLOR_PEPPER,
+}
 
 --[[@param v videolib]]
 local function drawBarFill(v, x, y, scale, progress, patch)
@@ -19,6 +27,57 @@ local function drawBarFill(v, x, y, scale, progress, patch)
 		nil, -- colormap
 		barOffset, 0, -- sx, sy
 		drawwidth, patch.height*FU)
+end
+
+local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, scale)
+	if not (type(str) == "string") then
+		warn("No string given in FlashSnakeCustomFontString");
+		return;
+	end
+
+	if not (type(fontName) == "string") then
+		warn("No font given in FlashSnakeCustomFontString");
+		return;
+	end
+
+	local font = customhud.GetFont(fontName);
+	if (font == nil) then
+		warn("Invalid font given in FlashSnakeCustomFontString");
+		return;
+	end
+
+	if (type(scale) != "number")
+		scale = nil;
+	end
+
+	local kerning = font.kerning;
+	if (scale != nil) then
+		kerning = $1 * scale;
+	end
+
+	local space = font.space;
+	if (scale != nil) then
+		space = $1 * scale;
+	end
+
+	local mono = font.mono;
+	if (mono != nil and scale != nil) then
+		mono = $1 * scale;
+	end
+	
+	local nextx = x;
+
+	if (align == "right") then
+		nextx = $1 - customhud.CustomFontStringWidth(v, str, fontName, scale);
+	elseif (align == "center") then
+		nextx = $1 - (customhud.CustomFontStringWidth(v, str, fontName, scale) / 2);
+	end
+
+	for i = 1,str:len() do
+		local otcolornum = 1+(((leveltime+i)/2)%#ot_color_table)
+		local nextByte = str:byte(i,i);
+		nextx = customhud.CustomFontChar(v, nextx, y, nextByte, fontName, flags, scale, ot_color_table[otcolornum]);
+	end
 end
 
 local bar_hud = function(v, player)
@@ -107,19 +166,10 @@ local bar_hud = function(v, player)
 				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 			else
 				local gm_metadata = PTSR.currentModeMetadata()
-				local otcolornum --= ((leveltime/4)% 2 == 0) and SKINCOLOR_RED or SKINCOLOR_WHITE
-				local ot_color_table = {
-					SKINCOLOR_RED,
-					SKINCOLOR_PEPPER,
-					SKINCOLOR_SALMON,
-					SKINCOLOR_WHITE,
-				}
-				
-				otcolornum = 1+abs(sin(FixedAngle(leveltime*15*FRACUNIT))*#ot_color_table-1)/FRACUNIT
 				
 				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 				
-				customhud.CustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, ot_color_table[otcolornum])
+				FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2)
 			end
 			
 			timeafteranimation = $ + 1

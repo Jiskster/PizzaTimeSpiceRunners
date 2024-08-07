@@ -197,7 +197,7 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	dustdevil = true,
 	dustdeviltimer = 30*TICRATE,
 	allowrevive = true,
-	overtime_music = "OTHARD",
+	--overtime_music = "OTHARD",
 	instant_overtime = true,
 	ring_score = 50,
 	enemy_score = 2000,
@@ -345,12 +345,7 @@ addHook("ThinkFrame", do
 			end
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
-				if multiplayer then
-					local otmus = CV_PTSR.overtime_music.value 
-					if otmus and PTSR.timeleft == 3*TICRATE then
-						S_FadeMusic(0, 3000)
-					end
-				end
+				
 				if PTSR.timeleft <= 0 then
 					PTSR.timeleft = 0
 					if multiplayer then

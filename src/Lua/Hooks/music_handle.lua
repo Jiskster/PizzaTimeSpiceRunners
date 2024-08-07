@@ -57,26 +57,38 @@ addHook("ThinkFrame", function()
 	local laps = consoleplayer.ptsr.laps
 	
 	if PTSR.pizzatime then
-		if PTSR.timeover and leveltime then
-			local mus = CV_PTSR.overtime_music.value
-			local mus_str = "OVRTME"
-			local gm_metadata = PTSR.currentModeMetadata()
-			
-			if mus then
-				if gm_metadata.overtime_music then
-					S_ChangeMusic(gm_metadata.overtime_music, true, player)
-					mapmusname = gm_metadata.overtime_music
-				elseif mapmusname ~= mus_str then
-					S_ChangeMusic(mus_str, true, player)
+		--PTSR.timeleft <= 56*TICRATE
+		if leveltime then -- srb2 is super slow tbh
+			if PTSR.timeover then
+				
+				local mus = CV_PTSR.overtime_music.value
+				
+				local mus_str = "OTMUSB"
+				local gm_metadata = PTSR.currentModeMetadata()
+				
+				if mus then
+					if gm_metadata.overtime_music then
+						S_ChangeMusic(gm_metadata.overtime_music, true, player)
+						mapmusname = gm_metadata.overtime_music
+					elseif mapmusname ~= mus_str then
+						S_ChangeMusic(mus_str, true, player)
+						mapmusname = mus_str
+					end
+				end
+				
+				P_SetupLevelSky(34)
+				P_SetSkyboxMobj(nil)
+				
+				if mus then
+					return
+				end
+			elseif PTSR.timeleft <= 20*TICRATE and multiplayer then -- Hurry up
+				local mus_str = "OTMUSA"
+				
+				if S_MusicName() ~= mus_str then
+					S_ChangeMusic(mus_str, false, player)
 					mapmusname = mus_str
 				end
-			end
-			
-			P_SetupLevelSky(34)
-			P_SetSkyboxMobj(nil)
-			
-			if mus then
-				return
 			end
 		end
 	

@@ -3,8 +3,12 @@ PTSR.MusicList = {
 		[1] = "PIZTIM",
 		[2] = "DEAOLI",
 		[3] = "PIJORE",
-	}
+	},
+	Overtime = "OTMUSB",
+	HurryUp = "OTMUSA",
 }
+
+PTSR.client_allowhurryupmusic = true
 
 local commands = {
 	["#CLEAR_LAP_MUSIC"] = function()
@@ -17,6 +21,38 @@ local commands = {
 		end
 		
 		PTSR.MusicList.Laps[tonumber(arg1)] = arg2
+	end,
+	["#TOGGLE_HURRYUP_MUSIC"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		
+		if not (arg1:lower() = "true" or arg1:lower() = "false") then
+			return
+		end
+		
+		if arg1:lower() == "true" then
+			PTSR.client_allowhurryupmusic = true
+		elseif arg1:lower() == "false"
+			PTSR.client_allowhurryupmusic = false
+		end
+	end,
+	["#DEFAULT_OVERTIME_MUS"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		if S_MusicExists(arg1) then
+			PTSR.MusicList.Overtime = arg1
+		end
+	end,
+	["#DEFAULT_HURRYUP_MUS"] = function(arg1, arg2)
+		if (arg1 == nil) then
+			return
+		end
+		
+		if S_MusicExists(arg1) then
+			PTSR.MusicList.HurryUp = arg1
+		end
 	end,
 }
 
@@ -47,7 +83,7 @@ else
 end
 
 function PTSR.IsOverTimeMusicInPriority()
-	return (PTSR.timeleft <= 20*TICRATE and multiplayer) or PTSR.timeover
+	return (PTSR.timeleft <= 20*TICRATE and multiplayer and PTSR.client_allowhurryupmusic) or PTSR.timeover
 end
 
 local IS_PANIC = false
@@ -67,7 +103,7 @@ addHook("ThinkFrame", function()
 				
 				local mus = CV_PTSR.overtime_music.value
 				
-				local mus_str = "OTMUSB"
+				local mus_str = PTSR.MusicList.Overtime
 				local gm_metadata = PTSR.currentModeMetadata()
 				
 				if mus then
@@ -86,10 +122,11 @@ addHook("ThinkFrame", function()
 				if mus then
 					return
 				end
-			elseif PTSR.timeleft <= 20*TICRATE and multiplayer then -- Hurry up
+			elseif PTSR.timeleft <= 20*TICRATE and multiplayer
+			and PTSR.client_allowhurryupmusic then -- Hurry up
 				local mus = CV_PTSR.overtime_music.value
 				
-				local mus_str = "OTMUSA"
+				local mus_str = PTSR.MusicList.HurryUp
 				
 				if S_MusicName() ~= mus_str then
 					S_ChangeMusic(mus_str, false, player)

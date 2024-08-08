@@ -49,6 +49,9 @@ local overtime_hud = function(v, player)
 			v.drawLevelTitle(right_tween+shakex_2, 100+shakey_2, "Overtime!", V_REDMAP)
 		*/
 	end
+
+	local t = min(FixedDiv(PTSR.timeover_tics, TICRATE*2), FU)
+	v.fadeScreen(SKINCOLOR_CRIMSON, ease.linear(t, 10, 0))
 end
 
 customhud.SetupItem("PTSR_overtime", ptsr_hudmodname, overtime_hud, "game", 0)

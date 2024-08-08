@@ -19,9 +19,9 @@ local itspizzatime_hud = function(v, player)
 			end
 		end
 		if CV_PTSR.homework.value then
-			v.drawScaled(0, (250*FU) - (PTSR.pizzatime_tics*FU)*3, FU/2, patch)
+			v.drawScaled(0, (250*FU) - (PTSR.pizzatime_tics*FU)*3, (FU/3)*3/2, patch)
 		else
-			v.drawScaled(100*FRACUNIT, (250*FU) - (PTSR.pizzatime_tics*FU)*3, FU/2, patch)
+			v.drawScaled(100*FRACUNIT, (250*FU) - (PTSR.pizzatime_tics*FU)*3, (FU/3)*3/2, patch)
 		end
 	end
 end

@@ -75,10 +75,10 @@ local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, 
 	end
 
 	for i = 1,str:len() do
-		local otcolornum = 1+(((leveltime+i)/2)%#ot_color_table)
+		local otcolornum = 1+(((leveltime+i)/4)%#ot_color_table)
 		local iMul = (i*4)
 		local iMulAndLT = leveltime+iMul
-		local yAdd = cos(FixedAngle(iMulAndLT*FRACUNIT*20))*4
+		local yAdd = cos(FixedAngle(iMulAndLT*FRACUNIT*10))*4
 		local nextByte = str:byte(i,i);
 		nextx = customhud.CustomFontChar(v, nextx, y+yAdd, nextByte, fontName, flags, scale, ot_color_table[otcolornum]);
 	end

@@ -55,7 +55,7 @@ PTSR.DoParryAnim = function(mobj, withsound, ringloss)
 
 			ring.throwspeed = P_RandomRange(-16, 16)*FU
 			ring.angle = fixangle(P_RandomRange(0, 360)*FU)
-			ring.momz = 8*FU
+			ring.momz = P_RandomRange(8, 16)*FU
 		end
 	end
 end
@@ -113,13 +113,12 @@ addHook("PlayerThink", function(player)
 		local data = player.ptsr.parryhitlagdata
 		local ptime = leveltime-player.ptsr.parryhitlagtime
 
-		if ptime >= 2 then
+		if ptime >= 5 then
 			player.mo.momx = data.momx
 			player.mo.momy = data.momy
 			player.mo.momz = data.momz
 
 			player.ptsr.parryhitlag = false
-			
 		else
 			P_SetOrigin(player.mo,
 				data.x,

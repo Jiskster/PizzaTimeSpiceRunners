@@ -100,9 +100,11 @@ function PTSR:ForceShieldParry(toucher, special)
 end
 
 function PTSR:PizzaCollision(peppino, pizza)
-	if peppino.player.ptsr.lastparryframe and (leveltime - peppino.player.ptsr.lastparryframe) <= CV_PTSR.parry_safeframes.value then
+	if peppino.player.ptsr.lastparryframe
+	and (leveltime - peppino.player.ptsr.lastparryframe) <= CV_PTSR.parry_safeframes.value
+	and not peppino.player.ptsr.cantparry then
 		PTSR.DoParry(peppino.player.mo, pizza)
-		PTSR.DoParryAnim(peppino.player.mo, true)
+		PTSR.DoParryAnim(peppino.player.mo, true, true)
 		PTSR.DoParryAnim(pizza)
 		peppino.player.ptsr.lastparryframe = leveltime
 	else

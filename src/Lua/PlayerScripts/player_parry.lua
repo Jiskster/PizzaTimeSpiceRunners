@@ -1,5 +1,43 @@
 -- Parry animation function with sound parameter.
-PTSR.DoParryAnim = function(mobj, withsound)
+mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
+	spawnstate = S_RING,
+	radius = 32*FU,
+	height = 32*FU,
+	flags = MF_NOCLIP|MF_NOCLIPHEIGHT
+}
+
+addHook("MobjThinker", function(mo)
+	if not (mo and mo.valid) then return end
+	local speed = mo.throwspeed or 16*FU
+
+	mo.momx = FixedMul(speed, cos(mo.angle))
+	mo.momy = FixedMul(speed, sin(mo.angle))
+	mo.frame = $|FF_TRANS40
+
+	if mo.z > mo.ceilingz
+	or mo.z+mo.height < mo.floorz then
+		P_RemoveMobj(mo)
+		return
+	end
+end, MT_PTSR_LOSSRING)
+
+PTSR.CanPizzaParry = function(player)
+	player.ptsr.cantparry = false
+	if player.rings >= 150 then
+		player.rings = $-($/10)
+		return true
+	end
+	
+	if player.rings >= 20 then
+		player.rings = max(0, $-20)
+		return true
+	end
+
+	player.ptsr.cantparry = true
+	return false
+end
+
+PTSR.DoParryAnim = function(mobj, withsound, ringloss)
 	local parry = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_PARRY)
 	P_SpawnGhostMobj(parry)
 	P_SetScale(parry, 3*FRACUNIT)
@@ -7,6 +45,18 @@ PTSR.DoParryAnim = function(mobj, withsound)
 	
 	if withsound then
 		S_StartSound(mobj, sfx_pzprry)
+	end
+
+	if ringloss then
+		for i = 1,20 do
+			local ring = P_SpawnMobjFromMobj(mobj,
+				0,0,0,
+				MT_PTSR_LOSSRING)
+
+			ring.throwspeed = P_RandomRange(-16, 16)*FU
+			ring.angle = fixangle(P_RandomRange(0, 360)*FU)
+			ring.momz = 8*FU
+		end
 	end
 end
 
@@ -32,6 +82,22 @@ PTSR.DoParry = function(parrier, victim)
 end
 
 -- Parry Stuff
+
+-- helper function so we can get whose pizzaface easily
+local function _isPF(mobj)
+	if not mobj and mobj.valid then
+		return false; end
+
+	if mobj.type == MT_PLAYER
+	and mobj.player
+	and mobj.player.ptsr
+	and mobj.player.ptsr.pizzaface then
+		return true; end
+
+	if mobj.type == MT_PIZZA_ENEMY then
+		return true; end
+end
+
 addHook("PlayerThink", function(player)
 	if not (player and player.mo and player.mo.valid) then return end
 	if (player.playerstate == PST_DEAD) or (player.ptsr.outofgame) then return end 
@@ -42,7 +108,33 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-	
+
+	if player.ptsr.parryhitlag then
+		local data = player.ptsr.parryhitlagdata
+		local ptime = leveltime-player.ptsr.parryhitlagtime
+
+		if ptime >= 2 then
+			player.mo.momx = data.momx
+			player.mo.momy = data.momy
+			player.mo.momz = data.momz
+
+			player.ptsr.parryhitlag = false
+			
+		else
+			P_SetOrigin(player.mo,
+				data.x,
+				data.y,
+				data.z
+			)
+			player.mo.momx = 0
+			player.mo.momy = 0
+			player.mo.momz = 0
+			player.mo.state = data.state
+			player.mo.frame = data.frame
+			player.drawangle = data.a
+		end
+	end
+
 	if not player.mo.ptsr.parry_cooldown then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
@@ -61,7 +153,7 @@ addHook("PlayerThink", function(player)
 				
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
-						if foundmobj.type == MT_PIZZA_ENEMY or foundmobj.flags & MF_ENEMY
+						if _isPF(foundmobj) or foundmobj.flags & MF_ENEMY
 						or (foundmobj.type == MT_PLAYER) then
 							if foundmobj.type == MT_PLAYER then
 								if foundmobj.player and foundmobj.player.valid then	
@@ -83,20 +175,39 @@ addHook("PlayerThink", function(player)
 								end
 							end
 							
+							if _isPF(foundmobj) then
+								-- lets check if they are eligible to parry
+								if not PTSR.CanPizzaParry(player) then
+									return
+								end
+
+								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
+							end
+
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then
 								return true
 							end
-							
-							if foundmobj.type == MT_PIZZA_ENEMY or (foundmobj.player and foundmobj.player.valid 
-							and foundmobj.player.ptsr and foundmobj.player.ptsr.pizzaface) then
-								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
-							end
-							
+
 							PTSR.DoParry(player.mo, foundmobj)
 							player.ptsr.lastparryframe = leveltime
-							
-							PTSR.DoParryAnim(player.mo, true)
+
+							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj))
 							PTSR.DoParryAnim(foundmobj)
+							
+							if not player.ptsr.parryhitlag then
+								local data = player.ptsr.parryhitlagdata
+								data.x = player.mo.x
+								data.y = player.mo.y
+								data.z = player.mo.z
+								data.momx = player.mo.momx
+								data.momy = player.mo.momy
+								data.momz = player.mo.momz
+								data.a = player.drawangle
+								data.state = player.mo.state
+								data.frame = player.mo.frame
+							end
+							player.ptsr.parryhitlag = true
+							player.ptsr.parryhitlagtime = leveltime
 							
 							player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 

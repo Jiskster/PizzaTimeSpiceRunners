@@ -38,6 +38,10 @@ function PTSR.KnockJohnPillar(john)
 			P_FlashPal(consoleplayer, 1, 2)
 		end
 		john.johnpillarknocked = true
+		
+		--jisk SAID he'd do this but he NEVER DID
+		--so here i am doing it FOR HIM
+		john.fuse = 3*TICRATE
 	end
 end
 

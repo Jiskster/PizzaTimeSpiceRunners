@@ -75,7 +75,7 @@ addHook("TouchSpecial", function(special, toucher)
 				print("\x83"..tplayer.name.." revived "..special.drop_name)
 				
 				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name)
+					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** revived "..special.drop_name.."\n")
 				end
 				
 				PTSR:AddComboTime(tplayer, tplayer.ptsr.combo_maxtime)
@@ -96,7 +96,7 @@ addHook("TouchSpecial", function(special, toucher)
 				PTSR:AddComboTime(tplayer, tplayer.ptsr.combo_maxtime)
 				
 				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name)
+					DiscordBot.Data.msgsrb2 = $ .. ("**"..tplayer.name.."** stole "..special.rings_kept.." rings from "..special.drop_name.."\n")
 				end
 				
 				special.deathring_used = true

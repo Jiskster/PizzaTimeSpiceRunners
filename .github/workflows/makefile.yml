@@ -17,14 +17,8 @@ jobs:
     - name: Make build
       run: make
 
-    - name: DEBUG - back to root
-      run: cd
-
-    - name: DEBUG - list
-      run: ls
-
-    - name: check in pizza time
-      run: cd PizzaTimeSpiceRunners
-
-    - name: list again
-      run: ls
+    - name: Upload build
+    - uses: actions/upload-artifact@v4
+      with:
+        name: PTSR_GHBUILD
+        path: build.pk3

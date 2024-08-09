@@ -50,25 +50,26 @@ local function InitMap2()
 	PTSR.john = nil
     for map in mapthings.iterate do
         if map.type == 1 then
-            PTSR.spawn_location.x = map.x
-            PTSR.spawn_location.y = map.y
-            PTSR.spawn_location.z = map.z
+			local sec = R_PointInSubsector(map.x*FU, map.y*FU).sector
+
+            PTSR.spawn_location.x = map.x*FU
+            PTSR.spawn_location.y = map.y*FU
+            PTSR.spawn_location.z = sec.floorheight+(map.z*FU)
             PTSR.spawn_location.angle = map.angle
         end
 		
         if map.type == 501 then
-            PTSR.end_location.x = map.x
-            PTSR.end_location.y = map.y
-            
-            -- forgive me for the double var define shit
-            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, 0, 64*FU)
-            PTSR.end_location.z = P_FloorzAtPos(map.x*FU, map.y*FU, $+(map.z*FU), 64*FU)
+			local sec = R_PointInSubsector(map.x*FU, map.y*FU).sector
+
+            PTSR.end_location.x = map.x*FU
+            PTSR.end_location.y = map.y*FU
+            PTSR.end_location.z = sec.floorheight+(map.z*FU)
  
             PTSR.end_location.angle = map.angle
 			local john = P_SpawnMobj(
-				map.x*FU, 
-				map.y*FU, 
-				map.z*FU,
+				PTSR.end_location.x, 
+				PTSR.end_location.y, 
+				PTSR.end_location.z,
 				MT_PILLARJOHN
 			)
 			john.angle = map.angle*ANG1

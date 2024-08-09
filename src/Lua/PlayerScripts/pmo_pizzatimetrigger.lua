@@ -26,7 +26,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		PTAnimFunctions.NewAnimation('redjohn', 'REDJOHN', 1, 22, true)
 
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
-		P_SetOrigin(thesign, PTSR.spawn_location.x*FRACUNIT, PTSR.spawn_location.y*FRACUNIT, PTSR.spawn_location.z*FRACUNIT)
+		P_SetOrigin(thesign, PTSR.spawn_location.x, PTSR.spawn_location.y, PTSR.spawn_location.z)
 		
 		if multiplayer and aimode and not CV_PTSR.nopizza.value then
 			PTSR:SpawnPFAI()
@@ -120,7 +120,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
 			player.ptsr.laps = 1
-			P_SetOrigin(pmo, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
+			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			
 			PTSR:AddComboTime(player, player.ptsr.combo_maxtime) -- give everyone combo time cause IM NICE!

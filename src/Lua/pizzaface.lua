@@ -224,10 +224,10 @@ function PTSR:SpawnPFAI(forcestyle)
 			return
 		end
 	end
-	local newpizaface = P_SpawnMobj(PTSR.end_location.x*FRACUNIT,
-					PTSR.end_location.y*FRACUNIT,
-					PTSR.end_location.z*FRACUNIT,
-					MT_PIZZA_ENEMY)
+	local newpizaface = P_SpawnMobj(PTSR.end_location.x,
+		PTSR.end_location.y,
+		PTSR.end_location.z,
+		MT_PIZZA_ENEMY)
 	if not multiplayer then
 		PTSR.aipf = newpizaface
 	end

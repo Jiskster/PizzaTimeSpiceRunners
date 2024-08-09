@@ -515,6 +515,12 @@ addHook("MobjThinker", function(mobj)
 			ghost.frame = $|FF_TRANS10|FF_FULLBRIGHT
 			--WEird ass interpolation is PISSing me off
 			P_SetOrigin(ghost,ghost.x,ghost.y,ghost.z)
+			
+			--But if PF is already close to the camera, dont get in the
+			--way more
+			if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
+				ghost.flags2 = $|MF2_DONTDRAW
+			end
 		end
 
 		if not maskdata.momentum then

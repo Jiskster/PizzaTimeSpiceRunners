@@ -151,6 +151,7 @@ addHook("PlayerThink", function(player)
 				
 				local friendlyfire = (CV_PTSR.parry_friendlyfire.value or gm_metadata.parry_friendlyfire)
 				local gotapf = false
+				local gotanobject = false
 				local range = 1000*FU
 				local real_range = CV_PTSR.parry_radius.value
 				
@@ -187,6 +188,8 @@ addHook("PlayerThink", function(player)
 								end
 
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
+								
+								gotapf = true
 							end
 
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then
@@ -216,7 +219,7 @@ addHook("PlayerThink", function(player)
 							
 							player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 
-							gotapf = true
+							gotanobject = true
 						end
 					end
 				end,
@@ -224,13 +227,12 @@ addHook("PlayerThink", function(player)
 				player.mo.x-range, player.mo.x+range,
 				player.mo.y-range, player.mo.y+range)
 
-				if not gotapf then
+				if not gotanobject then
 					S_StartSound(player.mo, failparrysfx[P_RandomRange(1,3)])
 					local tryparry = P_SpawnGhostMobj(player.mo)
 					tryparry.color = SKINCOLOR_WHITE
 					tryparry.fuse = 2
 					P_SetScale(tryparry, (3*FRACUNIT)/2)
-					L_SpeedCap(player.mo, 5*FRACUNIT)
 					player.ptsr.lastparryframe = leveltime
 					player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 				end

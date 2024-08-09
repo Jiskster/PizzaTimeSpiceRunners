@@ -323,6 +323,13 @@ CV_PTSR.parrycooldown = CV_RegisterVar({
 	PossibleValue = {MIN = 0, MAX = 525}, 
 })
 
+CV_PTSR.pfparrycooldown = CV_RegisterVar({
+	name = "PTSR_pfparrycooldown",
+	defaultvalue = "105", -- 3 seconds
+	flags = CV_NETVAR,
+	PossibleValue = {MIN = 0, MAX = 525}, 
+})
+
 CV_PTSR.parrystuntime = CV_RegisterVar({
 	name = "PTSR_parrystuntime",
 	defaultvalue = "45",

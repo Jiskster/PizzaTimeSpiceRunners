@@ -1,3 +1,5 @@
+PTSR.ParrySpendRequirement = 20 
+
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
 	spawnstate = S_RING,
@@ -20,22 +22,6 @@ addHook("MobjThinker", function(mo)
 		return
 	end
 end, MT_PTSR_LOSSRING)
-
-PTSR.CanPizzaParry = function(player)
-	player.ptsr.cantparry = false
-	if player.rings >= 150 then
-		player.rings = $-($/10)
-		return true
-	end
-	
-	if player.rings >= 20 then
-		player.rings = max(0, $-20)
-		return true
-	end
-
-	player.ptsr.cantparry = true
-	return false
-end
 
 PTSR.DoParryAnim = function(mobj, withsound, ringloss)
 	local parry = P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PT_PARRY)
@@ -108,7 +94,7 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-
+	
 	if player.ptsr.parryhitlag then
 		local data = player.ptsr.parryhitlagdata
 		local ptime = leveltime-player.ptsr.parryhitlagtime
@@ -182,11 +168,6 @@ addHook("PlayerThink", function(player)
 							end
 							
 							if _isPF(foundmobj) then
-								-- lets check if they are eligible to parry
-								if not PTSR.CanPizzaParry(player) then
-									return
-								end
-
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
 								
 								gotapf = true
@@ -199,7 +180,7 @@ addHook("PlayerThink", function(player)
 							PTSR.DoParry(player.mo, foundmobj)
 							player.ptsr.lastparryframe = leveltime
 
-							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj))
+							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj) and player.rings >= PTSR.ParrySpendRequirement)
 							PTSR.DoParryAnim(foundmobj)
 							
 							if not player.ptsr.parryhitlag then
@@ -214,11 +195,10 @@ addHook("PlayerThink", function(player)
 								data.state = player.mo.state
 								data.frame = player.mo.frame
 							end
+							
 							player.ptsr.parryhitlag = true
 							player.ptsr.parryhitlagtime = leveltime
 							
-							player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
-
 							gotanobject = true
 						end
 					end
@@ -234,6 +214,18 @@ addHook("PlayerThink", function(player)
 					tryparry.fuse = 2
 					P_SetScale(tryparry, (3*FRACUNIT)/2)
 					player.ptsr.lastparryframe = leveltime
+					player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
+				end
+				
+				if gotapf then	
+					if player.rings >= 150 then
+						player.rings = $-($/10)
+					elseif player.rings >= PTSR.ParrySpendRequirement then
+						player.rings = max(0, $ - PTSR.ParrySpendRequirement)
+					else -- you're broke buddy
+						player.mo.ptsr.parry_cooldown = CV_PTSR.pfparrycooldown.value
+					end
+				else
 					player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 				end
 			

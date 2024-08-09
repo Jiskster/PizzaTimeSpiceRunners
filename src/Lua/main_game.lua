@@ -255,9 +255,6 @@ addHook("NetVars", function(net)
 		"showtime",
 		"endsector",
 		
-		"panicblacklist",
-		"panicspr2",
-		
 		"hudstuff",
 		
 		"maxrankpoints",

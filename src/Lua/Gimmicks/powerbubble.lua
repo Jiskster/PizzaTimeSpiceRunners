@@ -29,7 +29,7 @@ mobjinfo[MT_PT_BUBBLEEFFECT] = {
 	radius = 16*FU,
 	height = 24*FU,
 	dispoffset = 1,
-	flags = MF_SLIDEME|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_NOCLIP
+	flags = MF_NOGRAVITY|MF_NOCLIP|MF_NOCLIPHEIGHT
 }
 
 mobjinfo[MT_PT_BUBBLEPOWER] = {
@@ -83,7 +83,7 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_TVRI,
 	frame = C,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_YELLOW
 })
 
@@ -99,7 +99,7 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_50BI,
 	frame = A,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_ORANGE
 })
 
@@ -115,7 +115,7 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_TV1U,
 	frame = C,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_BLUE
 })
 
@@ -132,7 +132,7 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_TVPI,
 	frame = C,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_MOSS
 })
 
@@ -149,7 +149,7 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_TVWW,
 	frame = C,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_WHITE
 })
 
@@ -166,13 +166,12 @@ PTSR:AddBubblePower({
 	end,
 	sprite = SPR_TVFO,
 	frame = C,
-	disable_popsound = true,
+	--disable_popsound = true,
 	pop_color = SKINCOLOR_GALAXY
 })
 
 function A_PT_BubbleFloatAnim(actor, var1) -- var1: color
-	local angles = 16
-	local thrust_factor = 30*FRACUNIT
+	local angles = 6
 	
 	for i = 0, angles do
 		local div = FixedAngle((360*FRACUNIT)/angles)*i
@@ -180,11 +179,13 @@ function A_PT_BubbleFloatAnim(actor, var1) -- var1: color
 		for ii = 0, angles do
 			local div2 = FixedAngle((360*FRACUNIT)/angles)*ii
 			
-			local b_mo = P_SpawnMobj(actor.x , actor.y, actor.z, MT_PT_BUBBLEEFFECT)
-			b_mo.divrem3 = P_RandomRange(FU/3, FU/6)
+			local b_mo = P_SpawnMobj(actor.x , actor.y, actor.z+(actor.height/2), MT_PT_BUBBLEEFFECT)
+			b_mo.divrem3 = FU/3
 			b_mo.color = var1 or SKINCOLOR_GREEN
 			
-			L_ThrustXYZ(b_mo, div, div2, thrust_factor)
+			b_mo.momx = P_RandomRange(-60,60)*FU
+			b_mo.momy = P_RandomRange(-60,60)*FU
+			b_mo.momz = P_RandomRange(-60,60)*FU
 		end
 	end
 end
@@ -203,7 +204,7 @@ addHook("TouchSpecial", function(special, toucher)
 		end
 		
 		if not PTSR.BubblePowers[special.bubblepower].disable_popsound then
-			S_StartSound(toucher, sfx_bblpop)
+			S_StartSound(toucher, sfx_pop)
 		end
 		
 		if PTSR.BubblePowers[special.bubblepower].pop_color then
@@ -257,18 +258,28 @@ addHook("MapThingSpawn", function(mobj)
 end)
 
 addHook("MobjSpawn", function(mobj)
-	mobj.spritexscale = $ / 4
-	mobj.spriteyscale = $ / 4
-	
-	mobj.fuse = 10
+	mobj.spritexscale = $/4
+	mobj.spriteyscale = $/4
+
+	mobj.spawntime = leveltime
 end, MT_PT_BUBBLEEFFECT)
 
 addHook("MobjThinker", function(mobj)
 	if mobj and mobj.valid and mobj.divrem3 then
-		mobj.momx = FixedMul($, FU - mobj.divrem3)
-		mobj.momy = FixedMul($, FU - mobj.divrem3)
-		mobj.momz = FixedMul($, FU - mobj.divrem3)
-		
-		mobj.frame = $ | ((10-mobj.fuse)<<FF_TRANSSHIFT)
+		mobj.momx = FixedMul($, mobj.divrem3)
+		mobj.momy = FixedMul($, mobj.divrem3)
+		mobj.momz = FixedMul($, mobj.divrem3)
+		mobj.scale = ease.incubic(FixedDiv(leveltime-mobj.spawntime, TICRATE),
+			FU, 0)
+
+		if leveltime-mobj.spawntime >= TICRATE then
+			P_RemoveMobj(mobj)
+			return; end
+
+		local transtween = ease.incubic(
+			FixedDiv(leveltime-mobj.spawntime, TICRATE),
+			2, 9)
+
+		mobj.frame = $|(transtween*FF_TRANS10)
 	end
 end, MT_PT_BUBBLEEFFECT)

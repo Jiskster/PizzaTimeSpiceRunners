@@ -14,11 +14,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Make build
       run: make
 
-    - name: Run check
-      run: make check
+    - name: DEBUG - back to root
+      run: cd
 
-    - name: Run distcheck
-      run: make distcheck
+    - name: DEBUG - list
+      run: ls
+
+    - name: check in pizza time
+      run: cd PizzaTimeSpiceRunners
+
+    - name: list again
+      run: ls

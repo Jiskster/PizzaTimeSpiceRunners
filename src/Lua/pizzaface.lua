@@ -107,6 +107,21 @@ function PTSR:PizzaCollision(peppino, pizza)
 		PTSR.DoParryAnim(peppino.player.mo, true, true)
 		PTSR.DoParryAnim(pizza)
 		peppino.player.ptsr.lastparryframe = leveltime
+
+		if not player.ptsr.parryhitlag then
+			local data = player.ptsr.parryhitlagdata
+			data.x = player.mo.x
+			data.y = player.mo.y
+			data.z = player.mo.z
+			data.momx = player.mo.momx
+			data.momy = player.mo.momy
+			data.momz = player.mo.momz
+			data.a = player.drawangle
+			data.state = player.mo.state
+			data.frame = player.mo.frame
+		end
+		player.ptsr.parryhitlag = true
+		player.ptsr.parryhitlagtime = leveltime
 	else
 		P_KillMobj(peppino,pizza)
 	end

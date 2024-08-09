@@ -242,6 +242,8 @@ end
 
 addHook("NetVars", function(net)
 	local sync_list = {
+		"ParryList",
+	
 		"spawn_location",
 		"end_location",
 		"pizzatime",

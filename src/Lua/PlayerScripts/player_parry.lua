@@ -1,6 +1,49 @@
 PTSR.ParrySpendRequirement = 20 
 PTSR.ParryHitLagFrames = 5
 
+PTSR.ParryList = {
+
+}
+
+addHook("ThinkFrame", function()
+	for i,v in pairs(PTSR.ParryList) do
+		if v.time_left then
+			v.time_left = $ - 1
+			
+			if not v.time_left then
+				table.remove(PTSR.ParryList, i)
+				continue
+			end
+			
+			if v.object and v.object.valid then
+				local object = v.object
+				local player = object.player
+				
+				if (leveltime % 3) == 0 then
+					local ghost = P_SpawnGhostMobj(object)
+				
+					if ghost and ghost.valid then
+						ghost.color = SKINCOLOR_WHITE
+						ghost.colorized = true
+					end
+					
+					--S_StartSound(object, sfx_kc38)
+				end
+				
+				/*
+				if player and player.valid then
+					player.drawangle = $ + ANG1
+				else
+					object.angle = $ + ANG1
+				end
+				*/
+			else
+				table.remove(PTSR.ParryList, i)
+			end
+		end
+	end
+end)
+
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
 	spawnstate = S_RING,
@@ -174,6 +217,11 @@ addHook("PlayerThink", function(player)
 								foundmobj.pfhitlag = PTSR.ParryHitLagFrames
 								
 								gotapf = true
+							else
+								table.insert(PTSR.ParryList, {
+									object = foundmobj,
+									time_left = 45,
+								})
 							end
 
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then

@@ -1,4 +1,5 @@
 PTSR.ParrySpendRequirement = 20 
+PTSR.ParryHitLagFrames = 5
 
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
@@ -99,7 +100,7 @@ addHook("PlayerThink", function(player)
 		local data = player.ptsr.parryhitlagdata
 		local ptime = leveltime-player.ptsr.parryhitlagtime
 
-		if ptime >= 5 then
+		if ptime >= PTSR.ParryHitLagFrames then
 			player.mo.momx = data.momx
 			player.mo.momy = data.momy
 			player.mo.momz = data.momz
@@ -170,6 +171,8 @@ addHook("PlayerThink", function(player)
 							if _isPF(foundmobj) then
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
 								
+								foundmobj.pfhitlag = PTSR.ParryHitLagFrames
+								
 								gotapf = true
 							end
 
@@ -217,7 +220,7 @@ addHook("PlayerThink", function(player)
 					player.mo.ptsr.parry_cooldown = CV_PTSR.parrycooldown.value
 				end
 				
-				if gotapf then	
+				if gotapf then
 					if player.rings >= 150 then
 						player.rings = $-($/10)
 					elseif player.rings >= PTSR.ParrySpendRequirement then

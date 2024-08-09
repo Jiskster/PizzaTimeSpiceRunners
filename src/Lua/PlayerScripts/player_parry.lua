@@ -42,7 +42,7 @@ PTSR.DoParryAnim = function(mobj, withsound, ringloss)
 
 			ring.throwspeed = P_RandomRange(-16, 16)*FU
 			ring.angle = fixangle(P_RandomRange(0, 360)*FU)
-			ring.momz = P_RandomRange(8, 16)*FU
+			ring.momz = P_RandomRange(0, 32)*FU
 		end
 	end
 end

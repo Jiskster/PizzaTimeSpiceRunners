@@ -131,6 +131,12 @@ addHook("PlayerThink", function(player)
 			player.mo.state = data.state
 			player.mo.frame = data.frame
 			player.drawangle = data.a
+			
+			if player == displayplayer then
+				camera.momx = 0
+				camera.momy = 0
+				camera.momz = 0
+			end
 		end
 	end
 

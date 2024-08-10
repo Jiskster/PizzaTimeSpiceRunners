@@ -143,7 +143,7 @@ PTSR.default_playervars = {
 	cantparry = false, --this is for the pizzaface parry - saxa
 	parryhitlag = false, --hit lag now
 	parryhitlagtime = 0, --this to make sure about shit
-	parryhitlagdata = {x=0,y=0,z=0,a=0,momx=0,momy=0,momz=0,on=false},
+	parryhitlagdata = {x=0,y=0,z=0,a=0},
 	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
 }
 

@@ -111,6 +111,47 @@ PTSR.DoParry = function(parrier, victim)
 	end
 end
 
+PTSR.DoParryHitlag = function(player)
+	-- remove to debug the shit for now
+
+	local data = player.ptsr.parryhitlagdata
+
+	data.x = player.mo.x
+	data.y = player.mo.y
+	data.z = player.mo.z
+
+	if data.momx == nil
+	or data.momy == nil
+	or data.momz == nil then
+		data.momx = player.mo.momx
+		data.momy = player.mo.momy
+		data.momz = player.mo.momz
+	end
+
+	data.a = player.drawangle
+	data.state = player.mo.state
+	data.frame = player.mo.frame
+	
+	player.ptsr.parryhitlag = true
+	player.ptsr.parryhitlagtime = leveltime
+end
+
+PTSR.StopParryHitlag = function(player, dontapplymom)
+	local data = player.ptsr.parryhitlagdata
+
+	if not dontapplymom then
+		player.mo.momx = data.momx
+		player.mo.momy = data.momy
+		player.mo.momz = data.momz
+	end
+
+	data.momx = nil
+	data.momy = nil
+	data.momz = nil
+
+	player.ptsr.parryhitlag = false
+end
+
 -- Parry Stuff
 
 -- helper function so we can get whose pizzaface easily
@@ -144,11 +185,7 @@ addHook("PlayerThink", function(player)
 		local ptime = leveltime-player.ptsr.parryhitlagtime
 
 		if ptime >= PTSR.ParryHitLagFrames then
-			player.mo.momx = data.momx
-			player.mo.momy = data.momy
-			player.mo.momz = data.momz
-
-			player.ptsr.parryhitlag = false
+			PTSR.StopParryHitlag(player)
 		else
 			P_SetOrigin(player.mo,
 				data.x,
@@ -170,7 +207,9 @@ addHook("PlayerThink", function(player)
 		end
 	end
 
-	if not player.mo.ptsr.parry_cooldown then
+	if not player.mo.ptsr.parry_cooldown
+	and not player.mo.pizza_in
+	and not player.mo.pizza_out then
 		if cmd.buttons & BT_ATTACK then
 			if not player.mo.pre_parry then -- pre parry start
 				local failparrysfx = {
@@ -234,21 +273,7 @@ addHook("PlayerThink", function(player)
 							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj) and player.rings >= PTSR.ParrySpendRequirement)
 							PTSR.DoParryAnim(foundmobj)
 							
-							if not player.ptsr.parryhitlag then
-								local data = player.ptsr.parryhitlagdata
-								data.x = player.mo.x
-								data.y = player.mo.y
-								data.z = player.mo.z
-								data.momx = player.mo.momx
-								data.momy = player.mo.momy
-								data.momz = player.mo.momz
-								data.a = player.drawangle
-								data.state = player.mo.state
-								data.frame = player.mo.frame
-							end
-							
-							player.ptsr.parryhitlag = true
-							player.ptsr.parryhitlagtime = leveltime
+							PTSR.DoParryHitlag(player)
 							
 							gotanobject = true
 						end

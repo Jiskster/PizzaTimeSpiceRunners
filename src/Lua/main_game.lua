@@ -309,6 +309,7 @@ rawset(_G, "PTSR_COUNT", do
 	local activeCount = 0
 	local inactiveCount = 0
 	local pizzaCount = 0
+	local peppinoCount = 0
 
 	for player in players.iterate
 		if player.valid
@@ -317,15 +318,19 @@ rawset(_G, "PTSR_COUNT", do
 			end
 			if player.ptsr.outofgame or player.spectator or player.ptsr.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
 				inactiveCount = $+1
+			else
+				peppinoCount = $+1
 			end
 		end
+		
 		activeCount = $+1
 	end
 
 	return {
 		inactive = inactiveCount, -- includes pizza faces
 		active = activeCount,
-		pizzas = pizzaCount
+		pizzas = pizzaCount,
+		peppinos = peppinoCount,
 	}
 end)
 

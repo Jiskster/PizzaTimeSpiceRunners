@@ -98,31 +98,32 @@ PTSR_AddHook("onparry", function(pmo, victim)
 	end
 end)
 
-/*
+
 PTSR_AddHook("pfthink", function(pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
-	
-	if count.active > 1 then
-		if pizza.pizza_target == PTSR.juggernaut_crownholder then
-			pizza.pizza_target = nil
+
+	if count.peppinos <= 1 then
+		pizza.pizza_target = PTSR.juggernaut_crownholder
+	else
+		if pizza.pizza_target ~= nil then
+			if pizza.pizza_target == PTSR.juggernaut_crownholder then
+				pizza.pizza_target = nil
+			end
 		end
 	end
 end)
-*/
 
 PTSR_AddHook("pfplayerfind", function(pizza, player)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
-	
-	if count.active > 1 then
+
+	if count.peppinos > 1 then
 		if player.mo and player.mo.valid then
 			if PTSR.juggernaut_crownholder == player.mo then
 				return false
 			end
 		end
-	else
-		pizza.pizza_target = PTSR.juggernaut_crownholder
 	end
 end)
 
@@ -131,7 +132,7 @@ PTSR_AddHook("pfdamage", function(toucher, pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
 	
-	if count.active > 1 then
+	if count.peppinos > 1 then
 		if PTSR.juggernaut_crownholder == toucher then
 			return true
 		else
@@ -139,16 +140,6 @@ PTSR_AddHook("pfdamage", function(toucher, pizza)
 		end
 	end
 end)
-
-/*
-PTSR_AddHook("pfteleport", function(pizza)
-	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
-
-	if PTSR.juggernaut_crownholder then
-		pizza.next_pfteleport = PTSR.juggernaut_crownholder
-	end
-end)
-*/
 
 local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}

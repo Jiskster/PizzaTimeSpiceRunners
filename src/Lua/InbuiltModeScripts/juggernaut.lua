@@ -98,19 +98,32 @@ PTSR_AddHook("onparry", function(pmo, victim)
 	end
 end)
 
+
 PTSR_AddHook("pfthink", function(pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
-	pizza.pizza_target = PTSR.juggernaut_crownholder
+	if pizza.pizza_target == PTSR.juggernaut_crownholder then
+		pizza.pizza_target = nil
+	end
 end)
 
+PTSR_AddHook("pfplayerfind", function(player)
+	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
+	
+	if player.mo and player.mo.valid then
+		if PTSR.juggernaut_crownholder == player.mo then
+			return false
+		end
+	end
+end)
+
+-- true == override
 PTSR_AddHook("pfdamage", function(toucher, pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
-	if PTSR.juggernaut_crownholder ~= toucher then
+	if PTSR.juggernaut_crownholder == toucher then
 		return true
 	else
-		P_SetOrigin(pizza, pizza.x, pizza.y, pizza.z + 512*FU)
 		return false
 	end
 end)

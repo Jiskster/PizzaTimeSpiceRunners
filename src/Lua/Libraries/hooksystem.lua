@@ -12,8 +12,10 @@ hooks.pfthink = {}
 hooks.pfprestunthink = {}
 hooks.pfdamage = {}
 hooks.pfteleport = {}
+hooks.pfplayerfind = {}
+hooks.pfplayertpfind = {}
 
-local override_register = false
+local override_register = nil
 /*
 	It's called override_register because a common use of hooks is to override
 	Ingame actions.
@@ -38,16 +40,14 @@ rawset(_G, "PTSR_DoHook", function(hooktype, ...)
 	end
 	
     for i,v in ipairs(hooks[hooktype]) do
-        if v(...) == true then
-            override_register = true
-        end
+		override_register = v(...)
     end
 
-    if override_register == true then
-        override_register = false
-        return true
-    else
-        return false
+    if override_register ~= nil then
+		local register_copy = override_register
+		
+		override_register = nil
+		return register_copy
     end
 end)
 

@@ -155,7 +155,7 @@ addHook("PlayerThink", function(player)
 		searchBlockmap("objects", function(refmobj, foundmobj)
 			if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 			and L_ZCollide(foundmobj,pmo) then
-				if foundmobj.type == MT_RING or foundmobj.type == MT_COIN and not foundmobj.tayken then
+				if (foundmobj.type == MT_RING or foundmobj.type == MT_COIN) and not foundmobj.tayken then
 					foundmobj["very secure x"] = foundmobj.x
 					foundmobj["very secure y"] = foundmobj.y
 					foundmobj["very secure z"] = foundmobj.z
@@ -165,6 +165,7 @@ addHook("PlayerThink", function(player)
 					
 					P_SetOrigin(foundmobj, pmo.x,pmo.y,pmo.z)
 					P_SetOrigin(foundmobj, vs_x,vs_y,vs_z)
+
 					foundmobj.tayken = true
 				else
 					return false

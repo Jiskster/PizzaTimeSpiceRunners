@@ -464,8 +464,8 @@ addHook("MobjThinker", function(mobj)
 		local p_target = mobj.pizza_target
 		local targeting_player = mobj.pizza_target.player
 		
-		local bandfactor = 600 -- lower = stronger.
-		local overdrive_threshold = 75*FU
+		local bandfactor = 400 -- lower = stronger.
+		local overdrive_threshold = 65*FU
 		
 		if PTSR.isOvertime() then
 			overdrive_threshold = $ * 2
@@ -474,7 +474,7 @@ addHook("MobjThinker", function(mobj)
 		-- Speed Overdrive
 		if targeting_player.speed >= overdrive_threshold then
 			local diff = targeting_player.speed - overdrive_threshold
-			speed = $ + FixedMul(diff, 32*FU/17)
+			speed = $ + FixedMul(diff, 32*FU/18)
 		end
 		
 		--higher range = weaker banding

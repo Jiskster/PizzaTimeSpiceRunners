@@ -462,9 +462,23 @@ addHook("MobjThinker", function(mobj)
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
 		local p_target = mobj.pizza_target
+		local targeting_player = mobj.pizza_target.player
+		
+		local bandfactor = 600 -- lower = stronger.
+		local overdrive_threshold = 75*FU
+		
+		if PTSR.isOvertime() then
+			overdrive_threshold = $ * 2
+		end
+		
+		-- Speed Overdrive
+		if targeting_player.speed >= overdrive_threshold then
+			local diff = targeting_player.speed - overdrive_threshold
+			speed = $ + FixedMul(diff, 32*FU/17)
+		end
 		
 		--higher range = weaker banding
-		local rubber_range = 400*mobj.pizza_target.scale
+		local rubber_range = bandfactor*mobj.pizza_target.scale
 		
 		if CV_PTSR.airubberband.value then
 			offset_speed = FixedMul(speed, FU+FixedDiv(dist - rubber_range, rubber_range))

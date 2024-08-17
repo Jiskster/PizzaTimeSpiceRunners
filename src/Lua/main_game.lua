@@ -164,13 +164,13 @@ PTSR.currentModeMetadata = function()
 	return PTSR.gamemode_list[PTSR.gamemode]
 end
 
-PTSR.gm_casual = PTSR.RegisterGamemode("Casual", {
+PTSR.gm_endurance = PTSR.RegisterGamemode("Endurance", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,
 })
 
-PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
+PTSR.gm_versus = PTSR.RegisterGamemode("Versus", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,

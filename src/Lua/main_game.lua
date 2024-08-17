@@ -197,20 +197,6 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	lapbonus = PTSR.lapbonus*2,
 })
 
-PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
-	dustdevil = true,
-	dustdeviltimer = 30*TICRATE,
-	allowrevive = true,
-	overtime_music = "OTHARD",
-	instant_overtime = true,
-	ring_score = 50,
-	enemy_score = 2000,
-	ringlapbonus = PTSR.ringlapbonus*2,
-	lapbonus = PTSR.lapbonus*4,
-	pfspeedmulti = (FU/4)*5, -- 1.25x
-	overtime_textontime = "HARD MODE!",
-})
-
 /*
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	parry_friendlyfire = false,

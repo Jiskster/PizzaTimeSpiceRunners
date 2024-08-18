@@ -22,17 +22,7 @@ G_AddGametype({
     description = "Run away from pizzaface, in style!"
 })
 
--- MapVote
-addHook("ThinkFrame", do
-	local MV = MapVote
-	if MV and MV.RegisterGametype then
-		local rg = MV.RegisterGametype
-		rg(GT_PTSPICER,	"Pizza Time" ,0,0,TOL_RACE)
-	end
-end)
-
 local loaded_mods = false
-
 
 rawset(_G, "PTSR", { -- variables
 	spawn_location = 

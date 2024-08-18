@@ -281,6 +281,8 @@ addHook("PlayerThink", function(player)
 	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if player.mo and player.mo.valid then
+		L_SpeedCap(player.mo, 85*FU)
+		
 		if gm_metadata and gm_metadata.speedcap then
 			L_SpeedCap(player.mo, gm_metadata.speedcap)
 		end

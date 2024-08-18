@@ -277,6 +277,7 @@ addHook('ThinkFrame', function()
 	end
 end)
 
+-- Main Speed Cap (Makes the game playable and fun for fast characters)
 addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
 	

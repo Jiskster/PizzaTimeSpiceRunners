@@ -278,6 +278,8 @@ addHook('ThinkFrame', function()
 end)
 
 addHook("PlayerThink", function(player)
+	if not PTSR.IsPTSR() then return end
+	
 	local gm_metadata = PTSR.currentModeMetadata()
 	
 	if player.mo and player.mo.valid then

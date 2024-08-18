@@ -278,16 +278,19 @@ addHook('ThinkFrame', function()
 end)
 
 -- Main Speed Cap (Makes the game playable and fun for fast characters)
-addHook("PlayerThink", function(player)
+
+addHook("PostThinkFrame", function()
 	if not PTSR.IsPTSR() then return end
 	
 	local gm_metadata = PTSR.currentModeMetadata()
 	
-	if player.mo and player.mo.valid then
-		L_SpeedCap(player.mo, 85*FU)
-		
-		if gm_metadata and gm_metadata.speedcap then
-			L_SpeedCap(player.mo, gm_metadata.speedcap)
+	for player in players.iterate do
+		if player.mo and player.mo.valid then
+			L_SpeedCap(player.mo, 85*FU)
+			
+			if gm_metadata and gm_metadata.speedcap then
+				L_SpeedCap(player.mo, gm_metadata.speedcap)
+			end
 		end
 	end
 end)

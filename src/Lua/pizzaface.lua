@@ -103,10 +103,6 @@ function PTSR:PizzaCollision(peppino, pizza)
 	if peppino.player.ptsr.lastparryframe
 	and (leveltime - peppino.player.ptsr.lastparryframe) <= CV_PTSR.parry_safeframes.value
 	and not peppino.player.ptsr.cantparry then
-		if not PTSR.CanPizzaParry(peppino.player) then
-			return
-		end
-
 		PTSR.DoParry(peppino.player.mo, pizza)
 		PTSR.DoParryAnim(peppino.player.mo, true, true)
 		PTSR.DoParryAnim(pizza)

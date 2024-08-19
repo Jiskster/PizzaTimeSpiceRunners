@@ -286,7 +286,7 @@ addHook("PostThinkFrame", function()
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid then
-			L_SpeedCap(player.mo, 85*FU)
+			L_SpeedCap(player.mo, 75*FU)
 			
 			if gm_metadata and gm_metadata.speedcap then
 				L_SpeedCap(player.mo, gm_metadata.speedcap)

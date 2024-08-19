@@ -1,7 +1,7 @@
 local tooltips_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
 	local count = PTSR_COUNT()
-	local practicemodetext = "\x84\* PRACTICE MODE *"
+	--local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = "\x82\* LAPS: "..player.ptsr.laps.." *"
 	local lapstext = "\x82\* LAPS: "..player.ptsr.laps.." / "..PTSR.maxlaps.." *"
 	
@@ -30,9 +30,11 @@ local tooltips_hud = function(v, player)
 	end
 
 	if PTSR.pizzatime then
+		/*
 		if (count.active == 1 and multiplayer) then -- practice mode
 			v.drawString(165*FU, ese-(FU*8), practicemodetext , V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
+		*/
 		
 		if player.ptsr.pizzaface then
 			if player.realmo.pfstuntime then
@@ -53,10 +55,13 @@ local tooltips_hud = function(v, player)
 		-- Early returns start here, no pizza face code allowed beyond here --
 		if player.ptsr.pizzaface then return end
 		
+		local lapflag = v.cachePatch("PTSR_LAPFLAG")
+		v.drawScaled(148*FU, ese-(FU*12), FU/2, lapflag, V_PERPLAYER|V_SNAPTOBOTTOM)
+		
 		if CV_PTSR.default_maxlaps.value then
-			v.drawString(165*FU, ese, lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
+			v.drawString(165*FU, ese-(FU*4), lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		else -- infinite laps
-			v.drawString(165*FU, ese, infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
+			v.drawString(165*FU, ese-(FU*4), infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 	end
 end

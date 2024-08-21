@@ -285,11 +285,13 @@ addHook("PostThinkFrame", function()
 	local gm_metadata = PTSR.currentModeMetadata()
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid then
-			L_SpeedCap(player.mo, 75*FU)
-			
-			if gm_metadata and gm_metadata.speedcap then
-				L_SpeedCap(player.mo, gm_metadata.speedcap)
+		if not (player.pflags & PF_SPINNING) then
+			if player.mo and player.mo.valid then
+				L_SpeedCap(player.mo, 75*FU)
+				
+				if gm_metadata and gm_metadata.speedcap then
+					L_SpeedCap(player.mo, gm_metadata.speedcap)
+				end
 			end
 		end
 	end

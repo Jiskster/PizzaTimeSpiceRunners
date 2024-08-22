@@ -106,6 +106,8 @@ dofile "titlecards.lua"
 
 dofile "Functions/get_ringcount.lua"
 dofile "Functions/is_ptsr.lua"
+dofile "Functions/speedcap_xy.lua"
+
 dofile "Init/initmap.lua"
 
 dofile "consolethings.lua"

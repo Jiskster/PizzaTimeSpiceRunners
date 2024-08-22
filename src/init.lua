@@ -173,3 +173,4 @@ dofile "Exit Signs/exitsign_thinkers.lua"
 
 dofile "Compatibility/C_Surge.lua"
 dofile "Compatibility/C_Skip.lua"
+dofile "Compatibility/C_Mach.lua"

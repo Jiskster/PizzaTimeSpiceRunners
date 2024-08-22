@@ -120,7 +120,10 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
 			player.ptsr.laps = 1
-			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
+			
+			local floorz = P_FloorzAtPos(PTSR.end_location.x, PTSR.end_location.y, PTSR.end_location.z, pmo.height)
+			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, floorz)
+			
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			
 			PTSR:AddComboTime(player, player.ptsr.combo_maxtime) -- give everyone combo time cause IM NICE!
@@ -134,8 +137,6 @@ PTSR.PizzaTimeTrigger = function(mobj)
 				player.powers[pw_invulnerability] = CV_PTSR.tpinv.value*TICRATE+20
 				--player.powers[pw_nocontrol] = 20
 				L_SpeedCap(player.mo, 0)
-				local thrust = FixedHypot(player.mo.momx, player.mo.momy)*2
-				P_InstaThrust(player.mo, player.mo.angle, thrust)
 			end
 		end
 		

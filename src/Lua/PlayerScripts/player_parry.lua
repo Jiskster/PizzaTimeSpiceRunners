@@ -251,6 +251,12 @@ addHook("PlayerThink", function(player)
 							end
 							
 							if _isPF(foundmobj) then
+								-- Prevents players from parrying pizza face before he is released.
+								-- And prevents him from being parried multiple times at once (RIP), TODO: Re-implement parry combos.
+								if (foundmobj.pfstuntime and not foundmobj.pfstunmomentum) then
+									return
+								end
+								
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
 								
 								foundmobj.pfhitlag = PTSR.ParryHitLagFrames

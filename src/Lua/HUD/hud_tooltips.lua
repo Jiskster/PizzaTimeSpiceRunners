@@ -55,8 +55,10 @@ local tooltips_hud = function(v, player)
 		-- Early returns start here, no pizza face code allowed beyond here --
 		if player.ptsr.pizzaface then return end
 		
-		local lapflag = v.cachePatch("PTSR_LAPFLAG")
-		v.drawScaled(148*FU, ese-(FU*12), FU/2, lapflag, V_PERPLAYER|V_SNAPTOBOTTOM)
+		local lapflag_name = "PTSR_LAPFLAG"
+		lapflag_name = $ .. "_A" .. tostring((leveltime/2)%12)
+		local lapflag_patch = v.cachePatch(lapflag_name)
+		v.drawScaled(148*FU, ese-(FU*12), FU/2, lapflag_patch, V_PERPLAYER|V_SNAPTOBOTTOM)
 		
 		if CV_PTSR.default_maxlaps.value then
 			v.drawString(165*FU, ese-(FU*4), lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")

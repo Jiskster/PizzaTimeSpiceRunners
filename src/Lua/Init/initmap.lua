@@ -17,6 +17,8 @@ local function InitMap()
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
 	PTSR.aipf = nil
+	PTSR.difficulty = FRACUNIT
+	PTSR.pizzaface_speed_multi = FRACUNIT
 
 	PTSR.vote_maplist = {}
 	

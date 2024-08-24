@@ -255,6 +255,10 @@ addHook("NetVars", function(net)
 		"dustdeviltimer",
 		
 		"nextgamemode",
+		
+		"difficulty",
+		
+		"pizzaface_speed_multi",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -317,12 +321,24 @@ local RANKMUS = {
 PTSR.RANKMUS = RANKMUS
 
 addHook("ThinkFrame", do
+	local gm_metadata = PTSR.currentModeMetadata()
 	local count = PTSR_COUNT()
 
 	if PTSR.pizzatime then
 		P_StartQuake(FRACUNIT*4, 1)
 		PTSR.pizzatime_tics = $ + 1
-
+		
+		if gm_metadata.core_endurance then
+			if (PTSR.pizzatime_tics % TICRATE) == 0 then
+			
+				if not PTSR.isOvertime() then
+					PTSR.difficulty = $ + FRACUNIT/128
+				else
+					PTSR.difficulty = $ + FRACUNIT/32
+				end
+			end
+		end
+		
 		if CV_PTSR.timelimit.value then
 			if not (PTSR.timeleft) then
 				PTSR.timeover_tics = $ + 1

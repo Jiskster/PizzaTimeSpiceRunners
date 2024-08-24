@@ -1,5 +1,7 @@
 local tooltips_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
+	local gm_metadata = PTSR.currentModeMetadata()
+	
 	local count = PTSR_COUNT()
 	--local practicemodetext = "\x84\* PRACTICE MODE *"
 	local infinitelapstext = tostring(player.ptsr.laps)
@@ -58,12 +60,28 @@ local tooltips_hud = function(v, player)
 		local lapflag_name = "PTSR_LAPFLAG"
 		lapflag_name = $ .. "_A" .. tostring((leveltime/2)%12)
 		local lapflag_patch = v.cachePatch(lapflag_name)
-		v.drawScaled(148*FU, ese-(FU*12), FU/2, lapflag_patch, V_PERPLAYER|V_SNAPTOBOTTOM)
+		local lapflag_patch_x = 148*FU
+		local lapflag_text_x = lapflag_patch_x + 17*FU
+		
+		-- Lap Count Flag Graphic
+		v.drawScaled(lapflag_patch_x, ese-(FU*12), FU/2, lapflag_patch, V_PERPLAYER|V_SNAPTOBOTTOM)
+		
+		if gm_metadata.core_endurance then
+			-- Difficulty
+			local difficulty_name = "PTSR_DIFF_FIRE"
+			difficulty_name = $ .. "A" .. tostring((leveltime/2)%14)
+			local difficulty_patch = v.cachePatch(difficulty_name)
+			local difficulty_string = string.format("%.2f", PTSR.difficulty)
+			v.drawScaled(lapflag_patch_x+(40*FU), ese-(FU*14), FU/2, difficulty_patch, V_PERPLAYER|V_SNAPTOBOTTOM)
+			customhud.CustomFontString(v, lapflag_text_x+(40*FU), ese-(FU*6), difficulty_string, "PTFNT", V_PERPLAYER|V_SNAPTOBOTTOM, "center", FU/3, SKINCOLOR_PURPLE)
+		end
+		
 		
 		if CV_PTSR.default_maxlaps.value then
-			v.drawString(165*FU, ese-(FU*4), lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
+			v.drawString(lapflag_text_x, ese-(FU*4), lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		else -- infinite laps
-			customhud.CustomFontString(v, 165*FU, ese-(FU*6), infinitelapstext, "SMNPT", V_PERPLAYER|V_SNAPTOBOTTOM, "center", FRACUNIT/2, SKINCOLOR_YELLOW)
+			customhud.CustomFontString(v, 165*FU, ese-(FU*6), infinitelapstext, "SMNPT", V_PERPLAYER|V_SNAPTOBOTTOM, "center", FU/2, SKINCOLOR_YELLOW)
+			
 			--v.drawString(165*FU, ese-(FU*4), infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 	end

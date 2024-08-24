@@ -79,7 +79,7 @@ local tooltips_hud = function(v, player)
 			local pfspeed_name = "PTSR_PFSHOE"
 			pfspeed_name = $ .. "_A_" .. tostring((leveltime/2)%16)
 			local pfspeed_patch = v.cachePatch(pfspeed_name)
-			local pfspeed_string = string.format("%.2f", PTSR.pizzaface_speed_multi)
+			local pfspeed_string = string.format("%.2fX", PTSR.pizzaface_speed_multi)
 			v.drawScaled(lapflag_patch_x-(40*FU), ese-(FU*14), FU/2, pfspeed_patch, V_PERPLAYER|V_SNAPTOBOTTOM)
 			customhud.CustomFontString(v, lapflag_text_x-(40*FU), ese-(FU*4), pfspeed_string, "PTFNT", V_PERPLAYER|V_SNAPTOBOTTOM, "center", FU/3, SKINCOLOR_SANGRIA)
 		end

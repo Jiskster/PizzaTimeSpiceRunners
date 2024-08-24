@@ -25,7 +25,8 @@ PTSR.DoLapBonus = function(player)
 		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		local combobonus = player.ptsr.combo_count * (gm_metadata.combobonus or PTSR.combobonus)
 		
-		if gm_metadata.core_endurance then
+		if gm_metadata.core_endurance 
+		and count.peppinos then
 			if not PTSR.isOvertime() then
 				PTSR.difficulty = $ + FixedDiv((FU/10), count.peppinos*FU)
 			else

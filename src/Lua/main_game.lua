@@ -165,16 +165,20 @@ PTSR.gm_versus = PTSR.RegisterGamemode("Versus", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
+	disable_speedcap = true,
 	lapbonus = 0,
 })
 
+/*
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = false,
 	elimination_cooldown = 35*TICRATE,
 	lapbonus = 0,
+	
 })
+*/
 
 PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,

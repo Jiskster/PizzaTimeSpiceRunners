@@ -258,6 +258,8 @@ addHook("PostThinkFrame", function()
 	
 	local gm_metadata = PTSR.currentModeMetadata()
 	
+	if gm_metadata.disable_speedcap then return end
+	
 	for player in players.iterate do
 		if not (player.pflags & PF_SPINNING) then
 			if player.mo and player.mo.valid then

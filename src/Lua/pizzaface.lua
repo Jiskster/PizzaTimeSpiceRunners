@@ -103,10 +103,12 @@ function PTSR:PizzaCollision(peppino, pizza)
 	if peppino.player.ptsr.lastparryframe
 	and (leveltime - peppino.player.ptsr.lastparryframe) <= CV_PTSR.parry_safeframes.value
 	and not peppino.player.ptsr.cantparry then
-		PTSR.DoParry(peppino.player.mo, pizza)
-		PTSR.DoParryAnim(peppino.player.mo, true, true)
+		local player = peppino.player
+		
+		PTSR.DoParry(player.mo, pizza)
+		PTSR.DoParryAnim(player.mo, true, true)
 		PTSR.DoParryAnim(pizza)
-		peppino.player.ptsr.lastparryframe = leveltime
+		player.ptsr.lastparryframe = leveltime
 
 		if not player.ptsr.parryhitlag then
 			local data = player.ptsr.parryhitlagdata
@@ -120,6 +122,7 @@ function PTSR:PizzaCollision(peppino, pizza)
 			data.state = player.mo.state
 			data.frame = player.mo.frame
 		end
+		
 		player.ptsr.parryhitlag = true
 		player.ptsr.parryhitlagtime = leveltime
 	else

@@ -297,7 +297,7 @@ CV_PTSR.aitpstuntime = CV_RegisterVar({
 
 CV_PTSR.aispeed = CV_RegisterVar({
 	name = "PTSR_aispeed",
-	defaultvalue = "30",
+	defaultvalue = "25",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 500*FRACUNIT}, 
 })
@@ -311,7 +311,7 @@ CV_PTSR.aileash = CV_RegisterVar({
 
 CV_PTSR.airubberband = CV_RegisterVar({
 	name = "PTSR_airubberband",
-	defaultvalue = "on",
+	defaultvalue = "off",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 
 })

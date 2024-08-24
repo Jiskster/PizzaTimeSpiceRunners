@@ -165,8 +165,7 @@ PTSR.gm_versus = PTSR.RegisterGamemode("Versus", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	ring_score = 14,
-	ringlapbonus = PTSR.ringlapbonus*2,
+	lapbonus = 0,
 })
 
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
@@ -174,9 +173,6 @@ PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	dustdevil = false,
 	allowrevive = false,
 	elimination_cooldown = 35*TICRATE,
-	ring_score = 300,
-	enemy_score = 3000,
-	ringlapbonus = 0,
 	lapbonus = 0,
 })
 
@@ -184,8 +180,6 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	ringlapbonus = 0,
-	lapbonus = PTSR.lapbonus*2,
 })
 
 /*

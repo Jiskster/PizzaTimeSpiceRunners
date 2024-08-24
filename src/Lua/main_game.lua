@@ -328,16 +328,18 @@ addHook("ThinkFrame", do
 		P_StartQuake(FRACUNIT*4, 1)
 		PTSR.pizzatime_tics = $ + 1
 		
-		if gm_metadata.core_endurance then
-			if (PTSR.pizzatime_tics % TICRATE) == 0 then
-				if not PTSR.isOvertime() then
-					PTSR.difficulty = $ + FRACUNIT/128
-				else
-					PTSR.difficulty = $ + FRACUNIT/32
+		if not PTSR.gameover then
+			if gm_metadata.core_endurance then
+				if (PTSR.pizzatime_tics % TICRATE) == 0 then
+					if not PTSR.isOvertime() then
+						PTSR.difficulty = $ + FRACUNIT/128
+					else
+						PTSR.difficulty = $ + FRACUNIT/32
+					end
 				end
+				
+				PTSR.pizzaface_speed_multi = FixedDiv(FU, FU*2) + FixedDiv(PTSR.difficulty, 2*FU)
 			end
-			
-			PTSR.pizzaface_speed_multi = FixedDiv(FU, FU*2) + FixedDiv(PTSR.difficulty, 2*FU)
 		end
 		
 		if CV_PTSR.timelimit.value then

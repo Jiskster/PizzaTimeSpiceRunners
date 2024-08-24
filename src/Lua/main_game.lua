@@ -330,19 +330,21 @@ addHook("ThinkFrame", do
 		
 		if gm_metadata.core_endurance then
 			if (PTSR.pizzatime_tics % TICRATE) == 0 then
-			
 				if not PTSR.isOvertime() then
 					PTSR.difficulty = $ + FRACUNIT/128
 				else
 					PTSR.difficulty = $ + FRACUNIT/32
 				end
 			end
+			
+			PTSR.pizzaface_speed_multi = FixedDiv(FU, FU*2) + FixedDiv(PTSR.difficulty, 2*FU)
 		end
 		
 		if CV_PTSR.timelimit.value then
 			if not (PTSR.timeleft) then
 				PTSR.timeover_tics = $ + 1
 			end
+			
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
 				

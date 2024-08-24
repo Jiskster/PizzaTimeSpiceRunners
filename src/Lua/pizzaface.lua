@@ -487,13 +487,16 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedMul($, yum)
 		end
 		
+		if gm_metadata.core_endurance then
+			speed = FixedMul($, PTSR.pizzaface_speed_multi)
+		end
+		
 		if gm_metadata.pfspeedmulti then
 			local newspeed = gm_metadata.pfspeedmulti
 			
 			speed = FixedMul($, newspeed)
 		end
-
-
+		
 		local val = CV_PTSR.aileash.value
 		if not multiplayer then
 			val = min($, 5000*FU) --prevents despawning

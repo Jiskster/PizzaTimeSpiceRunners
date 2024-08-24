@@ -155,6 +155,7 @@ PTSR.currentModeMetadata = function()
 end
 
 PTSR.gm_endurance = PTSR.RegisterGamemode("Endurance", {
+	core_endurance = true,
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,

@@ -29,6 +29,8 @@ end
 
 local overtimemulti_hud = function(v, player)
 	if not PTSR.timeover or PTSR.gameover then return end
+	local gm_metadata = PTSR.currentModeMetadata()
+	if gm_metadata.core_endurance then return end
 	
 	local speed = (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
 	local speedtext = L_FixedDecimal(FRACUNIT + speed,2)

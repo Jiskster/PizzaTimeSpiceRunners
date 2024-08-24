@@ -481,7 +481,7 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedDiv($, 2*FRACUNIT)
 		end
 		
-		if PTSR.timeover then
+		if PTSR.timeover and not gm_metadata.core_endurance then
 			local yum = FRACUNIT + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
 			
 			speed = FixedMul($, yum)

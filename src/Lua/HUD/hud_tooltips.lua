@@ -2,7 +2,7 @@ local tooltips_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
 	local count = PTSR_COUNT()
 	--local practicemodetext = "\x84\* PRACTICE MODE *"
-	local infinitelapstext = "\x82\* LAPS: "..player.ptsr.laps.." *"
+	local infinitelapstext = tostring(player.ptsr.laps)
 	local lapstext = "\x82\* LAPS: "..player.ptsr.laps.." / "..PTSR.maxlaps.." *"
 	
 	local pthud_offset = -8*FU
@@ -63,7 +63,8 @@ local tooltips_hud = function(v, player)
 		if CV_PTSR.default_maxlaps.value then
 			v.drawString(165*FU, ese-(FU*4), lapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		else -- infinite laps
-			v.drawString(165*FU, ese-(FU*4), infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
+			customhud.CustomFontString(v, 165*FU, ese-(FU*6), infinitelapstext, "SMNPT", V_PERPLAYER|V_SNAPTOBOTTOM, "center", FRACUNIT/2, SKINCOLOR_YELLOW)
+			--v.drawString(165*FU, ese-(FU*4), infinitelapstext, V_PERPLAYER|V_SNAPTOBOTTOM, "thin-fixed-center")
 		end
 	end
 end

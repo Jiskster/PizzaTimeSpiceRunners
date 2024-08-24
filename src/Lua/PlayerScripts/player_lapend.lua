@@ -29,7 +29,7 @@ PTSR.DoLapBonus = function(player)
 			if not PTSR.isOvertime() then
 				PTSR.difficulty = $ + FixedDiv((FU/10), count.peppinos*FU)
 			else
-				PTSR.difficulty = $ + FixedDiv((FU/10)*3, count.peppinos*FU)
+				PTSR.difficulty = $ + FixedDiv((FU/10)*4, count.peppinos*FU)
 			end
 		end
 		

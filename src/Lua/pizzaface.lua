@@ -103,14 +103,12 @@ function PTSR:PizzaCollision(peppino, pizza)
 	if peppino.player.ptsr.lastparryframe
 	and (leveltime - peppino.player.ptsr.lastparryframe) <= CV_PTSR.parry_safeframes.value
 	and not peppino.player.ptsr.cantparry then
-		if not PTSR.CanPizzaParry(peppino.player) then
-			return
-		end
-
-		PTSR.DoParry(peppino.player.mo, pizza)
-		PTSR.DoParryAnim(peppino.player.mo, true, true)
+		local player = peppino.player
+		
+		PTSR.DoParry(player.mo, pizza)
+		PTSR.DoParryAnim(player.mo, true, true)
 		PTSR.DoParryAnim(pizza)
-		peppino.player.ptsr.lastparryframe = leveltime
+		player.ptsr.lastparryframe = leveltime
 
 		if not player.ptsr.parryhitlag then
 			local data = player.ptsr.parryhitlagdata
@@ -124,6 +122,7 @@ function PTSR:PizzaCollision(peppino, pizza)
 			data.state = player.mo.state
 			data.frame = player.mo.frame
 		end
+		
 		player.ptsr.parryhitlag = true
 		player.ptsr.parryhitlagtime = leveltime
 	else
@@ -462,9 +461,12 @@ addHook("MobjThinker", function(mobj)
 		local dist = R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y)
 		local offset_speed = 0
 		local p_target = mobj.pizza_target
+		local targeting_player = mobj.pizza_target.player
+		
+		local bandfactor = 500 -- lower = stronger.
 		
 		--higher range = weaker banding
-		local rubber_range = 400*mobj.pizza_target.scale
+		local rubber_range = bandfactor*mobj.pizza_target.scale
 		
 		if CV_PTSR.airubberband.value then
 			offset_speed = FixedMul(speed, FU+FixedDiv(dist - rubber_range, rubber_range))
@@ -482,10 +484,14 @@ addHook("MobjThinker", function(mobj)
 			speed = FixedDiv($, 2*FRACUNIT)
 		end
 		
-		if PTSR.timeover then
+		if PTSR.timeover and not gm_metadata.core_endurance then
 			local yum = FRACUNIT + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
 			
 			speed = FixedMul($, yum)
+		end
+		
+		if gm_metadata.core_endurance then
+			speed = FixedMul($, PTSR.pizzaface_speed_multi)
 		end
 		
 		if gm_metadata.pfspeedmulti then
@@ -493,8 +499,7 @@ addHook("MobjThinker", function(mobj)
 			
 			speed = FixedMul($, newspeed)
 		end
-
-
+		
 		local val = CV_PTSR.aileash.value
 		if not multiplayer then
 			val = min($, 5000*FU) --prevents despawning

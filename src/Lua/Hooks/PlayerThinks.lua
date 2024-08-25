@@ -149,32 +149,6 @@ addHook("PlayerThink", function(player)
 			--P_KillMobj(player.mo,player.elfilin.ridingplayer)
 			player.elfilin.ridingplayer = 0
 		end
-		--endsupport
-		local range = 250*FRACUNIT -- higher blockmap range so it doesnt look choppy
-		local real_range = 110*FRACUNIT
-		searchBlockmap("objects", function(refmobj, foundmobj)
-			if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
-			and L_ZCollide(foundmobj,pmo) then
-				if (foundmobj.type == MT_RING or foundmobj.type == MT_COIN) and not foundmobj.tayken then
-					foundmobj["very secure x"] = foundmobj.x
-					foundmobj["very secure y"] = foundmobj.y
-					foundmobj["very secure z"] = foundmobj.z
-					local vs_x = foundmobj["very secure x"]
-					local vs_y = foundmobj["very secure y"]
-					local vs_z = foundmobj["very secure z"]
-					
-					P_SetOrigin(foundmobj, pmo.x,pmo.y,pmo.z)
-					P_SetOrigin(foundmobj, vs_x,vs_y,vs_z)
-
-					foundmobj.tayken = true
-				else
-					return false
-				end
-			end
-		end, 
-		player.mo,
-		player.mo.x-range, player.mo.x+range,
-		player.mo.y-range, player.mo.y+range)		
 	end
 end)
 
@@ -277,12 +251,24 @@ addHook('ThinkFrame', function()
 	end
 end)
 
-addHook("PlayerThink", function(player)
+-- Main Speed Cap (Makes the game playable and fun for fast characters)
+
+addHook("PostThinkFrame", function()
+	if not PTSR.IsPTSR() then return end
+	
 	local gm_metadata = PTSR.currentModeMetadata()
 	
-	if player.mo and player.mo.valid then
-		if gm_metadata and gm_metadata.speedcap then
-			L_SpeedCap(player.mo, gm_metadata.speedcap)
+	if gm_metadata.disable_speedcap then return end
+	
+	for player in players.iterate do
+		if not (player.pflags & PF_SPINNING) then
+			if player.mo and player.mo.valid then
+				if gm_metadata and gm_metadata.speedcap then
+					PTSR.SpeedCap_XY(player.mo, gm_metadata.speedcap)
+				else
+					PTSR.SpeedCap_XY(player.mo, 75*FU)
+				end
+			end
 		end
 	end
 end)

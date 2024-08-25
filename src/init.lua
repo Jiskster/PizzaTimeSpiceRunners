@@ -96,6 +96,7 @@ dofile "Libraries/hooksystem.lua"
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 customhud.SetupFont("COMBO", -1, 4)
+customhud.SetupFont("SMNPT", -1, 4)
 
 dofile "main_game.lua"
 
@@ -106,6 +107,8 @@ dofile "titlecards.lua"
 
 dofile "Functions/get_ringcount.lua"
 dofile "Functions/is_ptsr.lua"
+dofile "Functions/speedcap_xy.lua"
+
 dofile "Init/initmap.lua"
 
 dofile "consolethings.lua"
@@ -170,3 +173,7 @@ dofile "Hooks/intermission.lua"
 
 dofile "Exit Signs/exitsign_init.lua"
 dofile "Exit Signs/exitsign_thinkers.lua"
+
+dofile "Compatibility/C_Surge.lua"
+dofile "Compatibility/C_Skip.lua"
+dofile "Compatibility/C_Mach.lua"

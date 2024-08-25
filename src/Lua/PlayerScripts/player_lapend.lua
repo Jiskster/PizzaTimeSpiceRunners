@@ -14,6 +14,7 @@ end
 
 PTSR.DoLapBonus = function(player)
 	local gm_metadata = PTSR.currentModeMetadata()
+	local count = PTSR_COUNT()
 	
 	PTSR.ChatLapStatus(player)
 	
@@ -23,6 +24,15 @@ PTSR.DoLapBonus = function(player)
 		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
 		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		local combobonus = player.ptsr.combo_count * (gm_metadata.combobonus or PTSR.combobonus)
+		
+		if gm_metadata.core_endurance 
+		and count.peppinos then
+			if not PTSR.isOvertime() then
+				PTSR.difficulty = $ + FixedDiv((FU/10), count.peppinos*FU)
+			else
+				PTSR.difficulty = $ + FixedDiv((FU/10)*4, count.peppinos*FU)
+			end
+		end
 		
 		if PTSR_DoHook("onbonus", player) == true then
 			escapebonus = false

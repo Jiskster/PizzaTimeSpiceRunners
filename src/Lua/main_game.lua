@@ -22,17 +22,7 @@ G_AddGametype({
     description = "Run away from pizzaface, in style!"
 })
 
--- MapVote
-addHook("ThinkFrame", do
-	local MV = MapVote
-	if MV and MV.RegisterGametype then
-		local rg = MV.RegisterGametype
-		rg(GT_PTSPICER,	"Pizza Time" ,0,0,TOL_RACE)
-	end
-end)
-
 local loaded_mods = false
-
 
 rawset(_G, "PTSR", { -- variables
 	spawn_location = 
@@ -164,51 +154,36 @@ PTSR.currentModeMetadata = function()
 	return PTSR.gamemode_list[PTSR.gamemode]
 end
 
-PTSR.gm_casual = PTSR.RegisterGamemode("Casual", {
+PTSR.gm_endurance = PTSR.RegisterGamemode("Endurance", {
+	core_endurance = true,
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,
 })
 
-PTSR.gm_competitive = PTSR.RegisterGamemode("Competitive", {
+PTSR.gm_versus = PTSR.RegisterGamemode("Versus", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	ring_score = 14,
-	ringlapbonus = PTSR.ringlapbonus*2,
+	disable_speedcap = true,
+	lapbonus = 0,
 })
 
+/*
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = false,
 	elimination_cooldown = 35*TICRATE,
-	ring_score = 300,
-	enemy_score = 3000,
-	ringlapbonus = 0,
 	lapbonus = 0,
+	
 })
+*/
 
 PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
-	ringlapbonus = 0,
-	lapbonus = PTSR.lapbonus*2,
-})
-
-PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
-	dustdevil = true,
-	dustdeviltimer = 30*TICRATE,
-	allowrevive = true,
-	overtime_music = "OTHARD",
-	instant_overtime = true,
-	ring_score = 50,
-	enemy_score = 2000,
-	ringlapbonus = PTSR.ringlapbonus*2,
-	lapbonus = PTSR.lapbonus*4,
-	pfspeedmulti = (FU/4)*5, -- 1.25x
-	overtime_textontime = "HARD MODE!",
 })
 
 /*
@@ -284,6 +259,10 @@ addHook("NetVars", function(net)
 		"dustdeviltimer",
 		
 		"nextgamemode",
+		
+		"difficulty",
+		
+		"pizzaface_speed_multi",
 	}
 	
 	for i,v in ipairs(sync_list) do
@@ -346,16 +325,32 @@ local RANKMUS = {
 PTSR.RANKMUS = RANKMUS
 
 addHook("ThinkFrame", do
+	local gm_metadata = PTSR.currentModeMetadata()
 	local count = PTSR_COUNT()
 
 	if PTSR.pizzatime then
 		P_StartQuake(FRACUNIT*4, 1)
 		PTSR.pizzatime_tics = $ + 1
-
+		
+		if not PTSR.gameover then
+			if gm_metadata.core_endurance then
+				if (PTSR.pizzatime_tics % TICRATE) == 0 then
+					if not PTSR.isOvertime() then
+						PTSR.difficulty = $ + FRACUNIT/128
+					else
+						PTSR.difficulty = $ + FRACUNIT/32
+					end
+				end
+				
+				PTSR.pizzaface_speed_multi = FixedDiv(FU, FU*2) + FixedDiv(PTSR.difficulty, 2*FU)
+			end
+		end
+		
 		if CV_PTSR.timelimit.value then
 			if not (PTSR.timeleft) then
 				PTSR.timeover_tics = $ + 1
 			end
+			
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
 				

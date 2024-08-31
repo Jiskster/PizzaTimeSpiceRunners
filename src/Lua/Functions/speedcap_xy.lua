@@ -1,7 +1,6 @@
 function PTSR.DoBrakes_XY(mo,factor)
 	mo.momx = FixedMul($,factor)
 	mo.momy = FixedMul($,factor)
-	mo.momz = FixedMul($,factor)
 end
 
 function PTSR.SpeedCap_XY(mo,limit,factor)

@@ -87,6 +87,7 @@ end
 local bar_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
 	if PTSR.pizzatime then
+
 		local bar_finish = 1475*FRACUNIT/10
 		local TLIM = PTSR.maxtime or 0 
 		
@@ -175,7 +176,6 @@ local bar_hud = function(v, player)
 				
 				FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2)
 			end
-			
 			timeafteranimation = $ + 1
 		end
 	else

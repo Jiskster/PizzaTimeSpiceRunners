@@ -144,17 +144,18 @@ PTSR.DoParryHitlag = function(player)
 
 	local data = player.ptsr.parryhitlagdata
 
+	if data then
+		data.time = leveltime
+		return
+	end
+
 	data.x = player.mo.x
 	data.y = player.mo.y
 	data.z = player.mo.z
 
-	if data.momx == nil
-	or data.momy == nil
-	or data.momz == nil then
-		data.momx = player.mo.momx
-		data.momy = player.mo.momy
-		data.momz = player.mo.momz
-	end
+	data.momx = player.mo.momx
+	data.momy = player.mo.momy
+	data.momz = player.mo.momz
 
 	data.a = player.drawangle
 	data.state = player.mo.state
@@ -169,9 +170,9 @@ PTSR.StopParryHitlag = function(player, dontapplymom)
 
 	if data then
 		if not dontapplymom then
-			player.mo.momx = data.momx
-			player.mo.momy = data.momy
-			player.mo.momz = data.momz
+			player.mo.momx = data.momx or 0
+			player.mo.momy = data.momy or 0
+			player.mo.momz = data.momz or 0
 		end
 
 		data.momx = nil

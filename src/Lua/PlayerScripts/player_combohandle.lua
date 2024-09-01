@@ -5,6 +5,7 @@ function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_outro_tics = 0
 		player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
+		player.ptsr.combo_elapsed = 0
 		player.ptsr.combo_times_started = $ + 1
 	end
 end
@@ -88,10 +89,6 @@ addHook("PlayerThink", function(player)
 	
 	if player.ptsr.combo_outro_tics then
 		player.ptsr.combo_outro_tics = $ - 1
-		player.ptsr.combo_elapsed = $ + 1
-		
-		if not player.ptsr.combo_outro_tics then
-			player.ptsr.combo_elapsed = 0
-		end
+		player.ptsr.combo_elapsed = 0
 	end
 end)

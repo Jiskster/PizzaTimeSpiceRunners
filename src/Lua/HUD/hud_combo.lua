@@ -39,11 +39,14 @@ local combo_hud = function(v, player)
 	
 	local tween_popin_time = TICRATE
 	local tween_popin_div = FixedDiv(min(player.ptsr.combo_elapsed, tween_popin_time), tween_popin_time) -- down to up value
-	local ese_popin = ease.outback(tween_popin_div, -100*FU, 0)
+	
+	local ese_popin = 0; if not combo_outro_tics then
+		ese_popin = ease.outback(tween_popin_div, -100*FU, 0)
+	end
 	
 	local tween_popout_time = PTSR.combo_outro_tics
-	local tween_popout_div = FixedDiv(player.ptsr.combo_outro_tics*FU, tween_popout_time*FU) -- up to down value
-	local ese_popout = player.ptsr.combo_outro_tics and ease.linear(tween_popout_div, -400*FU, 0) or 0
+	local tween_popout_div = FU - FixedDiv(player.ptsr.combo_outro_tics*FU, tween_popout_time*FU) -- up to down value
+	local ese_popout = combo_outro_tics and ease.linear(tween_popout_div, 0, -400*FU) or 0
 	
 	local ese = ease.outexpo(FU - FixedDiv(combo_tween_time*FU, PTSR.combotween*FU), combo_timeleft_prev, combo_timeleft)
 	local meat = combo_tween_time and ese or combo_timeleft

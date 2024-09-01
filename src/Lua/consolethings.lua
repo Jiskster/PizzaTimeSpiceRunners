@@ -346,7 +346,7 @@ CV_PTSR.parryknockback_xy = CV_RegisterVar({
 
 CV_PTSR.parryknockback_z = CV_RegisterVar({
 	name = "PTSR_parryknockback_z",
-	defaultvalue = "15",
+	defaultvalue = "10",
 	flags = CV_NETVAR|CV_FLOAT,
 	PossibleValue = {MIN = 0, MAX = 25000*FRACUNIT}, 
 })

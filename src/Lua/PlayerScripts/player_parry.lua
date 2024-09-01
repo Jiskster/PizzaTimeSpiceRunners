@@ -40,6 +40,11 @@ addHook("ThinkFrame", function()
 					object.angle = $ + v.add_angle 
 					v.add_angle = $ + FixedAngle(speed*2)
 				end
+				
+				if (object.eflags & MFE_JUSTHITFLOOR) then
+					S_StartSound(object, sfx_s3k49)
+					P_SetObjectMomZ(object, 7*FRACUNIT)
+				end
 			else
 				table.remove(PTSR.ParryList, i)
 			end
@@ -54,6 +59,7 @@ addHook("MobjMoveBlocked", function(mobj, thing, line)
 				local speed = FixedHypot(v.object.momx, v.object.momy)
 				local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
 				
+				S_StartSound(v.object, sfx_s3k49)
 				P_InstaThrust(v.object, ang-ANGLE_90, 30*FU)
 			end
 		end
@@ -260,12 +266,6 @@ addHook("PlayerThink", function(player)
 										
 										if foundmobj.player.powers[pw_invulnerability] then
 											return
-										end
-										
-										for i,v in pairs(PTSR.ParryList) do
-											if v.object and v.object == foundmobj then
-												return
-											end
 										end
 									elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
 										return

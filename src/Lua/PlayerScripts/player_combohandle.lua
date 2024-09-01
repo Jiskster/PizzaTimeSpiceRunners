@@ -1,5 +1,5 @@
 PTSR.combotween = 10
-PTSR.combo_outro_tics = 6*TICRATE
+PTSR.combo_outro_tics = 4*TICRATE
 
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then

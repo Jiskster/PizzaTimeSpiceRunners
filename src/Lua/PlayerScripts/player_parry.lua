@@ -154,17 +154,19 @@ end
 PTSR.StopParryHitlag = function(player, dontapplymom)
 	local data = player.ptsr.parryhitlagdata
 
-	if not dontapplymom then
-		player.mo.momx = data.momx
-		player.mo.momy = data.momy
-		player.mo.momz = data.momz
+	if data then
+		if not dontapplymom then
+			player.mo.momx = data.momx
+			player.mo.momy = data.momy
+			player.mo.momz = data.momz
+		end
+
+		data.momx = nil
+		data.momy = nil
+		data.momz = nil
+
+		player.ptsr.parryhitlag = false
 	end
-
-	data.momx = nil
-	data.momy = nil
-	data.momz = nil
-
-	player.ptsr.parryhitlag = false
 end
 
 -- Parry Stuff
@@ -258,6 +260,12 @@ addHook("PlayerThink", function(player)
 										
 										if foundmobj.player.powers[pw_invulnerability] then
 											return
+										end
+										
+										for i,v in pairs(PTSR.ParryList) do
+											if v.object and v.object == foundmobj then
+												return
+											end
 										end
 									elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
 										return

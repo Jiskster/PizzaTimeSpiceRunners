@@ -35,6 +35,7 @@ addHook("ThinkFrame", function()
 					player.drawangle = v.add_angle 
 					v.add_angle = $ + FixedAngle(speed*2)
 					object.state = S_PLAY_PAIN
+					player.pflags = $|PF_THOKKED
 				else
 					object.angle = $ + v.add_angle 
 					v.add_angle = $ + FixedAngle(speed*2)

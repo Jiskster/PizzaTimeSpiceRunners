@@ -113,7 +113,9 @@ end
 
 PTSR.DoParry = function(parrier, victim)
 	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
-	
+	local knockback_xy = CV_PTSR.parryknockback_xy.value
+	local knockback_z = CV_PTSR.parryknockback_z.value
+
 	local haswhirlwind = false
 	
 	if parrier.player and parrier.player.valid then
@@ -123,13 +125,18 @@ PTSR.DoParry = function(parrier, victim)
 	victim.pfstunmomentum = true
 	victim.pfstuntime = CV_PTSR.parrystuntime.value
 	
-	if not haswhirlwind then
-		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value)
-		P_InstaThrust(victim, anglefromparrier + ANGLE_180, CV_PTSR.parryknockback_xy.value)
-	else
-		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value*2)
-		P_InstaThrust(victim, anglefromparrier + ANGLE_180, CV_PTSR.parryknockback_xy.value*2)
+	if haswhirlwind then
+		knockback_xy = $ * 2
+		knockback_z = $ * 2
 	end
+	
+	if PTSR.isOvertime() then
+		knockback_xy = $ * 2
+		knockback_z = $ * 2
+	end
+	
+	P_SetObjectMomZ(victim, knockback_z)
+	P_InstaThrust(victim, anglefromparrier + ANGLE_180, knockback_xy)
 end
 
 PTSR.DoParryHitlag = function(player)
@@ -285,6 +292,12 @@ addHook("PlayerThink", function(player)
 								
 								gotapf = true
 							else
+								local set_timeleft = 45
+								
+								if PTSR.isOvertime() then
+									set_timeleft = $*2
+								end
+								
 								table.insert(PTSR.ParryList, {
 									object = foundmobj,
 									time_left = 45,

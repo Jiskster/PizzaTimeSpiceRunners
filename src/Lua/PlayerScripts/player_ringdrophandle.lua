@@ -5,7 +5,7 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 		if not (damagetype & DMG_DEATHMASK) then
 			if not player.ptsr.outofgame
 			and not PTSR_DoHook('ondamage', target, inflictor, source, damage, damagetype) then
-				PTSR:AddComboTime(player, -(TICRATE + TICRATE/2))
+				PTSR:AddComboTime(player, -(2*TICRATE + TICRATE/2))
 				
 				if player.powers[pw_shield] then 
 					return 

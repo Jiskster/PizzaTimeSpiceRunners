@@ -18,6 +18,7 @@ addHook("ThinkFrame", function()
 			if v.object and v.object.valid then
 				local object = v.object
 				local player = object.player
+				local speed = FixedHypot(object.momx, object.momy)
 				
 				if (leveltime % 3) == 0 then
 					local ghost = P_SpawnGhostMobj(object)
@@ -30,13 +31,14 @@ addHook("ThinkFrame", function()
 					--S_StartSound(object, sfx_kc38)
 				end
 				
-				/*
 				if player and player.valid then
-					player.drawangle = $ + ANG1
+					player.drawangle = v.add_angle 
+					v.add_angle = $ + FixedAngle(speed*2)
+					object.state = S_PLAY_PAIN
 				else
-					object.angle = $ + ANG1
+					object.angle = $ + v.add_angle 
+					v.add_angle = $ + FixedAngle(speed*2)
 				end
-				*/
 			else
 				table.remove(PTSR.ParryList, i)
 			end
@@ -44,6 +46,18 @@ addHook("ThinkFrame", function()
 	end
 end)
 
+addHook("MobjMoveBlocked", function(mobj, thing, line)
+	if line and line.valid then
+		for i,v in pairs(PTSR.ParryList) do
+			if v.object and v.object == mobj then
+				local speed = FixedHypot(v.object.momx, v.object.momy)
+				local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
+				
+				P_InstaThrust(v.object, ang-ANGLE_90, 30*FU)
+			end
+		end
+	end
+end)
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
 	spawnstate = S_RING,
@@ -104,10 +118,10 @@ PTSR.DoParry = function(parrier, victim)
 	
 	if not haswhirlwind then
 		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value)
-		P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value)
+		P_InstaThrust(victim, anglefromparrier + ANGLE_180, CV_PTSR.parryknockback_xy.value)
 	else
 		P_SetObjectMomZ(victim, CV_PTSR.parryknockback_z.value*2)
-		P_InstaThrust(victim, anglefromparrier - ANGLE_180, CV_PTSR.parryknockback_xy.value*2)
+		P_InstaThrust(victim, anglefromparrier + ANGLE_180, CV_PTSR.parryknockback_xy.value*2)
 	end
 end
 
@@ -265,6 +279,7 @@ addHook("PlayerThink", function(player)
 								table.insert(PTSR.ParryList, {
 									object = foundmobj,
 									time_left = 45,
+									add_angle = 0,
 								})
 							end
 

@@ -26,10 +26,22 @@ function PTSR:FillCombo(player)
 	PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
 end
 
-function PTSR:EndCombo(player)
+function PTSR:ClearCombo(player)
 	player.ptsr.combo_count = 0
 	player.ptsr.combo_timeleft = 0
 	player.ptsr.combo_active = false
+end
+
+function PTSR:EndCombo(player)
+	player.ptsr.combo_outro_count = player.ptsr.combo_count
+	PTSR:ClearCombo(player)
+	
+	if not player.ptsr.outofgame then
+		player.ptsr.combo_timesfailed = $ + 1
+	end
+	
+	player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+	S_StartSound(player.mo, sfx_s1c5, player)
 end
 
 function PTSR:AddComboTime(player, amount)
@@ -38,8 +50,8 @@ function PTSR:AddComboTime(player, amount)
 			player.ptsr.combo_tweentime = PTSR.combotween
 			player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
 			player.ptsr.combo_timeleft = player.ptsr.combo_maxtime
-		elseif (player.ptsr.combo_timeleft + amount) < 0 then
-			self:EndCombo(player)
+		elseif (player.ptsr.combo_timeleft + amount) <= 0 then
+			PTSR:EndCombo(player)
 		else
 			player.ptsr.combo_tweentime = PTSR.combotween
 			player.ptsr.combo_timeleft_prev = player.ptsr.combo_timeleft
@@ -70,16 +82,7 @@ addHook("PlayerThink", function(player)
 		player.ptsr.combo_elapsed = $ + 1
 		
 		if not player.ptsr.combo_timeleft then
-			player.ptsr.combo_outro_count = player.ptsr.combo_count
 			PTSR:EndCombo(player)
-			
-			
-			if not player.ptsr.outofgame then
-				player.ptsr.combo_timesfailed = $ + 1
-			end
-			
-			player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
-			S_StartSound(player.mo, sfx_s1c5, player)
 		end
 	end
 	

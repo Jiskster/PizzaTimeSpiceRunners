@@ -26,7 +26,7 @@ addHook("MobjDeath", function(mobj)
 			player.ptsr.deathrank = player.ptsr.rank
 			player.ptsr.deathlaps = player.ptsr.laps
 			
-			PTSR:EndCombo(player)
+			PTSR:ClearCombo(player)
 			
 			if P_RandomChance(FRACUNIT/4) and CV_PTSR.screams.value and lastScreamTic ~= leveltime then
 				lastScreamTic = leveltime

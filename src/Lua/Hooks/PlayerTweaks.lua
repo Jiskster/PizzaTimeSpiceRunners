@@ -23,8 +23,6 @@ addHook("MobjDeath", function(target, inflictor, source)
 		end
 		
 		if (target.flags & MF_ENEMY) then 
-			print("ded: "..scoreadd_deduct)
-			print("equation: "..enemy_score-scoreadd_deduct)
 			P_AddPlayerScore(player, enemy_score-scoreadd_deduct)
 			PTSR.add_wts_score(player, target, enemy_score)
 			

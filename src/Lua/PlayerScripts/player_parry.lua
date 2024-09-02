@@ -133,9 +133,10 @@ addHook("MobjMoveBlocked", function(mobj, thing, line)
 			if v.object and v.object == mobj then
 				local speed = FixedHypot(v.object.momx, v.object.momy)
 				local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
+				local side = mobj.subsector.sector == line.frontsector and 1 or -1
 				
 				S_StartSound(v.object, sfx_s3k49)
-				P_InstaThrust(v.object, ang-ANGLE_90, 30*FU)
+				P_InstaThrust(v.object, ang-ANGLE_90*side, 30*FU)
 			end
 		end
 	end

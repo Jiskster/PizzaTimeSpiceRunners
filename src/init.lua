@@ -130,6 +130,8 @@ dofile "PlayerScripts/pmo_startnewlap.lua"
 dofile "PlayerScripts/pmo_pizzatimetrigger.lua"
 dofile "PlayerScripts/player_combohandle.lua"
 
+dofile "PlayerScripts/player_scorehud"
+
 dofile "Libraries/libs.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
@@ -164,7 +166,6 @@ dofile "Gimmicks/deathring.lua"
 dofile "Gimmicks/alivedustdevil.lua"
 dofile "Gimmicks/powerbubble.lua"
 dofile "Gimmicks/johnpillar.lua"
-dofile "Gimmicks/100ring.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"

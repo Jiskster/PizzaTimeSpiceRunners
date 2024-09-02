@@ -134,9 +134,14 @@ PTSR.default_playervars = {
 	parryhitlag = false, --hit lag now
 	parryhitlagtime = 0, --this to make sure about shit
 	parryhitlagdata = {x=0,y=0,z=0,a=0},
-	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
-}
+	hudstuff = PTSR_shallowcopy(PTSR.hudstuff),
 
+	-- score lmao
+	current_score = 0,
+	score_shakeTime = 0,
+	score_shakeDrainTime = FU/5,
+	score_objects = {}
+}
 PTSR.gamemode_list = {}
 
 PTSR.RegisterGamemode = function(name, input_table)

@@ -11,6 +11,10 @@ PTSR.LapTP = function(player, invincibility)
 	if invincibility then
 		player.powers[pw_invulnerability] = max($,CV_PTSR.tpinv.value*TICRATE) -- converts to seconds
 	end
-	
+
+	player.ptsr.current_score = player.score
+	player.ptsr.score_shakeTime = FU
+	player.ptsr.score_objects = {}
+
 	player.powers[pw_carry] = 0
 end

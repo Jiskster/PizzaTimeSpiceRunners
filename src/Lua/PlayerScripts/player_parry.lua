@@ -25,7 +25,7 @@ local function _isPF(mobj)
 		return true; end
 end
 
-addHook("PreThinkFrame", function()
+addHook("ThinkFrame", function()
 	-- Hitlag Table:
 	for object, v in pairs(PTSR.HitlagList) do
 		if v.time_left then

@@ -207,7 +207,7 @@ PTSR.DoParry = function(parrier, victim)
 	
 	if not _isPF(victim) then
 		if PTSR.isOvertime() then
-			knockback_xy = $ * 2
+			knockback_xy = $ * 3
 		end
 	end
 	

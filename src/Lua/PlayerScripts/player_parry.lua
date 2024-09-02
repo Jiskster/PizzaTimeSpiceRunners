@@ -5,12 +5,89 @@ PTSR.ParryList = {
 
 }
 
-addHook("ThinkFrame", function()
+PTSR.HitlagList = {
+
+}
+
+-- helper function so we can get whose pizzaface easily
+local function _isPF(mobj)
+	if not mobj and mobj.valid then
+		return false; end
+
+	if mobj.type == MT_PLAYER
+	and mobj.player
+	and mobj.player.ptsr
+	and mobj.player.ptsr.pizzaface then
+		return true; end
+
+	if mobj.type == MT_PIZZA_ENEMY then
+		return true; end
+end
+
+addHook("PreThinkFrame", function()
+	-- Hitlag Table:
+	for i,v in pairs(PTSR.HitlagList) do
+		if v.time_left then
+			v.time_left = $ - 1
+			
+			if not v.time_left then
+				if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
+					if v.object and v.object.valid then
+						v.object.momx = v.old_momx;
+						v.object.momy = v.old_momy;
+						v.object.momz = v.old_momz;
+						v.object.flags = $ & ~MF_NOTHINK
+					end
+				end
+				
+				table.remove(PTSR.HitlagList, i)
+				continue
+			end
+			
+			if v.object and v.object.valid then
+				local object = v.object
+				local player = object.player
+				
+				if v.old_x ~= nil and v.old_y ~= nil and v.old_z ~= nil and
+				v.old_state ~= nil and v.old_frame ~= nil then
+					P_SetOrigin(object, v.old_x, v.old_y, v.old_z);
+					
+					object.state = v.old_state;
+					object.frame = v.old_frame;
+					
+					object.momx = 0;
+					object.momy = 0;
+					object.momz = 0;
+					
+					if player and player.valid then
+						if player == displayplayer then
+							camera.momx = 0
+							camera.momy = 0
+							camera.momz = 0
+						end
+					end
+				end
+			else
+				table.remove(PTSR.HitlagList, i)
+			end
+		end
+	end
+	
+	-- Parry-stun Table:
 	for i,v in pairs(PTSR.ParryList) do
 		if v.time_left then
 			v.time_left = $ - 1
 			
 			if not v.time_left then
+				if v.object and v.object.valid then
+					local object = v.object
+					local player = object.player
+					
+					if player and player.valid then
+						object.state = S_PLAY_FALL
+					end
+				end
+				
 				table.remove(PTSR.ParryList, i)
 				continue
 			end
@@ -27,8 +104,6 @@ addHook("ThinkFrame", function()
 						ghost.color = SKINCOLOR_WHITE
 						ghost.colorized = true
 					end
-					
-					--S_StartSound(object, sfx_kc38)
 				end
 				
 				if player and player.valid then
@@ -130,74 +205,49 @@ PTSR.DoParry = function(parrier, victim)
 		knockback_z = $ * 2
 	end
 	
-	if PTSR.isOvertime() then
-		knockback_xy = $ * 2
-		knockback_z = $ * 2
+	if not _isPF(victim) then
+		if PTSR.isOvertime() then
+			knockback_xy = $ * 2
+			knockback_z = $ * 2
+		end
 	end
 	
 	P_SetObjectMomZ(victim, knockback_z)
 	P_InstaThrust(victim, anglefromparrier + ANGLE_180, knockback_xy)
 end
 
-PTSR.DoParryHitlag = function(player)
-	-- remove to debug the shit for now
-
-	local data = player.ptsr.parryhitlagdata
-
-	if data then
-		data.time = leveltime
-		return
-	end
-
-	data.x = player.mo.x
-	data.y = player.mo.y
-	data.z = player.mo.z
-
-	data.momx = player.mo.momx
-	data.momy = player.mo.momy
-	data.momz = player.mo.momz
-
-	data.a = player.drawangle
-	data.state = player.mo.state
-	data.frame = player.mo.frame
+PTSR.DoHitlag = function(mobj)
+	mobj.flags = $ | MF_NOTHINK
 	
-	player.ptsr.parryhitlag = true
-	player.ptsr.parryhitlagtime = leveltime
+	table.insert(PTSR.HitlagList, {
+		object = mobj,
+		time_left = PTSR.ParryHitLagFrames,
+		old_x = mobj.x,
+		old_y = mobj.y,
+		old_z = mobj.z,
+		old_momx = mobj.momx,
+		old_momy = mobj.momy,
+		old_momz = mobj.momz,
+		old_state = mobj.state,
+		old_frame = mobj.frame,
+	})
 end
 
-PTSR.StopParryHitlag = function(player, dontapplymom)
-	local data = player.ptsr.parryhitlagdata
-
-	if data then
-		if not dontapplymom then
-			player.mo.momx = data.momx or 0
-			player.mo.momy = data.momy or 0
-			player.mo.momz = data.momz or 0
+PTSR.StopHitlag = function(mobj, dontapplymom)
+	for i,v in pairs(PTSR.HitlagList) do
+		if v.object and v.object == mobj then
+			if not dontapplymom then
+				if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
+					v.object.momx = v.old_momx;
+					v.object.momy = v.old_momy;
+					v.object.momz = v.old_momz;
+					v.object.flags = $ & ~MF_NOTHINK
+				end
+				
+				table.remove(PTSR.HitlagList, i)
+			end
 		end
-
-		data.momx = nil
-		data.momy = nil
-		data.momz = nil
-
-		player.ptsr.parryhitlag = false
 	end
-end
-
--- Parry Stuff
-
--- helper function so we can get whose pizzaface easily
-local function _isPF(mobj)
-	if not mobj and mobj.valid then
-		return false; end
-
-	if mobj.type == MT_PLAYER
-	and mobj.player
-	and mobj.player.ptsr
-	and mobj.player.ptsr.pizzaface then
-		return true; end
-
-	if mobj.type == MT_PIZZA_ENEMY then
-		return true; end
 end
 
 addHook("PlayerThink", function(player)
@@ -210,33 +260,6 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-	
-	if player.ptsr.parryhitlag then
-		local data = player.ptsr.parryhitlagdata
-		local ptime = leveltime-player.ptsr.parryhitlagtime
-
-		if ptime >= PTSR.ParryHitLagFrames then
-			PTSR.StopParryHitlag(player)
-		else
-			P_SetOrigin(player.mo,
-				data.x,
-				data.y,
-				data.z
-			)
-			player.mo.momx = 0
-			player.mo.momy = 0
-			player.mo.momz = 0
-			player.mo.state = data.state
-			player.mo.frame = data.frame
-			player.drawangle = data.a
-			
-			if player == displayplayer then
-				camera.momx = 0
-				camera.momy = 0
-				camera.momz = 0
-			end
-		end
-	end
 
 	if not player.mo.ptsr.parry_cooldown
 	and not player.mo.pizza_in
@@ -289,8 +312,6 @@ addHook("PlayerThink", function(player)
 								
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
 								
-								foundmobj.pfhitlag = PTSR.ParryHitLagFrames
-								
 								gotapf = true
 							else
 								local set_timeleft = 45
@@ -316,7 +337,8 @@ addHook("PlayerThink", function(player)
 							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj) and player.rings >= PTSR.ParrySpendRequirement)
 							PTSR.DoParryAnim(foundmobj)
 							
-							PTSR.DoParryHitlag(player)
+							PTSR.DoHitlag(player.mo)
+							PTSR.DoHitlag(foundmobj)
 							
 							gotanobject = true
 						end

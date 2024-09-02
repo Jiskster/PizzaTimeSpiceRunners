@@ -131,9 +131,6 @@ PTSR.default_playervars = {
 
 	lastparryframe = nil,
 	cantparry = false, --this is for the pizzaface parry - saxa
-	parryhitlag = false, --hit lag now
-	parryhitlagtime = 0, --this to make sure about shit
-	parryhitlagdata = {x=0,y=0,z=0,a=0},
 	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
 }
 
@@ -217,6 +214,7 @@ end
 
 addHook("NetVars", function(net)
 	local sync_list = {
+		"HitlagList",
 		"ParryList",
 	
 		"spawn_location",

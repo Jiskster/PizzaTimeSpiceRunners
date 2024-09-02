@@ -200,7 +200,7 @@ PTSR.DoParry = function(parrier, victim)
 	
 	victim.pfstunmomentum = true
 	victim.pfstuntime = CV_PTSR.parrystuntime.value
-	
+
 	if haswhirlwind then
 		knockback_xy = $ * 2
 		knockback_z = $ * 2

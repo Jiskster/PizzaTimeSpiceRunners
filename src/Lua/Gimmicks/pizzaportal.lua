@@ -69,7 +69,8 @@ addHook("TouchSpecial", function(special, toucher)
 			if PTSR_DoHook("onlap", toucher) == true then
 				return
 			end
-			PTSR.StopParryHitlag(tplayer, true)
+			
+			PTSR.StopHitlag(toucher, true)
 			toucher.pizza_in = portal_time
 			PTSR:FillCombo(tplayer)
 			S_StartSound(toucher, sfx_lapin)

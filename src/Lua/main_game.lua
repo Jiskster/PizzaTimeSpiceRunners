@@ -22,8 +22,6 @@ G_AddGametype({
     description = "Run away from pizzaface, in style!"
 })
 
-local loaded_mods = false
-
 rawset(_G, "PTSR", { -- variables
 	spawn_location = 
 	{x = 0, y = 0, z = 0, angle = 0}, -- where the sign is at the start of the map

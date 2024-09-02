@@ -130,7 +130,7 @@ PTSR.default_playervars = {
 	lastparryframe = nil,
 	cantparry = false, --this is for the pizzaface parry - saxa
 	
-	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
+	hudstuff = PTSR_shallowcopy(PTSR.hudstuff),
 	
 	-- score lmao
 	current_score = 0,

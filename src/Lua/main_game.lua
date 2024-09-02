@@ -129,9 +129,15 @@ PTSR.default_playervars = {
 
 	lastparryframe = nil,
 	cantparry = false, --this is for the pizzaface parry - saxa
+	
 	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
+	
+	-- score lmao
+	current_score = 0,
+	score_shakeTime = 0,
+	score_shakeDrainTime = FU/5,
+	score_objects = {}
 }
-
 PTSR.gamemode_list = {}
 
 PTSR.RegisterGamemode = function(name, input_table)

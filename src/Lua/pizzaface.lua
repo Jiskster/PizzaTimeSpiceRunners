@@ -109,22 +109,6 @@ function PTSR:PizzaCollision(peppino, pizza)
 		PTSR.DoParryAnim(player.mo, true, true)
 		PTSR.DoParryAnim(pizza)
 		player.ptsr.lastparryframe = leveltime
-
-		if not player.ptsr.parryhitlag then
-			local data = player.ptsr.parryhitlagdata
-			data.x = player.mo.x
-			data.y = player.mo.y
-			data.z = player.mo.z
-			data.momx = player.mo.momx
-			data.momy = player.mo.momy
-			data.momz = player.mo.momz
-			data.a = player.drawangle
-			data.state = player.mo.state
-			data.frame = player.mo.frame
-		end
-		
-		player.ptsr.parryhitlag = true
-		player.ptsr.parryhitlagtime = leveltime
 	else
 		P_KillMobj(peppino,pizza)
 	end
@@ -396,35 +380,6 @@ addHook("MobjThinker", function(mobj)
 		mobj.frame = $|TR_TRANS70
 	else
 		mobj.frame = $ &~TR_TRANS70
-	end
-	
-	if mobj.pfhitlag then
-		if not mobj.pfhitlag_momx then
-			mobj.pfhitlag_momx = mobj.momx
-		end
-		
-		if not mobj.pfhitlag_momy then
-			mobj.pfhitlag_momy = mobj.momy
-		end
-		
-		if not mobj.pfhitlag_momz then
-			mobj.pfhitlag_momz = mobj.momz
-		end
-		
-		mobj.pfhitlag = max($ - 1, 0)
-		L_SpeedCap(mobj, 0)
-		
-		if not mobj.pfhitlag then
-			mobj.momx = mobj.pfhitlag_momx
-			mobj.momy = mobj.pfhitlag_momy
-			mobj.momz = mobj.pfhitlag_momz
-			
-			mobj.pfhitlag_momx = nil
-			mobj.pfhitlag_momy = nil
-			mobj.pfhitlag_momz = nil
-		end
-		
-		return
 	end
 	
 	if not PTSR.pizzatime then return end

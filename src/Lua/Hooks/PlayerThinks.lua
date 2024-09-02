@@ -263,6 +263,11 @@ addHook("PostThinkFrame", function()
 	for player in players.iterate do
 		if not (player.pflags & PF_SPINNING) then
 			if player.mo and player.mo.valid then
+				if PTSR.ParryList[player.mo] and
+				PTSR.HitlagList[player.mo] then
+					continue
+				end
+				
 				if gm_metadata and gm_metadata.speedcap then
 					PTSR.SpeedCap_XY(player.mo, gm_metadata.speedcap)
 				else

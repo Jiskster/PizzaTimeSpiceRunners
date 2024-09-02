@@ -22,8 +22,6 @@ G_AddGametype({
     description = "Run away from pizzaface, in style!"
 })
 
-local loaded_mods = false
-
 rawset(_G, "PTSR", { -- variables
 	spawn_location = 
 	{x = 0, y = 0, z = 0, angle = 0}, -- where the sign is at the start of the map
@@ -131,11 +129,9 @@ PTSR.default_playervars = {
 
 	lastparryframe = nil,
 	cantparry = false, --this is for the pizzaface parry - saxa
-	parryhitlag = false, --hit lag now
-	parryhitlagtime = 0, --this to make sure about shit
-	parryhitlagdata = {x=0,y=0,z=0,a=0},
-	hudstuff = PTSR_shallowcopy(PTSR.hudstuff),
 
+	hudstuff = PTSR_shallowcopy(PTSR.hudstuff)
+	
 	-- score lmao
 	current_score = 0,
 	score_shakeTime = 0,
@@ -222,6 +218,7 @@ end
 
 addHook("NetVars", function(net)
 	local sync_list = {
+		"HitlagList",
 		"ParryList",
 	
 		"spawn_location",

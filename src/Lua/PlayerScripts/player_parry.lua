@@ -1,22 +1,98 @@
 PTSR.ParrySpendRequirement = 20 
 PTSR.ParryHitLagFrames = 5
+PTSR.ParryStunFrames = 45
 
 PTSR.ParryList = {
 
 }
 
+PTSR.HitlagList = {
+
+}
+
+-- helper function so we can get whose pizzaface easily
+local function _isPF(mobj)
+	if not mobj and mobj.valid then
+		return false; end
+
+	if mobj.type == MT_PLAYER
+	and mobj.player
+	and mobj.player.ptsr
+	and mobj.player.ptsr.pizzaface then
+		return true; end
+
+	if mobj.type == MT_PIZZA_ENEMY then
+		return true; end
+end
+
 addHook("ThinkFrame", function()
-	for i,v in pairs(PTSR.ParryList) do
+	-- Hitlag Table:
+	for object, v in pairs(PTSR.HitlagList) do
 		if v.time_left then
 			v.time_left = $ - 1
 			
 			if not v.time_left then
-				table.remove(PTSR.ParryList, i)
+				if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
+					if object and object.valid then
+						object.momx = v.old_momx;
+						object.momy = v.old_momy;
+						object.momz = v.old_momz;
+						object.flags = $ & ~MF_NOTHINK
+					end
+				end
+				
+				PTSR.HitlagList[object] = nil
 				continue
 			end
 			
-			if v.object and v.object.valid then
-				local object = v.object
+			if object and object.valid then
+				local player = object.player
+				
+				if v.old_x ~= nil and v.old_y ~= nil and v.old_z ~= nil and
+				v.old_state ~= nil and v.old_frame ~= nil then
+					P_SetOrigin(object, v.old_x, v.old_y, v.old_z);
+					
+					object.state = v.old_state;
+					object.frame = v.old_frame;
+					
+					object.momx = 0;
+					object.momy = 0;
+					object.momz = 0;
+					
+					if player and player.valid then
+						if player == displayplayer then
+							camera.momx = 0
+							camera.momy = 0
+							camera.momz = 0
+						end
+					end
+				end
+			else
+				PTSR.HitlagList[object] = nil
+				continue
+			end
+		end
+	end
+	
+	-- Parry-stun Table:
+	for object, v in pairs(PTSR.ParryList) do
+		if v.time_left then
+			v.time_left = $ - 1
+			
+			if not v.time_left then
+				if object and object.valid then
+					local player = object.player
+					
+					if player and player.valid then
+						object.state = S_PLAY_FALL
+					end
+				end
+				
+				PTSR.ParryList[object] = nil
+				continue
+			end
+			
+			if object and object.valid then
 				local player = object.player
 				local speed = FixedHypot(object.momx, object.momy)
 				
@@ -27,8 +103,6 @@ addHook("ThinkFrame", function()
 						ghost.color = SKINCOLOR_WHITE
 						ghost.colorized = true
 					end
-					
-					--S_StartSound(object, sfx_kc38)
 				end
 				
 				if player and player.valid then
@@ -44,9 +118,25 @@ addHook("ThinkFrame", function()
 				if (object.eflags & MFE_JUSTHITFLOOR) then
 					S_StartSound(object, sfx_s3k49)
 					P_SetObjectMomZ(object, 7*FRACUNIT)
+					
+					v.time_left = $ - TICRATE
+					
+					if v.time_left <= 0 then
+						if object and object.valid then
+							local player = object.player
+							
+							if player and player.valid then
+								object.state = S_PLAY_FALL
+							end
+						end
+						
+						PTSR.ParryList[object] = nil
+						continue
+					end
 				end
 			else
-				table.remove(PTSR.ParryList, i)
+				PTSR.ParryList[object] = nil
+				continue
 			end
 		end
 	end
@@ -54,17 +144,17 @@ end)
 
 addHook("MobjMoveBlocked", function(mobj, thing, line)
 	if line and line.valid then
-		for i,v in pairs(PTSR.ParryList) do
-			if v.object and v.object == mobj then
-				local speed = FixedHypot(v.object.momx, v.object.momy)
-				local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
-				
-				S_StartSound(v.object, sfx_s3k49)
-				P_InstaThrust(v.object, ang-ANGLE_90, 30*FU)
-			end
+		if PTSR.ParryList[mobj] then
+			local speed = FixedHypot(mobj.momx, mobj.momy)
+			local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
+			local side = mobj.subsector.sector == line.frontsector and 1 or -1
+			
+			S_StartSound(mobj, sfx_s3k49)
+			P_InstaThrust(mobj, ang-ANGLE_90*side, 30*FU)
 		end
 	end
 end)
+
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
 	spawnstate = S_RING,
@@ -115,6 +205,7 @@ PTSR.DoParry = function(parrier, victim)
 	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
 	local knockback_xy = CV_PTSR.parryknockback_xy.value
 	local knockback_z = CV_PTSR.parryknockback_z.value
+	local victim_speed = FixedHypot(victim.momx, victim.momy)
 
 	local haswhirlwind = false
 	
@@ -124,80 +215,58 @@ PTSR.DoParry = function(parrier, victim)
 	
 	victim.pfstunmomentum = true
 	victim.pfstuntime = CV_PTSR.parrystuntime.value
-	
+
 	if haswhirlwind then
 		knockback_xy = $ * 2
-		knockback_z = $ * 2
 	end
 	
-	if PTSR.isOvertime() then
+	if not _isPF(victim) then
+		if PTSR.isOvertime() then
+			knockback_xy = $ * 3
+		end
+	end
+	
+	if victim_speed > 100*FU then
 		knockback_xy = $ * 2
-		knockback_z = $ * 2
 	end
 	
 	P_SetObjectMomZ(victim, knockback_z)
 	P_InstaThrust(victim, anglefromparrier + ANGLE_180, knockback_xy)
 end
 
-PTSR.DoParryHitlag = function(player)
-	-- remove to debug the shit for now
-
-	local data = player.ptsr.parryhitlagdata
-
-	if data then
-		data.time = leveltime
-		return
-	end
-
-	data.x = player.mo.x
-	data.y = player.mo.y
-	data.z = player.mo.z
-
-	data.momx = player.mo.momx
-	data.momy = player.mo.momy
-	data.momz = player.mo.momz
-
-	data.a = player.drawangle
-	data.state = player.mo.state
-	data.frame = player.mo.frame
+PTSR.DoHitlag = function(mobj)
+	mobj.flags = $ | MF_NOTHINK
 	
-	player.ptsr.parryhitlag = true
-	player.ptsr.parryhitlagtime = leveltime
-end
-
-PTSR.StopParryHitlag = function(player, dontapplymom)
-	local data = player.ptsr.parryhitlagdata
-
-	if data then
-		if not dontapplymom then
-			player.mo.momx = data.momx or 0
-			player.mo.momy = data.momy or 0
-			player.mo.momz = data.momz or 0
-		end
-
-		data.momx = nil
-		data.momy = nil
-		data.momz = nil
-
-		player.ptsr.parryhitlag = false
+	if PTSR.HitlagList[mobj] and PTSR.HitlagList[mobj].timeleft then
+		PTSR.HitlagList[mobj].timeleft = $ + PTSR.ParryHitLagFrames
+	else
+		PTSR.HitlagList[mobj] = {
+			time_left = PTSR.ParryHitLagFrames,
+			old_x = mobj.x,
+			old_y = mobj.y,
+			old_z = mobj.z,
+			old_momx = mobj.momx,
+			old_momy = mobj.momy,
+			old_momz = mobj.momz,
+			old_state = mobj.state,
+			old_frame = mobj.frame,
+		}
 	end
 end
 
--- Parry Stuff
-
--- helper function so we can get whose pizzaface easily
-local function _isPF(mobj)
-	if not mobj and mobj.valid then
-		return false; end
-
-	if mobj.type == MT_PLAYER
-	and mobj.player
-	and mobj.player.ptsr
-	and mobj.player.ptsr.pizzaface then
-		return true; end
-
-	if mobj.type == MT_PIZZA_ENEMY then
-		return true; end
+PTSR.StopHitlag = function(mobj, dontapplymom)
+	if PTSR.HitlagList[mobj] then
+		if not dontapplymom then
+			if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
+				v.object.momx = v.old_momx;
+				v.object.momy = v.old_momy;
+				v.object.momz = v.old_momz;
+				v.object.flags = $ & ~MF_NOTHINK
+			end
+			
+			PTSR.HitlagList[mobj] = nil
+		end
+	end
 end
 
 addHook("PlayerThink", function(player)
@@ -210,33 +279,6 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-	
-	if player.ptsr.parryhitlag then
-		local data = player.ptsr.parryhitlagdata
-		local ptime = leveltime-player.ptsr.parryhitlagtime
-
-		if ptime >= PTSR.ParryHitLagFrames then
-			PTSR.StopParryHitlag(player)
-		else
-			P_SetOrigin(player.mo,
-				data.x,
-				data.y,
-				data.z
-			)
-			player.mo.momx = 0
-			player.mo.momy = 0
-			player.mo.momz = 0
-			player.mo.state = data.state
-			player.mo.frame = data.frame
-			player.drawangle = data.a
-			
-			if player == displayplayer then
-				camera.momx = 0
-				camera.momy = 0
-				camera.momz = 0
-			end
-		end
-	end
 
 	if not player.mo.ptsr.parry_cooldown
 	and not player.mo.pizza_in
@@ -256,7 +298,6 @@ addHook("PlayerThink", function(player)
 				local real_range = CV_PTSR.parry_radius.value
 				
 				searchBlockmap("objects", function(refmobj, foundmobj)
-				
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if _isPF(foundmobj) or foundmobj.flags & MF_ENEMY
@@ -289,21 +330,23 @@ addHook("PlayerThink", function(player)
 								
 								PTSR:AddComboTime(player, player.ptsr.combo_maxtime/4)
 								
-								foundmobj.pfhitlag = PTSR.ParryHitLagFrames
-								
 								gotapf = true
 							else
-								local set_timeleft = 45
+								local set_timeleft = PTSR.ParryStunFrames
 								
 								if PTSR.isOvertime() then
 									set_timeleft = $*2
 								end
 								
-								table.insert(PTSR.ParryList, {
-									object = foundmobj,
-									time_left = 45,
-									add_angle = 0,
-								})
+								if PTSR.ParryList[foundmobj]
+								and PTSR.ParryList[foundmobj].time_left then
+									PTSR.ParryList[foundmobj].time_left = $ + set_timeleft
+								else
+									PTSR.ParryList[foundmobj] = {
+										time_left = set_timeleft,
+										add_angle = 0,
+									}
+								end
 							end
 
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then
@@ -316,7 +359,8 @@ addHook("PlayerThink", function(player)
 							PTSR.DoParryAnim(player.mo, true, _isPF(foundmobj) and player.rings >= PTSR.ParrySpendRequirement)
 							PTSR.DoParryAnim(foundmobj)
 							
-							PTSR.DoParryHitlag(player)
+							PTSR.DoHitlag(player.mo)
+							PTSR.DoHitlag(foundmobj)
 							
 							gotanobject = true
 						end

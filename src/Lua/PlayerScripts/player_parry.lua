@@ -119,7 +119,7 @@ addHook("ThinkFrame", function()
 					S_StartSound(object, sfx_s3k49)
 					P_SetObjectMomZ(object, 7*FRACUNIT)
 					
-					v.time_left = $ - 20
+					v.time_left = $ - TICRATE
 					
 					if v.time_left <= 0 then
 						if object and object.valid then

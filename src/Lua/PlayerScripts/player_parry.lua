@@ -203,19 +203,16 @@ PTSR.DoParry = function(parrier, victim)
 
 	if haswhirlwind then
 		knockback_xy = $ * 2
-		knockback_z = $ * 2
 	end
 	
 	if not _isPF(victim) then
 		if PTSR.isOvertime() then
 			knockback_xy = $ * 2
-			knockback_z = $ * 2
 		end
 	end
 	
 	if victim_speed > 100*FU then
 		knockback_xy = $ * 2
-		knockback_z = $ * 2
 	end
 	
 	P_SetObjectMomZ(victim, knockback_z)

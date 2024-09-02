@@ -118,6 +118,21 @@ addHook("ThinkFrame", function()
 				if (object.eflags & MFE_JUSTHITFLOOR) then
 					S_StartSound(object, sfx_s3k49)
 					P_SetObjectMomZ(object, 7*FRACUNIT)
+					
+					v.time_left = $ - 20
+					
+					if v.time_left <= 0 then
+						if object and object.valid then
+							local player = object.player
+							
+							if player and player.valid then
+								object.state = S_PLAY_FALL
+							end
+						end
+						
+						PTSR.ParryList[object] = nil
+						continue
+					end
 				end
 			else
 				PTSR.ParryList[object] = nil

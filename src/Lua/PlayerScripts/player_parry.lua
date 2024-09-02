@@ -1,5 +1,6 @@
 PTSR.ParrySpendRequirement = 20 
 PTSR.ParryHitLagFrames = 5
+PTSR.ParryStunFrames = 45
 
 PTSR.ParryList = {
 
@@ -26,26 +27,25 @@ end
 
 addHook("PreThinkFrame", function()
 	-- Hitlag Table:
-	for i,v in pairs(PTSR.HitlagList) do
+	for object, v in pairs(PTSR.HitlagList) do
 		if v.time_left then
 			v.time_left = $ - 1
 			
 			if not v.time_left then
 				if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
-					if v.object and v.object.valid then
-						v.object.momx = v.old_momx;
-						v.object.momy = v.old_momy;
-						v.object.momz = v.old_momz;
-						v.object.flags = $ & ~MF_NOTHINK
+					if object and object.valid then
+						object.momx = v.old_momx;
+						object.momy = v.old_momy;
+						object.momz = v.old_momz;
+						object.flags = $ & ~MF_NOTHINK
 					end
 				end
 				
-				table.remove(PTSR.HitlagList, i)
+				PTSR.HitlagList[object] = nil
 				continue
 			end
 			
-			if v.object and v.object.valid then
-				local object = v.object
+			if object and object.valid then
 				local player = object.player
 				
 				if v.old_x ~= nil and v.old_y ~= nil and v.old_z ~= nil and
@@ -68,19 +68,19 @@ addHook("PreThinkFrame", function()
 					end
 				end
 			else
-				table.remove(PTSR.HitlagList, i)
+				PTSR.HitlagList[object] = nil
+				continue
 			end
 		end
 	end
 	
 	-- Parry-stun Table:
-	for i,v in pairs(PTSR.ParryList) do
+	for object, v in pairs(PTSR.ParryList) do
 		if v.time_left then
 			v.time_left = $ - 1
 			
 			if not v.time_left then
-				if v.object and v.object.valid then
-					local object = v.object
+				if object and object.valid then
 					local player = object.player
 					
 					if player and player.valid then
@@ -88,12 +88,11 @@ addHook("PreThinkFrame", function()
 					end
 				end
 				
-				table.remove(PTSR.ParryList, i)
+				PTSR.ParryList[object] = nil
 				continue
 			end
 			
-			if v.object and v.object.valid then
-				local object = v.object
+			if object and object.valid then
 				local player = object.player
 				local speed = FixedHypot(object.momx, object.momy)
 				
@@ -121,7 +120,8 @@ addHook("PreThinkFrame", function()
 					P_SetObjectMomZ(object, 7*FRACUNIT)
 				end
 			else
-				table.remove(PTSR.ParryList, i)
+				PTSR.ParryList[object] = nil
+				continue
 			end
 		end
 	end
@@ -129,15 +129,13 @@ end)
 
 addHook("MobjMoveBlocked", function(mobj, thing, line)
 	if line and line.valid then
-		for i,v in pairs(PTSR.ParryList) do
-			if v.object and v.object == mobj then
-				local speed = FixedHypot(v.object.momx, v.object.momy)
-				local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
-				local side = mobj.subsector.sector == line.frontsector and 1 or -1
-				
-				S_StartSound(v.object, sfx_s3k49)
-				P_InstaThrust(v.object, ang-ANGLE_90*side, 30*FU)
-			end
+		if PTSR.ParryList[mobj] then
+			local speed = FixedHypot(mobj.momx, mobj.momy)
+			local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
+			local side = mobj.subsector.sector == line.frontsector and 1 or -1
+			
+			S_StartSound(mobj, sfx_s3k49)
+			P_InstaThrust(mobj, ang-ANGLE_90*side, 30*FU)
 		end
 	end
 end)
@@ -227,33 +225,34 @@ end
 PTSR.DoHitlag = function(mobj)
 	mobj.flags = $ | MF_NOTHINK
 	
-	table.insert(PTSR.HitlagList, {
-		object = mobj,
-		time_left = PTSR.ParryHitLagFrames,
-		old_x = mobj.x,
-		old_y = mobj.y,
-		old_z = mobj.z,
-		old_momx = mobj.momx,
-		old_momy = mobj.momy,
-		old_momz = mobj.momz,
-		old_state = mobj.state,
-		old_frame = mobj.frame,
-	})
+	if PTSR.HitlagList[mobj] and PTSR.HitlagList[mobj].timeleft then
+		PTSR.HitlagList[mobj].timeleft = $ + PTSR.ParryHitLagFrames
+	else
+		PTSR.HitlagList[mobj] = {
+			time_left = PTSR.ParryHitLagFrames,
+			old_x = mobj.x,
+			old_y = mobj.y,
+			old_z = mobj.z,
+			old_momx = mobj.momx,
+			old_momy = mobj.momy,
+			old_momz = mobj.momz,
+			old_state = mobj.state,
+			old_frame = mobj.frame,
+		}
+	end
 end
 
 PTSR.StopHitlag = function(mobj, dontapplymom)
-	for i,v in pairs(PTSR.HitlagList) do
-		if v.object and v.object == mobj then
-			if not dontapplymom then
-				if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
-					v.object.momx = v.old_momx;
-					v.object.momy = v.old_momy;
-					v.object.momz = v.old_momz;
-					v.object.flags = $ & ~MF_NOTHINK
-				end
-				
-				table.remove(PTSR.HitlagList, i)
+	if PTSR.HitlagList[mobj] then
+		if not dontapplymom then
+			if v.old_momx ~= nil and v.old_momy ~= nil and v.old_momz ~= nil then
+				v.object.momx = v.old_momx;
+				v.object.momy = v.old_momy;
+				v.object.momz = v.old_momz;
+				v.object.flags = $ & ~MF_NOTHINK
 			end
+			
+			PTSR.HitlagList[mobj] = nil
 		end
 	end
 end
@@ -321,17 +320,21 @@ addHook("PlayerThink", function(player)
 								
 								gotapf = true
 							else
-								local set_timeleft = 45
+								local set_timeleft = PTSR.ParryStunFrames
 								
 								if PTSR.isOvertime() then
 									set_timeleft = $*2
 								end
 								
-								table.insert(PTSR.ParryList, {
-									object = foundmobj,
-									time_left = 45,
-									add_angle = 0,
-								})
+								if PTSR.ParryList[foundmobj]
+								and PTSR.ParryList[foundmobj].time_left then
+									PTSR.ParryList[foundmobj].time_left = $ + set_timeleft
+								else
+									PTSR.ParryList[foundmobj] = {
+										time_left = set_timeleft,
+										add_angle = 0,
+									}
+								end
 							end
 
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then

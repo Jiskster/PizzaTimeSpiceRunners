@@ -141,6 +141,7 @@ addHook("MobjMoveBlocked", function(mobj, thing, line)
 		end
 	end
 end)
+
 -- Parry animation function with sound parameter.
 mobjinfo[freeslot "MT_PTSR_LOSSRING"] = {
 	spawnstate = S_RING,
@@ -191,6 +192,7 @@ PTSR.DoParry = function(parrier, victim)
 	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
 	local knockback_xy = CV_PTSR.parryknockback_xy.value
 	local knockback_z = CV_PTSR.parryknockback_z.value
+	local victim_speed = FixedHypot(victim.momx, victim.momy)
 
 	local haswhirlwind = false
 	
@@ -211,6 +213,11 @@ PTSR.DoParry = function(parrier, victim)
 			knockback_xy = $ * 2
 			knockback_z = $ * 2
 		end
+	end
+	
+	if victim_speed > 100*FU then
+		knockback_xy = $ * 2
+		knockback_z = $ * 2
 	end
 	
 	P_SetObjectMomZ(victim, knockback_z)
@@ -280,7 +287,6 @@ addHook("PlayerThink", function(player)
 				local real_range = CV_PTSR.parry_radius.value
 				
 				searchBlockmap("objects", function(refmobj, foundmobj)
-				
 					if R_PointToDist2(foundmobj.x, foundmobj.y, pmo.x, pmo.y) < real_range 
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if _isPF(foundmobj) or foundmobj.flags & MF_ENEMY

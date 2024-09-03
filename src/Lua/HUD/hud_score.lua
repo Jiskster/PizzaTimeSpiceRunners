@@ -35,8 +35,8 @@ function PTSR.add_wts_score(player, mobj, score)
 		local ox = 0
 		local oy = 0
 
-		ox = ((v.width()/v.dupx)-320)*FU
-		oy = ((v.height()/v.dupy)-200)*FU
+		ox = ((fakeV.width()/fakeV.dupx())-320)*FU
+		oy = ((fakeV.height()/fakeV.dupy())-200)*FU
 
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
 

@@ -103,8 +103,8 @@ local score_hud = function(v, player)
 	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
 	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 
-	if player == displayplayer
-	and player.ptsr then
+	if displayplayer and displayplayer.ptsr then
+		local player = displayplayer
 		for k,data in pairs(player.ptsr.score_objects) do
 			local t = FixedDiv(data.tics, MAX_TICS)
 			local drawX = ease.incubic(t, data.x, GO_TO_X)

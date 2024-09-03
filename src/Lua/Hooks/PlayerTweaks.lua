@@ -42,8 +42,10 @@ addHook("MobjDeath", function(target, inflictor, source)
 		end
 	end
 
-	if source.player
-	and source.player.ptsr then
-		source.player.ptsr.current_score = source.player.score
+	if source and source.valid then
+		if source.player
+		and source.player.ptsr then
+			source.player.ptsr.current_score = source.player.score
+		end
 	end
 end)

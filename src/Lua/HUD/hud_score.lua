@@ -57,7 +57,7 @@ addHook("PlayerThink", function(p)
 		data.tics = $+1
 		if data.tics > MAX_TICS then
 			table.remove(p.ptsr.score_objects, k)
-			p.ptsr.current_score = p.score
+			p.ptsr.current_score = $+data.score
 			p.ptsr.score_shakeTime = FU
 		end
 	end

@@ -32,11 +32,17 @@ function PTSR.add_wts_score(player, mobj, score)
 	local spr = score or 100
 
 	if player == displayplayer then
+		local ox = 0
+		local oy = 0
+
+		ox = ((v.width()/v.dupx)-320)*FU
+		oy = ((v.height()/v.dupy)-200)*FU
+
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
 
 		if wts.onScreen then
-			x = wts.x
-			y = wts.y
+			x = wts.x+ox
+			y = wts.y+ox
 			s = wts.scale/2
 		end
 	end
@@ -109,7 +115,7 @@ local score_hud = function(v, player)
 				drawY,
 				tostring(data.score),
 				"PTFNT",
-				V_PERPLAYER|V_SNAPTOBOTTOM,
+				V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP,
 				"center",
 				data.s,
 				SKINCOLOR_WHITE)

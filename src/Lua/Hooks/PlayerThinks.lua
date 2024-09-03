@@ -152,6 +152,41 @@ addHook("PlayerThink", function(player)
 	end
 end)
 
+for i = 1,5 do
+	sfxinfo[freeslot("sfx_rup"..i)].caption = "Ranked up!"
+	sfxinfo[freeslot("sfx_rad"..i)].caption = "Ranked down!"
+end
+local ranksTable = {
+	["D"] = 1,
+	["C"] = 2,
+	["B"] = 3,
+	["A"] = 4,
+	["S"] = 5,
+	["P"] = 6
+}
+local rankSounds = {
+	{
+		up = sfx_rup1,
+		down = sfx_rad1
+	},
+	{
+		up = sfx_rup2,
+		down = sfx_rad2
+	},
+	{
+		up = sfx_rup3,
+		down = sfx_rad3
+	},
+	{
+		up = sfx_rup4,
+		down = sfx_rad4
+	},
+	{
+		up = sfx_rup5,
+		down = sfx_rad5
+	}
+}
+
 -- rank thinker
 addHook("PlayerThink", function(player)
 	-- a 8th of the max rank points, multiply later
@@ -181,7 +216,9 @@ addHook("PlayerThink", function(player)
 
 	--player.ptsr.rank = "P"
 	-- boy what the hellllll o ma god way ayyaay
-	
+
+	local _lastrank = player.ptsr.rank
+
 	if player.score < pec then
 		-- this is real p rank
 		-- cry like a wittle babyy!
@@ -199,6 +236,26 @@ addHook("PlayerThink", function(player)
 		else
 			player.ptsr.rank = "S"
 		end
+	end
+
+	player.ptsr.rank_scaleTime = max(0, $-(FU/6))
+
+	if leveltime
+	and _lastrank ~= player.ptsr.rank then
+		local lastRankNum = ranksTable[_lastrank]
+		local rankNum = ranksTable[player.ptsr.rank]
+
+		local type = "down"
+		if rankNum >= lastRankNum then
+			type = "up"
+		end
+
+		S_StartSoundAtVolume(nil,
+			rankSounds[min(lastRankNum, rankNum)][type],
+			255/2,
+			player)
+
+		player.ptsr.rank_scaleTime = FU
 	end
 end)
 

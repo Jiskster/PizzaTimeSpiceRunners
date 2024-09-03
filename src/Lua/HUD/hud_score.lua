@@ -1,5 +1,3 @@
-dofile "Libraries/sglib"
-
 --hacky fix because jisk wants me to use it
 local fakeV = {
 	__width = 320,

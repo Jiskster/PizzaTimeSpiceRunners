@@ -32,17 +32,11 @@ function PTSR.add_wts_score(player, mobj, score)
 	local spr = score or 100
 
 	if player == displayplayer then
-		local ox = 0
-		local oy = 0
-
-		ox = ((fakeV.width()/fakeV.dupx())-320)*FU
-		oy = ((fakeV.height()/fakeV.dupy())-200)*FU
-
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
 
 		if wts.onScreen then
-			x = wts.x+ox
-			y = wts.y+oy
+			x = wts.x
+			y = wts.y
 			s = wts.scale/2
 		end
 	end
@@ -103,12 +97,19 @@ local score_hud = function(v, player)
 	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
 	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 
+	local ox = 0
+	local oy = 0
+
+	ox = -((v.width()/v.dupx())-320)*FU
+	oy = -((v.height()/v.dupy())-200)*FU
+
+
 	if displayplayer and displayplayer.ptsr then
 		local player = displayplayer
 		for k,data in pairs(player.ptsr.score_objects) do
 			local t = FixedDiv(data.tics, MAX_TICS)
-			local drawX = ease.incubic(t, data.x, GO_TO_X)
-			local drawY = ease.incubic(t, data.y, GO_TO_Y)
+			local drawX = ease.incubic(t, data.x, GO_TO_X+ox)
+			local drawY = ease.incubic(t, data.y, GO_TO_Y+oy)
 
 			customhud.CustomFontString(v,
 				drawX,

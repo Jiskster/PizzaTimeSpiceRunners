@@ -20,7 +20,7 @@ function fakeV.dupy()
 	return fakeV.__dupy
 end
 
-local MAX_TICS = TICRATE
+local MAX_TICS = TICRATE/2
 local GO_TO_X = 60*FU
 local GO_TO_Y = 25*FU
 local GO_TO_S = FU/5

@@ -50,6 +50,7 @@ end
 local function InitMap2()
     if not PTSR.IsPTSR() then return end
 	PTSR.john = nil
+
     for map in mapthings.iterate do
         if map.type == 1 then
 			local sec = R_PointInSubsector(map.x*FU, map.y*FU).sector
@@ -98,6 +99,7 @@ local function InitMap2()
 			end
 		end
 	end
+
 	if mapheaderinfo[gamemap].ptsr_s_rank_points ~= nil 
 	and tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points) then -- custom maxrankpoints
 		PTSR.maxrankpoints = tonumber(mapheaderinfo[gamemap].ptsr_s_rank_points)

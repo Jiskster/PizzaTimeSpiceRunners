@@ -25,6 +25,22 @@ local GO_TO_X = 60*FU
 local GO_TO_Y = 25*FU
 local GO_TO_S = FU/5
 
+local ranksTable = {
+	["D"] = 1,
+	["C"] = 2,
+	["B"] = 3,
+	["A"] = 4,
+	["S"] = 5,
+	["P"] = 6
+}
+
+local toppingsOnScore = {
+	[2] = "SCORESHROOM",
+	[3] = "SCOREPEPPERONI",
+	[4] = "SCOREOLIVE",
+	[5] = "SCOREPEPPER"
+}
+
 function PTSR.add_wts_score(player, mobj, score)
 	local x = 0
 	local y = 0
@@ -69,6 +85,8 @@ addHook("PlayerThink", function(p)
 end)
 
 local score_hud = function(v, player)
+	if not player.ptsr then return end
+
 	local x = 0
 	local y = 0
 
@@ -82,8 +100,8 @@ local score_hud = function(v, player)
 		local shakeTime = player.ptsr.score_shakeTime
 		local maxTime = player.ptsr.score_shakeDrainTime
 
-		local shakeX = v.RandomRange(-5, 5)*shakeTime
-		local shakeY = v.RandomRange(-5, 5)*shakeTime
+		local shakeX = v.RandomRange(-2, 2)*shakeTime
+		local shakeY = v.RandomRange(-2, 2)*shakeTime
 
 		x = $+shakeX
 		y = $+shakeY
@@ -95,6 +113,14 @@ local score_hud = function(v, player)
 	end
 
 	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
+
+	local rankNum = ranksTable[player.ptsr.rank]
+	for i = 1,rankNum do
+		if not (toppingsOnScore[i]) then continue end
+
+		v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_SNAPTOLEFT|V_SNAPTOTOP)
+	end
+
 	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 
 	local ox = 0

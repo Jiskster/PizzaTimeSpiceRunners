@@ -42,7 +42,7 @@ function PTSR.add_wts_score(player, mobj, score)
 
 		if wts.onScreen then
 			x = wts.x+ox
-			y = wts.y+ox
+			y = wts.y+oy
 			s = wts.scale/2
 		end
 	end

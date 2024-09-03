@@ -80,27 +80,9 @@ hud.add( function(v, player, camera)
 	if (not PTSR.IsPTSR()) then return end
 	if PTSR.gameover then return end
 
-	local width = 320
-	local height = 200
-	local realwidth = v.width()/v.dupx()
-	local realheight = v.height()/v.dupy()
-
-	local first_person = not camera.chase
-	local cam = first_person and player.realmo or camera
-	local spectator = player.spectator
-	local hudwidth = 320*FU
-	local hudheight =(300*v.height()/v.width())*FU
-
-	local fov = (CV_FindVar("fov").value/FRACUNIT)*ANG1 --Can this be fetched live instead of assumed?
-	
-	--the "distance" the HUD plane is projected from the player
-	local hud_distance = FixedDiv(hudwidth>>1, tan(fov>>1))
-
 	for _, tmo in pairs(PTSR.w2s_mobjs) do
 		if not tmo or not tmo.valid then continue end
-		
 		if tmo.player and player == tmo.player then continue end
-		
 		if tmo.player and tmo.player.valid then
 			if not tmo.player.ptsr.pizzaface then
 				continue
@@ -121,53 +103,33 @@ hud.add( function(v, player, camera)
 		local distlimit = 16000
 		if distance > distlimit*FRACUNIT then continue end
 
-		--Angle between camera vector and target
-		local hangdiff = R_PointToAngle2(cam.x, cam.y, tmo.x, tmo.y)
-		local hangle = hangdiff - cam.angle
-
-		--check if object is outside of our field of view
-		--converting to fixed just to normalise things
-		--e.g. this will convert 365° to 5° for us
-		local fhanlge = AngleFixed(hangle)
-		local fhfov = AngleFixed(fov>>1)
-		local f360 = AngleFixed(ANGLE_MAX)
-		if fhanlge < f360 - fhfov and fhanlge > fhfov then
-			continue
-		end
-		
 		--flipcam adjustment
 		local flip = 1
 		if displayplayer.mo and displayplayer.mo.valid
 			flip = P_MobjFlip(displayplayer.mo)
 		end
 
-		--figure out vertical angle
-		local h = FixedHypot(cam.x-tmo.x, cam.y-tmo.y)
 		local tmoz = tmo.z
 		if (flip == -1)
-			tmoz = tmo.z + tmo.height
+			tmoz = $ + tmo.height
 		end
 		if spectator
 			tmoz = $ - 48*tmo.scale
 		end
-		local vangdiff = R_PointToAngle2(0, 0, tmoz-cam.z-48*FRACUNIT*flip, h) - ANGLE_90
-		local vcangle = first_person and player.aiming or cam.aiming or 0
-		
-		local vangle = (vcangle + vangdiff) * flip
 
-		--again just check if we're outside the FOV
-		local fvangle = AngleFixed(vangle)
-		local fvfov = FixedMul(AngleFixed(fov), FRACUNIT*v.height()/v.width())
-		if fvangle < f360 - fvfov and fvangle > fvfov then
-			continue
-		end
 		if (tmo.flags2 & MF2_DONTDRAW) then
 			continue
 		end
-		local hpos = hudwidth>>1 - FixedMul(hud_distance, tan(hangle) * realwidth/width)
-		local vpos = hudheight>>1 + FixedMul(hud_distance, tan(vangle) * realheight/height)
 
-		hpos = $ - 25*FU
+		local result = SG_ObjectTracking(v,player,camera,{
+			x = tmo.x,
+			y = tmo.y,
+			z = tmoz
+		})
+		if not result.onScreen then continue end
+
+		result.y = $+(18*result.scale)
+
 		local name = "NPC"
 		local textcolor = SKINCOLOR_GREEN
 		local namecolor = SKINCOLOR_ORANGE
@@ -198,11 +160,9 @@ hud.add( function(v, player, camera)
 		elseif tmo.type == MT_PT_JUGGERNAUTCROWN then -- GAMEMODE: JUGGERNAUT exclusive
 			nodrawstuff = true
 		end
-		
 
-
-		local namefont = "fixed-center"
-		local ringfont = "fixed-center"
+		local namefont = "center"
+		local ringfont = "center"
 		local charwidth = 5
 		local lineheight = 8
 		--if distance > 500*FRACUNIT then
@@ -246,16 +206,16 @@ hud.add( function(v, player, camera)
 			end
 			
 			if not nodrawstuff then
-				customhud.CustomFontString(v, hpos, vpos, name, "PTFNT", trans, namefont, text_size, namecolor)
-				customhud.CustomFontString(v, hpos, vpos+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
+				customhud.CustomFontString(v, result.x, result.y, name, "PTFNT", trans, namefont, text_size, namecolor)
+				customhud.CustomFontString(v, result.x, result.y+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
 			end
 		end
 		
 		-- GAMEMODE: JUGGERNAUT exclusive
 		if tmo.type == MT_PT_JUGGERNAUTCROWN and not P_CheckSight(tmo, displayplayer.realmo) then
 			local crown_spr = v.getSpritePatch(SPR_C9W3)
-			v.drawScaled(hpos+(24*FRACUNIT), vpos, FU/4, crown_spr)
-			v.drawString(hpos+(12*FRACUNIT), vpos, obj_dist.."fu", nil, "thin-fixed")
+			v.drawScaled(result.x+(24*FRACUNIT), result.y, FU/4, crown_spr)
+			v.drawString(result.y+(12*FRACUNIT), result.y, obj_dist.."fu", nil, "thin-fixed")
 		end
 		--v.drawString(hpos, vpos, name, nameflags|trans|V_ALLOWLOWERCASE, namefont)
 		--v.drawString(hpos, vpos+(lineheight*FRACUNIT), health, rflags|trans|V_ALLOWLOWERCASE, ringfont)
@@ -271,7 +231,7 @@ hud.add( function(v, player, camera)
 				local flags = V_GRAYMAP
 				local thelines = string_linebreak(v, tmo.player.lastmessage, flags)
 				for i = 1, #thelines
-					v.drawString(hpos, vpos+(lineheight*(i+1)*FRACUNIT), thelines[i], flags|trans|V_ALLOWLOWERCASE, namefont)
+					v.drawString(result.x, result.y+(lineheight*(i+1)*FRACUNIT), thelines[i], flags|trans|V_ALLOWLOWERCASE, namefont)
 				end
 			end
 		end

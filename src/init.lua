@@ -93,6 +93,8 @@ dofile "Libraries/customhudlib.lua"
 
 dofile "Libraries/hooksystem.lua"
 
+dofile "Libraries/sglib"
+
 customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 customhud.SetupFont("COMBO", -1, 4)

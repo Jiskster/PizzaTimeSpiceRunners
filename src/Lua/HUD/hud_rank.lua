@@ -32,11 +32,12 @@ local rank_hud = function(v, player)
 	--
 
 	if player.ptsr.rank then
-		v.drawScaled(rankpos.x, rankpos.y,FRACUNIT/3, PTSR.r2p(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
+		local scale = ease.linear(player.ptsr.rank_scaleTime, FU/3, (FU/3)*2)
+	
+		v.drawScaled(rankpos.x, rankpos.y,scale, PTSR.r2p(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
 		--luigi budd: the fill
 		if per
 		and (player.ptsr.rank ~= "P")
-			
 			local patch = PTSR.r2f(v,player.ptsr.rank)
 			local max = percent
 			local erm = FixedDiv(score,max)
@@ -46,7 +47,7 @@ local rank_hud = function(v, player)
  			if scale2 < 0 then scale2 = FU end
 			
 			v.drawCropped(rankpos.x,rankpos.y+(scale2/3),
-				FU/3,FU/3,
+				scale,scale,
 				patch,
 				V_SNAPTOLEFT|V_SNAPTOTOP, 
 				nil,

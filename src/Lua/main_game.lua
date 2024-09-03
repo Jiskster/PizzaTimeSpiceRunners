@@ -99,6 +99,7 @@ PTSR.coremodes = {["1"] = true, ["2"] = true}
 
 PTSR.default_playervars = {
 	rank = "D",
+	rank_scaleTime = 0,
 	
 	pizzaface = false,
 	pizzamask = nil,

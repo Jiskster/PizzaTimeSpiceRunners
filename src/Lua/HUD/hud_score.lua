@@ -100,23 +100,24 @@ local score_hud = function(v, player)
 	local ox = 0
 	local oy = 0
 
-	ox = -((v.width()/v.dupx())-320)*FU
-	oy = -((v.height()/v.dupy())-200)*FU
+	ox = v.width()/v.dupx()
+	oy = v.height()/v.dupy()
 
-
+	ox = ($-320)*(FU/2)
+	oy = ($-200)*(FU/2)
 	if displayplayer and displayplayer.ptsr then
 		local player = displayplayer
 		for k,data in pairs(player.ptsr.score_objects) do
 			local t = FixedDiv(data.tics, MAX_TICS)
-			local drawX = ease.incubic(t, data.x, GO_TO_X+ox)
-			local drawY = ease.incubic(t, data.y, GO_TO_Y+oy)
+			local drawX = ease.incubic(t, data.x, GO_TO_X-ox)
+			local drawY = ease.incubic(t, data.y, GO_TO_Y-oy)
 
 			customhud.CustomFontString(v,
 				drawX,
 				drawY,
 				tostring(data.score),
 				"PTFNT",
-				V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP,
+				V_PERPLAYER,
 				"center",
 				data.s,
 				SKINCOLOR_WHITE)

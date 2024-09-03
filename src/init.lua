@@ -97,6 +97,7 @@ customhud.SetupFont("PTFNT", -1, 4)
 customhud.SetupFont("SCRPT", -2, 4)
 customhud.SetupFont("COMBO", -1, 4)
 customhud.SetupFont("SMNPT", -1, 4)
+customhud.SetupFont("PTLAP")
 
 dofile "main_game.lua"
 

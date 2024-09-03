@@ -61,6 +61,11 @@ addHook("PlayerThink", function(p)
 			p.ptsr.score_shakeTime = FU
 		end
 	end
+	if #p.ptsr.score_objects == 0
+	and p.score ~= p.ptsr.current_score then
+		p.ptsr.current_score = p.score
+		p.ptsr.score_shakeTime = FU
+	end
 end)
 
 local score_hud = function(v, player)
@@ -84,9 +89,14 @@ local score_hud = function(v, player)
 		y = $+shakeY
 	end
 
-	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..(leveltime/2)%12), (V_SNAPTOLEFT|V_SNAPTOTOP))
+	local frame = 0
+	if PTSR.pizzatime then
+		frame = (leveltime/2)%12
+	end
+
+	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
 	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
-	
+
 	if player == displayplayer
 	and player.ptsr then
 		for k,data in pairs(player.ptsr.score_objects) do

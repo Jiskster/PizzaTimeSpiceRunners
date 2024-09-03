@@ -1,3 +1,18 @@
+local function getPatchesFromNum(v, font, num)
+	local patches = {}
+	local str = tostring(num)
+
+	for i = 1,#str do
+		local byte = str:sub(i):byte()
+		local patch = v.cachePatch(string.format("%s%03d", font, byte))
+		if not patch then continue end
+
+		table.insert(patches, patch)
+	end
+
+	return patches
+end
+
 local lap_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
 	if not player.ptsr.laptime then return end
@@ -24,16 +39,31 @@ local lap_hud = function(v, player)
 	cz.y = $ + shakey
 
 	if cz.y ~= nil and hudst.anim_active then
+		local color
 		if player.ptsr.laps == 2
-			v.drawScaled(cz.x,cz.y,FRACUNIT/3, lap2flag, V_SNAPTOTOP)
+			color = v.getColormap(nil, SKINCOLOR_PURPLE)
 		elseif player.ptsr.laps == 3 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP)
+			color = v.getColormap(nil, SKINCOLOR_WHITE)
 		elseif player.ptsr.laps == 4 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_YELLOWMAP)
+			color = v.getColormap(nil, SKINCOLOR_YELLOW)
 		elseif player.ptsr.laps == 5 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_PURPLEMAP)
+			color = v.getColormap(nil, SKINCOLOR_ORANGE)
 		elseif player.ptsr.laps >= 6 then
-			v.drawLevelTitle(cz.x/FU,cz.y/FU, "LAP "..player.ptsr.laps, V_SNAPTOTOP|V_REDMAP)
+			color = v.getColormap(nil, SKINCOLOR_RED)
+		end
+
+		v.drawScaled(cz.x, cz.y, FU/3, v.cachePatch"LAPFLAG", V_SNAPTOTOP, color)
+		local patches = getPatchesFromNum(v, "PTLAP", player.ptsr.laps)
+
+		local fx = 0
+		local scale = FU/3
+
+		for _,patch in ipairs(patches) do
+			local x = cz.x + (165*scale)
+			local fy = (91-patch.height)*scale
+			
+			v.drawScaled(x+fx,cz.y+fy,scale,patch,V_SNAPTOTOP, color)
+			fx = $+(patch.width*scale)
 		end
 	end
 end

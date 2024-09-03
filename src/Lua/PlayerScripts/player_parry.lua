@@ -279,11 +279,17 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
+	local can_parry = PTSR_DoHook("canparry", player)
+
+	if can_parry == nil then
+		can_parry = true
+	end
 
 	if not player.mo.ptsr.parry_cooldown
 	and not player.mo.pizza_in
 	and not player.mo.pizza_out then
-		if cmd.buttons & BT_ATTACK then
+		if cmd.buttons & BT_ATTACK
+		and can_parry then
 			if not player.mo.pre_parry then -- pre parry start
 				local failparrysfx = {
 					sfx_prepr1,
@@ -333,7 +339,7 @@ addHook("PlayerThink", function(player)
 								gotapf = true
 							else
 								local set_timeleft = PTSR.ParryStunFrames
-								
+				
 								if PTSR.isOvertime() then
 									set_timeleft = $*2
 								end
@@ -347,6 +353,8 @@ addHook("PlayerThink", function(player)
 										add_angle = 0,
 									}
 								end
+	
+								PTSR_DoHook("onparried", foundmobj, pmo)
 							end
 
 							if PTSR_DoHook("onparry", pmo, foundmobj) == true then

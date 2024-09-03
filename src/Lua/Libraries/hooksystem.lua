@@ -1,5 +1,6 @@
 local hooks = {}
 hooks.onparry = {}
+hooks.canparry = {}
 hooks.onlap = {}
 hooks.onbonus = {}
 hooks.onringbonus = {}
@@ -7,6 +8,7 @@ hooks.onlapbonus = {}
 hooks.oncombobonus = {}
 hooks.onpizzatime = {}
 hooks.ondamage = {}
+hooks.onparried = {}
 hooks.ongameend = {}
 hooks.pfthink = {}
 hooks.pfprestunthink = {}

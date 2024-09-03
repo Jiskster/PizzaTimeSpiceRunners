@@ -1,10 +1,5 @@
 local timeafteranimation = 0
 
-local BARXOFF = 5*FU
-local BARYOFF = 5*FU
-local BARWIDTH = 295*FU
-local BARSECTIONWIDTH = 172*FU
-local TIMEMODFAC = 4*BARSECTIONWIDTH/FU
 local ot_color_table = {
 	SKINCOLOR_RED,
 	SKINCOLOR_PEPPER,
@@ -15,7 +10,7 @@ local ot_color_table = {
 }
 
 --[[@param v videolib]]
-local function drawBarFill(v, x, y, scale, progress, patch)
+/*local function drawBarFill(v, x, y, scale, progress, patch)
 	local clampedProg = max(0, min(progress, FU))
 	local patch = v.cachePatch(patch)
 	local drawwidth = FixedMul(clampedProg, BARWIDTH)
@@ -27,6 +22,77 @@ local function drawBarFill(v, x, y, scale, progress, patch)
 		nil, -- colormap
 		barOffset, 0, -- sx, sy
 		drawwidth, patch.height*FU)
+end*/
+
+local function drawBar(v, x, y, scale, properties)
+	local prog = properties and properties.offset or 0
+	local length = properties and properties.length or 0
+	local bar = v.cachePatch(properties and properties.bar or "SHOWTIMEBAR")
+	local fill = v.cachePatch(properties and properties.fill or "BARFILL")
+	local ox = properties and properties.fill_xoffset or 0
+	local oy = properties and properties.fill_yoffset or 0
+	local ow = properties and properties.fill_widthoffset or 0
+	local flags = properties and properties.flags or 0
+	local color = properties and properties.color
+
+	prog = -fill.width*$
+
+	ox = FixedMul($, scale)
+	oy = FixedMul($, scale)
+
+	length = bar.width*$
+	length = max(0, ($-ox)+ow)
+
+	while prog < length do
+		if prog+(fill.width*FU) < length then
+			if prog < 0 then
+				v.drawCropped(
+					x+ox, y+oy,
+					scale, scale,
+					fill,
+					flags,
+					color,
+					-prog,
+					0,
+					(fill.width*FU)-prog,fill.height*FU
+				)
+			else
+				v.drawScaled(x+FixedMul(prog, scale)+ox,
+					y+oy,
+					scale,
+					fill,
+					flags,
+					color)
+			end
+			prog = $+(fill.width*FU)
+		else
+			if prog > 0 then
+				v.drawCropped(
+					x+FixedMul(prog, scale)+ox, y+oy,
+					scale, scale,
+					fill,
+					flags,
+					color,
+					0, 0,
+					length-prog,
+					fill.height*FU
+				)
+			else
+				v.drawCropped(
+					x+ox, y+oy,
+					scale, scale,
+					fill,
+					flags,
+					color,
+					-prog, 0,
+					length,
+					fill.height*FU
+				)
+			end
+			prog = length
+		end
+	end
+	v.drawScaled(x,y,scale,bar,flags)
 end
 
 -- always give scale or die
@@ -155,13 +221,18 @@ local bar_hud = function(v, player)
 			--purple bar, +1 fracunit because i want it inside the box 
 			-- MAX VALUE FOR HSCALE: FRACUNIT*150
 			-- v.drawStretched(91*FRACUNIT, ese + (5*FU)/3, min(themath,bar_finish), (FU/2) - (FU/12), bar2, V_SNAPTOBOTTOM)
-			
-			drawBarFill(v, 90*FRACUNIT, ese, (FU/2), progress, barfill)
-			--brown overlay
-			v.drawScaled(90*FRACUNIT, ese, FU/2, bar, V_SNAPTOBOTTOM)
+	
+			drawBar(v, 90*FU, ese, FU/2, {
+				offset = FixedDiv(leveltime % (45*TICRATE), 45*TICRATE),
+				length = progress,
+				fill_xoffset = 5*FU,
+				fill_yoffset = 5*FU,
+				fill_widthoffset = -5*FU,
+				fill = PTSR.timeleft and "BARFILL" or "BARFILL2",
+				flags = V_SNAPTOBOTTOM
+			})
 			v.drawScaled((82*FU) + min(johnx,bar_finish), ese + (6*johnscale), johnscale, john, V_SNAPTOBOTTOM)
 			v.drawScaled(230*FU, ese - (8*FU) + pfEase, FU/3, pizzaface, V_SNAPTOBOTTOM)
-			
 			local timestring = G_TicsToMTIME(PTSR.timeleft)
 			local x = 165*FRACUNIT
 			local y = 176*FRACUNIT + FRACUNIT/2

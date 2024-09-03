@@ -43,7 +43,7 @@ function PTSR.add_wts_score(player, mobj, score)
 	local x = 0
 	local y = 0
 	local s = FU
-	local spr = score or 100
+	local score = score or 100
 
 	if player == displayplayer then
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
@@ -129,8 +129,8 @@ local score_hud = function(v, player)
 
 	ox = ($-320)*(FU/2)
 	oy = ($-200)*(FU/2)
-	if displayplayer and displayplayer.ptsr then
-		local player = displayplayer
+
+	if player.ptsr then
 		for k,data in pairs(player.ptsr.score_objects) do
 			local t = FixedDiv(data.tics, MAX_TICS)
 			local drawX = ease.incubic(t, data.x, GO_TO_X-ox)

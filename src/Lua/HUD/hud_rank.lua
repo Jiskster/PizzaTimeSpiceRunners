@@ -14,14 +14,14 @@ local rank_hud = function(v, player)
 	local rank = player.ptsr.rank
 	
 	if (rank == "D")
-		score = player.score
+		score = player.ptsr.current_score
 	elseif (rank == "C")
-		score = player.score-(per)
+		score = player.ptsr.current_score-(per)
 	elseif (rank == "B")
-		score = player.score-(per*2)
+		score = player.ptsr.current_score-(per*2)
 		percent = $*2
 	elseif (rank == "A")
-		score = player.score-(per*4)
+		score = player.ptsr.current_score-(per*4)
 		percent = $*4
 	/*
 	elseif (rank == "S")

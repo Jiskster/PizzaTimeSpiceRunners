@@ -10,14 +10,6 @@ local function getComboRank(combo)
 	return combo/5+1,very
 end
 
-COM_AddCommand("addcombo", function(p, scr)
-	p.ptsr.combo_count = tonumber(scr)
-end)
-
-COM_AddCommand("endcombo", function(p)
-	PTSR:EndCombo(p)
-end)
-
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_outro_tics = 0

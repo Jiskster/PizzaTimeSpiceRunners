@@ -143,7 +143,9 @@ PTSR.default_playervars = {
 	score_objects = {},
 
 	door_transitionTime = 0,
-	door_transitionFadeTime = 0 // will be double than transitionTime
+	door_transitionFadeTime = 0, // will be double than transitionTime
+
+	keyTo = nil, -- KEY
 }
 PTSR.gamemode_list = {}
 

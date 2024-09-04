@@ -171,6 +171,7 @@ dofile "Gimmicks/alivedustdevil.lua"
 dofile "Gimmicks/powerbubble.lua"
 dofile "Gimmicks/johnpillar.lua"
 dofile "Gimmicks/doors.lua"
+dofile "Gimmicks/keys.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"

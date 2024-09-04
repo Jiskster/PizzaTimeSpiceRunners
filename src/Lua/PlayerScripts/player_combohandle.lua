@@ -1,10 +1,6 @@
 PTSR.combotween = 10
 PTSR.combo_outro_tics = 4*TICRATE
 
-COM_AddCommand("combotest", function(p, scr)
-	p.ptsr.combo_count = tonumber(scr)
-end)
-
 local function getComboRank(combo)
 	local very = (combo/5+1)/16
 

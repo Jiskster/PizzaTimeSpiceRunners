@@ -7,8 +7,6 @@ local function getComboRank(combo)
 	local deplete = (16*5)*very
 	combo = $ - deplete
 
-	print(very)
-
 	return combo/5+1,very
 end
 

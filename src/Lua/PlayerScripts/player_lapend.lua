@@ -23,7 +23,6 @@ PTSR.DoLapBonus = function(player)
 		
 		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
 		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
-		local combobonus = player.ptsr.combo_count * (gm_metadata.combobonus or PTSR.combobonus)
 		
 		if gm_metadata.core_endurance 
 		and count.peppinos then
@@ -46,11 +45,6 @@ PTSR.DoLapBonus = function(player)
 			ringbonus = 0
 		end
 		
-		-- This might get deleted later. TODO: Remove this comment if this stays in final release
-		if PTSR_DoHook("oncombobonus", player) == true then
-			ringbonus = 0
-		end
-		
 		if escapebonus then
 			P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
 			if lapbonus or ringbonus then
@@ -63,10 +57,6 @@ PTSR.DoLapBonus = function(player)
 			
 			if ringbonus then
 				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
-			end
-			
-			if combobonus then
-				CONS_Printf(player, "* "..combobonus.." combo bonus!")
 			end
 		end
 	end

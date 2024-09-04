@@ -58,6 +58,8 @@ function PTSR:EndCombo(player)
 	if not PTSR.gameover then
 		PTSR.add_xy_score(player, 50*FU, 110*FU, score, 3*TICRATE)
 		player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+	else
+		player.ptsr.current_score = score
 	end
 	S_StartSound(player.mo, sfx_s1c5, player)
 	player.ptsr.combo_rank, player.ptsr.combo_rank_very = getComboRank(player.ptsr.combo_outro_count)

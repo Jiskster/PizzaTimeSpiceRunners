@@ -219,22 +219,24 @@ addHook("PlayerThink", function(player)
 
 	local _lastrank = player.ptsr.rank
 
-	if player.score < pec then
-		-- this is real p rank
-		-- cry like a wittle babyy!
-		player.ptsr.rank = "D"
-	elseif player.score <= pec*2 then
-		player.ptsr.rank = "C"	
-	elseif player.score <= pec*4 then
-		player.ptsr.rank = "B"
-	elseif player.score <= PTSR.maxrankpoints then
-		player.ptsr.rank = "A"
-	elseif player.score <= pec*16 then
-		if player.ptsr.combo_timesfailed == 0 
-		and player.ptsr.combo_times_started == 1 then -- never gave up, one chance
-			player.ptsr.rank = "P"
-		else
-			player.ptsr.rank = "S"
+	if not PTSR.gameover then
+		if player.score < pec then
+			-- this is real p rank
+			-- cry like a wittle babyy!
+			player.ptsr.rank = "D"
+		elseif player.score <= pec*2 then
+			player.ptsr.rank = "C"	
+		elseif player.score <= pec*4 then
+			player.ptsr.rank = "B"
+		elseif player.score <= PTSR.maxrankpoints then
+			player.ptsr.rank = "A"
+		elseif player.score <= pec*16 then
+			if player.ptsr.combo_timesfailed == 0 
+			and player.ptsr.combo_times_started == 1 then -- never gave up, one chance
+				player.ptsr.rank = "P"
+			else
+				player.ptsr.rank = "S"
+			end
 		end
 	end
 

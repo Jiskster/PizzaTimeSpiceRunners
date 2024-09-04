@@ -399,7 +399,11 @@ addHook("ThinkFrame", do
 						S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
 						mapmusname = RANKMUS[consoleplayer.ptsr.rank]
 					end
-
+					for p in players.iterate do
+						if p and p.ptsr and PTSR.PlayerHasCombo(p) then
+							PTSR:EndCombo(p)
+						end
+					end
 					PTSR_DoHook("ongameend")
 				end
 			else

@@ -31,6 +31,20 @@ local ranksTable = {
 	["S"] = 5,
 	["P"] = 6
 }
+local scoreYOffset = {
+	[0] = 0,
+	[1] = -1,
+	[2] = -1,
+	[3] = -1,
+	[4] = -1,
+	[5] = 1,
+	[6] = 2,
+	[7] = 3,
+	[8] = 5,
+	[9] = 4,
+	[10] = 2,
+	[11] = 1
+}
 
 local toppingsOnScore = {
 	[2] = "SCORESHROOM",
@@ -119,7 +133,8 @@ local score_hud = function(v, player)
 		v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_SNAPTOLEFT|V_SNAPTOTOP)
 	end
 
-	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
+	local yOffset = scoreYOffset[frame]*(FU/3) or 0
+	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y-yOffset, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 
 	local ox = 0
 	local oy = 0

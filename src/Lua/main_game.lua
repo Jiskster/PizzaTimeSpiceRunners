@@ -119,6 +119,9 @@ PTSR.default_playervars = {
 	
 	combo_outro_count = 0, -- i want to keep the old combo visible when exiting
 	combo_outro_tics = 0,
+
+	combo_rank = 0, -- hi saxa/mario here look at this oooooo combo ranks
+	combo_rank_very = 0,
 	
 	gotrevivedonce = false,
 	justrevived = false,
@@ -396,7 +399,11 @@ addHook("ThinkFrame", do
 						S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
 						mapmusname = RANKMUS[consoleplayer.ptsr.rank]
 					end
-
+					for p in players.iterate do
+						if p and p.ptsr and PTSR.PlayerHasCombo(p) then
+							PTSR:EndCombo(p)
+						end
+					end
 					PTSR_DoHook("ongameend")
 				end
 			else

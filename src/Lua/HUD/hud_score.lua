@@ -53,11 +53,12 @@ local toppingsOnScore = {
 	[5] = "SCOREPEPPER"
 }
 
-function PTSR.add_wts_score(player, mobj, score)
+function PTSR.add_wts_score(player, mobj, score, delay)
 	local x = 0
 	local y = 0
 	local s = FU
 	local score = score or 100
+	local delay = delay or 0
 
 	if player == displayplayer then
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
@@ -74,7 +75,21 @@ function PTSR.add_wts_score(player, mobj, score)
 		y = y,
 		s = GO_TO_S,
 		score = score,
-		tics = 0
+		tics = -delay
+	}
+end
+
+function PTSR.add_xy_score(player, x, y, score, delay)
+	local s = FU
+	local score = score or 100
+	local delay = delay or 0
+
+	player.ptsr.score_objects[#player.ptsr.score_objects+1] = {
+		x = x,
+		y = y,
+		s = GO_TO_S,
+		score = score,
+		tics = -delay
 	}
 end
 
@@ -147,7 +162,7 @@ local score_hud = function(v, player)
 
 	if player.ptsr then
 		for k,data in pairs(player.ptsr.score_objects) do
-			local t = FixedDiv(data.tics, MAX_TICS)
+			local t = FixedDiv(max(0, data.tics), MAX_TICS)
 			local drawX = ease.incubic(t, data.x, GO_TO_X-ox)
 			local drawY = ease.incubic(t, data.y, GO_TO_Y-oy)
 

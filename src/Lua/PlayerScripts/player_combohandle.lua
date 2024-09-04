@@ -1,6 +1,15 @@
 PTSR.combotween = 10
 PTSR.combo_outro_tics = 4*TICRATE
 
+local function getComboRank(combo)
+	local very = (combo/5+1)/16
+
+	local deplete = (16*5)*very
+	combo = $ - deplete
+
+	return combo/5+1,very
+end
+
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_outro_tics = 0
@@ -36,13 +45,22 @@ end
 function PTSR:EndCombo(player)
 	player.ptsr.combo_outro_count = player.ptsr.combo_count
 	PTSR:ClearCombo(player)
+
+	local x = player.ptsr.combo_outro_count
+	local score = x*250
 	
+	P_AddPlayerScore(player, score)
+
 	if not player.ptsr.outofgame then
 		player.ptsr.combo_timesfailed = $ + 1
 	end
 	
-	player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+	if not PTSR.gameover then
+		PTSR.add_xy_score(player, 50*FU, 110*FU, score, 3*TICRATE)
+		player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+	end
 	S_StartSound(player.mo, sfx_s1c5, player)
+	player.ptsr.combo_rank, player.ptsr.combo_rank_very = getComboRank(player.ptsr.combo_outro_count)
 end
 
 function PTSR:AddComboTime(player, amount)

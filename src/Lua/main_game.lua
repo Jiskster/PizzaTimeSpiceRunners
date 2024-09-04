@@ -140,7 +140,10 @@ PTSR.default_playervars = {
 	current_score = 0,
 	score_shakeTime = 0,
 	score_shakeDrainTime = FU/5,
-	score_objects = {}
+	score_objects = {},
+
+	door_transitionTime = 0,
+	door_transitionFadeTime = 0 // will be double than transitionTime
 }
 PTSR.gamemode_list = {}
 

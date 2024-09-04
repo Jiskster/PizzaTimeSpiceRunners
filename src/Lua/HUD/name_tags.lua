@@ -207,15 +207,15 @@ hud.add( function(v, player, camera)
 			
 			if not nodrawstuff then
 				customhud.CustomFontString(v, result.x, result.y, name, "PTFNT", trans, namefont, text_size, namecolor)
-				customhud.CustomFontString(v, result.x, result.y+(8*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
+				customhud.CustomFontString(v, result.x, result.y+(4*FRACUNIT), obj_dist.."fu", "PTFNT", trans, namefont, text_size, SKINCOLOR_WHITE)
 			end
 		end
 		
 		-- GAMEMODE: JUGGERNAUT exclusive
 		if tmo.type == MT_PT_JUGGERNAUTCROWN and not P_CheckSight(tmo, displayplayer.realmo) then
 			local crown_spr = v.getSpritePatch(SPR_C9W3)
-			v.drawScaled(result.x+(24*FRACUNIT), result.y, FU/4, crown_spr)
-			v.drawString(result.y+(12*FRACUNIT), result.y, obj_dist.."fu", nil, "thin-fixed")
+			v.drawScaled(result.x, result.y, FU/4, crown_spr)
+			v.drawString(result.x, result.y+(12*FRACUNIT), obj_dist.."fu", nil, "thin-fixed-center")
 		end
 		--v.drawString(hpos, vpos, name, nameflags|trans|V_ALLOWLOWERCASE, namefont)
 		--v.drawString(hpos, vpos+(lineheight*FRACUNIT), health, rflags|trans|V_ALLOWLOWERCASE, ringfont)

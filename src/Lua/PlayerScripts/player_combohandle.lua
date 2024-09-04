@@ -1,6 +1,21 @@
 PTSR.combotween = 10
 PTSR.combo_outro_tics = 4*TICRATE
 
+COM_AddCommand("combotest", function(p, scr)
+	p.ptsr.combo_count = tonumber(scr)
+end)
+
+local function getComboRank(combo)
+	local very = (combo/5+1)/16
+
+	local deplete = (16*5)*very
+	combo = $ - deplete
+
+	print(very)
+
+	return combo/5+1,very
+end
+
 function PTSR:StartCombo(player)
 	if player.mo and player.mo.valid and player.ptsr then
 		player.ptsr.combo_outro_tics = 0
@@ -42,6 +57,11 @@ function PTSR:EndCombo(player)
 	end
 	
 	player.ptsr.combo_outro_tics = PTSR.combo_outro_tics
+
+	player.ptsr.combo_rank, player.ptsr.combo_rank_very = getComboRank(player.ptsr.combo_outro_count)
+
+	print(player.ptsr.combo_rank)
+
 	S_StartSound(player.mo, sfx_s1c5, player)
 end
 

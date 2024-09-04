@@ -56,8 +56,6 @@ function PTSR:EndCombo(player)
 
 	player.ptsr.combo_rank, player.ptsr.combo_rank_very = getComboRank(player.ptsr.combo_outro_count)
 
-	print(player.ptsr.combo_rank)
-
 	S_StartSound(player.mo, sfx_s1c5, player)
 end
 

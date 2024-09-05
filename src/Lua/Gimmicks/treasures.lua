@@ -1,3 +1,5 @@
+local TREASURE_SCORE_AWARD = 10000
+
 states[freeslot "S_PTSR_TREASURE"] = {
 	sprite = freeslot "SPR_STRE",
 	frame = A,
@@ -53,7 +55,9 @@ addHook("TouchSpecial", function(mo, pmo)
 		if pmo.player ~= displayplayer then
 			S_StartSound(mo, sfx_trefou)
 		end
+		
 		S_StartSound(nil, sfx_trefou, pmo.player)
+		S_FadeMusic(50, 500, pmo.player)
 	end
 	return true
 end, MT_PTSR_TREASURE)
@@ -73,7 +77,10 @@ addHook("MobjThinker", function(mo)
 		and mo.player_got.ptsr 
 		and mo.player_got.ptsr.treasure_got == mo then
 			mo.player_got.ptsr.treasure_got = nil
-			P_AddPlayerScore(mo.player_got, 10000)
+			P_AddPlayerScore(mo.player_got, TREASURE_SCORE_AWARD)
+			PTSR.add_wts_score(mo.player_got, mo, TREASURE_SCORE_AWARD, 15, SKINCOLOR_YELLOW)
+			S_FadeMusic(100, 500, mo.player_got)
+			
 			if mo.player_got.mo then
 				mo.player_got.mo.state = S_PLAY_FALL
 			end
@@ -88,16 +95,17 @@ addHook("MobjThinker", function(mo)
 	end
 
 	local pmo = mo.player_got.mo
-
 	pmo.momx = 0
 	pmo.momy = 0
 	pmo.momz = 0
+	
 	if pmo.state ~= mo.player_got.ptsr.treasure_state then
 		pmo.state = mo.player_got.ptsr.treasure_state
 	end
 
 	P_SetOrigin(pmo, mo.spawn_x, mo.spawn_y, mo.spawn_z)
 	P_SetOrigin(mo, mo.spawn_x, mo.spawn_y, mo.spawn_z+pmo.height+(8*FU))
+	
 	if mo.effect and mo.effect.valid then
 		P_SetOrigin(mo.effect, mo.x, mo.y, mo.z)
 

@@ -53,7 +53,7 @@ local toppingsOnScore = {
 	[5] = "SCOREPEPPER"
 }
 
-function PTSR.add_wts_score(player, mobj, score, delay)
+function PTSR.add_wts_score(player, mobj, score, delay, color)
 	local x = 0
 	local y = 0
 	local s = FU
@@ -75,11 +75,12 @@ function PTSR.add_wts_score(player, mobj, score, delay)
 		y = y,
 		s = GO_TO_S,
 		score = score,
-		tics = -delay
+		tics = -delay,
+		color = color or SKINCOLOR_WHITE,
 	}
 end
 
-function PTSR.add_xy_score(player, x, y, score, delay)
+function PTSR.add_xy_score(player, x, y, score, delay, color)
 	local s = FU
 	local score = score or 100
 	local delay = delay or 0
@@ -89,7 +90,8 @@ function PTSR.add_xy_score(player, x, y, score, delay)
 		y = y,
 		s = GO_TO_S,
 		score = score,
-		tics = -delay
+		tics = -delay,
+		color = color or SKINCOLOR_WHITE,
 	}
 end
 
@@ -174,7 +176,7 @@ local score_hud = function(v, player)
 				V_PERPLAYER,
 				"center",
 				data.s,
-				SKINCOLOR_WHITE)
+				data.color)
 		end
 	end
 end

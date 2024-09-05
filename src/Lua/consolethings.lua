@@ -70,7 +70,7 @@ COM_AddCommand("ptsr_debug_forcept", function(player)
 end,1)
 
 CV_PTSR.nuhuh = CV_RegisterVar({
-	name = "ptsr_debug_nuhuh",
+	name = "ptsr_debug",
 	defaultvalue = "Off",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 

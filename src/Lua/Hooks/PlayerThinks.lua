@@ -242,6 +242,18 @@ addHook("PlayerThink", function(player)
 
 	player.ptsr.rank_scaleTime = max(0, $-(FU/6))
 
+	player.ptsr.door_transitionTime = max(0, $-1)
+	player.ptsr.door_transitionFadeTime = max(0, $-1)
+
+	if not (player.ptsr.door_transitionTime)
+	and player.ptsr.door_goto then
+		local gt = player.ptsr.door_goto
+		P_SetOrigin(player.mo, gt.x, gt.y, gt.z)
+		gt.colliding[player] = true
+
+		player.ptsr.door_goto = nil
+	end
+
 	if leveltime
 	and _lastrank ~= player.ptsr.rank then
 		local lastRankNum = ranksTable[_lastrank]

@@ -2,6 +2,10 @@ local portal_time = 25 -- tics
 local minspritescale = FRACUNIT/32
 local maxspritescale = FRACUNIT
 
+PTSR.pizzaportalpos = {}
+-- format: ["MAPTS"] = {[1] = {x = 0, y = 0, z = 0, a = 0}, ...}
+-- all values are ints
+
 freeslot("MT_PIZZAPORTAL", "S_PIZZAPORTAL", "SPR_P3PT", "sfx_lapin", "sfx_lapout", "sfx_yuck34")
 
 mobjinfo[MT_PIZZAPORTAL] = {
@@ -56,6 +60,18 @@ addHook("MapLoad", function(map)
 			else
 				print("\x85\PTSR: Invalid Portal Parameters, ID: ["..i.."]")
 			end
+		end
+	end
+	local title = G_BuildMapName(map)
+	print(title)
+
+	if PTSR.pizzaportalpos[title] then
+		for i = 1,#PTSR.pizzaportalpos[title] do
+			local data = PTSR.pizzaportalpos[title][i]
+			local portal = P_SpawnMobj(data.x*FU, data.y*FU, data.z*FU, MT_PIZZAPORTAL)
+			local angle = FixedAngle((data.a or 0)*FU)+ANGLE_90
+
+			portal.angle = angle
 		end
 	end
 end)

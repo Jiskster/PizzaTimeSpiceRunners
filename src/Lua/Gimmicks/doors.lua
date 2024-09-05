@@ -24,7 +24,7 @@ states[freeslot "S_PTSR_DOOR_UNLOCKED"] = {
 mobjinfo[freeslot "MT_PTSR_DOOR"] = {
 	doomednum = 2111,
 
-	radius = 32*FU,
+	radius = 20*FU,
 	height = 60*FU,
 
 	spawnstate = S_PTSR_DOOR,

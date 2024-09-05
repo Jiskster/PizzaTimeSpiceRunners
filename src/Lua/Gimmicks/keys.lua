@@ -6,6 +6,14 @@ states[freeslot "S_PTSR_KEY"] = {
 	tics = -1
 }
 
+states[freeslot "S_PTSR_KEY_EFFECT"] = {
+	sprite = freeslot "SPR_PKEF",
+	frame = FF_ANIMATE|A,
+	tics = 7*2,
+	var1 = G,
+	var2 = 2
+}
+
 sfxinfo[freeslot "sfx_coltpn"].caption = "Found something!"
 
 local keyNotCaughtFlags = MF_SPECIAL
@@ -15,8 +23,8 @@ mobjinfo[freeslot "MT_PTSR_KEY"] = {
 	doomednum = 2112,
 	spawnstate = S_PTSR_KEY,
 
-	radius = 32*FU,
-	height = 32*FU,
+	radius = 16*FU,
+	height = 24*FU,
 
 	flags = keyNotCaughtFlags
 }
@@ -50,6 +58,19 @@ end, MT_PTSR_KEY)
 addHook("PostThinkFrame", do
 	for k,key in pairs(PTSR.keys) do
 		if not (key and key.valid) then table.remove(PTSR.keys, k) continue end
+
+		if not (leveltime % 10) then
+			local x = key.x
+			local y = key.y
+			local z = key.z
+
+			x = $+(P_RandomRange(-key.radius/FU, key.radius/FU)*FU)
+			y = $+(P_RandomRange(-key.radius/FU, key.radius/FU)*FU)
+			z = $+(P_RandomRange(0, key.height/FU)*FU)
+
+			local effect = P_SpawnMobj(x, y, z, MT_THOK)
+			effect.state = S_PTSR_KEY_EFFECT
+		end
 
 		if key.attachedPlayer then
 			if not (key.attachedPlayer.valid 

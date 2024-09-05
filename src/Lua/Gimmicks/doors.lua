@@ -67,8 +67,10 @@ local function assignDoors(mo, type, angle)
 	if PTSR.doors[oppositeType][angle] then
 		local mo2 = PTSR.doors[oppositeType][angle]
 
-		mo.opposite_door = mo2
-		mo2.opposite_door = mo
+		if mo2 and mo.valid then
+			mo.opposite_door = mo2
+			mo2.opposite_door = mo
+		end
 	end
 
 	if type == "enter"

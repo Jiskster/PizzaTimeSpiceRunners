@@ -334,7 +334,7 @@ addHook("PostThinkFrame", function()
 	for player in players.iterate do
 		if not (player.pflags & PF_SPINNING) then
 			if player.mo and player.mo.valid then
-				if PTSR.ParryList[player.mo] and
+				if PTSR.ParryList[player.mo] or
 				PTSR.HitlagList[player.mo] then
 					continue
 				end

@@ -28,7 +28,7 @@ mobjinfo[freeslot "MT_PTSR_DOOR"] = {
 	height = 60*FU,
 
 	spawnstate = S_PTSR_DOOR,
-	flags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY
+	flags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_NOBLOCKMAP
 }
 
 sfxinfo[freeslot "sfx_edoor"].caption = "Entering door"

@@ -83,7 +83,7 @@ end
 
 function PTSR.CanComboTimeDecrease(player)
 	if player.mo and player.mo.valid then
-		return not (player.mo.pizza_in or player.mo.pizza_out)
+		return not (player.mo.pizza_in or player.mo.pizza_out or player.ptsr.treasure_got)
 	end
 	
 	return false

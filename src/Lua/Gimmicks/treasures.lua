@@ -80,6 +80,7 @@ addHook("MobjThinker", function(mo)
 			P_AddPlayerScore(mo.player_got, TREASURE_SCORE_AWARD)
 			PTSR.add_wts_score(mo.player_got, mo, TREASURE_SCORE_AWARD, 15, SKINCOLOR_YELLOW)
 			S_FadeMusic(100, 500, mo.player_got)
+			PTSR:FillCombo(mo.player_got)
 			
 			if mo.player_got.mo then
 				mo.player_got.mo.state = S_PLAY_FALL

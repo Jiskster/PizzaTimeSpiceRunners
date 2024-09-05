@@ -224,6 +224,10 @@ PTSR.DoParry = function(parrier, victim)
 		if PTSR.isOvertime() then
 			knockback_xy = $ * 3
 		end
+		
+		if parrier.hascrown then
+			knockback_xy = $ * 2
+		end
 	end
 	
 	if victim_speed > 100*FU then

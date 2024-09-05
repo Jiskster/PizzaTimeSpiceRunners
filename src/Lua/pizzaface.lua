@@ -51,7 +51,8 @@ PTSR.PFMaskData = {
 		trails = {SKINCOLOR_PEACHY, SKINCOLOR_RED},
 		sound = sfx_smdah,
 		emoji = ":stuck_out_tongue:",
-		tagcolor = SKINCOLOR_ORANGE
+		tagcolor = SKINCOLOR_ORANGE,
+		rubberrange = 100*FU
 	},
 	{
 		name = "Normal",
@@ -418,10 +419,11 @@ addHook("MobjThinker", function(mobj)
 		local p_target = mobj.pizza_target
 		local targeting_player = mobj.pizza_target.player
 		
-		local bandfactor = 500 -- lower = stronger.
-		
+		local bandfactor = maskdata.rubberrange or 500*FU
+
 		--higher range = weaker banding
-		local rubber_range = bandfactor*mobj.pizza_target.scale
+		--lower range = stronger banding
+		local rubber_range = FixedMul(bandfactor,mobj.pizza_target.scale)
 		
 		if CV_PTSR.airubberband.value then
 			offset_speed = FixedMul(speed, FU+FixedDiv(dist - rubber_range, rubber_range))

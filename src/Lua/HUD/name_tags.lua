@@ -80,6 +80,10 @@ hud.add( function(v, player, camera)
 	if (not PTSR.IsPTSR()) then return end
 	if PTSR.gameover then return end
 
+	if (player.awayviewmobj and player.spectator)
+		return
+	end
+
 	for _, tmo in pairs(PTSR.w2s_mobjs) do
 		if not tmo or not tmo.valid then continue end
 		if tmo.player and player == tmo.player then continue end
@@ -94,7 +98,13 @@ hud.add( function(v, player, camera)
 				or tmo.type == MT_PT_JUGGERNAUTCROWN) then
 			continue
 		end
-			
+		
+		--WAIT!!!!! check if we're spectating this pf first before doing anything else!
+		if (tmo.type == MT_PIZZA_ENEMY)
+		and (tmo == player.awayviewmobj)
+			continue
+		end
+		
 		--if not tmo.player and not mobjinfo[tmo.type].npc_name then continue end
 
 		--how far away is the other mobj?

@@ -80,6 +80,8 @@ rawset(_G, "PTSR", { -- variables
 	gamemode = 1,
 	
 	nextgamemode = 1,
+
+	pizzas = {},
 })
 
 PTSR.isOvertime = function()
@@ -279,6 +281,8 @@ addHook("NetVars", function(net)
 		"difficulty",
 		
 		"pizzaface_speed_multi",
+
+		"pizzas",
 	}
 	
 	for i,v in ipairs(sync_list) do

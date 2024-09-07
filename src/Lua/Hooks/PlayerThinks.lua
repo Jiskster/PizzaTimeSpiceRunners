@@ -271,6 +271,7 @@ addHook("PlayerThink", function(player)
 
 		player.ptsr.rank_scaleTime = FU
 	end
+
 end)
 
 --leaderboard stuff -luigi budd
@@ -308,6 +309,7 @@ addHook('ThinkFrame', function()
 			local p1 = a
 			local p2 = b
 			
+			--ALWAYS promote a P rank than an S with higher score
 			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank]
 				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank]
 					return true
@@ -347,4 +349,77 @@ addHook("PostThinkFrame", function()
 			end
 		end
 	end
+end)
+
+--PF Viewpoint (spectate pizzafaces)
+addHook("PlayerThink",function(p)
+	if not (p.spectator) then return end
+
+	local me = p.realmo
+
+	if (PTSR.gameover)
+		me.pfviewpoint = false
+		me.pfindex = 0
+		p.awayviewmobj = nil
+		return
+	end
+
+	--SURE
+	if (p.cmd.buttons & BT_TOSSFLAG)
+		if not (p.lastbuttons & BT_TOSSFLAG)
+			if me.pfindex == nil
+				me.pfindex = 1
+			else
+				me.pfindex = $+1
+			end
+			if me.pfindex > #PTSR.pizzas
+				me.pfviewpoint = false
+				me.pfindex = 0
+				p.awayviewmobj = nil
+				return
+			end
+			me.pfviewpoint = true
+		end
+	end
+
+	if me.pfviewpoint
+		local mypizza = PTSR.pizzas[me.pfindex]
+		local target = mypizza.pizza_target
+		local cameraman = mypizza.cameraman
+
+		--pressed something?
+		if (p.cmd.buttons &~BT_TOSSFLAG) ~= 0
+		or (p.cmd.forwardmove or p.cmd.sidemove)
+		--...orrr if the pf doesnt have a cameraman
+		or not (cameraman and cameraman.valid)
+			--stop spectating!
+			me.pfviewpoint = false
+			me.pfindex = 0
+			p.awayviewmobj = nil
+			return
+		end
+
+		p.awayviewmobj = cameraman
+		p.awayviewtics = TICRATE
+
+		if (target and target.valid)
+			local dist = R_PointToDist2(
+				target.x,
+				target.y,
+				mypizza.x,
+				mypizza.y
+			)
+
+			if dist ~= 0
+				p.awayviewaiming = R_PointToAngle2(0,
+					mypizza.z,
+					dist,
+					mypizza.pizza_target.z
+				)
+			else
+				p.awayviewaiming = 0
+			end
+		end
+	end
+
 end)

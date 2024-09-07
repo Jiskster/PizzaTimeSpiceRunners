@@ -1,4 +1,5 @@
 local already_announced_tornado = true
+local CLOSE_TRANS = TR_TRANS50
 
 freeslot("MT_PIZZA_ENEMY") -- For AI
 
@@ -208,12 +209,12 @@ function PTSR:SpawnPFAI(forcestyle)
 			return
 		end
 	end
-	local newpizaface = P_SpawnMobj(PTSR.end_location.x,
+	local newpizzaface = P_SpawnMobj(PTSR.end_location.x,
 		PTSR.end_location.y,
 		PTSR.end_location.z,
 		MT_PIZZA_ENEMY)
 	if not multiplayer then
-		PTSR.aipf = newpizaface
+		PTSR.aipf = newpizzaface
 	end
 
 	-- choose a random PF style if nothing was provided
@@ -239,19 +240,19 @@ function PTSR:SpawnPFAI(forcestyle)
 		style = 1
 	end
 	
-	newpizaface.laughsound = PTSR.PFMaskData[style].sound
-	newpizaface.state = PTSR.PFMaskData[style].state
-	newpizaface.spritexscale = PTSR.PFMaskData[style].scale
-	newpizaface.spriteyscale = PTSR.PFMaskData[style].scale
-	newpizaface.pizzastyle = style
+	newpizzaface.laughsound = PTSR.PFMaskData[style].sound
+	newpizzaface.state = PTSR.PFMaskData[style].state
+	newpizzaface.spritexscale = PTSR.PFMaskData[style].scale
+	newpizzaface.spriteyscale = PTSR.PFMaskData[style].scale
+	newpizzaface.pizzastyle = style
 
 	if not multiplayer and consoleplayer and consoleplayer.mo then
 		local cmo = consoleplayer.mo
-		P_SetOrigin(newpizaface, cmo.x, cmo.y, cmo.z)
+		P_SetOrigin(newpizzaface, cmo.x, cmo.y, cmo.z)
 	end
 	
 	if not multiplayer then
-		local laughsound = newpizaface.laughsound or sfx_pizzah
+		local laughsound = newpizzaface.laughsound or sfx_pizzah
 		if not PTSR.showtime // hiiii adding onto this for showtime
 			PTSR.showtime = true
 			local anim = animationtable["pizzaface"]
@@ -263,7 +264,8 @@ function PTSR:SpawnPFAI(forcestyle)
 		end
 	end
 
-	return newpizaface
+	table.insert(PTSR.pizzas,newpizzaface)
+	return newpizzaface
 end
 
 function PTSR.PlayerIsChasable(player)
@@ -377,12 +379,51 @@ addHook("MobjThinker", function(mobj)
 
 	PTSR.addw2sobject(mobj)
 
+	local beingHidden = false
+
 	if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
-		mobj.frame = $|TR_TRANS70
+	or ((mobj.cameraman and mobj.cameraman.valid) and (displayplayer.awayviewmobj == mobj.cameraman))
+		mobj.frame = $|CLOSE_TRANS
+		beingHidden = true
 	else
-		mobj.frame = $ &~TR_TRANS70
+		mobj.frame = $ &~CLOSE_TRANS
 	end
 	
+	--Set up camera point for PFViewpoint
+	if not (mobj.cameraman and mobj.cameraman.valid)
+		mobj.cameraman = P_SpawnMobjFromMobj(mobj,
+			P_ReturnThrustX(nil,mobj.angle,-140*mobj.scale),
+			P_ReturnThrustY(nil,mobj.angle,-140*mobj.scale),
+			130*mobj.scale,
+			MT_THOK
+		)
+		mobj.cameraman.flags2 = $|MF2_DONTDRAW
+		mobj.cameraman.tics,mobj.cameraman.fuse = -1,-1
+		mobj.cameraman.angle = mobj.angle
+	else
+		mobj.cameraman.momx = mobj.momx
+		mobj.cameraman.momy = mobj.momy
+		mobj.cameraman.momz = mobj.momz
+		mobj.cameraman.angle = mobj.angle
+
+		local vertang = 0
+		
+		if (mobj.pizza_target and mobj.pizza_target.valid)
+			vertang = R_PointToAngle2(0,
+				mobj.z,
+				R_PointToDist2(mobj.pizza_target.x, mobj.pizza_target.y, mobj.x, mobj.y),
+				mobj.pizza_target.z
+			)
+		end
+
+
+		P_MoveOrigin(mobj.cameraman,
+			mobj.x + P_ReturnThrustX(nil,mobj.angle,-140*mobj.scale),
+			mobj.y + P_ReturnThrustY(nil,mobj.angle,-140*mobj.scale),
+			mobj.z + P_ReturnThrustX(nil,vertang,110*mobj.scale)
+		)
+	end
+
 	if not PTSR.pizzatime then return end
 	
 	PTSR_DoHook("pfprestunthink", mobj)
@@ -493,6 +534,10 @@ addHook("MobjThinker", function(mobj)
             mobj.momz = $ + FixedMul(FixedDiv(tmomz - mobj.momz, flyto2), sped2)
 			L_SpeedCap(mobj, sped)
 		else
+			--WAAITTTTTTTTT!!!!!!!! If we're already really close to our target, don't move at all!
+			if dist < speed
+				speed = dist
+			end
 			P_FlyTo(mobj, tx, ty, tz, speed, true)
 		end
 		
@@ -514,6 +559,7 @@ addHook("MobjThinker", function(mobj)
 			--But if PF is already close to the camera, dont get in the
 			--way more
 			if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
+			or beingHidden
 				ghost.flags2 = $|MF2_DONTDRAW
 			end
 		end

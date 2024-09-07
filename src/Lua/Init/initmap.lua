@@ -19,6 +19,7 @@ local function InitMap()
 	PTSR.aipf = nil
 	PTSR.difficulty = FRACUNIT
 	PTSR.pizzaface_speed_multi = FRACUNIT
+	PTSR.pizzas = {}
 
 	PTSR.vote_maplist = {}
 	

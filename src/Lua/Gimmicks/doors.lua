@@ -8,6 +8,7 @@ freeslot("SPR_PDOR")
 freeslot("S_PTSR_DOOR_LOCKED")
 freeslot("S_PTSR_DOOR_UNLOCKED")
 freeslot("SPR_PDKE")
+freeslot("MT_PTSR_DOOR")
 
 states[S_PTSR_DOOR] = {
 	sprite = SPR_PDOR,
@@ -27,7 +28,7 @@ states[S_PTSR_DOOR_UNLOCKED] = {
 	tics = -1
 }
 
-mobjinfo[freeslot "MT_PTSR_DOOR"] = {
+mobjinfo[MT_PTSR_DOOR] = {
 	doomednum = 2111,
 
 	radius = 20*FU,

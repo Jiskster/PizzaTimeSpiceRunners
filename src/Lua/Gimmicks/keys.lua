@@ -4,6 +4,7 @@ freeslot("S_PTSR_KEY")
 freeslot("SPR_PKEF")
 freeslot("S_PTSR_KEY_EFFECT")
 freeslot("SPR_PKEY")
+freeslot("MT_PTSR_KEY")
 
 states[S_PTSR_KEY] = {
 	sprite = SPR_PKEY,
@@ -24,7 +25,7 @@ sfxinfo[freeslot "sfx_coltpn"].caption = "Found something!"
 local keyNotCaughtFlags = MF_SPECIAL
 local keyCaughtFlags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY
 
-mobjinfo[freeslot "MT_PTSR_KEY"] = {
+mobjinfo[MT_PTSR_KEY] = {
 	doomednum = 2112,
 	spawnstate = S_PTSR_KEY,
 

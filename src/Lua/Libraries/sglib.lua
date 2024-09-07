@@ -107,7 +107,7 @@ rawset(_G, "SG_ObjectTracking", function(v, p, c, point, reverse, allowspectator
 	-- Set results relative to top left!
 	result.x = FixedMul(tan(da), fg)
 	result.y = FixedMul((tan(viewpointAiming) - FixedDiv((point.z - viewz), 1 + FixedMul(cos(da), h))), fg)
-
+	
 	result.angle = da
 	result.pitch = dp
 	result.fov = fg
@@ -127,27 +127,13 @@ rawset(_G, "SG_ObjectTracking", function(v, p, c, point, reverse, allowspectator
 	result.y = $ + screenHalfH
 
 	result.scale = FixedDiv(screenHalfW, h+1)
-
-	-- Jisk: This is a copy and paste from the old world to screen code for more stability. Ignore that there's a similar check.
-	if c then
-		local cam = c
-		--Angle between camera vector and target
-		local hangdiff = R_PointToAngle2(cam.x, cam.y, point.x, point.y)
-		local hangle = hangdiff - cam.angle
-
-		--check if object is outside of our field of view
-		--converting to fixed just to normalise things
-		--e.g. this will convert 365° to 5° for us
-		local fhanlge = AngleFixed(hangle)
-		local fhfov = AngleFixed(fov>>1)
-		local f360 = AngleFixed(ANGLE_MAX)
-		
-		if fhanlge < f360 - fhfov and fhanlge > fhfov then
-			result.onScreen = false
-		end
-	end
 	
 	result.onScreen = not ((abs(da) > ANG60) or (abs(viewpointAiming - R_PointToAngle2(0, 0, h, (viewz - point.z))) > ANGLE_45))
+
+	-- Required hack for fixing backwards perfect angles rendering anywars.
+	if result.angle == INT32_MIN then
+		result.onScreen = false
+	end
 
 	-- Cheap dirty hacks for some split-screen related cases
 	if result.x < 0 or result.x > (screenWidth << FRACBITS) then

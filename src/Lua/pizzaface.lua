@@ -131,6 +131,8 @@ function PTSR:PizzaCanTag(peppino, pizza)
 	if peppino.player.ptsr.pizzaface then return false end -- lets not tag our buddies!!
 
 	if peppino.pizza_out or peppino.pizza_in then return false end -- in pizza portal? then dont kill
+	
+	if peppino.player.ptsr.treasure_got then return false end -- in a "treasure got" animation?
 
 	if pizza.player and pizza.player.valid and pizza.player.ptsr.pizzaface then
 		if pizza.pfstuntime then return false end
@@ -150,7 +152,8 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 	for peppino in players.iterate() do
 		if not peppino.ptsr.pizzaface and (peppino.mo and peppino.mo.valid) and
 		not peppino.spectator and not peppino.ptsr.outofgame and (peppino.playerstate ~= PST_DEAD)
-		and not peppino.quittime and PTSR_DoHook("pfplayertpfind", pizza, player) ~= false then
+		and not peppino.quittime and PTSR_DoHook("pfplayertpfind", pizza, player) ~= false 
+		and not peppino.ptsr.treasure_got then
 			table.insert(peppinos, #peppino)
 		end
 	end
@@ -160,7 +163,7 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 	local peppino_pmo = players[chosen_peppino].realmo
 	pizza.next_pfteleport = peppino_pmo -- next player object (mobj_t) to teleport to
 
-	if peppinos ~= {} then
+	if #peppinos > 0 then
 		if pizza.player then -- If Real Player
 			local player = pizza.player
 
@@ -271,7 +274,7 @@ end
 function PTSR.PlayerIsChasable(player)
 	return (not player.ptsr.outofgame and not player.spectator and not player.quittime and not player.ptsr.pizzaface
 			and not player.mo.pizza_out and not player.mo.pizza_in and player.playerstate ~= PST_DEAD
-			and player.mo.health)
+			and player.mo.health and not player.ptsr.treasure_got)
 end
 
 local function PF_FindNewPlayer(mobj)

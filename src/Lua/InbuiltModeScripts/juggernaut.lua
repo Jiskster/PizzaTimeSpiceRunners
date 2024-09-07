@@ -24,10 +24,16 @@ local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 		if player == refplayer or refplayer.ptsr.outofgame then
 			continue 
 		end
-			
-		if refplayer.score >= amount then
-			stolen = $ + amount
-			refplayer.score = $ - amount
+		
+		local per_amount = amount -- the real amount
+		
+		if refplayer.score > player.score then
+			per_amount = $ * 2
+		end
+		
+		if refplayer.score >= per_amount then
+			stolen = $ + per_amount
+			refplayer.score = $ - per_amount
 		else
 			stolen = $ + refplayer.score
 			refplayer.score = 0

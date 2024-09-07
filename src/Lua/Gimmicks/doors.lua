@@ -3,19 +3,25 @@ PTSR.doors = {
 	["exit"] = {}
 }
 
-states[freeslot "S_PTSR_DOOR"] = {
-	sprite = freeslot "SPR_PDOR",
+freeslot("S_PTSR_DOOR")
+freeslot("SPR_PDOR")
+freeslot("S_PTSR_DOOR_LOCKED")
+freeslot("S_PTSR_DOOR_UNLOCKED")
+freeslot("SPR_PDKE")
+
+states[S_PTSR_DOOR] = {
+	sprite = SPR_PDOR,
 	frame = A,
 	tics = -1
 }
 
-states[freeslot "S_PTSR_DOOR_LOCKED"] = {
-	sprite = freeslot "SPR_PDKE",
+states[S_PTSR_DOOR_LOCKED] = {
+	sprite = SPR_PDKE,
 	frame = A,
 	tics = -1
 }
 
-states[freeslot "S_PTSR_DOOR_UNLOCKED"] = {
+states[S_PTSR_DOOR_UNLOCKED] = {
 	sprite = SPR_PDKE,
 	frame = B,
 	tics = -1

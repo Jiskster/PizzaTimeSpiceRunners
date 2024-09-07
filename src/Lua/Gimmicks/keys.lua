@@ -1,13 +1,18 @@
 PTSR.keys = {}
 
-states[freeslot "S_PTSR_KEY"] = {
-	sprite = freeslot "SPR_PKEY",
+freeslot("S_PTSR_KEY")
+freeslot("SPR_PKEF")
+freeslot("S_PTSR_KEY_EFFECT")
+freeslot("SPR_PKEY")
+
+states[S_PTSR_KEY] = {
+	sprite = SPR_PKEY,
 	frame = A,
 	tics = -1
 }
 
-states[freeslot "S_PTSR_KEY_EFFECT"] = {
-	sprite = freeslot "SPR_PKEF",
+states[S_PTSR_KEY_EFFECT] = {
+	sprite = SPR_PKEF,
 	frame = FF_ANIMATE|A,
 	tics = 7*2,
 	var1 = G,

@@ -20,6 +20,10 @@ local keyNotCaughtFlags = MF_SPECIAL
 local keyCaughtFlags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY
 
 mobjinfo[freeslot "MT_PTSR_KEY"] = {
+	--$Name Key
+	--$Sprite PKEYA0
+	--$Category Spice Runners
+	--$AngleText Door ID
 	doomednum = 2112,
 	spawnstate = S_PTSR_KEY,
 

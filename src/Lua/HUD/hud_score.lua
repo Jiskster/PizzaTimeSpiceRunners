@@ -53,6 +53,8 @@ local toppingsOnScore = {
 	[5] = "SCOREPEPPER"
 }
 
+local displayValues = {}
+
 function PTSR.add_wts_score(player, mobj, score, delay, color)
 	local x = 0
 	local y = 0
@@ -60,7 +62,13 @@ function PTSR.add_wts_score(player, mobj, score, delay, color)
 	local score = score or 100
 	local delay = delay or 0
 
-	if player == displayplayer then
+	player.ptsr.score_objects[#player.ptsr.score_objects+1] = {
+		score = score,
+		tics = -delay,
+		color = color or SKINCOLOR_WHITE,
+	}
+
+	if player == consoleplayer then
 		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
 
 		if wts.onScreen then
@@ -68,16 +76,15 @@ function PTSR.add_wts_score(player, mobj, score, delay, color)
 			y = wts.y
 			s = wts.scale/2
 		end
+		displayValues[#displayValues+1] = {
+			x = x,
+			y = y,
+			s = GO_TO_S,
+			tics = -delay,
+			score = score,
+			color = color or SKINCOLOR_WHITE
+		}
 	end
-
-	player.ptsr.score_objects[#player.ptsr.score_objects+1] = {
-		x = x,
-		y = y,
-		s = GO_TO_S,
-		score = score,
-		tics = -delay,
-		color = color or SKINCOLOR_WHITE,
-	}
 end
 
 function PTSR.add_xy_score(player, x, y, score, delay, color)
@@ -86,13 +93,20 @@ function PTSR.add_xy_score(player, x, y, score, delay, color)
 	local delay = delay or 0
 
 	player.ptsr.score_objects[#player.ptsr.score_objects+1] = {
-		x = x,
-		y = y,
-		s = GO_TO_S,
 		score = score,
 		tics = -delay,
 		color = color or SKINCOLOR_WHITE,
 	}
+	if player == consoleplayer then
+		displayValues[#displayValues+1] = {
+			x = x,
+			y = y,
+			s = GO_TO_S,
+			tics = -delay,
+			score = score,
+			color = color or SKINCOLOR_WHITE
+		}
+	end
 end
 
 addHook("PlayerThink", function(p)
@@ -110,6 +124,15 @@ addHook("PlayerThink", function(p)
 	and p.score ~= p.ptsr.current_score then
 		p.ptsr.current_score = p.score
 		p.ptsr.score_shakeTime = FU
+	end
+end)
+
+addHook("ThinkFrame", do
+	for k,data in pairs(displayValues) do
+		data.tics = $+1
+		if data.tics > MAX_TICS
+			table.remove(displayValues, k)
+		end
 	end
 end)
 
@@ -162,22 +185,20 @@ local score_hud = function(v, player)
 	ox = ($-320)*(FU/2)
 	oy = ($-200)*(FU/2)
 
-	if player.ptsr then
-		for k,data in pairs(player.ptsr.score_objects) do
-			local t = FixedDiv(max(0, data.tics), MAX_TICS)
-			local drawX = ease.incubic(t, data.x, GO_TO_X-ox)
-			local drawY = ease.incubic(t, data.y, GO_TO_Y-oy)
+	for k,data in pairs(displayValues) do
+		local t = FixedDiv(max(0, data.tics), MAX_TICS)
+		local drawX = ease.incubic(t, data.x, GO_TO_X-ox)
+		local drawY = ease.incubic(t, data.y, GO_TO_Y-oy)
 
-			customhud.CustomFontString(v,
-				drawX,
-				drawY,
-				tostring(data.score),
-				"PTFNT",
-				V_PERPLAYER,
-				"center",
-				data.s,
-				data.color)
-		end
+		customhud.CustomFontString(v,
+			drawX,
+			drawY,
+			tostring(data.score),
+			"PTFNT",
+			V_PERPLAYER,
+			"center",
+			data.s,
+			data.color)
 	end
 end
 

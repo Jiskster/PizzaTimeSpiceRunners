@@ -1,5 +1,4 @@
---LUIG BUD!!!
---this code is old and sucks booty
+//LUIG BUD!!!
 
 /*
 	--TODO
@@ -17,12 +16,9 @@ states[S_EXITSPAWN_PLACEHOLDER] = {
 	tics = -1,
 }
 mobjinfo[MT_PIZZATOWER_EXITSIGN_SPAWN] = {
-	--$Name Exit Sign
-	--$Sprite GSSEA0
-	--$Category Spice Runners
-	doomednum = 1263, --1-26-[202]3
+	doomednum = 1263, //1-26-[202]3
 	spawnstate = S_EXITSPAWN_PLACEHOLDER,
-	spawnhealth = 1000, --gus cannot die lol
+	spawnhealth = 1000, //gus cannot die lol
 	radius = 14*FU,
 	height = 26*FU,
 	flags = MF_NOCLIPTHING
@@ -92,7 +88,7 @@ states[S_GUSTAVO_RAT_RALLY] = {
 mobjinfo[MT_GUSTAVO_EXITSIGN] = {
 	doomednum = -1,
 	spawnstate = S_GUSTAVO_EXIT_WAIT,
-	spawnhealth = 1000, --gus cannot die lol
+	spawnhealth = 1000, //gus cannot die lol
 	radius = 14*FU,
 	height = 26*FU,
 	flags = MF_NOCLIPTHING
@@ -128,7 +124,7 @@ states[S_STICK_EXIT_RALLY] = {
 mobjinfo[MT_STICK_EXITSIGN] = {
 	doomednum = -1,
 	spawnstate = S_STICK_EXIT_WAIT,
-	spawnhealth = 1000, --gus cannot die lol
+	spawnhealth = 1000, //gus cannot die lol
 	radius = 10*FU,
 	height = 32*FU,
 	flags = MF_NOCLIPTHING

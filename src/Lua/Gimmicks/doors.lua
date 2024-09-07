@@ -22,10 +22,6 @@ states[freeslot "S_PTSR_DOOR_UNLOCKED"] = {
 }
 
 mobjinfo[freeslot "MT_PTSR_DOOR"] = {
-	--$Name Door
-	--$Sprite PDORA0
-	--$Category Spice Runners
-	--$AngleText ID
 	doomednum = 2111,
 
 	radius = 20*FU,

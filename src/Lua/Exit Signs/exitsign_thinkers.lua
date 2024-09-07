@@ -1,8 +1,7 @@
---LUIG BUD!!!
---local isIcy = false
+//LUIG BUD!!!
+local isIcy = false
 local dist = 1500
 
-/*
 addHook("NetVars",function(n)
 	isIcy = n($)
 end)
@@ -12,7 +11,7 @@ local function isIcyF(map)
 		return false;
 	end
 	
-	-- https://wiki.srb2.org/wiki/Flats_and_textures/Skies
+	// https://wiki.srb2.org/wiki/Flats_and_textures/Skies
 	if (mapheaderinfo[map].skynum == 17
 	or mapheaderinfo[map].skynum == 29
 	or mapheaderinfo[map].skynum == 30
@@ -24,11 +23,11 @@ local function isIcyF(map)
 	if (mapheaderinfo[map].musname == "MP_ICE"
 	or mapheaderinfo[map].musname == "FHZ"
 	or mapheaderinfo[map].musname == "CCZ")
-		-- ice music
+		// ice music
 		return true;
 	end
 	
-	--time to bust out the thesaurus!
+	//time to bust out the thesaurus!
 	local icywords = {
 		"frozen",
 		"christmas",
@@ -68,17 +67,14 @@ end
 addHook("MapLoad",function(mapid)
 	isIcy = isIcyF(mapid)
 end)
-*/
-
 addHook("MapThingSpawn",function(mo,mt)
-	--we dont wanna see EXIT pop up from no where
-	--looks like an ERROR in a source game!
+	//we dont wanna see EXIT pop up from no where
+	//looks like an ERROR in a source game!
 	mo.flags2 = $|MF2_DONTDRAW
 	
 	if PTSR.IsPTSR()
 		local mul = 14
-		/*
-		if false
+		if isIcy
 			local gus = P_SpawnMobjFromMobj(mo,0,0,(mo.height*mul),MT_GUSTAVO_EXITSIGN)
 			gus.state = S_GUSTAVO_EXIT_WAIT
 			gus.icygus = true
@@ -93,8 +89,6 @@ addHook("MapThingSpawn",function(mo,mt)
 			gus.tracer = mo
 			return true
 		else
-		*/
-		do
 			if (P_RandomChance(FU/2))
 				local gus = P_SpawnMobjFromMobj(mo,0,0,(mo.height*mul),MT_GUSTAVO_EXITSIGN)
 				gus.state = S_GUSTAVO_EXIT_WAIT
@@ -171,8 +165,7 @@ addHook("MobjThinker",function(mo)
 				mo.state = S_GUSTAVO_RAT_FALL
 			elseif not (mo.icygus)
 				mo.state = S_GUSTAVO_EXIT_FALL
-			end
-			mo.momz = $ + P_GetMobjGravity(mo)
+			end			
 		end
 	end
 end,MT_GUSTAVO_EXITSIGN)
@@ -220,7 +213,6 @@ addHook("MobjThinker",function(mo)
 			end
 		else
 			mo.state = S_STICK_EXIT_FALL
-			mo.momz = $ + P_GetMobjGravity(mo)
 		end
 	end
 end,MT_STICK_EXITSIGN)

@@ -326,6 +326,11 @@ addHook("PlayerThink", function(player)
 										if foundmobj.player.powers[pw_invulnerability] then
 											return
 										end
+										
+										if PTSR.HitlagList[player.mo] 
+										or PTSR.ParryList[player.mo] then
+											return
+										end
 									elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
 										return
 									end

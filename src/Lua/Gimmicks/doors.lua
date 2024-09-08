@@ -169,9 +169,14 @@ addHook("MobjThinker", function(mo)
 			p.ptsr.door_transitionTime = TICRATE/4
 			p.ptsr.door_transitionFadeTime = TICRATE/2
 			p.ptsr.door_goto = op
-
-			S_StartSound(mo, sfx_edoor)
-			S_StartSound(nil, sfx_edoor, p)
+			
+			if (displayplayer and displayplayer.valid) then
+				if p ~= displayplayer then
+					S_StartSound(mo, sfx_edoor)
+				else
+					S_StartSound(nil, sfx_edoor, p)
+				end
+			end
 		end
 	end
 

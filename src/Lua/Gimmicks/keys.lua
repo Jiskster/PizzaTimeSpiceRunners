@@ -26,6 +26,10 @@ local keyNotCaughtFlags = MF_SPECIAL
 local keyCaughtFlags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY
 
 mobjinfo[MT_PTSR_KEY] = {
+	--$Category Spice Runners
+	--$Name Key
+	--$Sprite PKEYA0
+	--$Arg0 "Door/Key ID"
 	doomednum = 2112,
 	spawnstate = S_PTSR_KEY,
 
@@ -124,10 +128,18 @@ addHook("PostThinkFrame", do
 end)
 
 addHook("MapThingSpawn", function(mo, thing)
-	PTSR.keys[thing.angle] = mo
-	mo.assignedType = thing.angle
+	local id = 0
+	
+	if not udmf then
+		id = thing.angle
+	else
+		id = thing.args[0]
+	end
+	
+	PTSR.keys[id] = mo
+	mo.assignedType = id
+	
+	if not PTSR.doors["enter"][id] then return end
 
-	if not PTSR.doors["enter"][thing.angle] then return end
-
-	PTSR.doors["enter"][thing.angle].state = S_PTSR_DOOR_LOCKED
+	PTSR.doors["enter"][id].state = S_PTSR_DOOR_LOCKED
 end, MT_PTSR_KEY)

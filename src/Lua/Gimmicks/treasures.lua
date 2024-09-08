@@ -1,12 +1,14 @@
+freeslot("MT_PTSR_TREASURE", "S_PTSR_TREASURE", "S_PTSR_TREASURE_EFFECT")
+
 local TREASURE_SCORE_AWARD = 10000
 
-states[freeslot "S_PTSR_TREASURE"] = {
+states[S_PTSR_TREASURE] = {
 	sprite = freeslot "SPR_STRE",
 	frame = A,
 	tics = -1
 }
 
-states[freeslot "S_PTSR_TREASURE_EFFECT"] = {
+states[S_PTSR_TREASURE_EFFECT] = {
 	sprite = freeslot "SPR_TEFF",
 	frame = FF_ANIMATE|A,
 	tics = -1,
@@ -14,7 +16,10 @@ states[freeslot "S_PTSR_TREASURE_EFFECT"] = {
 	var2 = 1
 }
 
-mobjinfo[freeslot "MT_PTSR_TREASURE"] = {
+mobjinfo[MT_PTSR_TREASURE] = {
+	--$Category Spice Runners
+	--$Name Treasure
+	--$Sprite STREA0
 	doomednum = 2113,
 	radius = 16*FU,
 	height = 16*FU,

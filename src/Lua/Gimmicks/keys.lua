@@ -1,13 +1,19 @@
 PTSR.keys = {}
 
-states[freeslot "S_PTSR_KEY"] = {
-	sprite = freeslot "SPR_PKEY",
+freeslot("S_PTSR_KEY")
+freeslot("SPR_PKEF")
+freeslot("S_PTSR_KEY_EFFECT")
+freeslot("SPR_PKEY")
+freeslot("MT_PTSR_KEY")
+
+states[S_PTSR_KEY] = {
+	sprite = SPR_PKEY,
 	frame = A,
 	tics = -1
 }
 
-states[freeslot "S_PTSR_KEY_EFFECT"] = {
-	sprite = freeslot "SPR_PKEF",
+states[S_PTSR_KEY_EFFECT] = {
+	sprite = SPR_PKEF,
 	frame = FF_ANIMATE|A,
 	tics = 7*2,
 	var1 = G,
@@ -19,11 +25,7 @@ sfxinfo[freeslot "sfx_coltpn"].caption = "Found something!"
 local keyNotCaughtFlags = MF_SPECIAL
 local keyCaughtFlags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY
 
-mobjinfo[freeslot "MT_PTSR_KEY"] = {
-	--$Name Key
-	--$Sprite PKEYA0
-	--$Category Spice Runners
-	--$AngleText Door ID
+mobjinfo[MT_PTSR_KEY] = {
 	doomednum = 2112,
 	spawnstate = S_PTSR_KEY,
 

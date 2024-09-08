@@ -384,12 +384,14 @@ addHook("MobjThinker", function(mobj)
 
 	local beingHidden = false
 
-	if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
-	or ((mobj.cameraman and mobj.cameraman.valid) and (displayplayer.awayviewmobj == mobj.cameraman))
-		mobj.frame = $|CLOSE_TRANS
-		beingHidden = true
-	else
-		mobj.frame = $ &~CLOSE_TRANS
+	if displayplayer and displayplayer.valid then
+		if R_PointToDist(mobj.x,mobj.y) <= 100*mobj.scale
+		or ((mobj.cameraman and mobj.cameraman.valid) and (displayplayer.awayviewmobj == mobj.cameraman))
+			mobj.frame = $|CLOSE_TRANS
+			beingHidden = true
+		else
+			mobj.frame = $ &~CLOSE_TRANS
+		end
 	end
 	
 	--Set up camera point for PFViewpoint

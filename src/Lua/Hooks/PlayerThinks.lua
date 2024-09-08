@@ -352,10 +352,8 @@ addHook("PostThinkFrame", function()
 end)
 
 --PF Viewpoint (spectate pizzafaces)
-/*
 addHook("PlayerThink",function(p)
 	if not (p.spectator) then return end
-	if leveltime then return end
 
 	local me = p.realmo
 
@@ -425,4 +423,3 @@ addHook("PlayerThink",function(p)
 	end
 
 end)
-*/

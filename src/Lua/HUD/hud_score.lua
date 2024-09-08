@@ -68,22 +68,25 @@ function PTSR.add_wts_score(player, mobj, score, delay, color)
 		color = color or SKINCOLOR_WHITE,
 	}
 
-	if player == consoleplayer then
-		local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
+	if displayplayer and displayplayer.valid then
+		if player == displayplayer then
+			local wts = SG_ObjectTracking(fakeV,player,camera,mobj)
 
-		if wts.onScreen then
-			x = wts.x
-			y = wts.y
-			s = wts.scale/2
+			if wts.onScreen then
+				x = wts.x
+				y = wts.y
+				s = wts.scale/2
+			end
+			
+			displayValues[#displayValues+1] = {
+				x = x,
+				y = y,
+				s = GO_TO_S,
+				tics = -delay,
+				score = score,
+				color = color or SKINCOLOR_WHITE
+			}
 		end
-		displayValues[#displayValues+1] = {
-			x = x,
-			y = y,
-			s = GO_TO_S,
-			tics = -delay,
-			score = score,
-			color = color or SKINCOLOR_WHITE
-		}
 	end
 end
 
@@ -97,15 +100,17 @@ function PTSR.add_xy_score(player, x, y, score, delay, color)
 		tics = -delay,
 		color = color or SKINCOLOR_WHITE,
 	}
-	if player == consoleplayer then
-		displayValues[#displayValues+1] = {
-			x = x,
-			y = y,
-			s = GO_TO_S,
-			tics = -delay,
-			score = score,
-			color = color or SKINCOLOR_WHITE
-		}
+	if displayplayer and displayplayer.valid then
+		if player == displayplayer then
+			displayValues[#displayValues+1] = {
+				x = x,
+				y = y,
+				s = GO_TO_S,
+				tics = -delay,
+				score = score,
+				color = color or SKINCOLOR_WHITE
+			}
+		end
 	end
 end
 

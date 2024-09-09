@@ -10,7 +10,7 @@ freeslot("MT_PIZZAPORTAL", "S_PIZZAPORTAL", "SPR_P3PT", "sfx_lapin", "sfx_lapout
 
 mobjinfo[MT_PIZZAPORTAL] = {
 	--$Name "Pizza Portal"
-    --$Sprite SPR_P3PT
+    --$Sprite P3PTA0
     --$Category "Spice Runners"
 	doomednum = 1417,
 	spawnstate = S_PIZZAPORTAL,

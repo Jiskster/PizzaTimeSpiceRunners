@@ -249,6 +249,11 @@ addHook("PlayerThink", function(player)
 	and player.ptsr.door_goto then
 		local gt = player.ptsr.door_goto
 		P_SetOrigin(player.mo, gt.x, gt.y, gt.z)
+		
+		if udmf then
+			player.mo.angle = gt.angle
+		end
+		
 		gt.colliding[player] = true
 
 		player.ptsr.door_goto = nil

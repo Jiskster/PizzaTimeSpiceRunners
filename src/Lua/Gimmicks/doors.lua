@@ -29,6 +29,14 @@ states[S_PTSR_DOOR_UNLOCKED] = {
 }
 
 mobjinfo[MT_PTSR_DOOR] = {
+	--$Category Spice Runners
+	--$Name Door
+	--$Sprite PDORA0
+	--$Arg0 "Enter/Exit Type"
+	--$Arg0Type 11
+	--$Arg0Enum { 0="Enter"; 1="Exit";}
+	--$Arg1 "Door/Key ID"
+	
 	doomednum = 2111,
 
 	radius = 20*FU,
@@ -63,16 +71,16 @@ local function getPlayers(mo)
 	return players
 end
 
-local function assignDoors(mo, type, angle)
+local function assignDoors(mo, type, id)
 	if not (mo and mo.valid) then return end
 
 	local oppositeType = type == "enter" and "exit" or "enter"
 
-	PTSR.doors[type][angle] = mo
-	mo.assignedType = angle
+	PTSR.doors[type][id] = mo
+	mo.assignedType = id
 
-	if PTSR.doors[oppositeType][angle] then
-		local mo2 = PTSR.doors[oppositeType][angle]
+	if PTSR.doors[oppositeType][id] then
+		local mo2 = PTSR.doors[oppositeType][id]
 
 		if mo2 and mo.valid then
 			mo.opposite_door = mo2
@@ -81,7 +89,7 @@ local function assignDoors(mo, type, angle)
 	end
 
 	if type == "enter"
-	and PTSR.keys[angle] then
+	and PTSR.keys[id] then
 		mo.state = S_PTSR_DOOR_LOCKED
 		-- LOCK IT GET THE KEY BITCH
 	end
@@ -103,11 +111,24 @@ addHook("MobjSpawn", function(mo)
 end, MT_PTSR_DOOR)
 
 addHook("MapThingSpawn", function(mo, thing)
-	local type = thing.extrainfo == 0 and "enter" or "exit"
-	local oppositeType = thing.extrainfo == 0 and "exit" or "enter"
-
-	assignDoors(mo, type, thing.angle)
-	assignDoors(PTSR.doors[oppositeType][thing.angle], oppositeType, thing.angle)
+	local type
+	local oppositeType
+	local id = 0
+	
+	if not udmf then
+		type = thing.extrainfo == 0 and "enter" or "exit"
+		oppositeType = thing.extrainfo == 0 and "exit" or "enter"
+		id = thing.angle
+	else
+		type = thing.args[0] == 0 and "enter" or "exit"
+		oppositeType = thing.args[0] == 0 and "exit" or "enter"
+		id = thing.args[1]
+	end
+	
+	if type and oppositeType then
+		assignDoors(mo, type, id)
+		assignDoors(PTSR.doors[oppositeType][id], oppositeType, id)
+	end
 end, MT_PTSR_DOOR)
 
 addHook("MobjThinker", function(mo)
@@ -148,9 +169,14 @@ addHook("MobjThinker", function(mo)
 			p.ptsr.door_transitionTime = TICRATE/4
 			p.ptsr.door_transitionFadeTime = TICRATE/2
 			p.ptsr.door_goto = op
-
-			S_StartSound(mo, sfx_edoor)
-			S_StartSound(nil, sfx_edoor, p)
+			
+			if (displayplayer and displayplayer.valid) then
+				if p ~= displayplayer then
+					S_StartSound(mo, sfx_edoor)
+				else
+					S_StartSound(nil, sfx_edoor, p)
+				end
+			end
 		end
 	end
 

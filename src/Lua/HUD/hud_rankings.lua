@@ -29,13 +29,22 @@ local scoreboard_hud = function(v, player)
 		local aliveflag = (_player.playerstate ~= PST_LIVE or _player.quittime > 0) and V_50TRANS or 0
 		
 		local playerpingcolor
+		local rawpingstring = (_player.quittime) and "QUIT" or _player.ping
+		local drawping = rawpingstring
 		
-		if _player.ping < 105 then
+		if _player.ping < 128 then
 			playerpingcolor = V_GREENMAP
-		elseif _player.ping < 200 then
+		elseif _player.ping < 256 then
 			playerpingcolor = V_YELLOWMAP
 		elseif _player.ping < INT32_MAX then
 			playerpingcolor = V_REDMAP
+		end
+
+		if _player.quittime
+			playerpingcolor = V_REDMAP|((leveltime/TICRATE % 2) and V_50TRANS or 0) --hacky
+		else
+			drawping = (_player == server) and "SERV" or $.."ms"
+			playerpingcolor = $|((_player == server) and V_BLUEMAP or 0)
 		end
 		
 		local _xcoord = 22*FRACUNIT
@@ -62,8 +71,9 @@ local scoreboard_hud = function(v, player)
 		end
 		*/
 		
-		local scorewidth = v.stringWidth(tostring(_player.score), (commonflags|playernameflags))
-		local scoreandpingwidth = v.stringWidth(tostring(_player.score)..tostring(_player.ping), (commonflags))
+		--max here because it looks weird with 0 score
+		local scorewidth = max(v.stringWidth(tostring(_player.score), (commonflags|playernameflags)),v.stringWidth("00", (commonflags|playernameflags)))
+		local scoreandpingwidth = scorewidth + v.stringWidth(rawpingstring, (commonflags))
 		
 		-- [ Bar Things] --
 		v.drawFill(0, 25, 640, 1, V_SNAPTOTOP+V_SNAPTOLEFT) -- bar 
@@ -75,7 +85,7 @@ local scoreboard_hud = function(v, player)
 		-- [Player Score] --
 		v.drawString(_xcoord + 16*FRACUNIT, _ycoord + 8*FRACUNIT, tostring(_player.score), (commonflags), "thin-fixed")
 
-		v.drawString( _xcoord +8*FRACUNIT+(scorewidth*FU), _ycoord+8*FRACUNIT,  _player.ping.."ms", (commonflags|playerpingcolor), "thin-fixed")
+		v.drawString( _xcoord +8*FRACUNIT+(scorewidth*FU), _ycoord+8*FRACUNIT,  drawping, (commonflags|playerpingcolor), "thin-fixed")
 		v.drawString( _xcoord +16*FRACUNIT+(scoreandpingwidth*FU), _ycoord+8*FRACUNIT,  "laps: ".._player.ptsr.laps, (commonflags), "thin-fixed")
 		--v.drawString(int x, int y, string text, [int flags, [string align]])
 	

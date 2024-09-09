@@ -315,7 +315,11 @@ rawset(_G, "PTSR_COUNT", do
 			if player.ptsr.pizzaface then
 				pizzaCount = $+1
 			end
-			if player.ptsr.outofgame or player.spectator or player.ptsr.pizzaface or (player.playerstate == PST_DEAD and PTSR.pizzatime)
+			if player.ptsr.outofgame
+			or player.spectator
+			or player.ptsr.pizzaface
+			or player.quittime
+			or (player.playerstate == PST_DEAD and PTSR.pizzatime)
 				inactiveCount = $+1
 			else
 				peppinoCount = $+1

@@ -49,3 +49,14 @@ addHook("MobjDeath", function(target, inflictor, source)
 		end
 	end
 end)
+
+addHook("MobjDamage",function(mo,inf,sor)
+	if PTSR.IsPTSR() and sor and sor.valid and sor.player and sor.player.valid then
+		if (mo.flags & MF_ENEMY)
+		and mo.health
+			if PTSR.PlayerHasCombo(sor.player)
+				PTSR:AddComboTime(sor.player, TICRATE)
+			end
+		end
+	end
+end)

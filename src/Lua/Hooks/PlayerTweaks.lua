@@ -10,7 +10,6 @@ addHook("MobjDeath", function(target, inflictor, source)
 		local player = source.player
 		local gm_metadata = PTSR.currentModeMetadata()
 		local ring_score = gm_metadata.ring_score or PTSR.ring_score
-		local enemy_score = gm_metadata.enemy_score or PTSR.enemy_score
 		local real_scoreadd = player.scoreadd + 1
 		local scoreadd_deduct = 0
 
@@ -23,8 +22,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 		end
 		
 		if (target.flags & MF_ENEMY) then 
-			P_AddPlayerScore(player, enemy_score-scoreadd_deduct)
-			PTSR.add_wts_score(player, target, enemy_score)
+			P_AddPlayerScore(player, -scoreadd_deduct) -- remove score given from enemies
 			
 			if not player.ptsr.pizzaface then
 				PTSR:AddCombo(player)

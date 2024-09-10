@@ -145,6 +145,11 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			end
 		end
 		
+		local pizzatime_triggertag = mapheaderinfo[gamemap].ptsr_pizzatime_triggertag
+		if pizzatime_triggertag and tonumber(pizzatime_triggertag) then
+			P_LinedefExecute(tonumber(pizzatime_triggertag))
+		end
+		
 		if PTSR.john and PTSR.john.valid then
 			local john = PTSR.john
 			PTSR.KnockJohnPillar(john)

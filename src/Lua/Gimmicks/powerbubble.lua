@@ -103,6 +103,7 @@ PTSR:AddBubblePower({
 	pop_color = SKINCOLOR_ORANGE
 })
 
+/*
 PTSR:AddBubblePower({
 	name = "1 Up",
 	pickup_func = function(toucher)
@@ -118,6 +119,7 @@ PTSR:AddBubblePower({
 	--disable_popsound = true,
 	pop_color = SKINCOLOR_BLUE
 })
+*/
 
 PTSR:AddBubblePower({
 	name = "Pity Shield",

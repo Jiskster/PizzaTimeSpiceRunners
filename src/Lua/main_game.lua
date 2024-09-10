@@ -396,6 +396,11 @@ addHook("ThinkFrame", do
 						if DiscordBot then
 							DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
 						end
+						
+						local overtime_triggertag = mapheaderinfo[gamemap].ptsr_overtime_triggertag
+						if overtime_triggertag and tonumber(overtime_triggertag) then
+							P_LinedefExecute(tonumber(overtime_triggertag))
+						end
 					elseif not (PTSR.aipf
 					and PTSR.aipf.valid)
 						PTSR:SpawnPFAI()

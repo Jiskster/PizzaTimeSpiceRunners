@@ -48,7 +48,7 @@ local combo_hud = function(v, player)
 	local tween_popout_div = FU - FixedDiv(player.ptsr.combo_outro_tics*FU, tween_popout_time*FU) -- up to down value
 	local ese_popout = combo_outro_tics and ease.linear(tween_popout_div, 0, -500*FU) or 0
 	
-	local ese = ease.outexpo(FU - FixedDiv(combo_tween_time*FU, PTSR.combotween*FU), combo_timeleft_prev, combo_timeleft)
+	local ese = ease.outexpo(FU - FixedDiv(combo_tween_time*FU, PTSR.combotween*FU), combo_timeleft_prev or combo_timeleft, combo_timeleft)
 	local meat = combo_tween_time and ese or combo_timeleft
 	-- (tl/maxtime)*indic_max
 	local indic_newx = FixedMul(FixedDiv(meat*FU, combo_maxtime*FU), indic_max)

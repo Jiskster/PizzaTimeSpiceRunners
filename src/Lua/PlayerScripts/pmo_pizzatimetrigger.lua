@@ -128,6 +128,11 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			
 			PTSR:AddComboTime(player, player.ptsr.combo_maxtime) -- give everyone combo time cause IM NICE!
 			
+			-- if pizza time triggerer
+			if pmo == mobj then
+				PTSR:AddCombo(player, 1)
+			end
+			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
 			if angle_frompotal and tonumber(angle_frompotal) then
 				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)

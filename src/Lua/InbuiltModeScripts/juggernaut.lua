@@ -48,7 +48,8 @@ local function JG_GetPlayerCount()
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid 
-		and player.playerstate ~= PST_DEAD  
+		and player.playerstate ~= PST_DEAD 
+		and not player.quittime
 		and not player.ptsr.outofgame then
 			table.insert(player_range, player)
 		end
@@ -151,7 +152,10 @@ local function JN_FindAndMakeNewJuggernaut()
 	local player_range = {}
 	
 	for player in players.iterate do
-		if player.mo and player.mo.valid and player.playerstate ~= PST_DEAD and not player.ptsr.outofgame then
+		if player.mo and player.mo.valid
+		and player.playerstate ~= PST_DEAD
+		and not player.quittime
+		and not player.ptsr.outofgame then
 			table.insert(player_range, player)
 		end
 	end

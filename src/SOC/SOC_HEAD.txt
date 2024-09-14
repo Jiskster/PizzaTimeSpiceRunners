@@ -47,6 +47,7 @@ FlickyList = Bluebird,Chipmunk
 Lua.Takis_UsesHeartCards = true
 Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_timelimit_secs = 165
+Lua.ptsr_s_rank_points = 32000
 Lua.ptsr_maxlaps = 5
 Lua.ptsr_maxportals = 2
 Lua.ptsr_portal(1)_x = -915

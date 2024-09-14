@@ -23,7 +23,7 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 					player.powers[pw_shield] = 0
 				end
 				
-				player.score = max(player.score-2000, 0)
+				player.score = max(player.score-500, 0)
 				
 				P_DoPlayerPain(player, source, inflictor)
 			end

@@ -88,10 +88,10 @@ PTSR.isOvertime = function()
 	return PTSR.timeover
 end
 
-PTSR.ring_score = 100
+PTSR.ring_score = 50
 
-PTSR.lapbonus = 444
-PTSR.ringlapbonus = 7
+PTSR.lapbonus = 250
+PTSR.ringlapbonus = 14
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 

@@ -175,6 +175,7 @@ dofile "Gimmicks/johnpillar.lua"
 dofile "Gimmicks/doors.lua"
 dofile "Gimmicks/keys.lua"
 dofile "Gimmicks/treasures.lua"
+dofile "Gimmicks/escapeclock.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"

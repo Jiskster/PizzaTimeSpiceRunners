@@ -83,6 +83,29 @@ addHook("PlayerThink", function(player)
 end)
 
 addHook("PlayerThink", function(player)
+	if not PTSR.IsPTSR() then return end
+	if not (player.mo and player.mo.valid) then return end
+	
+	if player.spectator or player.playerstate ~= PST_LIVE or not player.mo.health
+	or (player.ptsr and player.ptsr.outofgame) then 
+		return
+	end
+	
+	local gm_metadata = PTSR.currentModeMetadata()
+	
+	if not gm_metadata.disable_pizzatime_penalty then
+		if PTSR.pizzatime_tics >= TICRATE and
+		((PTSR.pizzatime_tics % TICRATE) == 0) then
+			if PTSR.isOvertime() then
+				PTSR.DeductScore(player, 50)
+			elseif PTSR.pizzatime then
+				PTSR.DeductScore(player, 15)
+			end
+		end
+	end
+end)
+
+addHook("PlayerThink", function(player)
 	local hudst = player.hudstuff
 	
 	if hudst then

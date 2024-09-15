@@ -203,6 +203,7 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	parry_friendlyfire = true,
 	dustdevil = false,
 	allowrevive = false,
+	disable_pizzatime_penalty = true,
 })
 
 /*

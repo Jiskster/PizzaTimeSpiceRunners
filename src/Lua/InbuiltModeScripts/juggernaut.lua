@@ -33,7 +33,7 @@ local function P_StealPlayerScoreButOOG(player, amount) -- oog means outofgame
 		
 		if refplayer.score >= per_amount then
 			stolen = $ + per_amount
-			refplayer.score = $ - per_amount
+			PTSR.DeductScore(refplayer, per_amount)
 		else
 			stolen = $ + refplayer.score
 			refplayer.score = 0

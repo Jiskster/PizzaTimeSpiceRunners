@@ -22,7 +22,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 		end
 		
 		if (target.flags & MF_ENEMY) then 
-			player.score = max(0, -scoreadd_deduct) -- remove score given from enemies
+			player.score = max(0, $-scoreadd_deduct) -- remove score given from enemies
 			
 			if not player.ptsr.pizzaface then
 				PTSR:AddCombo(player)

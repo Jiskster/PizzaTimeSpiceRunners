@@ -167,6 +167,8 @@ dofile "HUD/hud_pfviewpoint.lua"
 
 dofile "discord_botleaderboard.lua"
 
+dofile "Gimmicks/exitsign_init.lua"
+dofile "Gimmicks/exitsign_thinkers.lua"
 dofile "Gimmicks/pizzaportal.lua"
 dofile "Gimmicks/deathring.lua"
 dofile "Gimmicks/alivedustdevil.lua"
@@ -181,9 +183,6 @@ dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"
 
 dofile "Hooks/intermission.lua"
-
-dofile "Exit Signs/exitsign_init.lua"
-dofile "Exit Signs/exitsign_thinkers.lua"
 
 dofile "Compatibility/C_Surge.lua"
 dofile "Compatibility/C_Skip.lua"

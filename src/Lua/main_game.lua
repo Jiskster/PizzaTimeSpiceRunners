@@ -150,7 +150,11 @@ PTSR.default_playervars = {
 
 	treasure_got = nil,
 	treasure_state = S_PLAY_RIDE,
-	treasures = 0
+	treasures = 0,
+	
+	score_deduct_list = {
+		-- [1] = {score = 50, fuse = 25, startfuse = 25}
+	}
 }
 PTSR.gamemode_list = {}
 

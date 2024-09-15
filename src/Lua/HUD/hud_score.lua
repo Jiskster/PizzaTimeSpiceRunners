@@ -55,6 +55,16 @@ local toppingsOnScore = {
 
 local displayValues = {}
 
+function PTSR.DeductScore(player, score_deducted)
+	table.insert(player.ptsr.score_deduct_list, {
+		score = abs(score_deducted),
+		fuse = 25,
+		startfuse = 25,
+	}) 
+	
+	player.score = max(0, $-abs(score_deducted))
+end
+
 function PTSR.add_wts_score(player, mobj, score, delay, color)
 	local x = 0
 	local y = 0
@@ -125,6 +135,21 @@ addHook("PlayerThink", function(p)
 			p.ptsr.score_shakeTime = FU
 		end
 	end
+	
+	for i,v in ipairs(p.ptsr.score_deduct_list) do
+		if v.fuse >= 0 then
+			v.fuse = $ - 1
+			
+			if v.fuse <= 0 then
+				table.remove(p.ptsr.score_deduct_list, i)
+				continue
+			end
+		else
+			table.remove(p.ptsr.score_deduct_list, i)
+			continue
+		end
+	end
+	
 	if #p.ptsr.score_objects == 0
 	and p.score ~= p.ptsr.current_score then
 		p.ptsr.current_score = p.score
@@ -144,9 +169,26 @@ end)
 local score_hud = function(v, player)
 	if not player.ptsr then return end
 
-	local x = 0
-	local y = 0
-
+	-- Pizza hud that's behind the score. (The one that gets toppings depending on rank)
+	local xPizzaPos = (24*FU)
+	local yPizzaPos = (15*FU)
+	
+	-- Offset from the pizza hud.
+	local xScoreOffset = (34*FU) -- xPizzaPos + this
+	local yScoreOffset = (-4*FU) -- yPizzaPos + this
+	
+	-- Actual score position.
+	local xScorePos = (xPizzaPos+xScoreOffset)
+	local yScorePos = (yPizzaPos+yScoreOffset)
+	
+	local xDeductOffset = (24*FU)
+	local yDeductOffset = (-4*FU)
+	
+	-- Score and Pizza HUD shake.
+	local xShake = 0
+	local yShake = 0
+	
+	
 	fakeV.__width = v.width()
 	fakeV.__height = v.height()
 	fakeV.__dupx = v.dupx()
@@ -157,11 +199,8 @@ local score_hud = function(v, player)
 		local shakeTime = player.ptsr.score_shakeTime
 		local maxTime = player.ptsr.score_shakeDrainTime
 
-		local shakeX = v.RandomRange(-2, 2)*shakeTime
-		local shakeY = v.RandomRange(-2, 2)*shakeTime
-
-		x = $+shakeX
-		y = $+shakeY
+		xShake = v.RandomRange(-2, 2)*shakeTime
+		yShake = v.RandomRange(-2, 2)*shakeTime
 	end
 
 	local frame = 0
@@ -169,18 +208,41 @@ local score_hud = function(v, player)
 		frame = (leveltime/2)%12
 	end
 
-	v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
+	-- Draw Pizza Hud.
+	v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
 
+	
 	local rankNum = ranksTable[player.ptsr.rank]
+	-- Draw toppings on Pizza Hud.
 	for i = 1,rankNum do
 		if not (toppingsOnScore[i]) then continue end
 
-		v.drawScaled((24*FU)+x, (15*FU)+y, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_SNAPTOLEFT|V_SNAPTOTOP)
 	end
 
+	-- For bobbing up and down.
 	local yOffset = scoreYOffset[frame]*(FU/3) or 0
-	customhud.CustomFontString(v, (58*FU)+x, (11*FU)+y-yOffset, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
-
+	
+	-- Draw score thats on top of Pizza Hud.
+	customhud.CustomFontString(v, xScorePos+xShake, yScorePos+yShake-yOffset, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
+	
+	-- Draw score deductions.
+	for i,data in ipairs(player.ptsr.score_deduct_list) do
+		if not (data.score and data.fuse ~= nil and data.startfuse ~= nil) then continue end
+		local fuse_reverse = (data.startfuse-data.fuse)-- counting up (starting from 0)
+		local div = FixedDiv(fuse_reverse*FU, data.startfuse*FU) 
+		local clmp = max(0, min(div, FU))
+		local ese = ease.linear(clmp, 0, -FU*8) -- to up
+		
+		-- For fading out when fuse is near done.
+		local transflag = 0
+		if data.fuse <= 9 then
+			transflag = $ | (V_90TRANS-(data.fuse*V_10TRANS))
+		end
+		
+		customhud.CustomFontString(v, xScorePos+xDeductOffset, yScorePos+yDeductOffset+ese, "-"..data.score, "STKPT", (V_SNAPTOLEFT|V_SNAPTOTOP|transflag), "right", FRACUNIT/3, SKINCOLOR_RED)
+	end
+	
 	local ox = 0
 	local oy = 0
 

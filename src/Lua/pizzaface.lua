@@ -53,7 +53,7 @@ PTSR.PFMaskData = {
 		sound = sfx_smdah,
 		emoji = ":stuck_out_tongue:",
 		tagcolor = SKINCOLOR_ORANGE,
-		rubberrange = 100*FU
+		parrysplit = true
 	},
 	{
 		name = "Normal",

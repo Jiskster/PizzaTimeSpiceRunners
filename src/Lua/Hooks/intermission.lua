@@ -63,7 +63,7 @@ addHook("ThinkFrame", do
 		
 		for i=1,1035 do
 			if mapheaderinfo[i] and (mapheaderinfo[i].typeoflevel & TOL_PTSR) 
-			and not mapheaderinfo[i].hidefromvote then
+			and not mapheaderinfo[i].ptsr_hidden then
 				table.insert(temp_maplist,i)
 			end
 		end

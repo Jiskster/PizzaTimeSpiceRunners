@@ -118,6 +118,7 @@ SaveGame = true
 SkyboxScale = 32
 FlickyList = Fish,Fish,Seal
 Lua.ptsr_timelimit_secs = 120
+Lua.ptsr_hidden = true
 #Flicky selection is final. Two sets of fish because they come in two colours.
 
 Level 8
@@ -132,6 +133,7 @@ RecordAttack = true
 LevelSelect = 1
 SaveGame = true
 SkyboxScale = 32
+Lua.ptsr_hidden = true
 FlickyList = Fish,Fish,Seal
 
 Level 10
@@ -164,6 +166,7 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 16
 FlickyList = Rat,Bear
+Lua.ptsr_hidden = true
 #Flicky selection is final.
 
 Level 13
@@ -179,6 +182,7 @@ LevelSelect = 1
 SkyboxScale = 64
 SaveGame = true
 FlickyList = Canary,Ram
+Lua.ptsr_hidden = true
 #Flicky selection is final.
 
 Level 14
@@ -194,6 +198,7 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 32
 FlickyList = Canary,Ram
+Lua.ptsr_hidden = true
 
 Level 22
 Levelname = Egg Rock
@@ -207,6 +212,7 @@ RecordAttack = true
 LevelSelect = 1
 SaveGame = true
 FlickyList = All
+Lua.ptsr_hidden = true
 #Probably final.
 
 Level 23
@@ -221,6 +227,7 @@ RecordAttack = true
 LevelSelect = 1
 SaveGame = true
 FlickyList = All
+Lua.ptsr_hidden = true
 
 
 Level 25
@@ -296,6 +303,7 @@ Lua.ptsr_portal(1)_y = -115
 Lua.ptsr_portal(1)_z = 1088
 Lua.ptsr_portal(1)_angle = 122
 Lua.ptsr_lapangle = 0
+Lua.ptsr_hidden = true
 
 Level 32
 Levelname = Forest Fortress
@@ -358,5 +366,6 @@ LevelSelect = 2
 SelectHeading = Challenge Stages
 SaveGame = true
 FlickyList = Puffin,Dove
+Lua.ptsr_hidden = true
 #Flicky selection is final.
 

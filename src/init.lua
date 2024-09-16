@@ -178,6 +178,8 @@ dofile "Gimmicks/keys.lua"
 dofile "Gimmicks/treasures.lua"
 dofile "Gimmicks/escapeclock.lua"
 
+dofile "VFX/bump.lua"
+
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"
 

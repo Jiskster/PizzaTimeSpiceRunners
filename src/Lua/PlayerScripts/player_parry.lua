@@ -118,6 +118,7 @@ addHook("ThinkFrame", function()
 				if (object.eflags & MFE_JUSTHITFLOOR) then
 					S_StartSound(object, sfx_s3k49)
 					P_SetObjectMomZ(object, 7*FRACUNIT)
+					P_SpawnMobj(object.x, object.y, object.z, MT_PTSR_VFX_BUMP)
 					
 					v.time_left = $ - TICRATE
 					
@@ -142,6 +143,7 @@ addHook("ThinkFrame", function()
 	end
 end)
 
+-- TODO: Remove in 2.2.14. Instead, use searchblockmap in the parrylist thinker.
 addHook("MobjMoveBlocked", function(mobj, thing, line)
 	if line and line.valid then
 		if PTSR.ParryList[mobj] then
@@ -149,6 +151,7 @@ addHook("MobjMoveBlocked", function(mobj, thing, line)
 			local ang = R_PointToAngle2(line.v1.x, line.v1.y, line.v2.x, line.v2.y)
 			local side = mobj.subsector.sector == line.frontsector and 1 or -1
 			
+			P_SpawnMobj(mobj.x, mobj.y, mobj.z, MT_PTSR_VFX_BUMP)
 			S_StartSound(mobj, sfx_s3k49)
 			P_InstaThrust(mobj, ang-ANGLE_90*side, 30*FU)
 		end

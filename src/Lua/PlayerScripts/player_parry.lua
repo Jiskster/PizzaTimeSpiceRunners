@@ -286,11 +286,7 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-	local can_parry = PTSR_DoHook("canparry", player)
-
-	if can_parry == nil then
-		can_parry = true
-	end
+	local can_parry = not PTSR_DoHook("canparry", player)
 
 	if not player.mo.ptsr.parry_cooldown
 	and not player.mo.pizza_in
@@ -369,7 +365,7 @@ addHook("PlayerThink", function(player)
 								PTSR_DoHook("onparried", foundmobj, pmo)
 							end
 
-							if PTSR_DoHook("onparry", pmo, foundmobj) == true then
+							if PTSR_DoHook("onparry", pmo, foundmobj) then
 								return true
 							end
 

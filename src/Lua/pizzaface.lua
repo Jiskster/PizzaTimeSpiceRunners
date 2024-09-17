@@ -152,7 +152,7 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 	for peppino in players.iterate() do
 		if not peppino.ptsr.pizzaface and (peppino.mo and peppino.mo.valid) and
 		not peppino.spectator and not peppino.ptsr.outofgame and (peppino.playerstate ~= PST_DEAD)
-		and not peppino.quittime and PTSR_DoHook("pfplayertpfind", pizza, player) ~= false 
+		and not peppino.quittime and not PTSR_DoHook("pfplayertpfind", pizza, peppino) 
 		and not peppino.ptsr.treasure_got then
 			table.insert(peppinos, #peppino)
 		end
@@ -282,9 +282,9 @@ local function PF_FindNewPlayer(mobj)
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid and PTSR.PlayerIsChasable(player) then
-			local hookreturn = PTSR_DoHook("pfplayerfind", mobj, player) 
+			local hookcancel = PTSR_DoHook("pfplayerfind", mobj, player)
 			
-			if hookreturn ~= false then
+			if not hookcancel then
 				table.insert(activeplayers, player)
 			end
 		end

@@ -33,15 +33,15 @@ PTSR.DoLapBonus = function(player)
 			end
 		end
 		
-		if PTSR_DoHook("onbonus", player) == true then
+		if PTSR_DoHook("onbonus", player) then
 			escapebonus = false
 		end
 		
-		if PTSR_DoHook("onlapbonus", player) == true then
+		if PTSR_DoHook("onlapbonus", player) then
 			lapbonus = 0
 		end
 		
-		if PTSR_DoHook("onringbonus", player) == true then
+		if PTSR_DoHook("onringbonus", player) then
 			ringbonus = 0
 		end
 		

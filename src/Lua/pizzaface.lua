@@ -342,7 +342,6 @@ addHook("TouchSpecial", function(special, toucher)
 	return true
 end, MT_PIZZA_ENEMY)
 
--- Player touches human pizzaface
 addHook("MobjCollide", function(peppino, pizza)
 	local player = peppino.player
 	local pizza_player = pizza.player
@@ -363,7 +362,6 @@ addHook("MobjCollide", function(peppino, pizza)
 	
 	PTSR:PizzaCollision(peppino, pizza)
 end, MT_PLAYER)
-
 
 addHook("PlayerCmd", function (player, cmd)
 	if player.ptsr.pizzaface and player.realmo.pfstuntime then
@@ -611,6 +609,94 @@ addHook("MobjSpawn", function(mobj)
 	mobj.pfstuntime = multiplayer and CV_PTSR.pizzatimestun.value*TICRATE or TICRATE
 end, MT_PIZZA_ENEMY)
 
+local function controls_angle(p)
+	local forwardmove = p.cmd.forwardmove
+	local sidemove = p.cmd.sidemove
+	if not (p.mo and p.mo.flags2 & MF2_TWOD) then
+		local camera_angle = (p.cmd.angleturn<<16)
+		local controls_angle = R_PointToAngle2(0,0, forwardmove*FU, -sidemove*FU)
+
+		return camera_angle+controls_angle
+	end
+
+	if sidemove > 0 then
+		return ANGLE_45
+	elseif sidemove < 0 then
+		return InvAngle(ANGLE_45)
+	end
+end
+
+local function handle_pf_player_movement(player)
+	-- handle movement
+	-- community feedback recommended us that we do this
+	-- literallymario/saxa
+
+	player.mo.momx = 0
+	player.mo.momy = 0
+	player.mo.momz = 0
+
+	local speed = 28
+
+	if not player.ptsr.pizzachase then
+		player.ptsr.pizzachase_cooldown = max(0, $-1)
+
+		if player.cmd.buttons & BT_CUSTOM1 then
+			speed = $*3/2
+		end
+
+		if player.cmd.forwardmove or player.cmd.sidemove then
+			local angle = controls_angle(player)
+			local hypot = FixedHypot(player.cmd.sidemove*FU, player.cmd.forwardmove*FU)
+
+			player.mo.momx = speed*FixedMul(cos(angle), hypot/50)
+			player.mo.momy = speed*FixedMul(sin(angle), hypot/50)
+		end
+
+		if player.cmd.buttons & BT_JUMP then
+			player.mo.momz = speed*FU
+		elseif player.cmd.buttons & BT_SPIN then
+			player.mo.momz = speed*-FU
+		end
+
+		if not (player.ptsr.pizzachase_cooldown)
+		and player.cmd.buttons & BT_CUSTOM2 then
+			player.ptsr.pizzachase = true
+			player.ptsr.pizzachase_time = 10*TICRATE
+			S_StartSound(player.mo, PTSR.PFMaskData[player.ptsr.pizzastyle].sound)
+		end
+	else
+		local found_player
+		for p in players.iterate do
+			if not (p
+			and p.mo
+			and p.mo.health
+			and p.ptsr
+			and not p.ptsr.pizzaface
+			and PTSR.PlayerIsChasable(p)) then continue end
+			if not (found_player and found_player.valid) then
+				found_player = p.mo
+			end
+
+			if p.mo.x < found_player.x
+			and p.mo.y < found_player.y
+			and p.mo.z < found_player.z then
+				found_player = p.mo
+			end
+		end
+
+		if found_player and found_player.valid then
+			P_FlyTo(player.mo,found_player.x,found_player.y,found_player.z,speed*(FU*3/2),true)
+		end
+
+		player.ptsr.pizzachase_time = max(0, $-1)
+		if not (player.ptsr.pizzachase_time)
+		or not (found_player and found_player.valid) then
+			player.ptsr.pizzachase = false
+			player.ptsr.pizzachase_cooldown = 30*TICRATE
+		end
+	end
+end
+
 --Player Pizza Face Thinker
 addHook("PlayerThink", function(player)
 	player.ptsr.pizzastyle = $ or 1
@@ -629,12 +715,9 @@ addHook("PlayerThink", function(player)
 		if player.realmo.pfstuntime then -- player freeze decrement (mainly for pizza faces)
 			player.realmo.pfstuntime = $ - 1
 			-- # No Momentum # --
-			if not player.realmo.pfstunmomentum then
-				player.mo.momx = 0
-				player.mo.momy = 0
-				player.mo.momz = 0
-				L_SpeedCap(player.mo, 0)
-			end
+			player.mo.momx = 0
+			player.mo.momy = 0
+			player.mo.momz = 0
 			-- # No Momentum # --
 			--player.pflags = $|PF_FULLSTASIS
 			if not player.realmo.pfstuntime then -- once it hits zero, LAUGH AHHHHAHHAAHAHAHHAHAH
@@ -652,7 +735,10 @@ addHook("PlayerThink", function(player)
 				
 				player.realmo.pfstunmomentum = false
 			elseif PTSR.pizzatime_tics < CV_PTSR.pizzatimestun.value*TICRATE then
-				player.mo.momz = P_MobjFlip(player.mo)*-FU
+				player.mo.momx = 0
+				player.mo.momy = 0
+				player.mo.momz = 0
+
 				if player.facechangecooldown then
 					player.facechangecooldown = $ - 1
 				else
@@ -676,6 +762,9 @@ addHook("PlayerThink", function(player)
 					end
 				end
 			end
+		else
+			-- player is not stunned? neat!
+			handle_pf_player_movement(player)
 		end
 
 		if (not player.ptsr.pizzamask or not player.ptsr.pizzamask.valid) then
@@ -690,7 +779,6 @@ addHook("PlayerThink", function(player)
 			player.mo.color = SKINCOLOR_ORANGE
 			player.mo.colorized = true
 		end
-
 
 		if not (leveltime % 3) and player.ptsr.pizzamask and player.ptsr.pizzamask.valid and player.speed > FRACUNIT then
 			if (player ~= displayplayer) or (camera.chase and player == displayplayer) then

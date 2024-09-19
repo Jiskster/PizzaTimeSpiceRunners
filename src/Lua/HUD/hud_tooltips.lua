@@ -52,6 +52,15 @@ local tooltips_hud = function(v, player)
 			else
 				v.drawString(165, 157, "\x85\* HOLD FIRE TO TELEPORT *", V_SNAPTOBOTTOM, "thin-center")
 			end
+
+			v.drawString(165, 157-10, "\x85\* HOLD C1 TO DASH *", V_SNAPTOBOTTOM, "thin-center")
+			if not player.ptsr.pizzachase then
+				if not (player.ptsr.pizzachase_cooldown) then
+					v.drawString(165, 157-20, "\x85\* PRESS C2 TO USE CHASEDOWN *", V_SNAPTOBOTTOM, "thin-center")
+				else
+					v.drawString(165, 157-20, "\x85\* COOLING DOWN *", V_SNAPTOBOTTOM, "thin-center")
+				end
+			end
 		end
 		
 		-- Early returns start here, no pizza face code allowed beyond here --

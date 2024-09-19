@@ -640,7 +640,7 @@ local function handle_pf_player_movement(player)
 	if not player.ptsr.pizzachase then
 		player.ptsr.pizzachase_cooldown = max(0, $-1)
 
-		if player.cmd.buttons & BT_CUSTOM1 then
+		if player.ptsr.pfbuttons & BT_CUSTOM1 then
 			speed = $*3/2
 		end
 
@@ -652,14 +652,14 @@ local function handle_pf_player_movement(player)
 			player.mo.momy = speed*FixedMul(sin(angle), hypot/50)
 		end
 
-		if player.cmd.buttons & BT_JUMP then
+		if player.ptsr.pfbuttons & BT_JUMP then
 			player.mo.momz = speed*FU
-		elseif player.cmd.buttons & BT_SPIN then
+		elseif player.ptsr.pfbuttons & BT_SPIN then
 			player.mo.momz = speed*-FU
 		end
 
 		if not (player.ptsr.pizzachase_cooldown)
-		and player.cmd.buttons & BT_CUSTOM2 then
+		and player.ptsr.pfbuttons & BT_CUSTOM2 then
 			player.ptsr.pizzachase = true
 			player.ptsr.pizzachase_time = 10*TICRATE
 			S_StartSound(player.mo, PTSR.PFMaskData[player.ptsr.pizzastyle].sound)
@@ -698,6 +698,18 @@ local function handle_pf_player_movement(player)
 end
 
 --Player Pizza Face Thinker
+
+addHook("PreThinkFrame", do
+	if not PTSR.IsPTSR() then return end
+	if PTSR.gameover then return end
+	for p in players.iterate do
+		if not (p.ptsr and p.ptsr.pizzaface) then continue end
+		-- to prevent weird shit lmfao
+		p.ptsr.pfbuttons = p.cmd.buttons
+		p.cmd.buttons = 0
+	end
+end)
+
 addHook("PlayerThink", function(player)
 	player.ptsr.pizzastyle = $ or 1
 	player.realmo.pfstuntime = $ or 0
@@ -767,6 +779,11 @@ addHook("PlayerThink", function(player)
 			handle_pf_player_movement(player)
 		end
 
+		if player.mo.skin ~= "sonic" then
+			-- compatibility issues might occur, quick, switch back to sonic!
+			R_SetPlayerSkin(player, "sonic")
+		end		
+
 		if (not player.ptsr.pizzamask or not player.ptsr.pizzamask.valid) then
 			player.ptsr.pizzamask = P_SpawnMobj(player.realmo.x,player.realmo.y,player.realmo.z,MT_PIZZAMASK)
 			player.ptsr.pizzamask.targetplayer = player --dream reference
@@ -802,7 +819,7 @@ addHook("PlayerThink", function(player)
 			player.pizzacharge = 0
 		end
 		if not player.ptsr.outofgame and (player.cmd.buttons & BT_ATTACK)
-		and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
+		and not player.ptsr.pizzachase and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
 			else

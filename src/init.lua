@@ -25,7 +25,7 @@ mobjinfo[MT_PIZZAMASK] = {
 	deathstate = S_NULL,
 	radius = 24*FU,
 	height = 48*FU,
-	flags = MF_NOCLIP|MF_NOGRAVITY|MF_SPECIAL
+	flags = MF_NOCLIP|MF_NOGRAVITY
 }
 
 states[S_PIZZAFACE] = {

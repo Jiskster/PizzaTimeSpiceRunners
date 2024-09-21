@@ -188,3 +188,5 @@ dofile "Hooks/intermission.lua"
 dofile "Compatibility/C_Surge.lua"
 dofile "Compatibility/C_Skip.lua"
 dofile "Compatibility/C_Mach.lua"
+
+dofile "Movesets/Sonic"

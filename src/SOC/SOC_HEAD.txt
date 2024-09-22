@@ -47,7 +47,7 @@ FlickyList = Bluebird,Chipmunk
 Lua.Takis_UsesHeartCards = true
 Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_timelimit_secs = 165
-Lua.ptsr_s_rank_points = 32000
+Lua.ptsr_s_rank_points = 27000
 Lua.ptsr_maxlaps = 5
 Lua.ptsr_maxportals = 2
 Lua.ptsr_portal(1)_x = -915
@@ -76,13 +76,10 @@ FlickyList = Rabbit,Chicken
 Lua.Takis_UsesHeartCards = true
 Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_timelimit_secs = 200
-Lua.ptsr_maxportals = 1
+Lua.ptsr_s_rank_points = 26000
 Lua.ptsr_maxlaps = 5
-Lua.ptsr_portal(1)_x = -2097
-Lua.ptsr_portal(1)_y = -705
-Lua.ptsr_portal(1)_z = 704
-Lua.ptsr_portal(1)_angle = 356 
 Lua.ptsr_lapangle = 180
+Lua.ptsr_pizzatime_triggertag = 9999
 #Flicky selection is final.
 
 Level 5
@@ -98,10 +95,12 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 16
 FlickyList = Rabbit,Chicken
-Lua.ptsr_timelimit_secs = 250
+Lua.ptsr_timelimit_secs = 230
+Lua.ptsr_s_rank_points = 22000
 Lua.Takis_UsesHeartCards = true
 Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_lapangle = 103
+Lua.ptsr_pizzatime_triggertag = 9999
 #see act 1
 
 Level 7
@@ -149,6 +148,10 @@ LevelSelect = 1
 Weather = PRECIP_STORM
 SkyboxScale = 64
 SaveGame = true
+Lua.ptsr_s_rank_points = 26000
+Lua.ptsr_pizzatime_triggertag = 999
+Lua.ptsr_timelimit_secs = 220
+Lua.ptsr_lapangle = 270
 FlickyList = Rat,Bear
 #Flicky selection is final.
 
@@ -327,6 +330,7 @@ Lua.ptsr_portal(1)_y = -14550
 Lua.ptsr_portal(1)_z = -96
 Lua.ptsr_portal(1)_angle = 357
 Lua.ptsr_lapangle = 270
+Lua.ptsr_s_rank_points = 22000
 
 Level 33
 levelname = Techno Legacy

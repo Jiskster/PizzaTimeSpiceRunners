@@ -28,11 +28,12 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 	end
 end,1)
 
-COM_AddCommand("ptsr_pizzatimenow", function(player)
+COM_AddCommand("ptsr_panic", function(player)
 	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
+	
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 

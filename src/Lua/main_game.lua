@@ -414,35 +414,24 @@ addHook("ThinkFrame", do
 			end
 		end
 
-		-- This is explicitly for turning off an inactive game (everyones dead!!!).
-		if not PTSR.gameover then
-			if (count.inactive == count.active) and PTSR.untilend < 100 then
-				PTSR.untilend = $ + 1
-				if PTSR.untilend >= 100 then
-					PTSR.gameover = true
-					print("GAME OVER!")
-					if consoleplayer and consoleplayer.valid then
-						S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
-						mapmusname = RANKMUS[consoleplayer.ptsr.rank]
-					end
-					for p in players.iterate do
-						if p and p.ptsr and PTSR.PlayerHasCombo(p) then
-							PTSR:EndCombo(p)
-						end
-					end
-					PTSR_DoHook("ongameend")
-				end
-			else
-				PTSR.untilend = 0
-			end
-		else -- intermission thinker
-			PTSR.intermission_tics = $ + 1
-		end
-
 		if PTSR.timeover then
 			PTSR.timeover_tics = $ + 1
 		end
-	end 
+	end
+	
+	-- This is explicitly for turning off an inactive game (everyones dead!!!).
+	if not PTSR.gameover then
+		if ((count.inactive == count.active) and PTSR.pizzatime) and PTSR.untilend < 100 then
+			PTSR.untilend = $ + 1
+			if PTSR.untilend >= 100 then
+				PTSR.EndGame()
+			end
+		else
+			PTSR.untilend = 0
+		end
+	else -- intermission thinker
+		PTSR.intermission_tics = $ + 1
+	end
 end)
 
 -- we love mobjs too

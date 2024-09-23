@@ -37,6 +37,15 @@ COM_AddCommand("ptsr_panic", function(player)
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 
+COM_AddCommand("ptsr_endgame", function(player)
+	if not PTSR.IsPTSR() then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	PTSR.EndGame()
+end,1)
+
 local forcePT = false
 
 COM_AddCommand("ptsr_debug_forcept", function(player)

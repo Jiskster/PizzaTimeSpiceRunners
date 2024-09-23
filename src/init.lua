@@ -109,6 +109,7 @@ dofile "main_game.lua"
 dofile "titlecards.lua"
 */
 
+dofile "Functions/end_game.lua"
 dofile "Functions/get_ringcount.lua"
 dofile "Functions/is_ptsr.lua"
 dofile "Functions/speedcap_xy.lua"

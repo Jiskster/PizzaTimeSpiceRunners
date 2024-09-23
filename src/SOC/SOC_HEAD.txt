@@ -257,6 +257,8 @@ Lua.ptsr_portal(1)_y = -3287
 Lua.ptsr_portal(1)_z = 256
 Lua.ptsr_portal(1)_angle = 358
 Lua.ptsr_lapangle = 270
+Lua.ptsr_s_rank_points = 30000
+Lua.ptsr_timelimit = 3
 
 #Bonus Levels
 
@@ -286,6 +288,8 @@ Lua.ptsr_portal(2)_y = -3578
 Lua.ptsr_portal(2)_z = -72
 Lua.ptsr_portal(2)_angle = 51
 Lua.ptsr_lapangle = 270
+Lua.ptsr_s_rank_points = 21000
+Lua.ptsr_timelimit_secs = 150
 
 Level 31
 LevelName = Pipe Towers
@@ -353,7 +357,10 @@ Lua.ptsr_portal(1)_x = -6947
 Lua.ptsr_portal(1)_y = 5358
 Lua.ptsr_portal(1)_z = 1280
 Lua.ptsr_portal(1)_angle = 182
-Lua.ptsr_lapangle = 90
+Lua.ptsr_lapangle = 270
+Lua.ptsr_timelimit = 2
+Lua.ptsr_pizzatime_triggertag = 113
+Lua.ptsr_s_rank_points = 18000
 
 #Challenge Stages
 

@@ -20,6 +20,7 @@ local hooks = {}
 hooks.onparry = {}
 hooks.canparry = {}
 hooks.onlap = {}
+hooks.laptp = {}
 hooks.onbonus = {}
 hooks.onringbonus = {}
 hooks.onlapbonus = {}

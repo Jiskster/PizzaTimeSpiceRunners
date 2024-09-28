@@ -6,6 +6,8 @@ local sonic_vars = {
 	}
 }
 
+local strong_flags = STR_FLOOR|STR_SPRING|STR_GUARD|STR_HEAVY
+
 sfxinfo[freeslot "sfx_gploop"].caption = "Ground pound sound."
 sfxinfo[freeslot "sfx_grpo"].caption = "SLAM."
 
@@ -26,6 +28,13 @@ local function spawnDust(mo)
 	end
 end
 
+local function atFloor(p)
+	if P_MobjFlip(p.mo) < 0 then
+		return p.mo.z+p.mo.height >= p.mo.ceilingz
+	end
+	return p.mo.z <= p.mo.floorz
+end
+
 local function groundPound(p)
 	local sptsr = p.sonicptsr
 	local grpo = sptsr.groundpound
@@ -34,8 +43,6 @@ local function groundPound(p)
 		grpo.stuntime = sonic_vars.groundpound.stuntime
 		return
 	end
-
-	local strong_flags = STR_FLOOR|STR_SPRING|STR_GUARD|STR_HEAVY
 
 	p.powers[pw_strong] = $|strong_flags
 
@@ -58,7 +65,7 @@ local function groundPound(p)
 		end
 	end*/
 
-	if P_IsObjectOnGround(p.mo) then
+	if atFloor(p) then
 		S_StopSoundByID(p.mo, sfx_gploop)
 		if not slope then
 			if grpo.stuntime == sonic_vars.groundpound.stuntime then
@@ -68,6 +75,7 @@ local function groundPound(p)
 			grpo.stuntime = max(0, $-1)
 			p.mo.momx = 0
 			p.mo.momy = 0
+			p.mo.momz = 0
 			p.pflags = $|PF_FULLSTASIS
 
 			local tweenTime = FixedDiv(grpo.stuntime, sonic_vars.groundpound.stuntime)
@@ -88,6 +96,9 @@ local function groundPound(p)
 		if not S_SoundPlaying(p.mo, sfx_gploop) then
 			S_StartSound(p.mo, sfx_gploop)
 		end
+		if p.mo.state ~= S_PLAY_SPINDASH then
+			p.mo.state = S_PLAY_SPINDASH
+		end
 		grpo.stuntime = sonic_vars.groundpound.stuntime
 
 		local scale = min(FixedDiv(p.mo.momz*P_MobjFlip(p.mo), -60*FU), FU/3)
@@ -104,6 +115,17 @@ local function groundPound(p)
 	end
 end
 
+local function resetPlayer(p)
+	p.powers[pw_strong] = $ & ~strong_flags
+	p.sonicptsr.groundpound.enabled = false
+	p.sonicptsr.groundpound.stuntime = sonic_vars.groundpound.stuntime
+	if p.mo then
+		p.mo.spritexscale = FU
+		p.mo.spriteyscale = FU
+		S_StopSoundByID(p.mo, sfx_gploop)
+	end
+end
+
 addHook("PlayerThink", function(p)
 	if not (p
 	and p.mo
@@ -112,7 +134,7 @@ addHook("PlayerThink", function(p)
 	and p.mo.skin == "sonic"
 	and PTSR:IsPTSR()) then
 		if p.sonicptsr then
-			S_StopSound(p.mo, sfx_gploop)
+			resetPlayer(p)
 		end
 		p.sonicptsr = nil
 		return
@@ -122,9 +144,12 @@ addHook("PlayerThink", function(p)
 		p.sonicptsr = PTSR_shallowcopy(sonic_vars)
 	end
 
+	local sptsr = p.sonicptsr
+	local grpo = sptsr.groundpound
+
 	if p.sonicptsr.groundpound.enabled
-	and not P_IsObjectOnGround(p.mo) then
-		p.mo.momz = $- ((FU/2)*P_MobjFlip(p.mo))
+	and not atFloor(p) then
+		p.mo.momz = $ + FixedMul(P_GetMobjGravity(p.mo), (FU*2)*3/2)
 	end
 end)
 
@@ -135,25 +160,32 @@ addHook("ThinkFrame", do
 		local sptsr = p.sonicptsr
 		local grpo = sptsr.groundpound
 
-		if not P_IsObjectOnGround(p.mo)
+		if not atFloor(p)
 		and p.cmd.buttons & BT_SPIN
 		and not (sptsr.buttons & BT_SPIN)
 		and not grpo.enabled
 		and p.pflags & PF_JUMPED then
+			p.powers[pw_strong] = $|strong_flags
+			p.mo.state = S_PLAY_SPINDASH
+			S_StartSound(p.mo, sfx_spin)
+			grpo.enabled = true
 			if p.pflags & PF_THOKKED then
 				p.mo.momx = 0
 				p.mo.momy = 0
 			end
-			p.mo.state = S_PLAY_SPINDASH
-			S_StartSound(p.mo, sfx_spin)
-			grpo.enabled = true
 			p.pflags = $|PF_THOKKED
 
-			P_SetObjectMomZ(p.mo, 12*FU)
+			P_SetObjectMomZ(p.mo, 16*FU)
 		end
 
 		groundPound(p)
 
 		sptsr.buttons = p.cmd.buttons
 	end
+end)
+
+PTSR_AddHook("laptp", function(p)
+	if not (p and p.sonicptsr) then return end
+	resetPlayer(p)
+	p.mo.state = S_PLAY_STND
 end)

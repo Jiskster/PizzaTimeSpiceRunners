@@ -1,7 +1,7 @@
 -- doesnt actually trigger or increment lap, just tps you
 PTSR.LapTP = function(player, invincibility)
 	if not player and not player.mo and not player.mo.valid then return end -- safety
-	
+	PTSR_DoHook("laptp", player, invincibility)
 	player.powers[pw_carry] = 0
 	
 	player.ptsr.outofgame = 0

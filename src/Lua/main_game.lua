@@ -88,10 +88,10 @@ PTSR.isOvertime = function()
 	return PTSR.timeover
 end
 
-PTSR.ring_score = 50
+PTSR.ring_score = 100
 
 PTSR.lapbonus = 250
-PTSR.ringlapbonus = 14
+PTSR.ringlapbonus = 50 --25
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
@@ -101,7 +101,7 @@ PTSR.default_playervars = {
 	rank = "D",
 	rank_scaleTime = 0,
 	
-	pizzaface = false,
+	pizzaface = false, -- are you a pizza face
 	pizzachase = false,
 	pizzachase_cooldown = 0,
 	pizzachase_time = 0,
@@ -109,6 +109,8 @@ PTSR.default_playervars = {
 	
 	laps = 0,
 	laptime = 0,
+	
+	rings_on_lap = 0, -- rings you got on the current lap (pre pizza time counts too)
 	
 	outofgame = 0,
 	

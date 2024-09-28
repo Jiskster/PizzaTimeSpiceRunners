@@ -662,6 +662,7 @@ local function handle_pf_player_movement(player)
 		and player.ptsr.pfbuttons & BT_CUSTOM2 then
 			player.ptsr.pizzachase = true
 			player.ptsr.pizzachase_time = 10*TICRATE
+			player.ptsr.chasepress = true
 			S_StartSound(player.mo, PTSR.PFMaskData[player.ptsr.pizzastyle].sound)
 		end
 	else
@@ -672,7 +673,8 @@ local function handle_pf_player_movement(player)
 			and p.mo.health
 			and p.ptsr
 			and not p.ptsr.pizzaface
-			and PTSR.PlayerIsChasable(p)) then continue end
+			and PTSR.PlayerIsChasable(p)
+			and P_CheckSight(p.mo, player.mo)) then continue end
 			if not (found_player and found_player.valid) then
 				found_player = p.mo
 			end
@@ -690,10 +692,13 @@ local function handle_pf_player_movement(player)
 
 		player.ptsr.pizzachase_time = max(0, $-1)
 		if not (player.ptsr.pizzachase_time)
-		or not (found_player and found_player.valid) then
+		or not (found_player and found_player.valid)
+		or ((player.ptsr.pfbuttons & BT_CUSTOM2) and not player.ptsr.chasepress) then
 			player.ptsr.pizzachase = false
 			player.ptsr.pizzachase_cooldown = 30*TICRATE
 		end
+
+		player.ptsr.chasepress = (player.ptsr.pfbuttons & BT_CUSTOM2)
 	end
 end
 
@@ -818,7 +823,7 @@ addHook("PlayerThink", function(player)
 		if player.ptsr.outofgame or PTSR.quitting then
 			player.pizzacharge = 0
 		end
-		if not player.ptsr.outofgame and (player.cmd.buttons & BT_ATTACK)
+		if not player.ptsr.outofgame and (player.ptsr.pfbuttons & BT_ATTACK)
 		and not player.ptsr.pizzachase and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1

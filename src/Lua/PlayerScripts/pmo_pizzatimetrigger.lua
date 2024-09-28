@@ -121,8 +121,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			if not (pmo and pmo.valid) then continue end
 			player.ptsr.laps = 1
 			
-			local floorz = P_FloorzAtPos(PTSR.end_location.x, PTSR.end_location.y, PTSR.end_location.z, pmo.height)
-			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, floorz)
+			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
 			
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			

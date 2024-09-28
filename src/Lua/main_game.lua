@@ -102,6 +102,9 @@ PTSR.default_playervars = {
 	rank_scaleTime = 0,
 	
 	pizzaface = false,
+	pizzachase = false,
+	pizzachase_cooldown = 0,
+	pizzachase_time = 0,
 	pizzamask = nil,
 	
 	laps = 0,
@@ -206,23 +209,17 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	disable_pizzatime_penalty = true,
 })
 
-/*
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,
-	player_pizzaface = true,
-	ring_score = 10,
-	enemy_score = 100,
-	ringlapbonus = 5,
-	lapbonus = 300,
+	player_pizzaface = true
 })
-*/
 
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]
-	
+
 	if newgamemode ~= PTSR.gamemode then -- dont print this if new gamemode is the same
 		local output_text = "PTSR Gamemode changed to " .. (gm_metadata.name or "Unnamed Mode")
 		print(output_text)

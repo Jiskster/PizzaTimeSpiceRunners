@@ -23,7 +23,7 @@ mobjinfo[MT_PIZZAMASK] = {
 	spawnstate = S_PIZZAFACE,
 	spawnhealth = 1000,
 	deathstate = S_NULL,
-	radius = 16*FU,
+	radius = 24*FU,
 	height = 48*FU,
 	flags = MF_NOCLIP|MF_NOGRAVITY
 }

@@ -6,8 +6,7 @@ PTSR.LapTP = function(player, invincibility)
 	
 	player.ptsr.outofgame = 0
 	
-	local floorz = P_FloorzAtPos(PTSR.end_location.x, PTSR.end_location.y, PTSR.end_location.z, player.mo.height)
-	P_SetOrigin(player.mo, PTSR.end_location.x,PTSR.end_location.y, floorz)
+	P_SetOrigin(player.mo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
 	
 	player.mo.angle = PTSR.end_location.angle - ANGLE_90
 	

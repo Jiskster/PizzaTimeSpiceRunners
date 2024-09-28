@@ -28,37 +28,22 @@ COM_AddCommand("ptsr_makepizza", function(player, arg)
 	end
 end,1)
 
-COM_AddCommand("ptsr_panicblacklist", function(p, skin, bool)
-	if not (skin
-	and skins[skin]) then
-		CONS_Printf(p, "You must input a valid skin to add/remove to the blacklist.")
-		return
-	end
-
-	if not bool then
-		PTSR.panicblacklist[skin] = not PTSR.panicblacklist[skin]
-		local text1 = PTSR.panicblacklist[skin] and "Added " or "Removed "
-		local text2 = PTSR.panicblacklist[skin] and " into " or " from "
-		CONS_Printf(p, text1..skin..text2.."the blacklist.")
-	else
-		if bool == "true"
-		or bool == "add"
-		or bool == "yes" then
-			PTSR.panicblacklist[skin] = true
-			CONS_Printf(p, "Added "..skin.." into the blacklist.")
-		else
-			PTSR.panicblacklist[skin] = false
-			CONS_Printf(p, "Removed "..skin.." from the blacklist.")
-		end
-	end
-end)
-
-COM_AddCommand("ptsr_pizzatimenow", function(player)
+COM_AddCommand("ptsr_panic", function(player)
 	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
 		return
 	end
+	
 	PTSR.PizzaTimeTrigger(player.mo)
+end,1)
+
+COM_AddCommand("ptsr_endgame", function(player)
+	if not PTSR.IsPTSR() then
+		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")
+		return
+	end
+	
+	PTSR.EndGame()
 end,1)
 
 local forcePT = false

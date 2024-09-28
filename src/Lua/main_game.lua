@@ -88,10 +88,10 @@ PTSR.isOvertime = function()
 	return PTSR.timeover
 end
 
-PTSR.ring_score = 50
+PTSR.ring_score = 100
 
 PTSR.lapbonus = 250
-PTSR.ringlapbonus = 14
+PTSR.ringlapbonus = 50 --25
 
 PTSR.laphold = 10*TICRATE -- hold fire to lap
 
@@ -101,11 +101,16 @@ PTSR.default_playervars = {
 	rank = "D",
 	rank_scaleTime = 0,
 	
-	pizzaface = false,
+	pizzaface = false, -- are you a pizza face
+	pizzachase = false,
+	pizzachase_cooldown = 0,
+	pizzachase_time = 0,
 	pizzamask = nil,
 	
 	laps = 0,
 	laptime = 0,
+	
+	rings_on_lap = 0, -- rings you got on the current lap (pre pizza time counts too)
 	
 	outofgame = 0,
 	
@@ -206,23 +211,17 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	disable_pizzatime_penalty = true,
 })
 
-/*
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,
-	player_pizzaface = true,
-	ring_score = 10,
-	enemy_score = 100,
-	ringlapbonus = 5,
-	lapbonus = 300,
+	player_pizzaface = true
 })
-*/
 
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]
-	
+
 	if newgamemode ~= PTSR.gamemode then -- dont print this if new gamemode is the same
 		local output_text = "PTSR Gamemode changed to " .. (gm_metadata.name or "Unnamed Mode")
 		print(output_text)
@@ -414,35 +413,24 @@ addHook("ThinkFrame", do
 			end
 		end
 
-		-- This is explicitly for turning off an inactive game (everyones dead!!!).
-		if not PTSR.gameover then
-			if (count.inactive == count.active) and PTSR.untilend < 100 then
-				PTSR.untilend = $ + 1
-				if PTSR.untilend >= 100 then
-					PTSR.gameover = true
-					print("GAME OVER!")
-					if consoleplayer and consoleplayer.valid then
-						S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
-						mapmusname = RANKMUS[consoleplayer.ptsr.rank]
-					end
-					for p in players.iterate do
-						if p and p.ptsr and PTSR.PlayerHasCombo(p) then
-							PTSR:EndCombo(p)
-						end
-					end
-					PTSR_DoHook("ongameend")
-				end
-			else
-				PTSR.untilend = 0
-			end
-		else -- intermission thinker
-			PTSR.intermission_tics = $ + 1
-		end
-
 		if PTSR.timeover then
 			PTSR.timeover_tics = $ + 1
 		end
-	end 
+	end
+	
+	-- This is explicitly for turning off an inactive game (everyones dead!!!).
+	if not PTSR.gameover then
+		if ((count.inactive == count.active) and PTSR.pizzatime) and PTSR.untilend < 100 then
+			PTSR.untilend = $ + 1
+			if PTSR.untilend >= 100 then
+				PTSR.EndGame()
+			end
+		else
+			PTSR.untilend = 0
+		end
+	else -- intermission thinker
+		PTSR.intermission_tics = $ + 1
+	end
 end)
 
 -- we love mobjs too

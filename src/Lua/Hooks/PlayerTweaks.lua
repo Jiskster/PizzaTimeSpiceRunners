@@ -30,6 +30,7 @@ addHook("MobjDeath", function(target, inflictor, source)
 			end
 			return
 		elseif (target.type == MT_RING or target.type == MT_COIN)
+			player.ptsr.rings_on_lap = $ + 1
 			P_AddPlayerScore(player, ring_score)
 			PTSR.add_wts_score(player, target, ring_score)
 			

@@ -45,8 +45,8 @@ addHook("TouchSpecial", function(special, toucher)
 					special.clock_collect_list[player] = player.ptsr.laps
 					S_StartSound(toucher, soundlist[P_RandomRange(1,#soundlist)])
 					
-					P_AddPlayerScore(player, 50)
-					PTSR.add_wts_score(player, special, 50)
+					P_AddPlayerScore(player, 100)
+					PTSR.add_wts_score(player, special, 100)
 					
 					if not player.ptsr.pizzaface then
 						PTSR:AddComboTime(player, TICRATE)

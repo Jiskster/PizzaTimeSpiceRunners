@@ -38,7 +38,7 @@ PTSR.StartNewLap = function(mobj)
 		end
 	else -- FAKE LAP -- 
 		mobj.pfstuntime = TICRATE*CV_PTSR.fakelapstun.value
-		P_SetOrigin(mobj, PTSR.end_location.x*FRACUNIT,PTSR.end_location.y*FRACUNIT, PTSR.end_location.z*FRACUNIT)
+		P_SetOrigin(mobj, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
 		mobj.angle = PTSR.end_location.angle - ANGLE_90
 	end
 end 

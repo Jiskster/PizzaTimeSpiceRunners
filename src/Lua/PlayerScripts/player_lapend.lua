@@ -22,7 +22,7 @@ PTSR.DoLapBonus = function(player)
 		local escapebonus = true
 		
 		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
-		local ringbonus = player.rings * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
+		local ringbonus = player.ptsr.rings_on_lap * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		
 		if gm_metadata.core_endurance 
 		and count.peppinos then
@@ -56,8 +56,10 @@ PTSR.DoLapBonus = function(player)
 			end
 			
 			if ringbonus then
-				CONS_Printf(player, "* "..ringbonus.." point ring bonus!")
+				CONS_Printf(player, "* "..ringbonus.." point ring bonus! ("..player.ptsr.rings_on_lap..")")
 			end
 		end
+		
+		player.ptsr.rings_on_lap = 0
 	end
 end

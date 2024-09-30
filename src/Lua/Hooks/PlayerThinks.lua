@@ -101,9 +101,9 @@ addHook("PlayerThink", function(player)
 		if PTSR.pizzatime_tics >= TICRATE and
 		((PTSR.pizzatime_tics % TICRATE) == 0) then
 			if PTSR.isOvertime() then
-				PTSR.DeductScore(player, 50)
+				PTSR.DeductScore(player, 100)
 			elseif PTSR.pizzatime then
-				PTSR.DeductScore(player, 15)
+				PTSR.DeductScore(player, 50)
 			end
 		end
 	end

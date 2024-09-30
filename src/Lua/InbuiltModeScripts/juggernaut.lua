@@ -128,7 +128,7 @@ PTSR_AddHook("pfplayerfind", function(pizza, player)
 	if count.peppinos > 1 then
 		if player.mo and player.mo.valid then
 			if PTSR.juggernaut_crownholder == player.mo then
-				return false
+				return true
 			end
 		end
 	end
@@ -268,8 +268,6 @@ addHook("MobjThinker", function(mobj)
 			mobj.equip_pmo = nil
 			mobj.flags = $ & ~(MF_NOCLIP | MF_NOGRAVITY)
 		end
-	else
-	
 	end
 	
 	if mobj.crowntimeout then

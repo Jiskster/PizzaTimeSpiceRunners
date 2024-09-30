@@ -58,7 +58,7 @@ local function InitMap2()
 
             PTSR.spawn_location.x = map.x*FU
             PTSR.spawn_location.y = map.y*FU
-            PTSR.spawn_location.z = sec.floorheight+(map.z*FU)
+            PTSR.spawn_location.z = sec.floorheight
             PTSR.spawn_location.angle = map.angle*ANG1
         end
 		
@@ -67,7 +67,7 @@ local function InitMap2()
 
             PTSR.end_location.x = map.x*FU
             PTSR.end_location.y = map.y*FU
-            PTSR.end_location.z = sec.floorheight+(map.z*FU)
+            PTSR.end_location.z = sec.floorheight
  
             PTSR.end_location.angle = map.angle*ANG1
 			local john = P_SpawnMobj(

@@ -178,6 +178,7 @@ dofile "Gimmicks/doors.lua"
 dofile "Gimmicks/keys.lua"
 dofile "Gimmicks/treasures.lua"
 dofile "Gimmicks/escapeclock.lua"
+dofile "Gimmicks/escapespawner.lua"
 
 dofile "VFX/bump.lua"
 

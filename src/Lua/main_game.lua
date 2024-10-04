@@ -236,6 +236,7 @@ end
 
 addHook("NetVars", function(net)
 	local sync_list = {
+		"EscapeSpawnList",
 		"HitlagList",
 		"ParryList",
 	
@@ -284,7 +285,7 @@ addHook("NetVars", function(net)
 		
 		"pizzaface_speed_multi",
 
-		"pizzas",
+		"pizzas"
 	}
 	
 	for i,v in ipairs(sync_list) do

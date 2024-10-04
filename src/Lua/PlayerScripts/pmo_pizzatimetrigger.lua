@@ -61,6 +61,12 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			PTSR.timeleft = 1
 		end
 		
+		for player in players.iterate do
+			for i,v in ipairs(PTSR.ESLOCATIONS) do
+				v.lap_list[player] = 0
+			end
+		end
+		
 		PTSR.laps = 1 -- new day new me
 		
 		PTSR_DoHook("onpizzatime")

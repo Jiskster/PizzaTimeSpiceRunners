@@ -80,6 +80,10 @@ addHook("PlayerThink", function(player)
 	if PTSR.pizzatime and PTSR.timeover and not gm_metadata.disableovertimeshoes then
 		player.powers[pw_sneakers] = 1
 	end
+
+	if player and player.mo and player.mo.valid and player.mo.pf_tele_delay then
+		player.mo.pf_tele_delay = $ - 1
+	end
 end)
 
 addHook("PlayerThink", function(player)

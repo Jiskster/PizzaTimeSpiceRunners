@@ -56,7 +56,7 @@ addHook("ThinkFrame", function()
 			for k,a in pairs(v.lap_list) do
 				if userdataType(k) ~= "player_t"
 				or not (k and k.valid) then
-					v.laplist[k] = nil
+					v.lap_list[k] = nil
 					break
 				end
 			end
@@ -70,7 +70,7 @@ addHook("ThinkFrame", function()
 						vMobj.fuse = 1
 						
 						if v.lap_list[player] == nil then
-							v.lap_list[player] = max(player.ptsr.laps - 1, 0)
+							v.lap_list[player] = player.ptsr.laps
 						end
 						
 						if (vMobj and vMobj.valid) and P_CheckSight(vMobj, player.mo) then							

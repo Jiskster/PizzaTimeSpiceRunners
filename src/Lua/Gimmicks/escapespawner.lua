@@ -29,6 +29,7 @@ states[S_ESCAPESPAWNER_ANIM] = {
 	nextstate = S_NULL
 }
 
+-- If a mobj type is on this list, they are given the norespawn flag.
 local nonrespawn_list = {
 	[MT_RING] = true,
 	[MT_COIN] = true
@@ -37,8 +38,8 @@ local nonrespawn_list = {
 -- Arealock: The distance where an object is forced back to its spawn.
 PTSR.EscapeSpawnList = {
 	-- [MT_ ...]{ }
-	[MT_BLUECRAWLA] = {arealock = 256*FU},
-	[MT_REDCRAWLA] = {arealock = 256*FU},
+	[MT_BLUECRAWLA] = {arealock = 512*FU},
+	[MT_REDCRAWLA] = {arealock = 512*FU},
 	[MT_RING] = true,
 	[MT_COIN] = true,
 }
@@ -69,7 +70,7 @@ addHook("ThinkFrame", function()
 						vMobj.fuse = 1
 						
 						if v.lap_list[player] == nil then
-							v.lap_list[player] = 0
+							v.lap_list[player] = max(player.ptsr.laps - 1, 0)
 						end
 						
 						if (vMobj and vMobj.valid) and P_CheckSight(vMobj, player.mo) then							
@@ -79,6 +80,10 @@ addHook("ThinkFrame", function()
 								v.child.angle = v.angle
 								P_SpawnMobj(v.x, v.y, v.z, MT_ESCAPESPAWNER_ANIM)
 								S_StartSound(v.child, sfx_espawn)
+								
+								if v.flipped == true then
+									v.child.eflags = $|MFE_VERTICALFLIP
+								end
 							end
 						end
 					end
@@ -126,6 +131,7 @@ addHook("MapLoad", function()
 						x = mobj.x,
 						y = mobj.y,
 						z = mobj.z,
+						flipped = (thing.options & MTF_OBJECTFLIP) == MTF_OBJECTFLIP,
 						lap_list = {}, -- [player_t] = latestlap
 						type = mobj.type,
 						angle = mobj.angle,

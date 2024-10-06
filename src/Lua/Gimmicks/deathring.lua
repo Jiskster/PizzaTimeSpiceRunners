@@ -91,6 +91,7 @@ addHook("TouchSpecial", function(special, toucher)
 			end				
 		else
 			if special.rings_kept then
+				tplayer.ptsr.rings_on_lap = $ + special.rings_kept
 				P_GivePlayerRings(tplayer, special.rings_kept)
 				print("\x83"..tplayer.name.." stole "..special.rings_kept.." rings from "..special.drop_name)
 				PTSR:AddComboTime(tplayer, tplayer.ptsr.combo_maxtime)

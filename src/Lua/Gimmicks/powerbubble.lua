@@ -77,6 +77,7 @@ PTSR:AddBubblePower({
 		if toucher and toucher.valid and toucher.player and toucher.player.valid then
 			local player = toucher.player
 			
+			player.ptsr.rings_on_lap = $ + 10
 			P_GivePlayerRings(player, 10)
 			S_StartSound(toucher, sfx_itemup)
 		end
@@ -93,6 +94,7 @@ PTSR:AddBubblePower({
 		if toucher and toucher.valid and toucher.player and toucher.player.valid then
 			local player = toucher.player
 			
+			player.ptsr.rings_on_lap = $ + 50
 			P_GivePlayerRings(player, 50)
 			S_StartSound(toucher, sfx_bb_50r)
 		end

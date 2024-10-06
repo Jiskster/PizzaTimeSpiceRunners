@@ -61,12 +61,6 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			PTSR.timeleft = 1
 		end
 		
-		for player in players.iterate do
-			for i,v in ipairs(PTSR.ESLOCATIONS) do
-				v.lap_list[player] = 0
-			end
-		end
-		
 		PTSR.laps = 1 -- new day new me
 		
 		PTSR_DoHook("onpizzatime")
@@ -125,7 +119,12 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		for player in players.iterate() do
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
+			
 			player.ptsr.laps = 1
+			
+			for i,v in ipairs(PTSR.ESLOCATIONS) do
+				v.lap_list[player] = player.ptsr.laps -- is 1
+			end
 			
 			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
 			

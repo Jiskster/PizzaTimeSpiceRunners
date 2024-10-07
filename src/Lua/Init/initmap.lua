@@ -12,8 +12,14 @@ local function InitMap()
 	PTSR.showtime = false
 	PTSR.deathrings = {}
 	PTSR.timeover_tics = 0 -- overtime
-	PTSR.intermission_tics = 0
+	PTSR.endscreen_tics = 0
+	PTSR.endscreen_phase_tics = 0
+	PTSR.endscreen_phase = 1
+	PTSR.vote_timeleft = 0
+	PTSR.vote_roulettelist = {}
+	PTSR.vote_screen = false
 	PTSR.gameover = false
+	PTSR.gameover_tics = 0
 	PTSR.untilend = 0
 	PTSR.dustdeviltimer = 0
 	PTSR.aipf = nil
@@ -43,7 +49,7 @@ local function InitMap()
 	end
 	*/
 
-	for i=1, CV_PTSR.levelsinvote.value do
+	for i=1,4 do
 		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
 	end
 end

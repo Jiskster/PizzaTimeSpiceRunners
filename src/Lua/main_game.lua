@@ -54,8 +54,14 @@ rawset(_G, "PTSR", { -- variables
 		
 		stop = false,
 	},
-
-	intermission_tics = 0,
+	
+	endscreen_tics = 0,
+	
+	endscreen_phase = 1,
+	
+	endscreen_phase_tics = 0,
+	
+	gameover_tics = 0,
 
 	gameover = false,
 	
@@ -66,10 +72,30 @@ rawset(_G, "PTSR", { -- variables
 	maxrankpoints = 0,
 	
 	vote_maplist = {
-		{votes = 0, mapnum = 1},
-		{votes = 0, mapnum = 1},
-		{votes = 0, mapnum = 1}
+		{votes = 0, mapnum = 1, gamemode = 1},
+		{votes = 0, mapnum = 1, gamemode = 1},
+		{votes = 0, mapnum = 1, gamemode = 1}
 	},
+	
+	vote_roulettelist = {
+		/*
+			{
+				[1] = {
+					mapnum = 1,
+					gamemode = 1,
+					voter_info = {
+						name = "John Doe"
+						skin = "sonic"
+						skincolor = SKINCOLOR_BLUE
+					},
+				}
+			}
+		*/
+	},
+	
+	vote_timeleft = 0,
+	
+	vote_screen = false,
 	
 	nextmapvoted = 0,
 	
@@ -140,6 +166,18 @@ PTSR.default_playervars = {
 	cantparry = false, --this is for the pizzaface parry - saxa
 	
 	hudstuff = PTSR_shallowcopy(PTSR.hudstuff),
+	
+	vote_selection = 1,
+	vote_pressed = false,
+	vote_unpressed = false, -- cancel vote
+	vote_up = false,
+	vote_down = false,
+	vote_left = false,
+	vote_right = false,
+	vote_alreadyvoted = false,
+	vote_selectanim = 0, -- selectanim decreases
+	vote_selectanim_start = 15,
+	vote_mapstats = {}, -- copied info from the selected map
 	
 	-- score lmao
 	current_score = 0,
@@ -266,12 +304,22 @@ addHook("NetVars", function(net)
 		"john",
 
 		"untilend",
-
-		"intermission_tics",
+		
+		"endscreen_tics",
+		
+		"endscreen_phase",
+		
+		"endscreen_phase_tics",
 
 		"gameover",
 		
+		"gameover_tics",
+		
 		"vote_maplist",
+		
+		"vote_roulettelist",
+		
+		"vote_screen",
 		
 		"nextmapvoted",
 		
@@ -430,7 +478,33 @@ addHook("ThinkFrame", do
 			PTSR.untilend = 0
 		end
 	else -- intermission thinker
-		PTSR.intermission_tics = $ + 1
+		PTSR.gameover_tics = $ + 1
+		
+		if PTSR.endscreen_phase >= 1 and PTSR.endscreen_phase <= 4 then
+			PTSR.endscreen_tics = $ + 1
+			PTSR.endscreen_phase_tics = max($ - 1, 0)
+			
+			if not PTSR.endscreen_phase_tics then
+				if PTSR.endscreen_phase == 1 then -- End of Black Fade In
+					PTSR.endscreen_phase_tics = PTSR.results_act2
+				elseif PTSR.endscreen_phase == 2 then -- End of Spinning Rank
+					PTSR.endscreen_phase_tics = PTSR.results_act3
+				elseif PTSR.endscreen_phase == 3 then -- End of Shaking Rank
+					PTSR.endscreen_phase_tics = PTSR.results_act4
+				elseif PTSR.endscreen_phase == 4 then-- End of Results Screen (Transition to vote screen)
+					PTSR.InitVoteScreen()
+				end
+				
+				PTSR.endscreen_phase = $ + 1
+			end
+		end
+		
+		/*
+			PTSR.results_act1 = 9*TICRATE + 10  -- last drum beat of the music
+			PTSR.results_act2 = 1*TICRATE + 29 -- cymbals (tschhh..)
+			PTSR.results_act3 = 5*TICRATE -- moment of silence.... (this frame is the last frame of act 2)
+			PTSR.results_vote_end = PTSR.results_act2_end + CV_PTSR.voteseconds.value*TICRATE
+		*/
 	end
 end)
 

@@ -5,6 +5,8 @@ function PTSR.EndGame()
 		PTSR.gameover = true
 		print("GAME OVER!")
 		
+		PTSR.endscreen_phase_tics = PTSR.results_act1
+		
 		if consoleplayer and consoleplayer.valid then
 			S_ChangeMusic(RANKMUS[consoleplayer.ptsr.rank], false, player)
 			mapmusname = RANKMUS[consoleplayer.ptsr.rank]

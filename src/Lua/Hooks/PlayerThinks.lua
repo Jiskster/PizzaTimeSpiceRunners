@@ -140,6 +140,28 @@ addHook("PlayerThink", function(player)
 	end
 end)
 
+addHook("PreThinkFrame", function()
+	if not PTSR.IsPTSR() then return end
+	if PTSR.inVoteScreen() then return end
+	
+	for player in players.iterate do
+		local cmd = player.cmd
+		player.hold_newlap = $ or 0
+
+		if player.ptsr.outofgame and not (player.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
+			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
+				player.hold_newlap = $ + 1
+			else
+				player.hold_newlap = 0
+			end
+			
+			cmd.buttons = 0
+			cmd.forwardmove = 0
+			cmd.sidemove = 0
+		end
+	end
+end)
+
 addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	local hudst = player.hudstuff

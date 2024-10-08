@@ -156,6 +156,8 @@ dofile "HUD/hud_gamemode.lua"
 dofile "HUD/hud_overtimemulti.lua"
 dofile "HUD/hud_untilend.lua"
 
+dofile "HUD/intermission/drawVoteScreenChosenMap.lua"
+dofile "HUD/intermission/drawVoteScreenRoulette.lua"
 dofile "HUD/intermission/drawVoteScreenMaps.lua"
 dofile "HUD/intermission/drawVoteScreenTimer.lua"
 dofile "HUD/intermission/draw_p_rank_animation.lua"

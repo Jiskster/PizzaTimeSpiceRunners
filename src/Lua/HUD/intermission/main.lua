@@ -35,6 +35,14 @@ local intermission_hud = function(v, player)
 		PTSR.drawVoteScreenTimer(v)
 		
 		PTSR.drawVoteScreenMaps(v, player)
+		
+		if PTSR.isVoteOver() then
+			if not (PTSR.vote_roulette_tictilmapswitch or PTSR.vote_finalpick) then
+				PTSR.drawVoteScreenRoulette(v)
+			else
+				PTSR.drawVoteScreenChosenMap(v)
+			end
+		end
 	end
 	
 	-- Reveal the rank.

@@ -42,7 +42,7 @@ function PTSR.InitVoteScreen()
 	
 	for i=1,#temp_selected_maplist do
 		PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]
-		PTSR.vote_maplist[i].gamemode = 1
+		PTSR.vote_maplist[i].gamemode = P_RandomRange(1,#PTSR.gamemode_list)
 	end
 
 	for player in players.iterate do 
@@ -186,26 +186,89 @@ end)
 
 addHook("ThinkFrame", do
 	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
-	
-	if PTSR.inVoteScreen() and not PTSR.isVoteOver() then
-		PTSR.vote_timeleft = $ - 1
-		
-		if not PTSR.vote_timeleft then
-			for player in players.iterate do
-				if not player.ptsr then continue end
+
+	if PTSR.inVoteScreen() then
+		if not PTSR.isVoteOver() then
+			PTSR.vote_timeleft = $ - 1
+
+			if not PTSR.vote_timeleft then
+				for player in players.iterate do
+					if not player.ptsr then continue end
+					
+					if player.ptsr.vote_alreadyvoted 
+					and player.ptsr.vote_mapstats["mapnum"] ~= nil
+					and player.ptsr.vote_mapstats["gamemode"] ~= nil then
+						table.insert(PTSR.vote_roulettelist, {
+							mapnum = player.ptsr.vote_mapstats["mapnum"],
+							gamemode = player.ptsr.vote_mapstats["gamemode"],
+							voter_info = {
+								name = player.name,
+								skin = skins[player.skin].name,
+								skincolor = player.skincolor,
+							}
+						})
+					end
+				end
 				
-				if player.ptsr.vote_alreadyvoted 
-				and player.ptsr.vote_mapstats["mapnum"] ~= nil
-				and player.ptsr.vote_mapstats["gamemode"] ~= nil then
-					table.insert(PTSR.vote_roulettelist, {
-						mapnum = player.ptsr.vote_mapstats["mapnum"],
-						gamemode = player.ptsr.vote_mapstats["gamemode"],
-						voter_info = {
-							name = player.name,
-							skin = skins[player.skin].name,
-							skincolor = player.skincolor,
-						}
-					})
+				if #PTSR.vote_roulettelist then -- setup roulette
+					PTSR.vote_roulette_ticspeed = P_RandomRange(1,2)
+					PTSR.vote_roulette_ticsleft = PTSR.vote_roulette_ticspeed
+					PTSR.vote_roulette_turnsleft = P_RandomRange(30,70)
+					PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
+				else -- no votes? go random bro
+					S_StartSound(nil, sfx_s3kb3)
+				
+					PTSR.vote_roulette_tictilmapswitch = 5*TICRATE
+					PTSR.vote_finalpick = PTSR.vote_maplist[P_RandomRange(1,#PTSR.vote_maplist)]
+					
+					PTSR.nextgamemode = 1
+					
+					print("\x82"..G_BuildMapTitle(PTSR.vote_finalpick.mapnum).. " was picked as the next map!")
+				end
+			end
+		else
+			if PTSR.vote_roulette_ticsleft 
+			and PTSR.vote_roulette_turnsleft 
+			and (not PTSR.vote_finalpick) and 
+			(not PTSR.vote_roulette_tictilmapswitch) then
+				PTSR.vote_roulette_ticsleft = $ - 1
+			
+				if not PTSR.vote_roulette_ticsleft then -- when next selection/when tumbler sound
+					if PTSR.vote_routette_ticspeed_turnsleft then
+						PTSR.vote_routette_ticspeed_turnsleft = $ - 1
+						
+						if not PTSR.vote_routette_ticspeed_turnsleft then
+							PTSR.vote_roulette_ticspeed = $ + P_RandomRange(2,6) -- lower selection speed
+							PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
+						end
+					end
+					
+					PTSR.vote_roulette_turnsleft = $ - 1
+					
+					if PTSR.vote_roulette_turnsleft then -- keep on going
+						S_StartSound(nil, sfx_s3kb7)
+						PTSR.vote_roulette_ticsleft = PTSR.vote_roulette_ticspeed
+						PTSR.vote_routette_selection = ((($+1)-1)%#PTSR.vote_roulettelist)+1
+					else -- its over bro
+						S_StartSound(nil, sfx_s3kb3)
+						
+						PTSR.vote_roulette_tictilmapswitch = 5*TICRATE
+						PTSR.vote_finalpick = PTSR.vote_roulettelist[PTSR.vote_routette_selection]
+						
+						PTSR.nextgamemode = PTSR.vote_finalpick.gamemode
+						
+						print("\x82"..G_BuildMapTitle(PTSR.vote_finalpick.mapnum).. " was picked as the next map!")
+					end
+				end
+			end
+		end
+		
+		if PTSR.vote_roulette_tictilmapswitch and PTSR.vote_finalpick then
+			PTSR.vote_roulette_tictilmapswitch = $ - 1
+			
+			if not PTSR.vote_roulette_tictilmapswitch then
+				if isserver then
+					COM_BufInsertText(server, "map "..PTSR.vote_finalpick.mapnum.." -f")
 				end
 			end
 		end

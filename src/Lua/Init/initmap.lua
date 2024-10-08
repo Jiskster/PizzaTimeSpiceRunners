@@ -18,6 +18,14 @@ local function InitMap()
 	PTSR.vote_timeleft = 0
 	PTSR.vote_roulettelist = {}
 	PTSR.vote_screen = false
+	PTSR.vote_roulette_ticsleft = 0
+	PTSR.vote_roulette_turnsleft = 100
+	PTSR.vote_routette_selection = 1
+	PTSR.vote_roulette_ticspeed = 50
+	PTSR.vote_routette_ticspeed_turnsleft = 20
+	PTSR.vote_routette_ticspeed_turnsleft_start = 20
+	PTSR.vote_roulette_tictilmapswitch = 0
+	PTSR.vote_finalpick = nil
 	PTSR.gameover = false
 	PTSR.gameover_tics = 0
 	PTSR.untilend = 0

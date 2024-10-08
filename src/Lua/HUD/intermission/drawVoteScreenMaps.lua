@@ -17,7 +17,15 @@ function PTSR.drawVoteScreenMaps(v, player)
 		
 		local mapscale = FU/2
 		local mapvoteinfo = PTSR.vote_maplist[i]
-		local mappatch = v.cachePatch(G_BuildMapName(mapvoteinfo.mapnum).."P")
+		local mapnum = mapvoteinfo.mapnum
+		local mappatch = v.cachePatch(G_BuildMapName(mapnum).."P")
+		
+		local maprealname = mapheaderinfo[mapnum].lvlttl
+		local mapact = mapheaderinfo[mapnum].actnum
+		
+		local gamemodeinfo = PTSR.gamemode_list[mapvoteinfo.gamemode]
+		local gamemodename = gamemodeinfo.name or "Unnamed"
+		
 		local panelpatch = v.cachePatch("PTSR_MAP_PANEL2")
 		local innerpatch = v.cachePatch("PTSR_MAP_INNER")
 		
@@ -29,7 +37,7 @@ function PTSR.drawVoteScreenMaps(v, player)
 			innerscale = ease.outquart(div, 0, mapscale) 
 		end
 		
-		local innerflag = V_50TRANS
+		local innerflag = V_50TRANS|V_ADD
 		
 		if player.ptsr.vote_alreadyvoted then
 			panelpatch = v.cachePatch("PTSR_MAP_PANEL")
@@ -61,6 +69,17 @@ function PTSR.drawVoteScreenMaps(v, player)
 			end
 			
 			v.drawScaled(panel_x, panel_y, mapscale, panelpatch)
+		end
+		
+		if maprealname then
+			v.drawString(x, y, maprealname, 0, "thin-fixed")
+		end
+		
+		if mapact then
+			v.drawString(x, y+(8*FU), "Act "..mapact, 0, "thin-fixed")
+			v.drawString(x, y+(16*FU), "\x82"..gamemodename, 0, "thin-fixed")
+		else
+			v.drawString(x, y+(8*FU), "\x82"..gamemodename, 0, "thin-fixed")
 		end
 	end
 end

@@ -97,6 +97,22 @@ rawset(_G, "PTSR", { -- variables
 	
 	vote_screen = false,
 	
+	vote_roulette_tictilmapswitch = 0,
+	
+	vote_roulette_ticsleft = 0,
+	
+	vote_roulette_turnsleft = 100,
+	
+	vote_routette_selection = 1,
+	
+	vote_roulette_ticspeed = 50,
+	
+	vote_routette_ticspeed_turnsleft = 20,
+	
+	vote_routette_ticspeed_turnsleft_start = 20, -- long ass name brah
+	
+	vote_finalpick = nil,
+	
 	nextmapvoted = 0,
 	
 	nextmapvoted_info = {},

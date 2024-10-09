@@ -127,7 +127,9 @@ addHook("ThinkFrame", function()
 			
 			if PTSR.pizzatime then
 				for player in players.iterate do
-					if (player.mo and player.mo.valid) then
+					if (player.mo and player.mo.valid) 
+					and (player.mo.health) and (not player.spectator)
+					and (not player.ptsr.outofgame) then
 						local dist = R_PointToDist2(player.mo.x, player.mo.y, v.x, v.y)
 						
 						if dist < 4096*FU then

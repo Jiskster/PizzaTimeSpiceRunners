@@ -337,6 +337,24 @@ addHook("NetVars", function(net)
 		
 		"vote_screen",
 		
+		"vote_timeleft",
+		
+		"vote_roulette_tictilmapswitch",
+		
+		"vote_roulette_ticsleft",
+		
+		"vote_roulette_turnsleft",
+		
+		"vote_routette_selection",
+		
+		"vote_roulette_ticspeed",
+		
+		"vote_routette_ticspeed_turnsleft",
+		
+		"vote_routette_ticspeed_turnsleft_start", -- long ass name brah
+		
+		"vote_finalpick",
+		
 		"nextmapvoted",
 		
 		"nextmapvoted_info",

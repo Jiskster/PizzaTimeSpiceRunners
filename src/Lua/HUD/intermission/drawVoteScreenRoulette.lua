@@ -1,21 +1,6 @@
 function PTSR.drawVoteScreenRoulette(v)
 	customhud.CustomFontString(v, 160*FU, 20*FU, tostring("CHOOSING MAP!"), "PTFNT", V_SNAPTOTOP, "center", FRACUNIT/2, SKINCOLOR_WHITE)
-	/*
-		vote_roulettelist = {
-			{
-				[1] = {
-					mapnum = 1,
-					gamemode = 1,
-					voter_info = {
-						name = "John Doe"
-						skin = "sonic"
-						skincolor = SKINCOLOR_BLUE
-					},
-				}
-			}
-		},
-	*/
-	
+
 	for i,info in ipairs(PTSR.vote_roulettelist) do
 		local x = 35*FU
 		local y = 60*FU

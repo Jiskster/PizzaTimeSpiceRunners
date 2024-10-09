@@ -16,7 +16,6 @@ function PTSR.drawVoteScreenChosenMap(v)
 			
 			local player_name = PTSR.vote_finalpick.voter_info.name
 			
-			
 			local mapscale = FU/2
 			
 			x = $ - FixedMul(mappatch.width*FU, mapscale)/2

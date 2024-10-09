@@ -32,6 +32,12 @@ function PTSR.drawVoteScreenRoulette(v)
 		local selpatch = v.cachePatch("PTSR_MAP_PANEL")
 		local innerpatch = v.cachePatch("PTSR_MAP_INNER")
 		
+		local player_skin = info.voter_info.skin
+		local player_skincolor = info.voter_info.skincolor
+		
+		local player_patch = v.getSprite2Patch(player_skin, SPR2_XTRA)
+		local player_colormap = v.getColormap(player_skin, player_skincolor)
+		
 		local x_offset = ((i-1)%6)*(50*FU)
 		local column = FixedCeil( FixedDiv(i*FU, 6*FU) ) / FU
 		
@@ -62,5 +68,7 @@ function PTSR.drawVoteScreenRoulette(v)
 		
 			v.drawScaled(sel_x, sel_y, mapscale, selpatch)
 		end
+		
+		v.drawScaled(x, y, mapscale, player_patch, 0, player_colormap)
 	end
 end

@@ -100,6 +100,8 @@ addHook("ThinkFrame", function()
 	if not (PTSR.ESLOCATIONS.loaded) then return end
 	if not leveltime then return end -- man srb2 sucks
 	if not PTSR.IsPTSR() then return end
+	if PTSR.gameover then return end
+	
 	local cyclesleft = 50
 	
 	while cyclesleft > 0 do

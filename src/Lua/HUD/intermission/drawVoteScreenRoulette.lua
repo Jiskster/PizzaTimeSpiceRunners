@@ -37,16 +37,19 @@ function PTSR.drawVoteScreenRoulette(v)
 		
 		local innerflag = V_50TRANS|V_ADD
 		
+		-- Adjust map icon's position
 		x = $ - FixedMul(mappatch.width*FU, mapscale)/2
 		y = $ - FixedMul(mappatch.height*FU, mapscale)/2
 		x = $ + x_offset
 		y = $ + (column-1)*(30*FU)
 		
+		-- Adjust selection for map icon's position
 		sel_x = $ - FixedMul(selpatch.width*FU, mapscale)/2
 		sel_y = $ - FixedMul(selpatch.height*FU, mapscale)/2
 		sel_x = $ + x_offset
 		sel_y = $ + (column-1)*(30*FU)
 		
+		-- Adjust inner yellow selection for map icon's position
 		inner_x = $ - FixedMul(innerpatch.width*FU, mapscale)/2
 		inner_y = $ - FixedMul(innerpatch.height*FU, mapscale)/2
 		inner_x = $ + x_offset

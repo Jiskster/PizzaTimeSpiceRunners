@@ -107,9 +107,9 @@ rawset(_G, "PTSR", { -- variables
 	
 	vote_roulette_ticspeed = 50,
 	
-	vote_routette_ticspeed_turnsleft = 20,
+	vote_routette_ticspeed_turnsleft = 7,
 	
-	vote_routette_ticspeed_turnsleft_start = 20, -- long ass name brah
+	vote_routette_ticspeed_turnsleft_start = 7, -- long ass name brah
 	
 	vote_finalpick = nil,
 	

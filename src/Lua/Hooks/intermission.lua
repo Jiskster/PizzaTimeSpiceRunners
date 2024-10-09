@@ -213,7 +213,7 @@ addHook("ThinkFrame", do
 				if #PTSR.vote_roulettelist then -- setup roulette
 					PTSR.vote_roulette_ticspeed = P_RandomRange(1,2)
 					PTSR.vote_roulette_ticsleft = PTSR.vote_roulette_ticspeed
-					PTSR.vote_roulette_turnsleft = P_RandomRange(30,70)
+					PTSR.vote_roulette_turnsleft = P_RandomRange(60,75)
 					PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
 				else -- no votes? go random bro
 					S_StartSound(nil, sfx_s3kb3)
@@ -238,7 +238,7 @@ addHook("ThinkFrame", do
 						PTSR.vote_routette_ticspeed_turnsleft = $ - 1
 						
 						if not PTSR.vote_routette_ticspeed_turnsleft then
-							PTSR.vote_roulette_ticspeed = $ + P_RandomRange(2,6) -- lower selection speed
+							PTSR.vote_roulette_ticspeed = $ + P_RandomRange(2,4) -- lower selection speed
 							PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
 						end
 					end

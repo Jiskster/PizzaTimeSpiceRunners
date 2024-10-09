@@ -395,7 +395,7 @@ rawset(_G, "PTSR_COUNT", do
 	local pizzaCount = 0
 	local peppinoCount = 0
 
-	for player in players.iterate
+	for player in players.iterate do
 		if player.valid
 			if player.ptsr.pizzaface then
 				pizzaCount = $+1

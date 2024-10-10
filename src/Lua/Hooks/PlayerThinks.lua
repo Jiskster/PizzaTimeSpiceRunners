@@ -88,6 +88,8 @@ end)
 
 addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
+	if PTSR.gameover then return end
+	
 	if not (player.mo and player.mo.valid) then return end
 	
 	if player.spectator or player.playerstate ~= PST_LIVE or not player.mo.health

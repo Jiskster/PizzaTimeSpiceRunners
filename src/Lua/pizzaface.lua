@@ -849,6 +849,10 @@ addHook("PlayerThink", function(player)
 			local zrange = 400*FU
 			searchBlockmap("objects", function(refmobj, foundmobj)
 				local strength = 3*FRACUNIT
+				local speed = FU + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
+				
+				strength = FixedMul(strength, speed)
+				
 				if foundmobj and abs(pmo.z-foundmobj.z) < zrange
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then

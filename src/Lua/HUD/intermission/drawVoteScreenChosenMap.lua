@@ -14,8 +14,6 @@ function PTSR.drawVoteScreenChosenMap(v)
 			local mappatch = v.cachePatch(G_BuildMapName(mapnum).."P")
 			local panelpatch = v.cachePatch("PTSR_MAP_PANEL")
 			
-			local player_name = PTSR.vote_finalpick.voter_info.name
-			
 			local mapscale = FU/2
 			
 			x = $ - FixedMul(mappatch.width*FU, mapscale)/2
@@ -25,7 +23,12 @@ function PTSR.drawVoteScreenChosenMap(v)
 			sel_y = $ - FixedMul(panelpatch.height*FU, mapscale)/2
 			
 			customhud.CustomFontString(v, 160*FU, text1_y, G_BuildMapTitle(mapnum), "PTFNT", V_SNAPTOTOP, "center", FRACUNIT/2, SKINCOLOR_YELLOW)
-			customhud.CustomFontString(v, 160*FU, text2_y, "VOTE WINNER: "..player_name, "PTFNT", V_SNAPTOTOP, "center", FRACUNIT/2, SKINCOLOR_GREEN)
+			
+			if PTSR.vote_finalpick.voter_info 
+			and PTSR.vote_finalpick.voter_info.name then
+				local player_name = PTSR.vote_finalpick.voter_info.name
+				customhud.CustomFontString(v, 160*FU, text2_y, "VOTE WINNER: "..player_name, "PTFNT", V_SNAPTOTOP, "center", FRACUNIT/2, SKINCOLOR_GREEN)
+			end
 			
 			v.drawScaled(x, y, mapscale, mappatch)
 			v.drawScaled(sel_x, sel_y, mapscale, panelpatch)

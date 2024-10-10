@@ -8,6 +8,7 @@ local costs = {
 	[MT_ATTRACT_BOX] = 25,
 	[MT_FORCE_BOX] = 20,
 	[MT_THUNDERCOIN_BOX] = 60,
+	[MT_MYSTERY_BOX] = 30,
 }
 
 local function autorefund (mo)
@@ -28,9 +29,11 @@ addHook("MobjThinker", autorefund, MT_INVULN_BOX)
 addHook("MobjThinker", autorefund, MT_ATTRACT_BOX)
 addHook("MobjThinker", autorefund, MT_FORCE_BOX)
 addHook("MobjThinker", autorefund, MT_THUNDERCOIN_BOX)
+addHook("MobjThinker", autorefund, MT_MYSTERY_BOX)
 
 addHook("ThinkFrame", function()
 	if AddSkipMonitor and not setstuff then
+		AddSkipMonitor(MT_MYSTERY_BOX, 69420, "steph my man, expose more of monitor spawning PLEASE", "like why gateskeep your modding environment like this")
 		AddSkipMonitor(MT_SKIPSUPERBOX, 69420, "steph my man, expose more of monitor spawning PLEASE", "like why gateskeep your modding environment like this")
 		setstuff = true
 	end

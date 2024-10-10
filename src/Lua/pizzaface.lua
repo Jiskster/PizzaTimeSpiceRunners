@@ -36,16 +36,6 @@ PTSR.PFMaskData = {
 		tagcolor = SKINCOLOR_MAGENTA
 	},
 	{
-		name = "Eggman",
-	    state = S_PF_EGGMAN,
-		scale = FU,
-		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
-		sound = sfx_bewar3,
-		emoji = ":egg:",
-		aiselectable = true,
-		tagcolor = SKINCOLOR_RED
-	},
-	{
 		name = "Summa",
 	    state = S_SUMMADAT_PF,
 		scale = FU/2,
@@ -63,16 +53,6 @@ PTSR.PFMaskData = {
 		sound = sfx_nrmlfc,
 		emoji = ":green_circle:",
 		tagcolor = SKINCOLOR_GREEN
-	},
-	{ -- Suggested by Maverick, maverick_2k on discord (841504642306801674)
-		name = "Kimizza",
-		state = S_KIMIZZA_PF,
-		scale = FU,
-		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
-		sound = sfx_evlagh,
-		emoji = ":pizza:",
-		aiselectable = true,
-		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
 		name = "Gooch",

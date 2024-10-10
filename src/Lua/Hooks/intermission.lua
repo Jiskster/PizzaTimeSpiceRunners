@@ -198,15 +198,23 @@ addHook("ThinkFrame", do
 					if player.ptsr.vote_alreadyvoted 
 					and player.ptsr.vote_mapstats["mapnum"] ~= nil
 					and player.ptsr.vote_mapstats["gamemode"] ~= nil then
-						table.insert(PTSR.vote_roulettelist, {
-							mapnum = player.ptsr.vote_mapstats["mapnum"],
-							gamemode = player.ptsr.vote_mapstats["gamemode"],
-							voter_info = {
-								name = player.name,
-								skin = skins[player.skin].name,
-								skincolor = player.skincolor,
-							}
-						})
+						local vote_multi = 1
+						
+						if player.ptsr.isWinner then
+							vote_multi = $ + 1
+						end
+						
+						for i=1,vote_multi do
+							table.insert(PTSR.vote_roulettelist, {
+								mapnum = player.ptsr.vote_mapstats["mapnum"],
+								gamemode = player.ptsr.vote_mapstats["gamemode"],
+								voter_info = {
+									name = player.name,
+									skin = skins[player.skin].name,
+									skincolor = player.skincolor,
+								}
+							})
+						end
 					end
 				end
 				

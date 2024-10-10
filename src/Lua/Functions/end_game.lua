@@ -12,6 +12,15 @@ function PTSR.EndGame()
 			mapmusname = RANKMUS[consoleplayer.ptsr.rank]
 		end
 		
+		if PTSR.leaderboard and PTSR.leaderboard[1] 
+		and PTSR.leaderboard[1].valid then
+			local winnerplayer = PTSR.leaderboard[1]
+			
+			if winnerplayer.ptsr then
+				winnerplayer.ptsr.isWinner = true
+			end
+		end
+		
 		for p in players.iterate do
 			if p and p.ptsr and PTSR.PlayerHasCombo(p) then
 				PTSR:EndCombo(p)

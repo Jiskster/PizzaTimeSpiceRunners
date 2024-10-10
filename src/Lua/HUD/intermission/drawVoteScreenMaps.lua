@@ -81,5 +81,11 @@ function PTSR.drawVoteScreenMaps(v, player)
 		else
 			v.drawString(x, y+(8*FU), "\x82"..gamemodename, 0, "thin-fixed")
 		end
+		
+		if player.ptsr then
+			if player.ptsr.isWinner then
+				v.drawString(160*FU, 180*FU, "\x8B".."Since you were #1, you get an extra vote!", V_SNAPTOBOTTOM|V_50TRANS, "thin-fixed-center")
+			end
+		end
 	end
 end

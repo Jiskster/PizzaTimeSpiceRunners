@@ -213,7 +213,9 @@ PTSR.default_playervars = {
 	
 	score_deduct_list = {
 		-- [1] = {score = 50, fuse = 25, startfuse = 25}
-	}
+	},
+	
+	isWinner = false, -- have they won a round (most points surviving)
 }
 PTSR.gamemode_list = {}
 

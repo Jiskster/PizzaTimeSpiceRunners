@@ -339,7 +339,7 @@ local ranktonum = {
 }
 
 addHook('ThinkFrame', function()
-	if gamestate ~= GS_LEVEL
+	if gamestate ~= GS_LEVEL then
 		return
 	end
 	
@@ -348,15 +348,13 @@ addHook('ThinkFrame', function()
 	if PTSR.pizzatime
 		PTSR.leaderboard = {}
 		
-		for p in players.iterate
-			
+		for p in players.iterate do
 			if (PTSR.pizzatime)
 				local outofgame = p.spectator or p.ptsr.pizzaface or (p.playerstate == PST_DEAD and PTSR.pizzatime)
-				if not outofgame
+				if not outofgame then
 					table.insert(PTSR.leaderboard,p)
 				end
 			end
-			
 		end
 		
 		table.sort(PTSR.leaderboard, function(a,b)
@@ -364,8 +362,8 @@ addHook('ThinkFrame', function()
 			local p2 = b
 			
 			--ALWAYS promote a P rank than an S with higher score
-			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank]
-				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank]
+			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank] then
+				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank] then
 					return true
 				end
 			else
@@ -374,7 +372,6 @@ addHook('ThinkFrame', function()
 				end
 			end
 		end)
-		
 	end
 end)
 

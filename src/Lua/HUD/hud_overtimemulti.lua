@@ -32,7 +32,7 @@ local overtimemulti_hud = function(v, player)
 	local gm_metadata = PTSR.currentModeMetadata()
 	if gm_metadata.core_endurance then return end
 	
-	local text = "PF SPEED: "
+	local text = "AI SPEED: "
 	
 	if gm_metadata.player_pizzaface then
 		text = "PF PULL STRENGTH: "

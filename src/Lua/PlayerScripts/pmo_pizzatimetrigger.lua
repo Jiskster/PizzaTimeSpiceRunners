@@ -120,6 +120,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
 			
+			player.powers[pw_carry] = 0
+			
 			player.ptsr.laps = 1
 			
 			for i,v in ipairs(PTSR.ESLOCATIONS) do
@@ -127,6 +129,8 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			end
 			
 			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
+			
+			pmo.state = S_PLAY_STND
 			
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			

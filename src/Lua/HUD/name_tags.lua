@@ -127,8 +127,10 @@ hud.add( function(v, player, camera)
 			tmoz = $ - 48*tmo.scale
 		end
 
-		if (tmo.flags2 & MF2_DONTDRAW) then
-			continue
+		if (tmo.type ~= MT_PLAYER) then
+			if (tmo.flags2 & MF2_DONTDRAW) then
+				continue
+			end
 		end
 
 		local result = SG_ObjectTracking(v,player,camera,{

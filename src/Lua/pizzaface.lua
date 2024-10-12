@@ -705,6 +705,8 @@ addHook("PlayerThink", function(player)
 	player.realmo.pfstuntime = $ or 0
 	if not PTSR.IsPTSR() then return end
 	if player.realmo and player.realmo.valid and player.ptsr.pizzaface and leveltime then
+		PTSR.addw2sobject(player.realmo)
+		
 		player.powers[pw_carry] = 0
 		
 		if player.redgreen == nil then

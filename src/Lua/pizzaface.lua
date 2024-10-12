@@ -68,16 +68,18 @@ PTSR.PFMaskData = {
 }
 
 function PTSR:ForceShieldParry(toucher, special)
-	PTSR.DoParry(toucher, special)
-	
-	PTSR.DoParryAnim(toucher, true)
-	PTSR.DoParryAnim(special)
-	
-	if toucher.player.powers[pw_shield] & SH_FORCEHP then
-		toucher.player.powers[pw_shield] = SH_FORCE|((toucher.player.powers[pw_shield] & SH_FORCEHP) - 1)
-	else
-		toucher.player.powers[pw_shield] = SH_NONE
-		P_DoPlayerPain(toucher.player)
+	if not toucher.player.powers[pw_invulnerability] then
+		PTSR.DoParry(toucher, special)
+		
+		PTSR.DoParryAnim(toucher, true)
+		PTSR.DoParryAnim(special)
+		
+		if toucher.player.powers[pw_shield] & SH_FORCEHP then
+			toucher.player.powers[pw_shield] = SH_FORCE|((toucher.player.powers[pw_shield] & SH_FORCEHP) - 1)
+		else
+			toucher.player.powers[pw_shield] = SH_NONE
+			P_DoPlayerPain(toucher.player)
+		end
 	end
 end
 

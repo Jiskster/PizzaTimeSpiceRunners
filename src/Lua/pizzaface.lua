@@ -142,13 +142,11 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 		end
 	end
 
-
 	if #peppinos > 0 then
 		local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
 		local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
 		local peppino_pmo = players[chosen_peppino].realmo
 		pizza.next_pfteleport = peppino_pmo -- next player object (mobj_t) to teleport to
-
 
 		pizza.next_pfteleport.pf_tele_delay = 10
 		if pizza.player then -- If Real Player
@@ -814,6 +812,7 @@ addHook("PlayerThink", function(player)
 		if player.ptsr.outofgame or PTSR.quitting then
 			player.pizzacharge = 0
 		end
+		
 		if not player.ptsr.outofgame and (player.ptsr.pfbuttons & BT_ATTACK)
 		and not player.ptsr.pizzachase and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
@@ -868,11 +867,14 @@ addHook("MobjThinker", function(mobj)
 		local targetplayer = mobj.targetplayer
 		P_MoveOrigin(mobj, targetplayer.mo.x, targetplayer.mo.y, targetplayer.mo.z)
 		mobj.angle = targetplayer.drawangle
+		
 		local thisMask = PTSR.PFMaskData[targetplayer.ptsr.pizzastyle]
+		
 		if mobj.state ~= thisMask.state then
 			mobj.state = thisMask.state
 			mobj.scale = thisMask.scale
 		end
+		
 		mobj.flags2 = ($ & ~MF2_OBJECTFLIP) | (targetplayer.mo.flags2 & MF2_OBJECTFLIP)
 		mobj.eflags = ($ & ~MFE_VERTICALFLIP) | (targetplayer.mo.eflags & MFE_VERTICALFLIP)
 		mobj.color = targetplayer.skincolor

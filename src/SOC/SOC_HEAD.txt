@@ -49,15 +49,11 @@ Lua.Takis_MaxHeartCards = 3
 Lua.ptsr_timelimit_secs = 165
 Lua.ptsr_s_rank_points = 27000
 Lua.ptsr_maxlaps = 5
-Lua.ptsr_maxportals = 2
+Lua.ptsr_maxportals = 1
 Lua.ptsr_portal(1)_x = -915
 Lua.ptsr_portal(1)_y = 6661
 Lua.ptsr_portal(1)_z = -64
 Lua.ptsr_portal(1)_angle = 145 
-Lua.ptsr_portal(2)_x = -1178
-Lua.ptsr_portal(2)_y = 560
-Lua.ptsr_portal(2)_z = 1568
-Lua.ptsr_portal(2)_angle = 12 
 Lua.ptsr_lapangle = 0
 #see act 1
 

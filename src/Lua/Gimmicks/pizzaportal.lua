@@ -173,7 +173,7 @@ addHook("MobjThinker", function(mobj)
 			PTSR.StartNewLap(mobj)
 			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
-			if angle_frompotal and tonumber(angle_frompotal) then
+			if angle_frompotal and tonumber(angle_frompotal) ~= nil then
 				mobj.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
 			

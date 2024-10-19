@@ -142,7 +142,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			end
 			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
-			if angle_frompotal and tonumber(angle_frompotal) then
+			if angle_frompotal and tonumber(angle_frompotal) ~= nil then
 				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
 			

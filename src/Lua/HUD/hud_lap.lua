@@ -46,13 +46,18 @@ local lap_hud = function(v, player)
 	cz.y = $ + shakey
 
 	if cz.y ~= nil and hudst.anim_active then
-		local color
+		local color = SKINCOLOR_PURPLE
 		
 		if PTSR.LapColors[player.ptsr.laps] then
 			color = v.getColormap(nil, PTSR.LapColors[player.ptsr.laps])
 		else -- pseudo rng lap colors
 			local colornum = ((player.ptsr.laps*INT8_MAX)%#skincolors)+1
-			color = v.getColormap(nil, colornum)
+			
+			if skincolors[colornum] then
+				color = v.getColormap(nil, colornum)
+			else
+				color = v.getColormap(nil, SKINCOLOR_PURPLE) -- default
+			end
 		end
 		
 		v.drawScaled(cz.x, cz.y, FU/3, v.cachePatch"LAPFLAG", V_SNAPTOTOP, color)

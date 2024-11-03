@@ -36,16 +36,6 @@ PTSR.PFMaskData = {
 		tagcolor = SKINCOLOR_MAGENTA
 	},
 	{
-		name = "Eggman",
-	    state = S_PF_EGGMAN,
-		scale = FU,
-		trails = {SKINCOLOR_GOLD, SKINCOLOR_FLAME},
-		sound = sfx_bewar3,
-		emoji = ":egg:",
-		aiselectable = true,
-		tagcolor = SKINCOLOR_RED
-	},
-	{
 		name = "Summa",
 	    state = S_SUMMADAT_PF,
 		scale = FU/2,
@@ -53,7 +43,7 @@ PTSR.PFMaskData = {
 		sound = sfx_smdah,
 		emoji = ":stuck_out_tongue:",
 		tagcolor = SKINCOLOR_ORANGE,
-		rubberrange = 100*FU
+		parrysplit = true
 	},
 	{
 		name = "Normal",
@@ -63,16 +53,6 @@ PTSR.PFMaskData = {
 		sound = sfx_nrmlfc,
 		emoji = ":green_circle:",
 		tagcolor = SKINCOLOR_GREEN
-	},
-	{ -- Suggested by Maverick, maverick_2k on discord (841504642306801674)
-		name = "Kimizza",
-		state = S_KIMIZZA_PF,
-		scale = FU,
-		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
-		sound = sfx_evlagh,
-		emoji = ":pizza:",
-		aiselectable = true,
-		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
 		name = "Gooch",
@@ -88,16 +68,18 @@ PTSR.PFMaskData = {
 }
 
 function PTSR:ForceShieldParry(toucher, special)
-	PTSR.DoParry(toucher, special)
-	
-	PTSR.DoParryAnim(toucher, true)
-	PTSR.DoParryAnim(special)
-	
-	if toucher.player.powers[pw_shield] & SH_FORCEHP then
-		toucher.player.powers[pw_shield] = SH_FORCE|((toucher.player.powers[pw_shield] & SH_FORCEHP) - 1)
-	else
-		toucher.player.powers[pw_shield] = SH_NONE
-		P_DoPlayerPain(toucher.player)
+	if not toucher.player.powers[pw_invulnerability] then
+		PTSR.DoParry(toucher, special)
+		
+		PTSR.DoParryAnim(toucher, true)
+		PTSR.DoParryAnim(special)
+		
+		if toucher.player.powers[pw_shield] & SH_FORCEHP then
+			toucher.player.powers[pw_shield] = SH_FORCE|((toucher.player.powers[pw_shield] & SH_FORCEHP) - 1)
+		else
+			toucher.player.powers[pw_shield] = SH_NONE
+			P_DoPlayerPain(toucher.player)
+		end
 	end
 end
 
@@ -153,17 +135,20 @@ function PTSR:RNGPizzaTP(pizza, uselaugh)
 		if not peppino.ptsr.pizzaface and (peppino.mo and peppino.mo.valid) and
 		not peppino.spectator and not peppino.ptsr.outofgame and (peppino.playerstate ~= PST_DEAD)
 		and not peppino.quittime and not PTSR_DoHook("pfplayertpfind", pizza, peppino) 
-		and not peppino.ptsr.treasure_got then
+		and not peppino.ptsr.treasure_got
+		and not peppino.mo.pf_tele_delay
+		then
 			table.insert(peppinos, #peppino)
 		end
 	end
 
-	local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
-	local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
-	local peppino_pmo = players[chosen_peppino].realmo
-	pizza.next_pfteleport = peppino_pmo -- next player object (mobj_t) to teleport to
-
 	if #peppinos > 0 then
+		local chosen_peppinonum = P_RandomRange(1,#peppinos) -- random entry in table
+		local chosen_peppino = peppinos[chosen_peppinonum] -- get the chosen value in table
+		local peppino_pmo = players[chosen_peppino].realmo
+		pizza.next_pfteleport = peppino_pmo -- next player object (mobj_t) to teleport to
+
+		pizza.next_pfteleport.pf_tele_delay = 10
 		if pizza.player then -- If Real Player
 			local player = pizza.player
 
@@ -662,6 +647,7 @@ local function handle_pf_player_movement(player)
 		and player.ptsr.pfbuttons & BT_CUSTOM2 then
 			player.ptsr.pizzachase = true
 			player.ptsr.pizzachase_time = 10*TICRATE
+			player.ptsr.chasepress = true
 			S_StartSound(player.mo, PTSR.PFMaskData[player.ptsr.pizzastyle].sound)
 		end
 	else
@@ -672,7 +658,8 @@ local function handle_pf_player_movement(player)
 			and p.mo.health
 			and p.ptsr
 			and not p.ptsr.pizzaface
-			and PTSR.PlayerIsChasable(p)) then continue end
+			and PTSR.PlayerIsChasable(p)
+			and P_CheckSight(p.mo, player.mo)) then continue end
 			if not (found_player and found_player.valid) then
 				found_player = p.mo
 			end
@@ -690,10 +677,13 @@ local function handle_pf_player_movement(player)
 
 		player.ptsr.pizzachase_time = max(0, $-1)
 		if not (player.ptsr.pizzachase_time)
-		or not (found_player and found_player.valid) then
+		or not (found_player and found_player.valid)
+		or ((player.ptsr.pfbuttons & BT_CUSTOM2) and not player.ptsr.chasepress) then
 			player.ptsr.pizzachase = false
 			player.ptsr.pizzachase_cooldown = 30*TICRATE
 		end
+
+		player.ptsr.chasepress = (player.ptsr.pfbuttons & BT_CUSTOM2)
 	end
 end
 
@@ -715,6 +705,10 @@ addHook("PlayerThink", function(player)
 	player.realmo.pfstuntime = $ or 0
 	if not PTSR.IsPTSR() then return end
 	if player.realmo and player.realmo.valid and player.ptsr.pizzaface and leveltime then
+		PTSR.addw2sobject(player.realmo)
+		
+		player.powers[pw_carry] = 0
+		
 		if player.redgreen == nil then
 			player.redgreen = $ or false
 		end
@@ -818,7 +812,8 @@ addHook("PlayerThink", function(player)
 		if player.ptsr.outofgame or PTSR.quitting then
 			player.pizzacharge = 0
 		end
-		if not player.ptsr.outofgame and (player.cmd.buttons & BT_ATTACK)
+		
+		if not player.ptsr.outofgame and (player.ptsr.pfbuttons & BT_ATTACK)
 		and not player.ptsr.pizzachase and not PTSR.quitting and not player.realmo.pfstuntime and not player.pizzachargecooldown then -- basically check if you're active in general
 			if player.pizzacharge < TICRATE then
 				player.pizzacharge = $ + 1
@@ -839,6 +834,10 @@ addHook("PlayerThink", function(player)
 			local zrange = 400*FU
 			searchBlockmap("objects", function(refmobj, foundmobj)
 				local strength = 3*FRACUNIT
+				local speed = FU + (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
+				
+				strength = FixedMul(strength, speed)
+				
 				if foundmobj and abs(pmo.z-foundmobj.z) < zrange
 				and foundmobj.valid and P_CheckSight(pmo, foundmobj) then
 					if (foundmobj.type == MT_PLAYER) and ((leveltime/2)%2) == 0 then
@@ -868,11 +867,14 @@ addHook("MobjThinker", function(mobj)
 		local targetplayer = mobj.targetplayer
 		P_MoveOrigin(mobj, targetplayer.mo.x, targetplayer.mo.y, targetplayer.mo.z)
 		mobj.angle = targetplayer.drawangle
+		
 		local thisMask = PTSR.PFMaskData[targetplayer.ptsr.pizzastyle]
+		
 		if mobj.state ~= thisMask.state then
 			mobj.state = thisMask.state
 			mobj.scale = thisMask.scale
 		end
+		
 		mobj.flags2 = ($ & ~MF2_OBJECTFLIP) | (targetplayer.mo.flags2 & MF2_OBJECTFLIP)
 		mobj.eflags = ($ & ~MFE_VERTICALFLIP) | (targetplayer.mo.eflags & MFE_VERTICALFLIP)
 		mobj.color = targetplayer.skincolor

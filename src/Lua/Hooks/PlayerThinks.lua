@@ -80,10 +80,16 @@ addHook("PlayerThink", function(player)
 	if PTSR.pizzatime and PTSR.timeover and not gm_metadata.disableovertimeshoes then
 		player.powers[pw_sneakers] = 1
 	end
+
+	if player and player.mo and player.mo.valid and player.mo.pf_tele_delay then
+		player.mo.pf_tele_delay = $ - 1
+	end
 end)
 
 addHook("PlayerThink", function(player)
 	if not PTSR.IsPTSR() then return end
+	if PTSR.gameover then return end
+	
 	if not (player.mo and player.mo.valid) then return end
 	
 	if player.spectator or player.playerstate ~= PST_LIVE or not player.mo.health
@@ -132,6 +138,28 @@ addHook("PlayerThink", function(player)
 			if hudst.wait_tics == 1 then
 				hudst.stop = true
 			end
+		end
+	end
+end)
+
+addHook("PreThinkFrame", function()
+	if not PTSR.IsPTSR() then return end
+	if PTSR.inVoteScreen() then return end
+	
+	for player in players.iterate do
+		local cmd = player.cmd
+		player.hold_newlap = $ or 0
+
+		if player.ptsr.outofgame and not (player.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
+			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
+				player.hold_newlap = $ + 1
+			else
+				player.hold_newlap = 0
+			end
+			
+			cmd.buttons = 0
+			cmd.forwardmove = 0
+			cmd.sidemove = 0
 		end
 	end
 end)
@@ -313,7 +341,7 @@ local ranktonum = {
 }
 
 addHook('ThinkFrame', function()
-	if gamestate ~= GS_LEVEL
+	if gamestate ~= GS_LEVEL then
 		return
 	end
 	
@@ -322,15 +350,13 @@ addHook('ThinkFrame', function()
 	if PTSR.pizzatime
 		PTSR.leaderboard = {}
 		
-		for p in players.iterate
-			
+		for p in players.iterate do
 			if (PTSR.pizzatime)
 				local outofgame = p.spectator or p.ptsr.pizzaface or (p.playerstate == PST_DEAD and PTSR.pizzatime)
-				if not outofgame
+				if not outofgame then
 					table.insert(PTSR.leaderboard,p)
 				end
 			end
-			
 		end
 		
 		table.sort(PTSR.leaderboard, function(a,b)
@@ -338,8 +364,8 @@ addHook('ThinkFrame', function()
 			local p2 = b
 			
 			--ALWAYS promote a P rank than an S with higher score
-			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank]
-				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank]
+			if ranktonum[a.ptsr.rank] ~= ranktonum[b.ptsr.rank] then
+				if ranktonum[a.ptsr.rank] > ranktonum[b.ptsr.rank] then
 					return true
 				end
 			else
@@ -348,7 +374,6 @@ addHook('ThinkFrame', function()
 				end
 			end
 		end)
-		
 	end
 end)
 

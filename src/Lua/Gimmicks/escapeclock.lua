@@ -30,6 +30,12 @@ states[S_PTSR_ESCAPECLOCK] = {
 	var2 = 2,
 }
 
+sfxinfo[sfx_escl01].flags = SF_TOTALLYSINGLE
+sfxinfo[sfx_escl02].flags = SF_TOTALLYSINGLE
+sfxinfo[sfx_escl03].flags = SF_TOTALLYSINGLE
+sfxinfo[sfx_escl04].flags = SF_TOTALLYSINGLE
+sfxinfo[sfx_escl05].flags = SF_TOTALLYSINGLE
+
 addHook("TouchSpecial", function(special, toucher)
 	local player = toucher.player
 	

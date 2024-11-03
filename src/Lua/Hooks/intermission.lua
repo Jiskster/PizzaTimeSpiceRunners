@@ -1,15 +1,153 @@
-PTSR.intermission_act1 = 324 -- last drum beat of the music
-PTSR.intermission_act2 = 388 -- cymbals (tschhh..)
-PTSR.intermission_act_end = PTSR.intermission_act2 + 5*TICRATE
-PTSR.intermission_vote_end = PTSR.intermission_act_end + CV_PTSR.voteseconds.value*TICRATE
+PTSR.results_act1 = 3*TICRATE + 24 -- Fading to black
+PTSR.results_act2 = 5*TICRATE + 23 -- Spinning Rank (Anticipation..)
+PTSR.results_act3 = 1*TICRATE + 29 -- Shaking Rank (Last note held)
+PTSR.results_act4 = 5*TICRATE -- cymbals (tschhh..) and moment of silence....
+--PTSR.results_vote_end = PTSR.results_act2_end + CV_PTSR.voteseconds.value*TICRATE
 
 
-function PTSR:inVoteScreen()
-	return PTSR.intermission_tics > PTSR.intermission_act_end
+function PTSR.inVoteScreen()
+	return (PTSR.vote_screen == true)
 end
 
-function PTSR:isVoteOver()
-	return PTSR.intermission_tics > PTSR.intermission_vote_end
+function PTSR.isVoteOver()
+	return (PTSR.vote_screen == true) and (not PTSR.vote_timeleft)
+end
+
+function PTSR.InitVoteScreen()
+	local levelsinvote = 4
+	
+	PTSR.vote_maplist = {}  -- votes, mapnumber
+	
+	for i=1,levelsinvote do
+		table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
+	end
+	
+	local temp_maplist = {} -- maps that have ptsr TOL_ and not hidden
+	local temp_selected_maplist = {} -- few maps
+	
+	-- get every map that is ptsr and not hidden
+	for i=1,1035 do
+		if mapheaderinfo[i] and (mapheaderinfo[i].typeoflevel & TOL_PTSR) 
+		and not mapheaderinfo[i].ptsr_hidden then
+			table.insert(temp_maplist,i)
+		end
+	end
+	
+	-- choose a select few maps.
+	for i=1,levelsinvote do
+		local chosen = P_RandomRange(1,#temp_maplist)
+		table.insert(temp_selected_maplist,temp_maplist[chosen])
+		table.remove(temp_maplist,chosen)
+	end
+	
+	for i=1,#temp_selected_maplist do
+		PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]
+		PTSR.vote_maplist[i].gamemode = P_RandomRange(1,#PTSR.gamemode_list)
+	end
+
+	for player in players.iterate do 
+		player.ptsr.vote_selection = P_RandomRange(1,levelsinvote)
+	end
+	
+	S_StartSound(nil,sfx_s3kb3)
+	
+	S_ChangeMusic("P_INT", true)
+	mapmusname = "P_INT"
+	
+	PTSR.vote_timeleft = CV_PTSR.voteseconds.value*TICRATE
+	PTSR.vote_screen = true
+end
+
+local function RegisterVoteScreenInput(player, cmd)
+	if (cmd.buttons & BT_JUMP) then
+		if not player.ptsr.vote_pressed then
+			if not player.ptsr.vote_alreadyvoted then
+				S_StartSound(nil, sfx_s1a1, player)
+				player.ptsr.vote_selectanim = player.ptsr.vote_selectanim_start
+				player.ptsr.vote_mapstats = {
+					mapnum = PTSR.vote_maplist[player.ptsr.vote_selection].mapnum,
+					gamemode = PTSR.vote_maplist[player.ptsr.vote_selection].gamemode,
+				}
+				player.ptsr.vote_alreadyvoted = true
+			end
+			
+			player.ptsr.vote_pressed = true
+		end
+	else
+		player.ptsr.vote_pressed = false
+	end
+	
+	if (cmd.buttons & BT_SPIN) then
+		if not player.ptsr.vote_unpressed then
+			if player.ptsr.vote_alreadyvoted then
+				S_StartSound(nil, sfx_s3k72, player) 
+				player.ptsr.vote_mapstats = {}
+				player.ptsr.vote_alreadyvoted = false
+			end
+			
+			player.ptsr.vote_unpressed = true
+		end
+	else
+		player.ptsr.vote_unpressed = false
+	end
+	
+	if not player.ptsr.vote_alreadyvoted then 
+		if (cmd.forwardmove > 40) then
+			if not player.ptsr.vote_up then
+				S_StartSound(nil, sfx_s3kb7, player)
+			
+				if player.ptsr.vote_selection - 2 > 0 then
+					player.ptsr.vote_selection = max(1, $ - 2)
+				end
+			
+				player.ptsr.vote_up = true
+			end
+		else
+			player.ptsr.vote_up = false
+		end
+		
+		if (cmd.forwardmove < -40) then
+			if not player.ptsr.vote_down then
+				S_StartSound(nil, sfx_s3kb7, player)
+			
+				if player.ptsr.vote_selection + 2 <= 4 then
+					player.ptsr.vote_selection = min($ + 2, 4)
+				end
+			
+				player.ptsr.vote_down = true
+			end
+		else
+			player.ptsr.vote_down = false
+		end
+		
+		if (cmd.sidemove < -40) then
+			if not player.ptsr.vote_left then
+				S_StartSound(nil, sfx_s3kb7, player)
+			
+				if player.ptsr.vote_selection - 1 > 0 then
+					player.ptsr.vote_selection = max(1, $ - 1)
+				end
+			
+				player.ptsr.vote_left = true
+			end
+		else
+			player.ptsr.vote_left = false
+		end
+		
+		if (cmd.sidemove > 40) then
+			if not player.ptsr.vote_right then
+				S_StartSound(nil, sfx_s3kb7, player)
+			
+				if player.ptsr.vote_selection + 1 <= 4 then
+					player.ptsr.vote_selection = min($ + 1, 4)
+				end
+			
+				player.ptsr.vote_right = true
+			end
+		else
+			player.ptsr.vote_right = false
+		end
+	end
 end
 
 local function allequals(...)
@@ -47,207 +185,121 @@ addHook("MobjThinker", function(mobj)
 end)
 
 addHook("ThinkFrame", do
-	local levelsinvote = CV_PTSR.levelsinvote.value
-
 	if not PTSR.IsPTSR() or gamestate ~= GS_LEVEL then return end --stop the trolling
-	
-	if PTSR.gameover and PTSR.intermission_tics == PTSR.intermission_act_end then
-		PTSR.vote_maplist = {}  -- votes, mapnumber
-		
-		for i=1,levelsinvote do
-			table.insert(PTSR.vote_maplist, {votes = 0, mapnum = 1, gamemode = 1})
-		end
-		
-		local temp_maplist = {}
-		local temp_selected_maplist = {}
-		
-		for i=1,1035 do
-			if mapheaderinfo[i] and (mapheaderinfo[i].typeoflevel & TOL_PTSR) 
-			and not mapheaderinfo[i].ptsr_hidden then
-				table.insert(temp_maplist,i)
-			end
-		end
-		
-		for i=1,levelsinvote do
-			local chosen = P_RandomRange(1,#temp_maplist)
-			table.insert(temp_selected_maplist,temp_maplist[chosen])
-			table.remove(temp_maplist,chosen)
-		end
-		
-		for i=1,#temp_selected_maplist do
-			-- assign gamemodes
-			local newgamemode = 1
-			local coremodes = {} -- EX: {1,2}
-			if multiplayer then
-				for i,v in pairs(PTSR.coremodes) do
-					if v == true then
-						table.insert(coremodes, i)
-					end
-				end
-				
-				local gamemode_fromcoremodes = P_RandomRange(1,#coremodes) -- coremode range
-				newgamemode = coremodes[gamemode_fromcoremodes] 
-			
-				if P_RandomChance(FU/3) then
-					if #PTSR.gamemode_list > #coremodes then
-						newgamemode = P_RandomRange(#coremodes + 1, #PTSR.gamemode_list)
-					end
-				end
-				
-				if not multiplayer then
-					newgamemode = 1
-				end
-			end
-			
-			-- set mapvote var
-			PTSR.vote_maplist[i].mapnum = temp_selected_maplist[i]
-			PTSR.vote_maplist[i].gamemode = tonumber(newgamemode)
 
-			print(G_BuildMapTitle(temp_selected_maplist[i]))
-		end
-		
-		for player in players.iterate do 
-			player.ptvote_selection = P_RandomRange(1,levelsinvote)
-		end
-		
-		S_StartSound(nil,sfx_s3kb3)
-		
-		S_ChangeMusic("P_INT", true)
-		mapmusname = "P_INT"
-	end
-	
-	if PTSR.intermission_tics == PTSR.intermission_vote_end then
-		local sorted_votes = PTSR_shallowcopy(PTSR.vote_maplist) -- table
-		local raw_votes = {} -- just the votes numbers
-		
-		table.sort(sorted_votes,function(a,b) return a.votes > b.votes end)
-		
-		for i=1,#sorted_votes do
-			raw_votes[i] = sorted_votes[i].votes
-		end
-		
-		if allequals(unpack(raw_votes))
-			local chosenmap = P_RandomRange(1,levelsinvote)
-			
-			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a tie with all maps!")
-			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum 
-			
-			PTSR.nextmapvoted_info = sorted_votes[chosenmap]
-		elseif sorted_votes[1].votes == sorted_votes[2].votes then
-			local chosenmap = P_RandomRange(1,2)
-			
-			print("\x82"..G_BuildMapTitle(sorted_votes[chosenmap].mapnum).. " was picked as the next map with a two way tie!")
-			PTSR.nextmapvoted = sorted_votes[chosenmap].mapnum
-			
-			PTSR.nextmapvoted_info = sorted_votes[chosenmap]
+	if PTSR.inVoteScreen() then
+		if not PTSR.isVoteOver() then
+			PTSR.vote_timeleft = $ - 1
+
+			if not PTSR.vote_timeleft then
+				for player in players.iterate do
+					if not player.ptsr then continue end
+					
+					if player.ptsr.vote_alreadyvoted 
+					and player.ptsr.vote_mapstats["mapnum"] ~= nil
+					and player.ptsr.vote_mapstats["gamemode"] ~= nil then
+						local vote_multi = 1
+						
+						if player.ptsr.isWinner then
+							vote_multi = $ + 1
+						end
+						
+						for i=1,vote_multi do
+							table.insert(PTSR.vote_roulettelist, {
+								mapnum = player.ptsr.vote_mapstats["mapnum"],
+								gamemode = player.ptsr.vote_mapstats["gamemode"],
+								voter_info = {
+									name = player.name,
+									skin = skins[player.skin].name,
+									skincolor = player.skincolor,
+								}
+							})
+						end
+					end
+				end
+				
+				if #PTSR.vote_roulettelist then -- setup roulette
+					PTSR.vote_roulette_ticspeed = P_RandomRange(1,2)
+					PTSR.vote_roulette_ticsleft = PTSR.vote_roulette_ticspeed
+					PTSR.vote_roulette_turnsleft = P_RandomRange(60,75)
+					PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
+				else -- no votes? go random bro
+					S_StartSound(nil, sfx_s3kb3)
+				
+					PTSR.vote_roulette_tictilmapswitch = 5*TICRATE
+					PTSR.vote_finalpick = PTSR.vote_maplist[P_RandomRange(1,#PTSR.vote_maplist)]
+					
+					PTSR.nextgamemode = 1
+					
+					print("\x82"..G_BuildMapTitle(PTSR.vote_finalpick.mapnum).. " was picked as the next map!")
+				end
+			end
 		else
-			print("\x82"..G_BuildMapTitle(sorted_votes[1].mapnum).. " was picked as the next map!")
-			PTSR.nextmapvoted = sorted_votes[1].mapnum
+			if PTSR.vote_roulette_ticsleft 
+			and PTSR.vote_roulette_turnsleft 
+			and (not PTSR.vote_finalpick) and 
+			(not PTSR.vote_roulette_tictilmapswitch) then
+				PTSR.vote_roulette_ticsleft = $ - 1
 			
-			PTSR.nextmapvoted_info = sorted_votes[1]
+				if not PTSR.vote_roulette_ticsleft then -- when next selection/when tumbler sound
+					if PTSR.vote_routette_ticspeed_turnsleft then
+						PTSR.vote_routette_ticspeed_turnsleft = $ - 1
+						
+						if not PTSR.vote_routette_ticspeed_turnsleft then
+							PTSR.vote_roulette_ticspeed = $ + P_RandomRange(2,4) -- lower selection speed
+							PTSR.vote_routette_ticspeed_turnsleft = PTSR.vote_routette_ticspeed_turnsleft_start
+						end
+					end
+					
+					PTSR.vote_roulette_turnsleft = $ - 1
+					
+					if PTSR.vote_roulette_turnsleft then -- keep on going
+						S_StartSound(nil, sfx_s3kb7)
+						PTSR.vote_roulette_ticsleft = PTSR.vote_roulette_ticspeed
+						PTSR.vote_routette_selection = ((($+1)-1)%#PTSR.vote_roulettelist)+1
+					else -- its over bro
+						S_StartSound(nil, sfx_s3kb3)
+						
+						PTSR.vote_roulette_tictilmapswitch = 5*TICRATE
+						PTSR.vote_finalpick = PTSR.vote_roulettelist[PTSR.vote_routette_selection]
+						
+						PTSR.nextgamemode = PTSR.vote_finalpick.gamemode
+						
+						print("\x82"..G_BuildMapTitle(PTSR.vote_finalpick.mapnum).. " was picked as the next map!")
+					end
+				end
+			end
 		end
 		
-		for i,v in ipairs(sorted_votes) do
-			print(i..": "..G_BuildMapTitle(v.mapnum).. "["..v.votes.."]")
+		if PTSR.vote_roulette_tictilmapswitch and PTSR.vote_finalpick then
+			PTSR.vote_roulette_tictilmapswitch = $ - 1
+			
+			if not PTSR.vote_roulette_tictilmapswitch then
+				if isserver then
+					COM_BufInsertText(server, "map "..PTSR.vote_finalpick.mapnum.." -f")
+				end
+			end
 		end
-		
-		S_StartSound(nil, sfx_s3kb3)
-		
-		PTSR.nextgamemode = tonumber(PTSR.nextmapvoted_info.gamemode)
-	end
-	
-	if PTSR.intermission_tics == PTSR.intermission_vote_end + 5*TICRATE then
-		COM_BufInsertText(server, "map "..PTSR.nextmapvoted)
 	end
 end)
 
 addHook("PreThinkFrame", function()
+	if not PTSR.IsPTSR() then return end
+	if not (PTSR.inVoteScreen()) then return end
+	
 	for player in players.iterate do
 		local cmd = player.cmd
 		
-		player.hold_newlap = $ or 0
-		
-		if player.ptsr.outofgame and not (player.ptsr.laps >= PTSR.maxlaps and CV_PTSR.default_maxlaps.value) then 
-			if (player.cmd.buttons & BT_ATTACK) and not PTSR.gameover then
-				player.hold_newlap = $ + 1
-			else
-				player.hold_newlap = 0
-			end
+		if player.ptsr.vote_selectanim then
+			player.ptsr.vote_selectanim = max(0, $ - 1)
 		end
 		
-		if PTSR:inVoteScreen() and not PTSR:isVoteOver() then
-		
-			-- Selection Increment
-			if not player.ptvote_voted then
-				if cmd.forwardmove < -40 or cmd.sidemove > 40 then
-					if not player.ptvote_down then
-						S_StartSound(nil, sfx_s3kb7, player)
-					
-						if player.ptvote_selection + 1 > CV_PTSR.levelsinvote.value then
-							player.ptvote_selection = 1
-						else
-							player.ptvote_selection = $ + 1 
-						end
-						
-						player.ptvote_down = true
-					end
-				else
-					player.ptvote_down = false
-				end
-				
-				-- Selection Decrement
-				if cmd.forwardmove > 40 or cmd.sidemove < -40 then
-					if not player.ptvote_up then
-						S_StartSound(nil, sfx_s3kb7, player)
-						
-						if player.ptvote_selection - 1 < 1 then
-							player.ptvote_selection = CV_PTSR.levelsinvote.value
-						else
-							player.ptvote_selection = $ - 1 
-						end
-						
-						player.ptvote_up = true
-					end
-				else
-					player.ptvote_up = false
-				end
-			end
-			
-			if cmd.buttons & BT_JUMP and not player.ptvote_voted then
-				if not player.ptvote_votepressed then
-					S_StartSound(nil, sfx_s1a1, player)  
-
-					PTSR.vote_maplist[player.ptvote_selection].votes = $ + 1
-					player.ptvote_voted = true
-					player.ptvote_votepressed = true
-				end
-			else
-				player.ptvote_votepressed = false
-			end
-			
-			if cmd.buttons & BT_SPIN and player.ptvote_voted then
-				if not player.ptvote_unvotepressed then
-					S_StartSound(nil, sfx_s3k72, player) 
-
-					PTSR.vote_maplist[player.ptvote_selection].votes = $ - 1
-					player.ptvote_voted = false
-					player.ptvote_unvotepressed = true
-				end
-			else
-				player.ptvote_unvotepressed = false
-			end
-			
-			if player.ptvote_selection then
-				player.ptvote_selection = clamp(1,$,CV_PTSR.levelsinvote.value)
-			else
-				player.ptvote_selection = 1
-			end
+		if not PTSR.isVoteOver() then
+			RegisterVoteScreenInput(player, cmd)
 		end
 		
-		if PTSR:inVoteScreen() or player.ptsr.outofgame then
-			cmd.buttons = 0
-			cmd.forwardmove = 0
-			cmd.sidemove = 0	
-		end
+		cmd.buttons = 0
+		cmd.forwardmove = 0
+		cmd.sidemove = 0	
 	end
 end)

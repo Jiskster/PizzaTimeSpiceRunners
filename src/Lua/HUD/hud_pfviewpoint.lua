@@ -1,7 +1,9 @@
 local pfviewpoint_hud = function(v, p)
 	if not PTSR.IsPTSR() then return end
 	if not (p.spectator) then return end
-
+	local gm_metadata = PTSR.currentModeMetadata()
+	if gm_metadata.player_pizzaface then return end
+	
     local me = p.realmo
 
     if not (me and me.valid) then return end

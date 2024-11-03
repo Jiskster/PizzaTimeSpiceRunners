@@ -32,13 +32,19 @@ local overtimemulti_hud = function(v, player)
 	local gm_metadata = PTSR.currentModeMetadata()
 	if gm_metadata.core_endurance then return end
 	
+	local text = "AI SPEED: "
+	
+	if gm_metadata.player_pizzaface then
+		text = "PF PULL STRENGTH: "
+	end
+	
 	local speed = (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
 	local speedtext = L_FixedDecimal(FRACUNIT + speed,2)
 	
 	local totics = PTSR.timeover_tics
 	local t = min(FixedDiv(totics, 5*TICRATE), FU)
 
-	local tw = v.stringWidth("PF SPEED: "..speedtext.."X", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")*FU
+	local tw = v.stringWidth(text..speedtext.."X", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")*FU
 
 	local y = 58*FU
 	local x = ease.outcubic(t, -tw, 16*FU)
@@ -47,7 +53,7 @@ local overtimemulti_hud = function(v, player)
 	local prog = min(FixedMul(limit, FixedDiv(speed, FU*2)), limit)
 
 	-- barfill(v, x, y, FU/3, prog, V_SNAPTOBOTTOM)
-	v.drawString(x, y, "PIZZA SPEED: "..speedtext.."X", V_SNAPTOTOP|V_SNAPTOLEFT|V_REDMAP|V_20TRANS, "thin-fixed")
+	v.drawString(x, y, text..speedtext.."X", V_SNAPTOTOP|V_SNAPTOLEFT|V_REDMAP|V_20TRANS, "thin-fixed")
 end
 
 customhud.SetupItem("PTSR_overtimemulti", ptsr_hudmodname, overtimemulti_hud, "game", 0)

@@ -11,12 +11,13 @@ PTSR.StartNewLap = function(mobj)
 		
 		player.ptsr.laptime = 0
 		
+		for i,v in ipairs(PTSR.ESLOCATIONS) do
+			v.lap_list[player] = player.ptsr.laps
+		end
 		
 		player.ptsr.laps = $ + 1
 		PTSR.laps = $ + 1
-		
-		
-		
+
 		/* Unused code idk what tf this is for
 		if player.ptsr.laps > PTSR.laps
 			PTSR.laps = player.ptsr.laps

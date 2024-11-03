@@ -239,6 +239,15 @@ PTSR.DoParry = function(parrier, victim)
 	
 	P_SetObjectMomZ(victim, knockback_z)
 	P_InstaThrust(victim, anglefromparrier + ANGLE_180, knockback_xy)
+
+	if victim.type == MT_PIZZA_ENEMY and PTSR.PFMaskData[victim.pizzastyle or 1].parrysplit and #PTSR.pizzas < 25 then
+		local newpf = PTSR:SpawnPFAI(victim.pizzastyle)
+		P_SetOrigin(newpf, victim.x, victim.y, victim.z)
+		newpf.pfstunmomentum = true
+		newpf.pfstuntime = CV_PTSR.parrystuntime.value
+		P_SetObjectMomZ(newpf, knockback_z/2)
+		P_InstaThrust(newpf, anglefromparrier + ANGLE_180, knockback_xy/2)
+	end
 end
 
 PTSR.DoHitlag = function(mobj)

@@ -119,9 +119,18 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		for player in players.iterate() do
 			local pmo = player.mo
 			if not (pmo and pmo.valid) then continue end
+			
+			player.powers[pw_carry] = 0
+			
 			player.ptsr.laps = 1
 			
+			for i,v in ipairs(PTSR.ESLOCATIONS) do
+				v.lap_list[player] = player.ptsr.laps -- is 1
+			end
+			
 			P_SetOrigin(pmo, PTSR.end_location.x,PTSR.end_location.y, PTSR.end_location.z)
+			
+			pmo.state = S_PLAY_STND
 			
 			pmo.angle = PTSR.end_location.angle - ANGLE_90
 			
@@ -133,7 +142,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 			end
 			
 			local angle_frompotal = mapheaderinfo[gamemap].ptsr_lapangle 
-			if angle_frompotal and tonumber(angle_frompotal) then
+			if angle_frompotal and tonumber(angle_frompotal) ~= nil then
 				pmo.angle = FixedAngle(tonumber(angle_frompotal)*FRACUNIT)
 			end
 			

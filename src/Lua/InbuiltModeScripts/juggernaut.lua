@@ -93,6 +93,7 @@ PTSR_AddHook("onparry", function(pmo, victim)
 				PTSR.juggernaut_crownholder = nil
 			
 				P_DoPlayerPain(victim.player)
+				S_StartSound(nil, sfx_ptsrc1, victim.player)
 				
 				local output_text = victim.player.name.. " lost their crown!"
 				chatprint("\x82".. "*" .. output_text)
@@ -175,6 +176,7 @@ local function JN_FindAndMakeNewJuggernaut()
 	PTSR.juggernaut_crownholder = chosen_player.realmo
 	
 	S_StartSound(nil, sfx_s24f)
+	S_StartSound(nil, sfx_ptsrc2, chosen_player)
 	
 	newcrown.flags = $ | (MF_NOCLIP | MF_NOGRAVITY)
 	
@@ -216,15 +218,15 @@ addHook("MobjThinker", function(mobj)
 	
 	-- despawn timer
 	if mobj.crownorphan then
-		 mobj.crownorphan = $ - 1
-		 
-		 if not mobj.crownorphan and JG_GetPlayerCount() ~= 0 then
+		mobj.crownorphan = $ - 1
+		
+		if not mobj.crownorphan and JG_GetPlayerCount() ~= 0 then
 			JN_FindAndMakeNewJuggernaut()
-	
+			
 			mobj.invalidcrown = true
 			P_KillMobj(mobj)
 			return
-		 end
+		end
 	end
 	
 	if mobj.equip_pmo and mobj.equip_pmo.valid then

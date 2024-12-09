@@ -1,15 +1,11 @@
 freeslot("TOL_PTSR")
 freeslot("sfx_pizzah", "sfx_pizzao", "sfx_coneba", "sfx_pepdie", "sfx_lap2", "sfx_pzprry",
-		 "sfx_prepr1", "sfx_prepr2", "sfx_prepr3", "sfx_ptsrc1", "sfx_ptsrc2", "MT_PT_PARRY",
-		 "S_PT_PARRY", "SPR_PRRY")
+		 "sfx_prepr1", "sfx_prepr2", "sfx_prepr3", "MT_PT_PARRY", "S_PT_PARRY", "SPR_PRRY")
 freeslot("sfx_evlagh")
 
 for i = 0, 2
 	sfxinfo[sfx_prepr1 + i].caption = "Boink"
 end
-
-sfxinfo[sfx_ptsrc1].caption = "Crown get!"
-sfxinfo[sfx_ptsrc2].caption = "Crown lost!"
 
 sfxinfo[sfx_pizzah].caption = "Pizzaface laughs"
 sfxinfo[sfx_coneba].caption = "Coneball laughs"

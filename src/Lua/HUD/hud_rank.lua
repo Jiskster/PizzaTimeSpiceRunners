@@ -3,6 +3,10 @@ local rank_hud = function(v, player)
 		x = 110*FRACUNIT,
 		y = 20*FRACUNIT
 	}
+	local minim_rankpos = {
+		x = 70*FRACUNIT,
+		y = 10*FRACUNIT
+	}
 	if not PTSR.IsPTSR() then return end
 	
 	if player.ptsr.pizzaface then return end
@@ -30,8 +34,9 @@ local rank_hud = function(v, player)
 	*/
 	end
 	--
-
 	if player.ptsr.rank then
+/*-------------------PTSR HUD---------------------*/
+		if not isminimalhud
 		local scale = ease.linear(player.ptsr.rank_scaleTime, FU/3, (FU/3)*2)
 	
 		v.drawScaled(rankpos.x, rankpos.y,scale, PTSR.r2p(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
@@ -56,7 +61,34 @@ local rank_hud = function(v, player)
 			)
 			
 		end
-	end
+		else
+/*-------------------GKS MINIMAL HUD---------------------*/
+		local scale = ease.linear(player.ptsr.rank_scaleTime, FU/2, (FU/2)*2)
+	
+		v.drawScaled(minim_rankpos.x, minim_rankpos.y,scale, PTSR.r2p_minimal(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP|V_HUDTRANSDOUBLE)		
+		--luigi budd: the fill
+		if per
+		and (player.ptsr.rank ~= "player")
+			local patch = PTSR.r2f_minimal(v,player.ptsr.rank)
+			local max = percent
+			local erm = FixedDiv(score,max)
+			
+			local scale2 = patch.height*FU-(FixedMul(erm,patch.height*FU))
+			
+ 			if scale2 < 0 then scale2 = FU end
+			
+			v.drawCropped(minim_rankpos.x,minim_rankpos.y+(scale2/2),
+				scale,scale,
+				patch,
+				V_SNAPTOLEFT|V_SNAPTOTOP|V_HUDTRANSDOUBLE, 
+				nil,
+				0,scale2,
+				patch.width*FU,patch.height*FU
+			)
+			
+		end
+		end
+	end	
 end
 
 customhud.SetupItem("PTSR_rank", ptsr_hudmodname, rank_hud, "game", 0)

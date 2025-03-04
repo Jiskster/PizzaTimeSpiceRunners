@@ -1,5 +1,6 @@
 local itspizzatime_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
+	if isminimalhud then return end
 	if PTSR.pizzatime and PTSR.pizzatime_tics then
 		/*
 		if PTSR.pizzatime_tics < 85

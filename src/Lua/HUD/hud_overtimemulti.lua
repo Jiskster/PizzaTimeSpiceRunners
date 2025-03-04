@@ -32,14 +32,17 @@ local overtimemulti_hud = function(v, player)
 	local gm_metadata = PTSR.currentModeMetadata()
 	if gm_metadata.core_endurance then return end
 	
+	local speed = (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
+	local speedtext = L_FixedDecimal(FRACUNIT + speed,2)
+	
+/*-------------------PTSR HUD---------------------*/
+	if not isminimalhud
+	
 	local text = "AI SPEED: "
 	
 	if gm_metadata.player_pizzaface then
 		text = "PF PULL STRENGTH: "
 	end
-	
-	local speed = (PTSR.timeover_tics*CV_PTSR.overtime_speed.value)
-	local speedtext = L_FixedDecimal(FRACUNIT + speed,2)
 	
 	local totics = PTSR.timeover_tics
 	local t = min(FixedDiv(totics, 5*TICRATE), FU)
@@ -54,6 +57,26 @@ local overtimemulti_hud = function(v, player)
 
 	-- barfill(v, x, y, FU/3, prog, V_SNAPTOBOTTOM)
 	v.drawString(x, y, text..speedtext.."X", V_SNAPTOTOP|V_SNAPTOLEFT|V_REDMAP|V_20TRANS, "thin-fixed")
+	else
+/*-------------------GKS MINIMAL HUD---------------------*/
+	local graphic = v.cachePatch("MINIM_PFSPEED")
+	
+	if gm_metadata.player_pizzaface then
+		graphic = v.cachePatch("MINIM_MAGNET")
+	end
+	
+	local bartooltips_y = 180
+	local speed_pos = {
+		x = 110,
+		y = bartooltips_y
+	}
+	if gm_metadata.player_pizzaface
+		v.draw(speed_pos.x-2, speed_pos.y+3, graphic, V_SNAPTOBOTTOM|V_HUDTRANS)
+	else
+		v.draw(speed_pos.x, speed_pos.y, graphic, V_SNAPTOBOTTOM|V_HUDTRANS)
+	end
+	v.drawString(speed_pos.x, speed_pos.y, speedtext.."X", V_SNAPTOBOTTOM|V_HUDTRANSDOUBLE, "thin-center")
+	end
 end
 
 customhud.SetupItem("PTSR_overtimemulti", ptsr_hudmodname, overtimemulti_hud, "game", 0)

@@ -21,8 +21,8 @@ PTSR.DoLapBonus = function(player)
 	if player.ptsr.laps ~= nil then
 		local escapebonus = true
 		
-		local lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
-		local ringbonus = player.ptsr.rings_on_lap * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
+		player.lapbonus = player.ptsr.laps * (gm_metadata.lapbonus or PTSR.lapbonus)
+		player.ringbonus = player.ptsr.rings_on_lap * (gm_metadata.ringlapbonus or PTSR.ringlapbonus)
 		
 		if gm_metadata.core_endurance 
 		and count.peppinos then
@@ -38,25 +38,26 @@ PTSR.DoLapBonus = function(player)
 		end
 		
 		if PTSR_DoHook("onlapbonus", player) then
-			lapbonus = 0
+			player.lapbonus = 0
 		end
 		
 		if PTSR_DoHook("onringbonus", player) then
-			ringbonus = 0
+			player.ringbonus = 0
 		end
 		
 		if escapebonus then
-			P_AddPlayerScore(player, lapbonus + ringbonus ) -- Bonus!
-			if lapbonus or ringbonus then
+			P_AddPlayerScore(player, player.lapbonus + player.ringbonus ) -- Bonus!
+			if player.isminimalhud then return end
+			if player.lapbonus or player.ringbonus then
 				CONS_Printf(player, "** Lap "..player.ptsr.laps.." bonuses **")
 			end
 			
-			if lapbonus then
-				CONS_Printf(player, "* "..lapbonus.." point lap bonus!")
+			if player.lapbonus then
+				CONS_Printf(player, "* "..player.lapbonus.." point lap bonus!")
 			end
 			
-			if ringbonus then
-				CONS_Printf(player, "* "..ringbonus.." point ring bonus! ("..player.ptsr.rings_on_lap..")")
+			if player.ringbonus then
+				CONS_Printf(player, "* "..player.ringbonus.." point ring bonus! ("..player.ptsr.rings_on_lap..")")
 			end
 		end
 		

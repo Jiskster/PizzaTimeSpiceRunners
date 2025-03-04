@@ -37,6 +37,29 @@ COM_AddCommand("ptsr_panic", function(player)
 	PTSR.PizzaTimeTrigger(player.mo)
 end,1)
 
+--MinimalHud
+rawset(_G, "ptsr_minimalhud", function(p, arg)
+	if arg == "1" or arg == "on" or arg == "true"
+		isminimalhud = 1
+		if io and p == consoleplayer
+			local file = io.openlocal("client/SpiceRunners/minimalhud.txt", "w+")
+			file:write(isminimalhud)
+			file:close()
+		end
+	elseif arg == "0" or arg == "off" or arg == "false"
+		isminimalhud = 0
+		if io and p == consoleplayer
+			local file = io.openlocal("client/SpiceRunners/minimalhud.txt", "w+")
+			file:write(isminimalhud)
+			file:close()
+		end
+	else
+		CONS_Printf(p, "Insert a valid value")
+	end
+end)
+
+COM_AddCommand("ptsr_minimalhud", ptsr_minimalhud, COM_LOCAL)
+
 COM_AddCommand("ptsr_endgame", function(player)
 	if not PTSR.IsPTSR() then
 		CONS_Printf(player, "Command must be ran in the Pizza Time Spice Runners mode.")

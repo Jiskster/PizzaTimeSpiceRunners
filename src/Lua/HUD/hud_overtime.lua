@@ -1,5 +1,6 @@
 local overtime_hud = function(v, player)
 	if not PTSR.timeover then return end
+	if isminimalhud then return end
 	local left_tween 
 	local right_tween 
 	

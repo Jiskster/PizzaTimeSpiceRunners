@@ -28,8 +28,11 @@ local lap_hud = function(v, player)
 
 	if not player == consoleplayer then return end
 	
-	local lap2flag = v.cachePatch("LAP2FLAG")
 	local hudst = player.hudstuff
+	
+/*-------------------PTSR HUD---------------------*/
+	if not isminimalhud
+	local lap2flag = v.cachePatch("LAP2FLAG")
 	
 	local shakex = v.RandomRange(-FU/2,FU/2)
 	local shakey = v.RandomRange(-FU/2,FU/2)
@@ -73,6 +76,24 @@ local lap_hud = function(v, player)
 			v.drawScaled(x+fx,cz.y+fy,scale,patch,V_SNAPTOTOP, color)
 			fx = $+(patch.width*scale)
 		end
+	end
+/*-------------------GKS MINIMAL HUD---------------------*/
+	else
+	if hudst.anim_active then
+		local lapping_pos = {
+			x = 160,
+			y = 15,
+			flags = V_SNAPTOTOP,
+			margin = 15
+		}
+		local lap_string = "LAP"
+		local lapping_icon = v.cachePatch("BYELSTAT")
+		local lapping_icon2 = v.cachePatch("FNSHICO")
+		v.draw(((lapping_pos.x-lapping_pos.margin)-30), (lapping_pos.y-4), lapping_icon, lapping_pos.flags|V_HUDTRANS)
+		v.drawScaled((((lapping_pos.x+lapping_pos.margin)-8))*FU, ((lapping_pos.y-4))*FU, FU/2, lapping_icon2, lapping_pos.flags|V_HUDTRANSHALF)
+		v.drawString((lapping_pos.x-lapping_pos.margin), lapping_pos.y, lap_string, lapping_pos.flags|V_HUDTRANSDOUBLE, "center")
+		v.drawString((lapping_pos.x+lapping_pos.margin), lapping_pos.y, player.ptsr.laps, lapping_pos.flags|V_YELLOWMAP|V_HUDTRANSDOUBLE, "center")
+	end
 	end
 end
 

@@ -47,7 +47,7 @@ PTSR.DoLapBonus = function(player)
 		
 		if escapebonus then
 			P_AddPlayerScore(player, player.lapbonus + player.ringbonus ) -- Bonus!
-			if player.isminimalhud then return end
+			if isminimalhud then return end
 			if player.lapbonus or player.ringbonus then
 				CONS_Printf(player, "** Lap "..player.ptsr.laps.." bonuses **")
 			end

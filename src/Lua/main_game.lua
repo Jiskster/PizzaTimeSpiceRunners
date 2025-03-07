@@ -220,6 +220,8 @@ PTSR.default_playervars = {
 	
 	isWinner = false, -- have they won a round (most points surviving)
 	
+	pf_immunity = 0, -- How many tics you are immune to pizzaface.
+	
 	-- Shields
 	atrraction_timer = 0,
 }
@@ -503,24 +505,12 @@ addHook("ThinkFrame", do
 						for i=1,#PTSR.BubbleMobjList do
 							local bubble = PTSR.BubbleMobjList[i]
 							
-							bubble.bubbleactive = true
-							bubble.state = S_PT_BUBBLE
-							bubble.displaypower.state = S_PT_BUBBLE3
+							PTSR.SetBubbleActive(bubble, true)
 							bubble.bubblepower = PTSR.bubble_shoesid
 							
-							local powerdef = PTSR.BubblePowers[bubble.bubblepower] or PTSR.BubblePowers[1] or error("No bubbledefs exist.")
+							PTSR.RefreshBubbleIcon(bubble)
 							
-							if powerdef.sprite == nil then
-								bubble.displaypower.sprite = SPR_TVRI 
-							else
-								bubble.displaypower.sprite = powerdef.sprite
-							end
-							
-							if powerdef.frame == nil then
-								bubble.displaypower.frame = C
-							else
-								bubble.displaypower.frame = powerdef.frame
-							end
+							bubble.bubblerespawntics = 0
 						end
 					elseif not (PTSR.aipf
 					and PTSR.aipf.valid)

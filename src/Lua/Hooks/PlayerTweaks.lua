@@ -28,6 +28,11 @@ addHook("MobjDeath", function(target, inflictor, source)
 				PTSR:AddCombo(player)
 				PTSR:AddComboTime(player, player.ptsr.combo_maxtime)
 			end
+			
+			-- Increase attraction shield timer when an enemy is killed.
+			if player.ptsr.atrraction_timer then
+				player.ptsr.atrraction_timer = min($ + (TICRATE/2), 15*TICRATE) -- can only go up to 15 seconds.
+			end
 			return
 		elseif (target.type == MT_RING or target.type == MT_COIN)
 			player.ptsr.rings_on_lap = $ + 1

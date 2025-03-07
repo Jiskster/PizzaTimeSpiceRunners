@@ -4,11 +4,12 @@ addHook("PlayerThink", function(player)
 	if not (player.mo and player.mo.valid) then return end
 	
 	if player.ptsr.atrraction_timer then
-		if (player.powers[pw_shield] & SH_ATTRACT) then
+		if (player.powers[pw_shield] == SH_ATTRACT) then
 			player.ptsr.atrraction_timer = max(0, $ - 1)
 			
 			if not player.ptsr.atrraction_timer then
-				player.powers[pw_shield] = 0
+				P_SwitchShield(player, SH_PITY)
+				P_SpawnShieldOrb(player)
 				S_StartSound(player.mo, sfx_s3k79)
 				P_FlashPal(player, 1, 12)
 			else
@@ -17,7 +18,6 @@ addHook("PlayerThink", function(player)
 				end
 			end
 		else -- Clear silently cause its probably illegal.
-			player.powers[pw_shield] = 0
 			player.ptsr.atrraction_timer = 0
 		end
 	end

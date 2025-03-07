@@ -204,7 +204,7 @@ PTSR.DoParryAnim = function(mobj, withsound, ringloss)
 	end
 end
 
-PTSR.DoParry = function(parrier, victim)
+PTSR.DoParry = function(parrier, victim, kbmulti_xy, kbmulti_z)
 	local anglefromparrier = R_PointToAngle2(victim.x, victim.y, parrier.x, parrier.y)
 	local knockback_xy = CV_PTSR.parryknockback_xy.value
 	local knockback_z = CV_PTSR.parryknockback_z.value
@@ -235,6 +235,14 @@ PTSR.DoParry = function(parrier, victim)
 	
 	if victim_speed > 100*FU then
 		knockback_xy = $ * 2
+	end
+	
+	if kbmulti_xy then
+		knockback_xy = FixedMul($, kbmulti_xy)
+	end
+	
+	if kbmulti_z then
+		knockback_z = FixedMul($, kbmulti_z)
 	end
 	
 	P_SetObjectMomZ(victim, knockback_z)

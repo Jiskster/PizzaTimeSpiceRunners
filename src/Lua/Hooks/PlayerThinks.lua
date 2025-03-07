@@ -86,6 +86,10 @@ addHook("PlayerThink", function(player)
 	if player and player.mo and player.mo.valid and player.mo.pf_tele_delay then
 		player.mo.pf_tele_delay = $ - 1
 	end
+	
+	if player and player.ptsr then
+		player.ptsr.pf_immunity = max(0, $ - 1)
+	end
 end)
 
 addHook("PlayerThink", function(player)

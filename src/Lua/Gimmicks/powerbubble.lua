@@ -102,7 +102,8 @@ PTSR:AddBubblePower({
 	sprite = SPR_50BI,
 	frame = A,
 	--disable_popsound = true,
-	pop_color = SKINCOLOR_ORANGE
+	pop_color = SKINCOLOR_ORANGE,
+	disable_respawn = true,
 })
 
 /*
@@ -178,13 +179,19 @@ PTSR:AddBubblePower({
 	name = "Attraction Shield",
 	pickup_func = function(toucher)
 		if toucher and toucher.valid and toucher.player and toucher.player.valid then
-			local player = toucher.player
+			local player = toucher.player	
 			
-			player.ptsr.atrraction_timer = 10*TICRATE
-			
-			P_SwitchShield(player, SH_ATTRACT)
-			P_SpawnShieldOrb(player)
-			S_StartSound(toucher, sfx_attrsg)
+			if not (toucher.eflags & MFE_UNDERWATER) then
+				player.ptsr.atrraction_timer = $ + 10*TICRATE
+				
+				P_SwitchShield(player, SH_ATTRACT)
+				P_SpawnShieldOrb(player)
+				S_StartSound(toucher, sfx_attrsg)
+			else -- Give pity shield if underwater.
+				P_SwitchShield(player, SH_PITY)
+				P_SpawnShieldOrb(player)
+				S_StartSound(toucher, sfx_shield)
+			end
 		end
 	end,
 	sprite = SPR_TVAT,
@@ -238,9 +245,11 @@ addHook("TouchSpecial", function(special, toucher)
 	end
 	
 	if special.displaypower and special.displaypower.valid then
-		P_SpawnGhostMobj(special.displaypower)
-		--P_RemoveMobj(special.displaypower)
-		special.displaypower.state = S_INVISIBLE
+		local ghost = P_SpawnGhostMobj(special)
+		ghost.fuse = 5
+		
+		local ghost2 = P_SpawnGhostMobj(special.displaypower)
+		ghost2.fuse = 10
 	end
 	
 	if special.bubblepower and PTSR.BubblePowers[special.bubblepower] then
@@ -263,32 +272,46 @@ addHook("TouchSpecial", function(special, toucher)
 	end
 	
 	A_PT_BubbleFloatAnim(special, popcolor)
+
+	PTSR.SetBubbleActive(special, false)
 	
-	special.bubbleactive = false
-	special.state = S_INVISIBLE
+	if not PTSR.isOvertime() then
+		special.bubblerespawntics = 45*TICRATE
+	else
+		special.bubblerespawntics = 30*TICRATE
+	end
 	
 	return true
 end, MT_PT_BUBBLE)
 
-addHook("MobjSpawn", function(bubble)
+function PTSR.GetRandomBubblePower(condition)
 	local powerlist = {}
 
 	for i=1, #PTSR.BubblePowers do
+		if condition then
+			if condition(PTSR.BubblePowers[i]) == false then -- if callback is false then continue
+				continue
+			end
+		end
+		
 		if not PTSR.BubblePowers[i].disable_spawn then
 			table.insert(powerlist, i)
 		end
 	end
 	
-	bubble.bubblepower = powerlist[P_RandomRange(1, #powerlist)]
-	
-	bubble.displaypower = P_SpawnMobj(bubble.x, bubble.y, bubble.z+24*FU, MT_PT_BUBBLEPOWER)
-	bubble.bubbleactive = true
-	
-	local powerdef = PTSR.BubblePowers[bubble.bubblepower] or PTSR.BubblePowers[1] or error("No bubbledefs exist.")
-	
-	if powerdef.offset_z then
-		P_SetOrigin(bubble.displaypower, bubble.x, bubble.y, bubble.z+powerdef.offset_z)
+	if #powerlist then
+		return powerlist[P_RandomRange(1, #powerlist)]
+	else
+		return 1
 	end
+end
+
+function PTSR.GetBubblePower(power_id)
+	return PTSR.BubblePowers[power_id] or PTSR.BubblePowers[1] or error("No bubbledefs exist.")
+end
+
+function PTSR.RefreshBubbleIcon(bubble)
+	local powerdef = PTSR.GetBubblePower(bubble.bubblepower)
 	
 	if powerdef.sprite == nil then
 		bubble.displaypower.sprite = SPR_TVRI 
@@ -301,6 +324,37 @@ addHook("MobjSpawn", function(bubble)
 	else
 		bubble.displaypower.frame = powerdef.frame
 	end
+end
+
+function PTSR.SetBubbleActive(bubble, bool)
+	if bubble.displaypower and bubble.displaypower.valid then
+		if bool == true then
+			bubble.bubbleactive = true
+			bubble.state = S_PT_BUBBLE
+			bubble.displaypower.state = S_PT_BUBBLE3
+		elseif bool == false then
+			bubble.bubbleactive = false
+			bubble.state = S_INVISIBLE
+			bubble.displaypower.state = S_INVISIBLE
+		end
+	end
+end
+
+addHook("MobjSpawn", function(bubble)
+	bubble.bubblepower = PTSR.GetRandomBubblePower()
+	
+	bubble.displaypower = P_SpawnMobj(bubble.x, bubble.y, bubble.z+24*FU, MT_PT_BUBBLEPOWER)
+	bubble.bubbleactive = true
+	
+	bubble.bubblerespawntics = 0
+	
+	local powerdef = PTSR.GetBubblePower(bubblepower_num)
+	
+	if powerdef.offset_z then
+		P_SetOrigin(bubble.displaypower, bubble.x, bubble.y, bubble.z+powerdef.offset_z)
+	end
+	
+	PTSR.RefreshBubbleIcon(bubble)
 	
 	PTSR.BubbleMobjList[#PTSR.BubbleMobjList + 1] = bubble
 end, MT_PT_BUBBLE)
@@ -313,6 +367,28 @@ addHook("ThinkFrame", function()
 			for i,bubble in ipairs(PTSR.BubbleMobjList) do
 				if not (bubble and bubble.valid) then
 					table.remove(PTSR.BubbleMobjList, i)
+				else
+					if bubble.bubblerespawntics and not bubble.bubbleactive then
+						if PTSR.pizzatime then
+							bubble.bubblerespawntics = max(0, $ - 1)
+							
+							if not bubble.bubblerespawntics then
+								if not PTSR.isOvertime()
+									bubble.bubblepower = PTSR.GetRandomBubblePower(function(power_def)
+										if power_def.disable_respawn then
+											return false
+										end
+									end)
+								else
+									bubble.bubblepower = PTSR.bubble_shoesid
+								end
+								
+								PTSR.SetBubbleActive(bubble, true)
+								
+								PTSR.RefreshBubbleIcon(bubble)
+							end
+						end
+					end
 				end
 			end
 		end

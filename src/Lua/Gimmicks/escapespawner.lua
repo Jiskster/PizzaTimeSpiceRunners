@@ -196,8 +196,10 @@ addHook("ThinkFrame", function()
 	-- Server-Side exclusive
 	local teleport_queue = {}
 	local respawn_queue = {}
+	
+	local count = PTSR_COUNT()
 
-	local cyclesleft = 50
+	local cyclesleft = 8 + (42/count.peppinos)
 	
 	if serversided then
 		cyclesleft = 5
@@ -231,7 +233,7 @@ addHook("ThinkFrame", function()
 					and (not player.ptsr.outofgame) then
 						local dist = R_PointToDist2(player.mo.x, player.mo.y, v.x, v.y)
 						
-						if dist < 4096*FU then
+						if dist < 5120*FU then
 							local vMobj = P_SpawnMobj(v.x, v.y, v.z, MT_RAY) -- Spawn a ray to check position (Because P_CheckSight only takes mobj_t)
 							vMobj.fuse = 1
 							
@@ -290,29 +292,60 @@ addHook("ThinkFrame", function()
 				end
 			end
 		end
+		
 		if serversided then
 			if #teleport_queue then
-				local arglist = ""
+				local no_repeat = {}
 				
 				for i=1, #teleport_queue do
-					arglist = $ .. teleport_queue[i] .. " "
+					for r,v in ipairs(no_repeat) do
+						if v == teleport_queue[i] then
+							print("found_repeat")
+							continue
+						end
+					end
+					
+					table.insert(no_repeat, teleport_queue[i])
 				end
 				
-				local text = "_PTSR_SS_ENEMY_TELEPORT "..luaOnly.." "..arglist
+				local arglist = ""
 				
-				COM_BufAddText(nil, text)
+				for i=1, #no_repeat do
+					arglist = $ .. no_repeat[i] .. " "
+				end
+				
+				if #no_repeat then
+					local text = "_PTSR_SS_ENEMY_TELEPORT "..luaOnly.." "..arglist
+					
+					COM_BufAddText(nil, text)
+				end
 			end
 			
 			if #respawn_queue then
-				local arglist = ""
+				local no_repeat = {}
 				
-				for i=1, #respawn_queue do
-					arglist = $ .. respawn_queue[i] .. " "
+				for i=1, #teleport_queue do
+					for r,v in ipairs(no_repeat) do
+						if v == teleport_queue[i] then
+							print("found_repeat")
+							continue
+						end
+					end
+					
+					table.insert(no_repeat, teleport_queue[i])
 				end
 				
-				local text = "_PTSR_SS_ENEMY_RESPAWN "..luaOnly.." "..arglist
+				local arglist = ""
 				
-				COM_BufAddText(nil, text)
+				for i=1, #no_repeat do
+					arglist = $ .. no_repeat[i] .. " "
+				end
+				
+				if #no_repeat then
+					local text = "_PTSR_SS_ENEMY_RESPAWN "..luaOnly.." "..arglist
+					
+					COM_BufAddText(nil, text)
+				end
 			end
 		end
 		

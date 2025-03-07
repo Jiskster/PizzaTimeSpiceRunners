@@ -637,9 +637,15 @@ local function handle_pf_player_movement(player)
 			player.ptsr.pizzasprint_time = $/2
 		end
 
-		if max(player.cmd.forwardmove, player.cmd.sidemove) > PLAYPF_DEADZONE then
+		if max(abs(player.cmd.forwardmove), abs(player.cmd.sidemove)) > PLAYPF_DEADZONE then
 			local angle = controls_angle(player)
-            local frac = FixedDiv(FixedHypot(player.cmd.sidemove << 16, player.cmd.forwardmove << 16), 50*FU)
+            local frac = abs(FixedDiv(FixedHypot(
+                    abs(player.cmd.sidemove << 16),
+                    abs(player.cmd.forwardmove << 16)
+                ), 50*FU
+            ))
+            frac = min($, FU)
+            print(string.format("%f",frac))
 
 			player.mo.momx = P_ReturnThrustX(nil, angle, FixedMul(speed,frac))
 			player.mo.momy = P_ReturnThrustY(nil, angle, FixedMul(speed,frac))

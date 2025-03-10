@@ -12,7 +12,7 @@ local minimal_lives = function(v, player)
 		if player.ptsr.pizzaface --Pizza Face Icon!
 			v.drawScaled(char_icon.x+(2*FU), char_icon.y+(2*FU), FU/2, pf_icon, char_icon.flags, v.getColormap(TC_DEFAULT, 0, "FullBlack"))
 			v.drawScaled(char_icon.x, char_icon.y, FU/2, pf_icon, char_icon.flags)
-		else -- Normal player icon
+		elseif life_icon -- Normal player icon
 			v.drawScaled(char_icon.x+(2*FU), char_icon.y+(2*FU), FixedMul(FU, skins[player.mo.skin].highresscale), life_icon, char_icon.flags, v.getColormap(TC_DEFAULT, 0, "FullBlack"))
 			v.drawScaled(char_icon.x, char_icon.y, FixedMul(FU, skins[player.mo.skin].highresscale), life_icon, char_icon.flags,skin_color)
 		end

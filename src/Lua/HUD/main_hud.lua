@@ -157,7 +157,6 @@ SetupHud "Rank"
 SetupHud "PlayerPF"
 SetupHud "OvertimeMultiplier"
 SetupHud "Lives"
-SetupHud "Gamemode"
 
 path = "HUD/Drawers/default";
 -- Minimal Hud Setup End --

@@ -1,8 +1,8 @@
 PTSR.MusicList = {
 	Laps = {
-		[1] = "PIZTIM",
-		[2] = "DEAOLI",
-		[3] = "PIJORE",
+		[1] = "PIZTI7",
+		[2] = "DEAOL7",
+		[3] = "PIJOR7",
 	},
 	Overtime = "OTMUSC", -- default
 	HurryUp = "OTMUSD", -- default

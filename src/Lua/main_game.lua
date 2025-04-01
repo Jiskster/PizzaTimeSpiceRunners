@@ -167,6 +167,7 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	dustdevil = false,
 	allowrevive = false,
 	disable_pizzatime_penalty = true,
+	speedcap = 45*FU,
 })
 
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {

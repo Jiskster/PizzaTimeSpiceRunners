@@ -4,8 +4,8 @@ PTSR.MusicList = {
 		[2] = "DEAOLI",
 		[3] = "PIJORE",
 	},
-	Overtime = "OTMUSB", -- default
-	HurryUp = "OTMUSA", -- default
+	Overtime = "OTMUSC", -- default
+	HurryUp = "OTMUSD", -- default
 	OvertimeTics = 20*TICRATE -- default
 }
 

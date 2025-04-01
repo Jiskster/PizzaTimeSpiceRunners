@@ -9,9 +9,9 @@ addHook("MobjDeath", function(mobj)
 	if PTSR.pizzatime then
 		if not player.ptsr.pizzaface then
 			if CV_PTSR.showdeaths.value then
-				chatprint("\x82*"..player.name.."\x82 has died.")
+				chatprint("\x82*"..player.name.."\x82 got violated..")
 				if DiscordBot then
-					DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:skull: **" .. player.name .. "** died.\n"
+					DiscordBot.Data.msgsrb2 = $ .. "[" .. #player .. "]:skull: **" .. player.name .. "** got violated.\n"
 				end
 			end
 			

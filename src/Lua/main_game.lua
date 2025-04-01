@@ -143,14 +143,6 @@ PTSR.gm_endurance = PTSR.RegisterGamemode("Endurance", {
 	allowrevive = true,
 })
 
-PTSR.gm_versus = PTSR.RegisterGamemode("Versus", {
-	parry_friendlyfire = true,
-	dustdevil = false,
-	allowrevive = false,
-	disable_speedcap = true,
-	lapbonus = 0,
-})
-
 /*
 PTSR.gm_elimination = PTSR.RegisterGamemode("Elimination", {
 	parry_friendlyfire = false,
@@ -178,11 +170,13 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 })
 
 PTSR.gm_ptkidmode = PTSR.RegisterGamemode("Retarded PT Kid Mode", {
+	parry_friendlyfire = true,
 	core_endurance = true,
 	dustdevil = true,
 	allowrevive = true,
 	disable_speedcap = true,
 	pfspeedmulti = tofixed("1.7"),
+	lapbonus = 412412,
 })
 
 PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {

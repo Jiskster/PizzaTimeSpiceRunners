@@ -4,7 +4,9 @@ local gamemode_hud = function(v, player)
 	
 	local currentGamemode = PTSR.gamemode_list[PTSR.gamemode].name or "Unnamed"
 	
-	v.drawString(320, 0, "\x8A"..currentGamemode, V_SNAPTORIGHT|V_SNAPTOTOP|V_50TRANS|V_ADD, "thin-right")
+	for i=0,2 do
+		v.drawString(320, 0 + (i*8), "\x8A"..currentGamemode.." IS THE MODE", V_SNAPTORIGHT|V_SNAPTOTOP|V_50TRANS|V_ADD, "right")
+	end
 end
 
 return "Gamemode", gamemode_hud

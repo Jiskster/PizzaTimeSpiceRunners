@@ -143,7 +143,7 @@ addHook("PlayerThink", function(player)
 
 		--check for quit time, because its sorta like "camping" since we're not receiving
 		--any inputs for this PF
-		if PTSR.timeover and not (player.realmo.pfstuntime or player.quittime) then
+		if (player.realmo.pfstuntime or player.quittime) then
 			local pmo = player.mo
 			local findrange = 2500*FRACUNIT
 			local zrange = 400*FU

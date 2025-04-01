@@ -1,6 +1,6 @@
 PTSR.PFMaskData = {
 	{
-		name = "Pizzaface",
+		name = "Freakza Face",
 		state = S_PIZZAFACE,
 		scale = FU,
 		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
@@ -10,10 +10,10 @@ PTSR.PFMaskData = {
 		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
-		name = "Coneball",
+		name = "Glueball (100% glue nothing else)",
 	    state = S_CONEBALL,
 		scale = 3*FU/4,
-		trails = {SKINCOLOR_SKY, SKINCOLOR_NEON},
+		trails = {SKINCOLOR_WHITE, SKINCOLOR_WHITE},
 		sound = sfx_coneba,
 		emoji = ":candy:",
 		aiselectable = true,

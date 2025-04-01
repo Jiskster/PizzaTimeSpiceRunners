@@ -209,7 +209,7 @@ CV_PTSR.pizzalaugh = CV_RegisterVar({ -- Whenever the pizzaface laugh plays when
 
 CV_PTSR.homework = CV_RegisterVar({
 	name = "PTSR_homework",
-	defaultvalue = "Off",
+	defaultvalue = "On",
 	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 
 })

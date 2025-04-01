@@ -272,6 +272,7 @@ dofile "VFX/bump.lua"
 
 dofile "InbuiltModeScripts/elimination.lua"
 dofile "InbuiltModeScripts/juggernaut.lua"
+dofile "InbuiltModeScripts/ptkidmode.lua"
 
 dofile "Hooks/intermission.lua"
 

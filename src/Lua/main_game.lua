@@ -177,6 +177,14 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	player_pizzaface = true
 })
 
+PTSR.gm_ptkidmode = PTSR.RegisterGamemode("Retarded PT Kid Mode", {
+	core_endurance = true,
+	dustdevil = true,
+	allowrevive = true,
+	disable_speedcap = true,
+	pfspeedmulti = tofixed("1.7"),
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]

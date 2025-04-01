@@ -199,6 +199,16 @@ PTSR.gm_hardmode = PTSR.RegisterGamemode("Hard Mode", {
 	overtime_textontime = "HARD MODE!",
 })
 
+PTSR.RegisterGamemode("Spice Walkers",	{
+	parry_friendlyfire = true,
+	dustdevil = true,
+	dustdeviltimer = 10*TICRATE,
+	allowrevive = true,
+	speedcap = 25*FRACUNIT,
+	overtime_music = "OVTWTF",
+	overtime_textontime = "WHAT THE FUCK!",
+})
+
 PTSR.ChangeGamemode = function(gm)
 	local newgamemode = gm or 1
 	local gm_metadata = PTSR.gamemode_list[gm]

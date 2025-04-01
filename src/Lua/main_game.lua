@@ -160,6 +160,7 @@ PTSR.gm_juggernaut = PTSR.RegisterGamemode("Juggernaut", {
 	allowrevive = false,
 	disable_pizzatime_penalty = true,
 	speedcap = 45*FU,
+	lapbonus = 412412
 })
 
 PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
@@ -167,6 +168,7 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	dustdevil = false,
 	allowrevive = true,
 	player_pizzaface = true
+	lapbonus = 412412
 })
 
 PTSR.gm_ptkidmode = PTSR.RegisterGamemode("Retarded PT Kid Mode", {

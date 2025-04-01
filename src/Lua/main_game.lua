@@ -167,7 +167,7 @@ PTSR.gm_playerpf = PTSR.RegisterGamemode("Player PF", {
 	parry_friendlyfire = false,
 	dustdevil = false,
 	allowrevive = true,
-	player_pizzaface = true
+	player_pizzaface = true,
 	lapbonus = 412412
 })
 

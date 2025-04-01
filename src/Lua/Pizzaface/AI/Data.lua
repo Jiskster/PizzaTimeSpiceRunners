@@ -1,3 +1,12 @@
+freeslot("S_WEGA", "sfx_wega", "SPR_WEGA")
+
+states[S_WEGA] = {
+    sprite = SPR_WEGA,
+    frame = FF_FULLBRIGHT|A,
+    tics = -1,
+    nextstate = S_WEGA
+}
+
 PTSR.PFMaskData = {
 	{
 		name = "Freakza Face",
@@ -17,7 +26,7 @@ PTSR.PFMaskData = {
 		sound = sfx_coneba,
 		emoji = ":candy:",
 		aiselectable = true,
-		tagcolor = SKINCOLOR_MAGENTA,
+		tagcolor = SKINCOLOR_WHITE,
 		special = "coneball"
 	},
 	{
@@ -28,7 +37,8 @@ PTSR.PFMaskData = {
 		sound = sfx_smdah,
 		emoji = ":stuck_out_tongue:",
 		tagcolor = SKINCOLOR_ORANGE,
-		parrysplit = true
+		parrysplit = true,
+		aiselectable = true
 	},
 	{
 		name = "Normal",
@@ -37,16 +47,17 @@ PTSR.PFMaskData = {
 		trails = {SKINCOLOR_GREEN, SKINCOLOR_WHITE},
 		sound = sfx_nrmlfc,
 		emoji = ":green_circle:",
-		tagcolor = SKINCOLOR_GREEN
+		tagcolor = SKINCOLOR_GREEN,
+		aiselectable = true
 	},
 	{
-		name = "Gooch",
-	    state = S_GOOCH_PF,
+		name = "Wega",
+	    state = S_WEGA,
 		scale = FU,
-		trails = {SKINCOLOR_RED, SKINCOLOR_GREEN},
-		sound = sfx_pizzah,
+		trails = {SKINCOLOR_PURPLE, SKINCOLOR_BLACK},
+		sound = sfx_wega,
 		emoji = ":slight_smile:",
-		tagcolor = SKINCOLOR_RED,
+		tagcolor = SKINCOLOR_PURPLE,
 		momentum = true,
 		aiselectable = true
 	}

@@ -10,7 +10,7 @@ PTSR.PFMaskData = {
 		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
-		name = "Glueball (100% glue nothing else)",
+		name = "C-Ball",
 	    state = S_CONEBALL,
 		scale = 3*FU/4,
 		trails = {SKINCOLOR_WHITE, SKINCOLOR_WHITE},

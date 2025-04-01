@@ -12,16 +12,14 @@ mobjinfo[MT_PILLARJOHN] = {
 
 states[S_PILLARJOHN] = {
     sprite = SPR_PILJ,
-    frame = FF_ANIMATE|A,
+    frame = A,
     tics = -1,
-    var1 = 11,
-    var2 = 3,
     nextstate = S_PILLARJOHN
 }
 
 states[S_PILLARJOHN_PAIN] = {
     sprite = SPR_PILJ,
-    frame = 12,
+    frame = A,
     tics = -1,
     nextstate = S_PILLARJOHN_PAIN
 }

@@ -278,8 +278,8 @@ CV_PTSR.killwhilerunning = CV_RegisterVar({
 
 CV_PTSR.screams = CV_RegisterVar({
 	name = "PTSR_screams",
-	defaultvalue = "off",
-	flags = CV_SAVE,
+	defaultvalue = "on",
+	flags = CV_NETVAR,
 	PossibleValue = CV_OnOff, 
 })
 

@@ -3,8 +3,6 @@
 	screams
 */
 
-local lastScreamTic = -1
-
 addHook("MobjDeath", function(mobj)
 	if not PTSR.IsPTSR() then return end
 	local player = mobj.player
@@ -28,8 +26,7 @@ addHook("MobjDeath", function(mobj)
 			
 			PTSR:ClearCombo(player)
 			
-			if P_RandomChance(FRACUNIT/4) and CV_PTSR.screams.value and lastScreamTic ~= leveltime then
-				lastScreamTic = leveltime
+			if P_RandomChance(FRACUNIT/2) then
 				S_StartSound(nil, sfx_pepdie)
 			end
 		end

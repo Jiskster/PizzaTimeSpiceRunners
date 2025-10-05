@@ -60,7 +60,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		
 		PTSR.laps = 1 -- new day new me
 		
-		PTSR_DoHook("onpizzatime")
+		PTSR.DoHook("onpizzatime")
 		
 		-- player pf only stuff
 		if multiplayer and not aimode and not CV_PTSR.nopizza.value then

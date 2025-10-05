@@ -191,10 +191,9 @@ states[S_GOOCH_PF] = {
     nextstate = S_GOOCH_PF
 }
 
-dofile "Libraries/require.lua"
-dofile "Libraries/customhudlib.lua"
-
-dofile "Libraries/hooksystem.lua"
+dofile "Libraries/lib_require.lua"
+dofile "Libraries/lib_customhud.lua"
+dofile "Libraries/lib_hooks.lua"
 
 --this is UGLY.
 dofile "SaxAnimation/Init.lua"
@@ -241,7 +240,7 @@ dofile "PlayerScripts/player_combohandle.lua"
 
 dofile "PlayerScripts/player_scorehud"
 
-dofile "Libraries/libs.lua"
+dofile "Libraries/lib_common.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
 

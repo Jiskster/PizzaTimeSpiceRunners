@@ -75,7 +75,7 @@ states[S_PT_JUGGERNAUTCROWN] = {
     nextstate = S_PT_JUGGERNAUTCROWN
 }
 
-PTSR_AddHook("onparry", function(pmo, victim)
+PTSR.AddHook("onparry", function(pmo, victim)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 
 	if victim.hascrown then
@@ -107,7 +107,7 @@ PTSR_AddHook("onparry", function(pmo, victim)
 end)
 
 
-PTSR_AddHook("pfthink", function(pizza)
+PTSR.AddHook("pfthink", function(pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
 
@@ -122,7 +122,7 @@ PTSR_AddHook("pfthink", function(pizza)
 	end
 end)
 
-PTSR_AddHook("pfplayerfind", function(pizza, player)
+PTSR.AddHook("pfplayerfind", function(pizza, player)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
 
@@ -136,7 +136,7 @@ PTSR_AddHook("pfplayerfind", function(pizza, player)
 end)
 
 -- true == override
-PTSR_AddHook("pfdamage", function(toucher, pizza)
+PTSR.AddHook("pfdamage", function(toucher, pizza)
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	local count = PTSR_COUNT()
 	
@@ -189,7 +189,7 @@ local function JN_FindAndMakeNewJuggernaut()
 	end
 end
 
-PTSR_AddHook("onpizzatime", function()
+PTSR.AddHook("onpizzatime", function()
 	if PTSR.gamemode ~= PTSR.gm_juggernaut then return end
 	
 	chatprint("\x82\*Juggernaut! Get that crown!")

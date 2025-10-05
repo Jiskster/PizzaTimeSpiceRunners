@@ -15,7 +15,7 @@ states[S_PILLARJOHN] = {
     frame = FF_ANIMATE|A,
     tics = -1,
     var1 = 10,
-    var2 = 3,
+    var2 = 2,
     nextstate = S_PILLARJOHN
 }
 

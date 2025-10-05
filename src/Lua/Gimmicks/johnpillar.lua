@@ -1,4 +1,4 @@
-freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILJ", "sfx_jpilr")
+freeslot("MT_PILLARJOHN", "S_PILLARJOHN", "S_PILLARJOHN_PAIN", "SPR_PILLAR_JOHN", "sfx_jpilr")
 
 mobjinfo[MT_PILLARJOHN] = {
 	doomednum = -1,
@@ -11,17 +11,17 @@ mobjinfo[MT_PILLARJOHN] = {
 }
 
 states[S_PILLARJOHN] = {
-    sprite = SPR_PILJ,
+    sprite = SPR_PILLAR_JOHN,
     frame = FF_ANIMATE|A,
     tics = -1,
-    var1 = 11,
+    var1 = 10,
     var2 = 3,
     nextstate = S_PILLARJOHN
 }
 
 states[S_PILLARJOHN_PAIN] = {
-    sprite = SPR_PILJ,
-    frame = 12,
+    sprite = SPR_PILLAR_JOHN,
+    frame = A,
     tics = -1,
     nextstate = S_PILLARJOHN_PAIN
 }

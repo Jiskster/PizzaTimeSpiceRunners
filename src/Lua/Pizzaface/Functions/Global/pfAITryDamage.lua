@@ -11,7 +11,7 @@ function PTSR.pfAITryDamage(special, toucher)
 			return true
 		end
 		
-		if PTSR_DoHook("pfpredamage", toucher, special) then
+		if PTSR.DoHook("pfpredamage", toucher, special) then
 			return true
 		end
 	
@@ -27,7 +27,7 @@ function PTSR.pfAITryDamage(special, toucher)
 			return true
 		end
 		
-		if PTSR_DoHook("pfdamage", toucher, special) then
+		if PTSR.DoHook("pfdamage", toucher, special) then
 			return true
 		end
 		

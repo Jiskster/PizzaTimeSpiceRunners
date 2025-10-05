@@ -41,7 +41,7 @@ local function EL_EliminateLastPlayer()
 	end
 end
 
-PTSR_AddHook("onpizzatime", function()
+PTSR.AddHook("onpizzatime", function()
 	if PTSR.gamemode ~= PTSR.gm_elimination then return end
 
 	local gm_metadata = PTSR.currentModeMetadata()

@@ -46,7 +46,7 @@ states[S_PT_BUBBLE] = {
     sprite = SPR_PBBL,
     frame = A|FF_ANIMATE|FF_FULLBRIGHT,
     tics = -1,
-	var1 = 3,
+	var1 = 5,
 	var2 = 2,
     nextstate = S_PT_BUBBLE,
 }

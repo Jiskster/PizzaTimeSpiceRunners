@@ -247,9 +247,9 @@ function A_PT_BubbleFloatAnim(actor, var1) -- var1: color
 			b_mo.divrem3 = FU/3
 			b_mo.color = var1 or SKINCOLOR_GREEN
 			
-			b_mo.momx = P_RandomRange(-60,60)*FU
-			b_mo.momy = P_RandomRange(-60,60)*FU
-			b_mo.momz = P_RandomRange(-60,60)*FU
+			b_mo.momx = P_RandomRange(-120,120)*FU
+			b_mo.momy = P_RandomRange(-120,120)*FU
+			b_mo.momz = P_RandomRange(-120,120)*FU
 		end
 	end
 end

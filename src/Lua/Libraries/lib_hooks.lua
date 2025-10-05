@@ -37,7 +37,7 @@ hooks.pfteleport = {}
 hooks.pfplayerfind = {}
 hooks.pfplayertpfind = {}
 
-rawset(_G, "PTSR_AddHook", function(hooktype, func)
+function PTSR.AddHook(hooktype, func)
 	if hooks[hooktype] then
 		table.insert(hooks[hooktype], {
 			func = func,
@@ -46,9 +46,9 @@ rawset(_G, "PTSR_AddHook", function(hooktype, func)
 	else
 		error("Invalid HookType")
 	end
-end)
+end
 
-rawset(_G, "PTSR_DoHook", function(hooktype, ...)
+function PTSR.DoHook(hooktype, ...)
 	if not hooks[hooktype] then
 		error("Invalid HookType")
 	end
@@ -68,5 +68,6 @@ rawset(_G, "PTSR_DoHook", function(hooktype, ...)
     end
 
     return override
-end)
+end
 
+rawset(_G, "PTSR_AddHook", PTSR.AddHook) -- backwards compat for old ptsr mods

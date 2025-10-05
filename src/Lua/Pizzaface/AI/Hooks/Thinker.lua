@@ -59,7 +59,7 @@ addHook("MobjThinker", function(mobj)
 
 	if not PTSR.pizzatime then return end
 	
-	if PTSR_DoHook("pfprestunthink", mobj) then
+	if PTSR.DoHook("pfprestunthink", mobj) then
 		return
 	end
 	
@@ -94,7 +94,7 @@ addHook("MobjThinker", function(mobj)
 	end
 	
 	PTSR.pfFindPlayer(mobj)
-	if PTSR_DoHook("pfthink", mobj) then
+	if PTSR.DoHook("pfthink", mobj) then
 		return
 	end
 	

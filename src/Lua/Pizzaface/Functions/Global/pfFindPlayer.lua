@@ -3,7 +3,7 @@ function PTSR.pfFindPlayer(mobj)
 	
 	for player in players.iterate do
 		if player.mo and player.mo.valid and PTSR.pfCanChase(player) then
-			local hookcancel = PTSR_DoHook("pfplayerfind", mobj, player)
+			local hookcancel = PTSR.DoHook("pfplayerfind", mobj, player)
 			
 			if not hookcancel then
 				table.insert(activeplayers, player)

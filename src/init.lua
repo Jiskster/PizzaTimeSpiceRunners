@@ -195,10 +195,6 @@ dofile "Libraries/lib_require.lua"
 dofile "Libraries/lib_customhud.lua"
 dofile "Libraries/lib_hooks.lua"
 
---this is UGLY.
-dofile "SaxAnimation/Init.lua"
-dofile "SaxAnimation/UpdatePerFrame.lua"
-
 dofile "Libraries/sglib"
 
 customhud.SetupFont("PTFNT", -1, 4)
@@ -245,6 +241,8 @@ dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"
 
 dofile "HUD/name_tags.lua"
+
+dofile "HUD/hud_states.lua"
 
 dofile "HUD/main_hud.lua"
 

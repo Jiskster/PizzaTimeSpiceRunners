@@ -274,6 +274,8 @@ addHook("NetVars", function(net)
 		"pizzas",
 		
 		"BubbleMobjList",
+		
+		"hud_states",
 	}
 	
 	for i,v in ipairs(sync_list) do

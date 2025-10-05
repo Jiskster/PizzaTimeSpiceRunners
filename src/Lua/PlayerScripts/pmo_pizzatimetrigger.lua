@@ -21,10 +21,7 @@ PTSR.PizzaTimeTrigger = function(mobj)
 		end
 		
 		PTSR.pizzatime = true
-		PTAnimFunctions.NewAnimation('pizzaface', 'PIZZAFACE_SLEEPING', 2, 11, true)
-		PTAnimFunctions.NewAnimation('john', 'JOHN', 2, 22, true)
-		PTAnimFunctions.NewAnimation('redjohn', 'REDJOHN', 1, 22, true)
-
+		
 		local thesign = P_SpawnMobj(0,0,0, MT_SIGN)
 		P_SetOrigin(thesign, PTSR.spawn_location.x, PTSR.spawn_location.y, PTSR.spawn_location.z)
 		

@@ -164,106 +164,109 @@ local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, 
 end
 
 local bar_hud = function(v, player)
-	if not PTSR.IsPTSR() then return end
-	if PTSR.pizzatime then
-
-		local bar_finish = 1475*FRACUNIT/10
-		local TLIM = PTSR.maxtime or 0 
-		
-		local barfill = PTSR.isOvertime() and "BARFILL2" or "BARFILL"
-		
-		-- "TLIM" is time limit number converted to seconds to minutes
-		--example, if CV_PTSR.timelimit.value is 4, it goes to 4*35 to 4*35*60 making it 4 minutes
-
-		local div = ( (FU) / (pthud_expectedtime) )*PTSR.pizzatime_tics
-		
-		local ese = (PTSR.pizzatime_tics < pthud_expectedtime) and 
-		linear(div, pthud_start_pos, pthud_finish_pos) or pthud_finish_pos  -- ese is y axis tween
-		
-		-- hi saxa here BAR GO DOWN
-		local time_offset = 60
-		if not multiplayer and PTSR.timeover_tics >= time_offset then
-			local tween = (PTSR.timeover_tics-time_offset)*FU/pthud_expectedtime
-			ese = tween < FU and linear(tween, pthud_finish_pos, pthud_start_pos) or pthud_start_pos
-		end
-
-		local pfEase = min(max(PTSR.pizzatime_tics - CV_PTSR.pizzatimestun.value*TICRATE - 50, 0), 100)
-		pfEase = (pfEase*pfEase) * FU / 22
-		if not multiplayer then pfEase = 0 end
-
-		local bar = v.cachePatch("SHOWTIMEBAR") -- the orange border
-		local bar2 = v.cachePatch("SHOWTIMEBAR2") -- the purple thing
-		
-		--1/PTSR.timeleft
-		--PTSR.timeleft
-
-		local pizzaface = v.cachePatch('PIZZAFACE_SLEEPING1')
-		if animationtable['pizzaface'] // dont wanna risk anything yknow
-			pizzaface = v.cachePatch(animationtable['pizzaface'].display_name)
-		end
-		
-		local john
-		
-		if not PTSR.isOvertime() then
-			john = v.cachePatch('JOHN1')
-			if animationtable['john']
-				john = v.cachePatch(animationtable['john'].display_name)
-			end
-		else
-			john = v.cachePatch('REDJOHN1')
-			if animationtable['redjohn']
-				john = v.cachePatch(animationtable['redjohn'].display_name)
-			end
-		end
-
-		--ease.linear(fixed_t t, [[fixed_t start], fixed_t end])
-		if PTSR.maxtime then
-			--for the bar length calculations
-			local progress = FixedDiv(TLIM*FRACUNIT-PTSR.timeleft*FRACUNIT, TLIM*FRACUNIT)
-			local johnx = FixedMul(progress, bar_finish)
-			
-
-			-- Fix negative errors?
-			if johnx < 0 then
-				johnx = 0
-			end
-
-			local johnscale = (FU/2) -- + (FU/4)
-
-			-- during animation
-			--purple bar, +1 fracunit because i want it inside the box 
-			-- MAX VALUE FOR HSCALE: FRACUNIT*150
-			-- v.drawStretched(91*FRACUNIT, ese + (5*FU)/3, min(themath,bar_finish), (FU/2) - (FU/12), bar2, V_SNAPTOBOTTOM)
+	if not PTSR.IsPTSR() then 
+		return end;
 	
-			drawBar(v, 90*FU, ese, FU/2, {
-				offset = FixedDiv(leveltime % (45*TICRATE), 45*TICRATE),
-				length = progress,
-				fill_xoffset = 5*FU,
-				fill_yoffset = 5*FU,
-				fill_widthoffset = -5*FU,
-				fill = PTSR.timeleft and "BARFILL" or "BARFILL2",
-				flags = V_SNAPTOBOTTOM
-			})
-			v.drawScaled((82*FU) + min(johnx,bar_finish), ese + (6*johnscale), johnscale, john, V_SNAPTOBOTTOM)
-			v.drawScaled(230*FU, ese - (8*FU) + pfEase, FU/3, pizzaface, V_SNAPTOBOTTOM)
-			local timestring = G_TicsToMTIME(PTSR.timeleft)
-			local x = 165*FRACUNIT
-			local y = 176*FRACUNIT + FRACUNIT/2
-			local y_offset = (3*FRACUNIT)/2
-			
-			if PTSR.timeleft or not multiplayer then
-				customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
-			else
-				local gm_metadata = PTSR.currentModeMetadata()
-				
-				local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
-				
-				FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2)
-			end
-			timeafteranimation = $ + 1
-		end
-	else
+	if not PTSR.pizzatime then
 		timeafteranimation = 0
+		return
+	end
+	
+	local bar_finish = 1475*FRACUNIT/10
+	local TLIM = PTSR.maxtime or 0 
+	
+	local barfill = PTSR.isOvertime() and "BARFILL2" or "BARFILL"
+	
+	-- "TLIM" is time limit number converted to seconds to minutes
+	--example, if CV_PTSR.timelimit.value is 4, it goes to 4*35 to 4*35*60 making it 4 minutes
+
+	local div = ( (FU) / (pthud_expectedtime) )*PTSR.pizzatime_tics
+	
+	local ese = (PTSR.pizzatime_tics < pthud_expectedtime) and 
+	linear(div, pthud_start_pos, pthud_finish_pos) or pthud_finish_pos  -- ese is y axis tween
+	
+	-- hi saxa here BAR GO DOWN
+	local time_offset = 60
+	if not multiplayer and PTSR.timeover_tics >= time_offset then
+		local tween = (PTSR.timeover_tics-time_offset)*FU/pthud_expectedtime
+		ese = tween < FU and linear(tween, pthud_finish_pos, pthud_start_pos) or pthud_start_pos
+	end
+
+	local pfEase = min(max(PTSR.pizzatime_tics - CV_PTSR.pizzatimestun.value*TICRATE - 50, 0), 100)
+	pfEase = (pfEase*pfEase) * FU / 22
+	if not multiplayer then pfEase = 0 end
+
+	local bar = v.cachePatch("SHOWTIMEBAR") -- the orange border
+	local bar2 = v.cachePatch("SHOWTIMEBAR2") -- the purple thing
+
+	local pizzaface = v.cachePatch(PTSR.getHudStateFrame("PIZZAFACE_SLEEPING"))
+	
+	if PTSR.showtime then -- WAKE THE FUCK UP PIZZA FACE!!
+		pizzaface = v.cachePatch(PTSR.getHudStateFrame("PIZZAFACE_SHOWTIME"))
+	end
+	
+	local john
+	
+	if not PTSR.isOvertime() then
+		john = v.cachePatch(PTSR.getHudStateFrame("JOHN"))
+	else
+		john = v.cachePatch(PTSR.getHudStateFrame("REDJOHN"))
+	end
+
+	--ease.linear(fixed_t t, [[fixed_t start], fixed_t end])
+	if PTSR.maxtime then
+		--for the bar length calculations
+		local progress = FixedDiv(TLIM*FRACUNIT-PTSR.timeleft*FRACUNIT, TLIM*FRACUNIT)
+		local johnx = FixedMul(progress, bar_finish)
+
+		-- Fix negative errors?
+		johnx = max(0, $)
+
+		local johnscale = (FU/2) -- + (FU/4)
+
+		drawBar(v, 90*FU, ese, FU/2, {
+			offset = FixedDiv(leveltime % (45*TICRATE), 45*TICRATE),
+			length = progress,
+			fill_xoffset = 5*FU,
+			fill_yoffset = 5*FU,
+			fill_widthoffset = -5*FU,
+			fill = PTSR.timeleft and "BARFILL" or "BARFILL2",
+			flags = V_SNAPTOBOTTOM
+		})
+		
+		 -- angry john...
+		v.drawScaled(
+			(82*FU) + min(johnx,bar_finish), 
+			ese + (6*johnscale), 
+			johnscale, 
+			john, 
+			V_SNAPTOBOTTOM
+		)
+		
+		-- sleepy pf...
+		v.drawScaled(230*FU,
+			ese - (8*FU) + pfEase,
+			FU/3,
+			pizzaface, 
+			V_SNAPTOBOTTOM
+		) 
+		
+		local timestring = G_TicsToMTIME(PTSR.timeleft)
+		local x = 165*FRACUNIT
+		local y = 176*FRACUNIT + FRACUNIT/2
+		local y_offset = (3*FRACUNIT)/2
+		
+		if PTSR.timeleft or not multiplayer then
+			customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
+		else
+			local gm_metadata = PTSR.currentModeMetadata()
+			
+			local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
+			
+			FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2) -- OVERTIME!
+		end
+		
+		timeafteranimation = $ + 1
 	end
 end
 

@@ -52,10 +52,8 @@ function PTSR.pfSpawnAI(forcestyle)
 		local laughsound = newpizzaface.laughsound or sfx_pizzah
 		if not PTSR.showtime // hiiii adding onto this for showtime
 			PTSR.showtime = true
-			local anim = animationtable["pizzaface"]
-			if anim then
-				anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
-			end
+			
+			PTSR.resetHudState("PIZZAFACE_SHOWTIME")
 
 			S_StartSound(nil, laughsound)
 		end

@@ -72,11 +72,9 @@ addHook("MobjThinker", function(mobj)
 		if not mobj.pfstuntime then -- If we just got to 0
 			if not PTSR.showtime // hiiii adding onto this for showtime
 				PTSR.showtime = true
-				local anim = animationtable["pizzaface"]
-				if anim then
-					anim:ChangeAnimation('PIZZAFACE_SHOWTIME', 3, 8, false)
-				end
-
+				
+				PTSR.resetHudState("PIZZAFACE_SHOWTIME")
+				
 				S_StartSound(nil, laughsound)
 			end
 			mobj.pfstunmomentum = false

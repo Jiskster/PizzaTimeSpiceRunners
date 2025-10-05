@@ -236,6 +236,11 @@ dofile "PlayerScripts/player_combohandle.lua"
 
 dofile "PlayerScripts/player_scorehud"
 
+dofile "Momentum/momentum.lua"
+dofile "Momentum/slope.lua"
+dofile "Momentum/gravity.lua"
+dofile "Momentum/ceiling.lua"
+
 dofile "Libraries/lib_common.lua"
 dofile "exit_handle.lua"
 dofile "Hooks/music_handle.lua"

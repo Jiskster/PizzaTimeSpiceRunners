@@ -27,6 +27,6 @@ function PTSR.EndGame()
 			end
 		end
 		
-		PTSR_DoHook("ongameend")
+		PTSR.DoHook("ongameend")
 	end
 end

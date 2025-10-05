@@ -29,14 +29,13 @@ function PTSR.SetupHud(filepath)
 	local funcname, drawfunc, type, style, hudlayer = dofile(filepath)
 	local hudstyle = (style or "default")
 	local hudtype = (type or "game")
-	
 	-- Make a new function from the current function.
 	-- Currently makes it so huds don't draw if it's not PTSR.
 	-- And makes it so it only draws the current style
 	
 	if drawfunc and funcname then
 		local new_drawfunc = function(v, player)
-			if gametype ~= GT_PTSPICER then 
+			if not PTSR.IsPTSR() then 
 				return 
 			end
 			

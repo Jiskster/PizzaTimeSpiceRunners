@@ -1,5 +1,5 @@
 addHook("PlayerThink", function(player)
-	if gametype ~= GT_PTSPICER then return end
+	if not PTSR.IsPTSR() then return end
 	if not (player and player.valid and player.ptsr) then return end
 	if not (player.mo and player.mo.valid) then return end
 	

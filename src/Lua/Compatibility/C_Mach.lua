@@ -5,7 +5,7 @@ local oldIndex = oldMT.__index
 
 oldMT.__index = function(mobj, field)
     if field ~= "mach_ringAttract" 
-	or not (skins["mach"] or GT_PTSPICER) then
+	or not (skins["mach"] or PTSR.IsPTSR()) then
         return oldIndex(mobj, field)
     else
         if (mobj.type == MT_FLINGRING

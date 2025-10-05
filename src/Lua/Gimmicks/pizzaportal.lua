@@ -23,8 +23,10 @@ mobjinfo[MT_PIZZAPORTAL] = {
 
 states[S_PIZZAPORTAL] = {
     sprite = SPR_P3PT,
-    frame = A|FF_PAPERSPRITE|FF_FULLBRIGHT,
+    frame = A|FF_PAPERSPRITE|FF_FULLBRIGHT|FF_ANIMATE,
     tics = -1,
+	var1 = C,
+	var2 = 2,
     nextstate = S_PIZZAPORTAL
 }
 

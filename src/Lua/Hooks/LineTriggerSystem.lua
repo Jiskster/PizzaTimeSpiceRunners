@@ -42,7 +42,7 @@ addHook("MobjLineCollide", function(mobj, line)
 			player.ptsr.outofgame = 1
 			
 			if CV_PTSR.forcelap.value
-			and not PTSR_DoHook("onlap", toucher) then 
+			and not PTSR.DoHook("onlap", toucher) then 
 				PTSR.StartNewLap(mobj)
 			end
 

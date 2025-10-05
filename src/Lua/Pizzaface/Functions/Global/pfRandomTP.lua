@@ -5,7 +5,7 @@ function PTSR.pfRandomTP(pizza, uselaugh)
 	for peppino in players.iterate() do
 		if not peppino.ptsr.pizzaface and (peppino.mo and peppino.mo.valid) and
 		not peppino.spectator and not peppino.ptsr.outofgame and (peppino.playerstate ~= PST_DEAD)
-		and not peppino.quittime and not PTSR_DoHook("pfplayertpfind", pizza, peppino) 
+		and not peppino.quittime and not PTSR.DoHook("pfplayertpfind", pizza, peppino) 
 		and not peppino.ptsr.treasure_got
 		and not peppino.mo.pf_tele_delay
 		then
@@ -40,7 +40,7 @@ function PTSR.pfRandomTP(pizza, uselaugh)
 			
 			pizza.next_pfteleport = nil
 		else -- If AI Pizza Face
-			PTSR_DoHook("pfteleport", pizza)
+			PTSR.DoHook("pfteleport", pizza)
 			
 			if not PTSR.timeover then
 				pizza.pfstuntime = CV_PTSR.aitpstuntime.value

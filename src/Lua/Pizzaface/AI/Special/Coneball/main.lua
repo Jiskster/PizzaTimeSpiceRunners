@@ -108,7 +108,7 @@ local function isConeballingOnSomeone(pizza)
     )
 end
 
-PTSR_AddHook("pfpredamage", function (playermo, pizza)
+PTSR.AddHook("pfpredamage", function (playermo, pizza)
     if isConeball(pizza) then
         -- do this here manually to avoid the invuln condition
 		if playermo.player.powers[pw_shield] > 0 then
@@ -141,7 +141,7 @@ PTSR_AddHook("pfpredamage", function (playermo, pizza)
     end
 end)
 
-PTSR_AddHook("preparry", function (playermo, pizza)
+PTSR.AddHook("preparry", function (playermo, pizza)
     if isConeballingOnSomeone(pizza) then
         return true
     end
@@ -171,7 +171,7 @@ local function stabby(pizza)
     end
 end
 
-PTSR_AddHook("pfprestunthink", function (pizza)
+PTSR.AddHook("pfprestunthink", function (pizza)
     if isConeballingOnSomeone(pizza) then
         local target = pizza.pizza_target
         if not PTSR.pfCanChase(target.player) then

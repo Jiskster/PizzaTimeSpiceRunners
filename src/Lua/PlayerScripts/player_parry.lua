@@ -334,7 +334,7 @@ addHook("PlayerThink", function(player)
 	local pmo = player.mo
 	
 	local gm_metadata = PTSR.currentModeMetadata()
-	local can_parry = not PTSR_DoHook("canparry", player)
+	local can_parry = not PTSR.DoHook("canparry", player)
 
 	if not player.mo.ptsr.parry_cooldown
 	and not player.mo.pizza_in
@@ -357,7 +357,7 @@ addHook("PlayerThink", function(player)
 					and abs(foundmobj.z-pmo.z) < CV_PTSR.parry_height.value then
 						if (_isPF(foundmobj) or (foundmobj.flags & MF_ENEMY)
 						or (foundmobj.type == MT_PLAYER))
-						and not PTSR_DoHook("preparry", pmo, foundmobj) then
+						and not PTSR.DoHook("preparry", pmo, foundmobj) then
 							if foundmobj.type == MT_PLAYER then
 								if foundmobj.player and foundmobj.player.valid then	
 									if not foundmobj.player.ptsr.pizzaface then
@@ -409,10 +409,10 @@ addHook("PlayerThink", function(player)
 									}
 								end
 	
-								PTSR_DoHook("onparried", foundmobj, pmo)
+								PTSR.DoHook("onparried", foundmobj, pmo)
 							end
 
-							if PTSR_DoHook("onparry", pmo, foundmobj) then
+							if PTSR.DoHook("onparry", pmo, foundmobj) then
 								return true
 							end
 

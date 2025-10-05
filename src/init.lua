@@ -240,6 +240,7 @@ dofile "Momentum/momentum.lua"
 dofile "Momentum/slope.lua"
 dofile "Momentum/gravity.lua"
 dofile "Momentum/ceiling.lua"
+dofile "Momentum/classicspindash.lua"
 
 dofile "Libraries/lib_common.lua"
 dofile "exit_handle.lua"

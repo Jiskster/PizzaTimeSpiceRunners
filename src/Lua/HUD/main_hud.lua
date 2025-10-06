@@ -134,7 +134,6 @@ end)
 
 SetupHud "DoorFade"
 SetupHud "Bar"
-SetupHud "ItsPizzaTime"
 SetupHud "Tooltips"
 SetupHud "Lapping"
 SetupHud "Rank"
@@ -172,6 +171,7 @@ SetupHud "Rankings"
 SetupHud "Score"
 SetupHud "HurryUp"
 SetupHud "PFViewpoint"
+SetupHud "ItsPizzaTime"
 
 -- [Minimal Hud Setup] --
 path = "HUD/Drawers/minimal";

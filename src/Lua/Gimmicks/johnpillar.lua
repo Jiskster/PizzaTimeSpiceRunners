@@ -34,9 +34,7 @@ function PTSR.KnockJohnPillar(john)
 		john.momy = -sin(john.angle)*8
 		john.momz = P_MobjFlip(john)*8*FU
 		S_StartSound(nil, sfx_jpilr)
-		if consoleplayer and consoleplayer.valid then
-			P_FlashPal(consoleplayer, 1, 2)
-		end
+
 		john.johnpillarknocked = true
 		
 		--jisk SAID he'd do this but he NEVER DID

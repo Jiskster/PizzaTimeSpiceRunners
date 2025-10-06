@@ -1,12 +1,12 @@
 local itspizzatime_hud = function(v, player)
 	if not PTSR.IsPTSR() then return end
-	if PTSR.pizzatime and PTSR.pizzatime_tics then
-		/*
-		if PTSR.pizzatime_tics < 85
-			v.draw(0, 0, v.cachePatch("PIZZAPAL"), V_50TRANS|V_SNAPTOTOP|V_SNAPTOLEFT|V_PERPLAYER)
-		end
-		*/
+
+	local t = min(FixedDiv(PTSR.pizzatime_tics*FU, 1*TICRATE*FU), FU)
+	
+	if t then
+		v.fadeScreen(SKINCOLOR_WHITE, ease.linear(t, 10, 0))
 	end
+	
 	if PTSR.pizzatime and PTSR.pizzatime_tics and PTSR.pizzatime_tics < 10*TICRATE then
 		local patch = v.cachePatch("ITSPIZZATIME1")
 		if CV_PTSR.homework.value then

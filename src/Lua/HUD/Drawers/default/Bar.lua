@@ -224,6 +224,7 @@ local bar_hud = function(v, player)
 
 		local johnscale = (FU/2) -- + (FU/4)
 
+		-- the bar itself
 		drawBar(v, 90*FU, ese, FU/2, {
 			offset = FixedDiv(leveltime % (45*TICRATE), 45*TICRATE),
 			length = progress,
@@ -231,7 +232,7 @@ local bar_hud = function(v, player)
 			fill_yoffset = 5*FU,
 			fill_widthoffset = -5*FU,
 			fill = PTSR.timeleft and "BARFILL" or "BARFILL2",
-			flags = V_SNAPTOBOTTOM
+			flags = V_PERPLAYER|V_SNAPTOBOTTOM
 		})
 		
 		 -- angry john...
@@ -240,7 +241,7 @@ local bar_hud = function(v, player)
 			ese + (6*johnscale), 
 			johnscale, 
 			john, 
-			V_SNAPTOBOTTOM
+			V_PERPLAYER|V_SNAPTOBOTTOM
 		)
 		
 		-- sleepy pf...
@@ -248,7 +249,7 @@ local bar_hud = function(v, player)
 			ese - (8*FU) + pfEase,
 			FU/3,
 			pizzaface, 
-			V_SNAPTOBOTTOM
+			V_PERPLAYER|V_SNAPTOBOTTOM
 		) 
 		
 		local timestring = G_TicsToMTIME(PTSR.timeleft)
@@ -257,13 +258,13 @@ local bar_hud = function(v, player)
 		local y_offset = (3*FRACUNIT)/2
 		
 		if PTSR.timeleft or not multiplayer then
-			customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
+			customhud.CustomFontString(v, x, ese + y_offset, timestring, "PTFNT", (V_PERPLAYER|V_SNAPTOBOTTOM), "center", FRACUNIT/2, SKINCOLOR_WHITE)
 		else
 			local gm_metadata = PTSR.currentModeMetadata()
 			
 			local ot_text = gm_metadata.overtime_textontime or "OVERTIME!"
 			
-			FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_SNAPTOBOTTOM), "center", FRACUNIT/2) -- OVERTIME!
+			FlashSnakeCustomFontString(v, x, ese + y_offset, ot_text, "PTFNT", (V_PERPLAYER|V_SNAPTOBOTTOM), "center", FRACUNIT/2) -- OVERTIME!
 		end
 		
 		timeafteranimation = $ + 1

@@ -209,7 +209,7 @@ local score_hud = function(v, player)
 	end
 
 	-- Draw Pizza Hud.
-	v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_SNAPTOLEFT|V_SNAPTOTOP))
+	v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch("SCOREOFPIZZA"..frame), (V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP))
 
 	
 	local rankNum = ranksTable[player.ptsr.rank]
@@ -217,14 +217,14 @@ local score_hud = function(v, player)
 	for i = 1,rankNum do
 		if not (toppingsOnScore[i]) then continue end
 
-		v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawScaled(xPizzaPos+xShake, yPizzaPos+yShake, FU/3, v.cachePatch(toppingsOnScore[i]..frame), V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP)
 	end
 
 	-- For bobbing up and down.
 	local yOffset = scoreYOffset[frame]*(FU/3) or 0
 	
 	-- Draw score thats on top of Pizza Hud.
-	customhud.CustomFontString(v, xScorePos+xShake, yScorePos+yShake-yOffset, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
+	customhud.CustomFontString(v, xScorePos+xShake, yScorePos+yShake-yOffset, tostring(player.ptsr and player.ptsr.current_score or 0), "SCRPT", (V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP), "center", FRACUNIT/3)
 	
 	-- Draw score deductions.
 	for i,data in ipairs(player.ptsr.score_deduct_list) do

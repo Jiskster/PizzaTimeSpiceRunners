@@ -34,7 +34,7 @@ local rank_hud = function(v, player)
 	if player.ptsr.rank then
 		local scale = ease.linear(player.ptsr.rank_scaleTime, FU/3, (FU/3)*2)
 	
-		v.drawScaled(rankpos.x, rankpos.y,scale, PTSR.r2p(v,player.ptsr.rank), V_SNAPTOLEFT|V_SNAPTOTOP)		
+		v.drawScaled(rankpos.x, rankpos.y,scale, PTSR.r2p(v,player.ptsr.rank), V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP)		
 		--luigi budd: the fill
 		if per
 		and (player.ptsr.rank ~= "P")
@@ -49,7 +49,7 @@ local rank_hud = function(v, player)
 			v.drawCropped(rankpos.x,rankpos.y+(scale2/3),
 				scale,scale,
 				patch,
-				V_SNAPTOLEFT|V_SNAPTOTOP, 
+				V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP, 
 				nil,
 				0,scale2,
 				patch.width*FU,patch.height*FU

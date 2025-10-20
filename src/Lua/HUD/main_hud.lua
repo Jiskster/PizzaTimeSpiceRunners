@@ -137,11 +137,11 @@ addHook("HUD", function(v,p,c)
 	if not loaded_fastpatch then
 		cachePatch = v.cachePatch
 		
-		v.fastPatch = function(patch)
+		v.fastPatch = function(patch, ...)
 			if patches[patch] then
 				return patches[patch]
 			else
-				patches[patch] = cachePatch(patch)
+				patches[patch] = cachePatch(patch, ...)
 				
 				return patches[patch]
 			end

@@ -171,6 +171,13 @@ SetupHud "Gamemode"
 SetupHud "OvertimeMultiplier"
 SetupHud "UntilEnd"
 
+-- Refresh patch cache when addon is loaded.
+addHook("AddonLoaded", function()
+	for i,v in pairs(patches) do
+		patches[i] = nil
+	end
+end)
+
 -- [Minimal Hud Setup] --
 path = "HUD/Drawers/minimal";
 

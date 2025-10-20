@@ -114,7 +114,10 @@ PTSR.r2f = function(v,rank)
 	end
 end
 
--- Hardcoded for now.
+local patches = {}
+local loaded_fastpatch = false
+local cachePatch = nil 
+
 addHook("HUD", function(v,p,c)
 	if PTSR.IsPTSR() then
 		hud.disable("textspectator") -- sonic team junior
@@ -130,6 +133,31 @@ addHook("HUD", function(v,p,c)
 			hud.enable("lives")
 		end
 	end
+	
+	if not loaded_fastpatch then
+		cachePatch = v.cachePatch
+		
+		v.fastPatch = function(patch)
+			if patches[patch] then
+				return patches[patch]
+			else
+				patches[patch] = cachePatch(patch)
+				
+				return patches[patch]
+			end
+		end
+		
+		loaded_fastpatch = true
+	end
+	
+	/*
+	local c = 0
+	for i,v in pairs(patches) do
+		c = $ + 1
+	end
+	
+	print(c)
+	*/
 end)
 
 SetupHud "DoorFade"

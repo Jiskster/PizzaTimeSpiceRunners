@@ -7,13 +7,13 @@ local combo_hud = function(v, player)
 	
 	local prank_able = player.ptsr.combo_timesfailed == 0 and player.ptsr.combo_times_started == 1 
 	
-	local bar = v.cachePatch("PTSR_COMBOBAR")
+	local bar = v.fastPatch("PTSR_COMBOBAR")
 	local indic
 	
 	if prank_able then
-		indic = v.cachePatch("PTSR_INDIC0"..tostring((leveltime%8)+1)) -- in dick :skull:
+		indic = v.fastPatch("PTSR_INDIC0"..tostring((leveltime%8)+1)) -- in dick :skull:
 	else
-		indic = v.cachePatch("PTSR_FAIL_INDIC0"..tostring((leveltime%8)+1))
+		indic = v.fastPatch("PTSR_FAIL_INDIC0"..tostring((leveltime%8)+1))
 	end
 	
 	local colormap = v.getColormap(player.skin, player.skincolor)
@@ -89,12 +89,12 @@ local combo_hud = function(v, player)
 		v.drawString(15, 108, "P RANK ISNT JUST", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")
 		v.drawString(15, 116, "HOLDING W ANYMORE :)", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")
 		*/
-		local patch = v.cachePatch("CR"..player.ptsr.combo_rank.."_"..leveltime % 2)
+		local patch = v.fastPatch("CR"..player.ptsr.combo_rank.."_"..leveltime % 2)
 		v.drawScaled(15*FU, 70*FU, FU/2, patch, V_SNAPTOLEFT|V_SNAPTOTOP)
 
 		local very = player.ptsr.combo_rank_very
 		for i = very,1,-1 do
-			v.drawScaled((10-(3*(i-1)))*FU, 65*FU, FU/2, v.cachePatch("CRVERY"), V_SNAPTOLEFT|V_SNAPTOTOP)
+			v.drawScaled((10-(3*(i-1)))*FU, 65*FU, FU/2, v.fastPatch("CRVERY"), V_SNAPTOLEFT|V_SNAPTOTOP)
 		end
 	end
 end

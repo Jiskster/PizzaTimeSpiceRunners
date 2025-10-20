@@ -40,8 +40,8 @@ end*/
 local function drawBar(v, x, y, scale, properties)
 	local prog = properties and properties.offset or 0
 	local length = properties and properties.length or 0
-	local bar = v.cachePatch(properties and properties.bar or "SHOWTIMEBAR")
-	local fill = v.cachePatch(properties and properties.fill or "BARFILL")
+	local bar = v.fastPatch(properties and properties.bar or "SHOWTIMEBAR")
+	local fill = v.fastPatch(properties and properties.fill or "BARFILL")
 	local ox = properties and properties.fill_xoffset or 0
 	local oy = properties and properties.fill_yoffset or 0
 	local ow = properties and properties.fill_widthoffset or 0
@@ -196,21 +196,21 @@ local bar_hud = function(v, player)
 	pfEase = (pfEase*pfEase) * FU / 22
 	if not multiplayer then pfEase = 0 end
 
-	local bar = v.cachePatch("SHOWTIMEBAR") -- the orange border
-	local bar2 = v.cachePatch("SHOWTIMEBAR2") -- the purple thing
+	local bar = v.fastPatch("SHOWTIMEBAR") -- the orange border
+	local bar2 = v.fastPatch("SHOWTIMEBAR2") -- the purple thing
 
-	local pizzaface = v.cachePatch(PTSR.getHudStateFrame("PIZZAFACE_SLEEPING"))
+	local pizzaface = v.fastPatch(PTSR.getHudStateFrame("PIZZAFACE_SLEEPING"))
 	
 	if PTSR.showtime then -- WAKE THE FUCK UP PIZZA FACE!!
-		pizzaface = v.cachePatch(PTSR.getHudStateFrame("PIZZAFACE_SHOWTIME"))
+		pizzaface = v.fastPatch(PTSR.getHudStateFrame("PIZZAFACE_SHOWTIME"))
 	end
 	
 	local john
 	
 	if not PTSR.isOvertime() then
-		john = v.cachePatch(PTSR.getHudStateFrame("JOHN"))
+		john = v.fastPatch(PTSR.getHudStateFrame("JOHN"))
 	else
-		john = v.cachePatch(PTSR.getHudStateFrame("REDJOHN"))
+		john = v.fastPatch(PTSR.getHudStateFrame("REDJOHN"))
 	end
 
 	--ease.linear(fixed_t t, [[fixed_t start], fixed_t end])

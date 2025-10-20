@@ -3,8 +3,8 @@ local overtime_hud = function(v, player)
 	local left_tween 
 	local right_tween 
 	
-	local text_its = v.cachePatch("OT_ITS")
-	local text_overtime = v.cachePatch("OT_OVERTIME")
+	local text_its = v.fastPatch("OT_ITS")
+	local text_overtime = v.fastPatch("OT_OVERTIME")
 	
 	local anim_len = 7*TICRATE/4 -- 1.75 secs
 	local anim_delay = 2*TICRATE

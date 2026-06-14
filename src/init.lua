@@ -12,7 +12,6 @@ sfxinfo[sfx_ptsrc1].caption = "Crown lost!"
 sfxinfo[sfx_ptsrc2].caption = "Crown get!"
 
 sfxinfo[sfx_pizzah].caption = "Pizzaface laughs"
-sfxinfo[sfx_coneba].caption = "Coneball laughs"
 sfxinfo[sfx_pepdie].caption = "Death"
 sfxinfo[sfx_lap2].caption = "New lap!"
 
@@ -129,7 +128,7 @@ PTSR.HUD = {
 	minimal = {};
 }
 
-freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_CONEBALL", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_CONB", "SPR_SMAD", "sfx_smdah", "S_GOOCH_PF", "SPR_PZAD")
+freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_SMAD", "sfx_smdah", "S_GOOCH_PF", "SPR_PZAD")
 freeslot("sfx_nrmlfc","S_NORMALFACE_PF","SPR_NMFC")
 freeslot("S_KIMIZZA_PF", "SPR_KMZA")
 

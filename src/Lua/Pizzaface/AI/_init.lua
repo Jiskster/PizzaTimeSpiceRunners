@@ -10,8 +10,7 @@ local files = {
 	"Hooks/PlayerTouch",
 	
 	-- Put special pizza face logic below this comment:
-	
-	"Special/Coneball/main",
+
 }
 
 for i,v in ipairs(files) do

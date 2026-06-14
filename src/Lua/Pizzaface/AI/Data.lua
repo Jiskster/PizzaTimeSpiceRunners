@@ -10,17 +10,6 @@ PTSR.PFMaskData = {
 		tagcolor = SKINCOLOR_ORANGE
 	},
 	{
-		name = "Coneball",
-	    state = S_CONEBALL,
-		scale = 3*FU/4,
-		trails = {SKINCOLOR_SKY, SKINCOLOR_NEON},
-		sound = sfx_coneba,
-		emoji = ":candy:",
-		aiselectable = true,
-		tagcolor = SKINCOLOR_MAGENTA,
-		special = "coneball"
-	},
-	{
 		name = "Summa",
 	    state = S_SUMMADAT_PF,
 		scale = FU/2,

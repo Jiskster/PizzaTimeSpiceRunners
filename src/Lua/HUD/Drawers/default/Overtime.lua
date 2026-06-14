@@ -51,7 +51,7 @@ local overtime_hud = function(v, player)
 	end
 
 	local tics = 2*TICRATE
-	local t = min(FixedDiv(PTSR.timeover_tics*FU, tics*FU), FU)
+	local t = min(FixedDiv(PTSR.timeover_tics, tics), FU)
 	
 	if t then
 		v.fadeScreen(SKINCOLOR_CRIMSON, ease.linear(t, 10, 0))

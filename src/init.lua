@@ -128,9 +128,7 @@ PTSR.HUD = {
 	minimal = {};
 }
 
-freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_PF_EGGMAN", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_SMAD", "sfx_smdah", "S_GOOCH_PF", "SPR_PZAD")
-freeslot("sfx_nrmlfc","S_NORMALFACE_PF","SPR_NMFC")
-freeslot("S_KIMIZZA_PF", "SPR_KMZA")
+freeslot("MT_PIZZAMASK", "S_PIZZAFACE", "S_SUMMADAT_PF", "SPR_PZAT", "SPR_SMAD", "sfx_smdah", "S_GOOCH_PF", "SPR_PZAD")
 
 mobjinfo[MT_PIZZAMASK] = {
 	doomednum = -1,
@@ -151,34 +149,11 @@ states[S_PIZZAFACE] = {
     nextstate = S_PIZZAFACE
 }
 
-states[S_PF_EGGMAN] = {
-    sprite = SPR_EGGM,
-    frame = FF_FULLBRIGHT|A,
-    tics = -1,
-    nextstate = S_PF_EGGMAN
-}
-
 states[S_SUMMADAT_PF] = {
     sprite = SPR_SMAD,
     frame = FF_FULLBRIGHT|A,
     tics = -1,
     nextstate = S_SUMMADAT_PF
-}
-
-states[S_NORMALFACE_PF] = {
-    sprite = SPR_NMFC,
-    frame = FF_FULLBRIGHT|A,
-    tics = -1,
-    nextstate = S_NORMALFACE_PF
-}
-
-states[S_KIMIZZA_PF] = {
-    sprite = SPR_KMZA,
-    frame = FF_ANIMATE|FF_FULLBRIGHT|A,
-    tics = -1,
-    var1 = 1,
-    var2 = 1,
-    nextstate = S_KIMIZZA_PF
 }
 
 states[S_GOOCH_PF] = {

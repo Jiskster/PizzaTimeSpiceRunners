@@ -19,7 +19,6 @@ local combo_hud = function(v, player)
 	local colormap = v.getColormap(player.skin, player.skincolor)
 	local bar_x = 5*FU; 
 	
-	
 	local bar_y = 40*FU
 	local indic_max = 67*FU
 	local combo_timeleft = player.ptsr.combo_timeleft
@@ -63,8 +62,11 @@ local combo_hud = function(v, player)
 		end
 	end
 
-	v.drawScaled(bar_x + indic_newx, bar_y+20*FU, FU/2, indic, V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
-	v.drawScaled(bar_x, bar_y, FU/2, bar, V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
+	-- Draw Indicator
+	v.drawScaled(bar_x + indic_newx, bar_y+20*FU, FU/2, indic, V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
+
+	-- Draw Bar
+	v.drawScaled(bar_x, bar_y, FU/2, bar, V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP, colormap)
 	
 	do -- very normal code
 		local combostring = tostring(combo_count)
@@ -80,21 +82,17 @@ local combo_hud = function(v, player)
 		for i=1,length do
 			table.insert(numsleft, tonumber(input:sub(i,i)))
 			
-			customhud.CustomFontChar(v, bar_x+(25*FU) - ((i-1)*12*FU), bar_y+(40*FU) - ((i-1)*4*FU), string.byte(numsleft[i]), "COMBO", (V_SNAPTOLEFT|V_SNAPTOTOP), FU/2, player.skincolor)
+			customhud.CustomFontChar(v, bar_x+(25*FU) - ((i-1)*12*FU), bar_y+(40*FU) - ((i-1)*4*FU), string.byte(numsleft[i]), "COMBO", (V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP), FU/2, player.skincolor)
 		end
 	end
 	
 	if combo_outro_tics then
-		/*v.drawString(15, 100, "UNFINISHED", V_SNAPTOLEFT|V_SNAPTOTOP)
-		v.drawString(15, 108, "P RANK ISNT JUST", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")
-		v.drawString(15, 116, "HOLDING W ANYMORE :)", V_SNAPTOLEFT|V_SNAPTOTOP, "thin")
-		*/
 		local patch = v.fastPatch("CR"..player.ptsr.combo_rank.."_"..leveltime % 2)
-		v.drawScaled(15*FU, 70*FU, FU/2, patch, V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawScaled(15*FU, 70*FU, FU/2, patch, V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP)
 
 		local very = player.ptsr.combo_rank_very
 		for i = very,1,-1 do
-			v.drawScaled((10-(3*(i-1)))*FU, 65*FU, FU/2, v.fastPatch("CRVERY"), V_SNAPTOLEFT|V_SNAPTOTOP)
+			v.drawScaled((10-(3*(i-1)))*FU, 65*FU, FU/2, v.fastPatch("CRVERY"), V_PERPLAYER|V_SNAPTOLEFT|V_SNAPTOTOP)
 		end
 	end
 end

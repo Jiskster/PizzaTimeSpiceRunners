@@ -93,7 +93,7 @@ else
 end
 
 function PTSR.IsOverTimeMusicInPriority()
-	return (PTSR.timeleft <= 20*TICRATE and multiplayer and PTSR.client_allowhurryupmusic) or PTSR.timeover
+	return (PTSR.timeleft <= 20*TICRATE and PTSR.client_allowhurryupmusic) or PTSR.timeover
 end
 
 local IS_PANIC = false
@@ -132,7 +132,7 @@ addHook("ThinkFrame", function()
 					return
 				end
 			elseif PTSR.MusicList.OvertimeTics
-			and PTSR.timeleft <= PTSR.MusicList.OvertimeTics and multiplayer
+			and PTSR.timeleft <= PTSR.MusicList.OvertimeTics
 			and PTSR.client_allowhurryupmusic then -- Hurry up
 				local mus = CV_PTSR.overtime_music.value
 				
@@ -157,21 +157,6 @@ addHook("ThinkFrame", function()
 			else
 				S_StopMusic(player)
 			end
-		end
-		
-		if S_MusicName() ~= "PIZTIM" then
-			IS_PANIC = false
-		end
-		
-		local length = S_GetMusicLength()
-
-		if not multiplayer
-		and S_MusicName() == "PIZTIM"
-		and PTSR.timeleft <= 56*TICRATE
-		and not IS_PANIC then
-			S_ChangeMusic("PIZTIM", false, consoleplayer)
-			S_SetMusicPosition(length-(PTSR.timeleft/TICRATE*1000))
-			IS_PANIC = true
 		end
 	end
 end)

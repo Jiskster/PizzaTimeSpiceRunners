@@ -371,33 +371,33 @@ addHook("ThinkFrame", do
 			if PTSR.timeleft and (count.inactive ~= count.active) then
 				PTSR.timeleft = max(0, $ - 1)
 				
-				if PTSR.timeleft <= 0 then
+				if PTSR.timeleft <= 0 and not PTSR.timeover then -- ITS OVERTIME!	
 					PTSR.timeleft = 0
-					if multiplayer then -- ITS OVERTIME!
-						PTSR.timeover = true
+
+					PTSR.timeover = true
 						
-						local timeover_text = "\x8F*Overtime!"
-						chatprint(timeover_text)
-						
-						S_StartSound(nil, P_RandomRange(41,43)) -- lightning
-						--S_StartSound(nil, sfx_pizzao)
-						
-						for i,deathring in ipairs(PTSR.deathrings) do
-							if deathring and deathring.valid and deathring.rings_kept then
-								deathring.rings_kept = $ * 3
-							end
+					local timeover_text = "\x8F*Overtime!"
+					chatprint(timeover_text)
+					
+					S_StartSound(nil, P_RandomRange(41,43)) -- lightning
+					--S_StartSound(nil, sfx_pizzao)
+					
+					for i,deathring in ipairs(PTSR.deathrings) do
+						if deathring and deathring.valid and deathring.rings_kept then
+							deathring.rings_kept = $ * 3
 						end
-						
-						if DiscordBot then
-							DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
-						end
-						
-						local overtime_triggertag = mapheaderinfo[gamemap].ptsr_overtime_triggertag
-						if overtime_triggertag and tonumber(overtime_triggertag) then
-							P_LinedefExecute(tonumber(overtime_triggertag))
-						end
-						
-						
+					end
+					
+					if DiscordBot then
+						DiscordBot.Data.msgsrb2 = $ .. ":alarm_clock: Overtime!\n"
+					end
+					
+					local overtime_triggertag = mapheaderinfo[gamemap].ptsr_overtime_triggertag
+					if overtime_triggertag and tonumber(overtime_triggertag) then
+						P_LinedefExecute(tonumber(overtime_triggertag))
+					end
+					
+					if multiplayer then
 						for i=1,#PTSR.BubbleMobjList do
 							local bubble = PTSR.BubbleMobjList[i]
 							
@@ -412,7 +412,10 @@ addHook("ThinkFrame", do
 							
 							bubble.bubblerespawntics = 0
 						end
-					elseif not (PTSR.aipf
+					end
+
+					if not multiplayer 
+					and not (PTSR.aipf
 					and PTSR.aipf.valid)
 						PTSR.pfSpawnAI()
 					end

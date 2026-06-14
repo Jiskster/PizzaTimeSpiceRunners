@@ -20,15 +20,6 @@ PTSR.PFMaskData = {
 		parrysplit = true
 	},
 	{
-		name = "Normal",
-	    state = S_NORMALFACE_PF,
-		scale = FU/2,
-		trails = {SKINCOLOR_GREEN, SKINCOLOR_WHITE},
-		sound = sfx_nrmlfc,
-		emoji = ":green_circle:",
-		tagcolor = SKINCOLOR_GREEN
-	},
-	{
 		name = "Gooch",
 	    state = S_GOOCH_PF,
 		scale = FU,

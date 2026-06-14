@@ -164,6 +164,10 @@ local function FlashSnakeCustomFontString(v, x, y, str, fontName, flags, align, 
 end
 
 local bar_hud = function(v, player)
+	-- Cache Crucial Patches (For lag improvement on pizzatime)
+	v.fastPatch("SHOWTIMEBAR")
+	v.fastPatch("BARFILL")
+	
 	if not PTSR.IsPTSR() then 
 		return end;
 	
